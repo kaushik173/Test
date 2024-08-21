@@ -1,0 +1,11 @@
+RequestedByName	String	100	Smith, Joe
+RFDType	String	50	Role
+Clients String 300	John Smith, Wendy Allen
+PetitionNumber	String	50	AAA111
+NextHearingType	String	50	Hearing Type
+NextHearingDateTime	DateTime		01/01/2000
+NextHearingDepartment	String	50	1
+RFDDueDate	DateTime		01/01/2000
+RequestedForName	String	100	Smith, Joe
+Children 300	John Smith, Wendy Allen
+GroupID	Number	1

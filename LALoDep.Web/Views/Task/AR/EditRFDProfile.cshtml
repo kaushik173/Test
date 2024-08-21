@@ -1,0 +1,218 @@
+﻿@using System.Data
+@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.Task.EditRfdProfileViewModel
+@{
+    ViewBag.Title = "Edit AR Profile ";
+
+
+}
+
+@{
+    Html.RenderPartial("~/Views/Task/AR/_tabs.cshtml");
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Add New Profile</span>
+                <div class="widget-buttons">
+
+                    @Model.RfdHeader
+
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "recordTime-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.Hidden("EncryptHearingReportFilingDueID", Model.HearingReportFilingDueID.ToEncrypt())
+
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.PersonID, "Person", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.PersonID, Model.PersonList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.ProfileTypeID, "Profile Type ", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ProfileTypeID, Model.ProfileTypeList, "", new { @class = "form-control input-sm", tabindex = 2, @style = "width:100%" })
+                    </div>
+                }
+
+            </div>
+        </div>
+        @if (Model.ProfileList != null && Model.ProfileList.Count > 0)
+        {
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Profile List</span>
+                    <div class="widget-buttons">
+
+
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+                            <thead>
+                                <tr>
+
+                                    <th>Person</th>
+                                    <th>Date</th>
+                                    <th> </th>
+
+                                    <th>Description</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+            var profileName = "";
+                                }
+                                @foreach (var item in Model.ProfileList)
+                                {
+
+                                    <tr @if (Model.CurrentRoleID == item.RoleID.Value && Model.CurrentProfileTypeID==item.ProfileTypeCodeID.Value) { <text> class="highLightBlue" </text>              }>
+
+                                        <td>
+                                            @if (item.ProfilePerson != profileName)
+                                            {
+                                                @item.ProfilePerson
+                                            }
+
+                                        </td>
+                                        <td width="100">@item.ProfileDate</td>
+                                        <td width="80" class="text-align-center">
+                                            <a class="btn btn-sm btn-info printProfile" data-roleid="@item.RoleID" data-rfdid="@item.HearingReportFilingDueID" data-profiletypecodeid="@item.ProfileTypeCodeID.Value"><i class="fa fa-print"></i> Print</a> 
+                                        </td>
+
+                                        <td><a href="/Task/EditRfdProfile/@item.HearingReportFilingDueID.ToEncrypt()?roleId=@item.RoleID.ToEncrypt()&profileTypeId=@item.ProfileTypeCodeID.ToEncrypt()">@item.ProfileDisplay</a></td>
+
+                                    </tr>
+                                            profileName = item.ProfilePerson;
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        }
+        @if (Model.ProfileQuestionList != null && Model.ProfileQuestionList.Count > 0)
+        {
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+
+                        @if (Model.ProfileList != null && Model.CurrentProfileID > 0)
+                        {
+                            var profile = Model.ProfileList.FirstOrDefault(o => o.ProfileID.Value == Model.CurrentProfileID);
+                            if (profile != null)
+                            {
+                                <span>@profile.ProfilePerson - @profile.ProfileDate - @profile.ProfileDisplay</span>
+                            }
+                        }
+
+
+                    </span>
+                    <div class="widget-buttons">
+
+
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+
+
+                        @{
+                        var categories = Model.ProfileQuestionList.DistinctBy(o => o.CategoryID);
+                        foreach (var category in categories)
+                        {   <table class="table table-bordered table-condensed table-hover table-padding table-striped" style="margin-bottom: 20px !important;">
+
+                            <tbody>
+                                <tr>
+
+                                    <th>@category.Category Questions </th>
+                                    <th>Answers</th>
+                                    <th>Note </th>
+
+
+
+                                </tr>
+                                @foreach (var item in Model.ProfileQuestionList.Where(o => o.CategoryID.HasValue && o.CategoryID.Value == category.CategoryID).ToList())
+                                {
+                                    <tr>
+
+                                        <td width="60%">
+                                        
+                                            <a href="/Task/EditRFDProfileQuestion/@ViewBag.Id?questionId=@item.QuestionID.ToEncrypt()&roleId=@Model.CurrentRoleID.ToEncrypt()&profileTypeId=@item.ProfileTypeCodeID.Value.ToEncrypt()">@item.Question</a>
+                                        </td>
+                                        <td>@item.FreeformAnswer @item.Answer</td>
+                                        <td width="80">
+                                            @if (item.Note.HasValue && item.Note.Value == 1 && item.ProfileID.HasValue)
+                                            {
+                                                <a class="btn   btn-info btn-xs btnNote" data-profileid="@item.ProfileID.Value.ToEncrypt()">Note</a>
+                                            }
+
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        }
+                        }
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--script-->
+@section fixedfooter{
+
+    <div class="boxfloat text-center">
+
+
+
+
+
+        <button id="btnContinue" type="submit" class="btn btn-primary v-bottom  default" tabindex="3">
+            Continue
+        </button>
+
+        <button id="btnExitAR" type="submit" class="btn btn-default  v-bottom  " tabindex="5">
+            Exit AR
+        </button>
+        <button id="btnPrintAR" type="submit" class="btn btn-default  v-bottom  " tabindex="6">
+            Print AR
+        </button>
+        <button id="btnAddNewProfile" type="submit" class="btn btn-default v-bottom  " tabindex="7" data-secure-id="@((int) SecurityToken.EditRFDAddProfile)">
+            Add New Profile
+        </button>
+
+
+
+
+
+    </div>
+
+}
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/AR/EditRfdProfile.js?v=" + Guid.NewGuid())"></script>
+
+}

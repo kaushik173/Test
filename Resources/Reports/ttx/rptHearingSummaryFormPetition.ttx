@@ -1,0 +1,6 @@
+HearingID	Number		1
+Child	String	200	Glenda Gold, Gary Gold
+PetitionNumber	String	50	CSI123A
+PetitionType	String	50	300 Original
+PetitionFileDate	Date		11/25/2000
+PetitionResult	String	50	Completed

@@ -1,0 +1,166 @@
+﻿@model LALoDep.Models.Task.AdditionalAttendeesViewModel
+@using LALoDep.Custom
+@{
+    ViewBag.Title = " ";
+    var tabindex = 5;
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+
+    <style>
+        body {
+            margin-top: 0px !important;
+            padding: 0px;
+        }
+    </style>
+
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AdditionalAttendees-form", @class = "form-inline  center-block" }))
+{
+    @Html.HiddenFor(o=>o.HearingID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+               
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+
+                        @if (Model.HearingAttendance != null && Model.HearingAttendance.Count > 0)
+                        {
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="workedForList">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Attended
+                                        </th>
+                                        <th>
+                                            Person
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.HearingAttendance)
+                                    {
+                                        <tr>
+                                            <td width="30" style="vertical-align: middle">
+                                                <input type="checkbox" value="@item.RoleID" tabindex="@(++tabindex)" class="chkAttended" />
+                                            </td>
+                                            <td style="vertical-align: middle">@item.PersonNameDisplay</td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="btnSave" type="button" tabindex="@(++tabindex)" class="btn btn-primary default v-bottom ">Save</button>
+       
+        <button id="btnCancel" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Cancel</button>
+
+    </div>
+}
+
+@section scripts
+{
+
+    <script>
+
+        $(function () {
+
+
+            setInitialFormValues('AdditionalAttendees-form', true);
+
+
+        });
+         
+
+        $("#btnSave").on("click", function () {
+            SaveData(1)
+        });
+        $("#btnCancel").on("click", function () {
+            self.parent.ClosePopup();
+        });
+        function GetData() {
+            var data = $('#AdditionalAttendees-form').serializeFormObject();
+            data.HearingAttendance = [];
+
+            $('.chkAttended:checked').each(function () {
+
+                $this = $(this);
+                
+                data.HearingAttendance.push({
+                    RoleID: $this.attr('value'),
+                    
+                });
+            })
+            return data;
+
+        }
+        function SaveData(buttonId) {
+
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return;
+            }
+           
+            if ($('.chkAttended:checked').length == 0) {
+                notifyDanger('At least one attendee needs to be checked.');
+                $('.chkAttended:first').focus();
+                return false;
+            }
+
+            var data = GetData();
+            isBottomBarAccessible(false);
+
+
+            $.ajax({
+                type: "POST", dataType: 'json', url: '/Task/AdditionalAttendees', data: JSON.stringify(data), contentType: "application/json",
+                success: function (result) {
+                    if (result.Status == "Done") {
+                        RequestSubmitted();
+                        notifySuccess('Data Saved Successfully!');
+
+                       
+
+                        if (buttonId == 1) {
+                            isBottomBarAccessible(false);
+                            setTimeout(function () {
+                                isBottomBarAccessible(false);
+
+                                self.parent.document.location.href = self.parent.document.location.href;
+                                self.parent.ClosePopup();
+
+                            }, 2000);
+                            return false;
+                        }
+
+                    }
+                    else {
+                        notifyDanger('There is something wrong while processing request.');
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+}
+

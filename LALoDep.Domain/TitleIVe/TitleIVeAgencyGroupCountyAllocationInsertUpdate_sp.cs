@@ -1,0 +1,21 @@
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace LALoDep.Domain.TitleIVe
+{
+
+    public class TitleIVeAgencyGroupCountyAllocationInsertUpdate_spParams
+    {
+        public int? ErrorID { get; set; }
+        public int? UserID { get; set; }
+        public int? AgencyGroupID { get; set; }
+        public string InputData { get; set; }
+
+    }
+
+}

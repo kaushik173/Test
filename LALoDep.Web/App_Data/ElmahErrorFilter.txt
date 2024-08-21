@@ -1,0 +1,3 @@
+﻿;Write Each Error Message on seperate line that needs to be ignore by elmah.
+The controller for path '/browserconfig.xml' was not found
+A public action method 'asd' was not found on controller 'Jcats.SD.UI.Controllers.CaseController'

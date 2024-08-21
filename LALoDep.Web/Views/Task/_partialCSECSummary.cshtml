@@ -1,0 +1,64 @@
+﻿@model IEnumerable<LALoDep.Domain.CSEC.CSECGetSummary_spResult>
+@using LALoDep.Core.Custom.Extensions
+@{
+    Layout = null;
+
+    if (Model.Any())
+    {
+        var groupIds = Model.Select(o => o.GroupID).Distinct();
+
+        foreach (var groupId in groupIds)
+        {
+            var firstRecordRow = Model.Where(o => o.GroupID == groupId).FirstOrDefault();
+            var  records = Model.Where(o => o.GroupID == groupId).ToList();
+
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption" id="countSearchResult">@firstRecordRow.GroupDisplay</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClients">
+                                <thead>
+                                    <tr>
+                                        <th>Staff Member</th>
+                                        
+                                        <th width="15%">Marked Incomplete</th>
+                                        <th width="15%">Completed</th>
+                                        <th width="15%">Past Due</th>
+                                        <th width="15%">@firstRecordRow.XColumn </th>
+                                        <th width="20%">@firstRecordRow.YColumn </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var record in records)
+                                    {
+                                        <tr>
+                                            <td>
+                                            
+                                            <a href="/Task/MyCSECQueue/@record.StaffPersonID.Value.ToEncrypt()">@record.StaffMember</a>
+                                           </td><td>@record.MarkedIncomplete</td>
+                                            <td>@record.Completed</td>
+                                            <td>@record.PastDue</td>
+                                            <td>@record.XValue </td>
+                                            <td>@record.YValue </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+}
+
+
+

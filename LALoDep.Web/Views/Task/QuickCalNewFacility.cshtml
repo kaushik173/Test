@@ -1,0 +1,102 @@
+﻿@model LALoDep.Models.Task.QuickCalNewFacilityViewModel
+@{
+    ViewBag.Title = "QuickCalNewFacility";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px">
+        <div class="alert alert-danger">
+            Only enter a value here if the Facility/Institution is NOT already in the dropdown on the previous page. The address street and city will be temporarily set to "To Be Entered". Your JCATS Administrator will receive an email with this info, and they'll add the address, so they can make sure it is correct, before activating for others to begin using, too. Once the administrator does this, the address will be reflected on your entry.
+        </div>
+        <div class="widget row">
+
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickCalNewFacility-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.HearingID)
+
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            @Html.LabelFor(m => m.FacilityName, "Facility Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FacilityName, new { @class = "form-control input-sm ", tabindex = 1, autofocus = "autofocus" ,maxlength=100})
+
+
+                        </div>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default v-bottom" tabindex="3">Add</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="5">Cancel </button>
+    </div>
+}
+@section Scripts{
+
+    <script>
+        setTimeout(function () {
+            $('#FirstName').focus();
+
+        }, 1000);
+        function Validation() {
+            if ($('#FirstName').val() == '') {
+                isValid = false;
+                parent.notifyDanger('Facility Name is required!');
+                $('#FirstName').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            var isvalid = Validation();
+
+            if (isvalid) {
+                var params = $('#QuickCalNewFacility-form').serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/QuickCalNewFacility',
+                    data: params,
+                    success: function (result) {
+                        if (result.Status == "Done") {
+
+                            parent.QuickCalNewFacilityDropdownRefresh(result.CodeID, result.CodeDisplay)
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+        });
+
+        $("#btnCancel").on("click", function () {
+            parent.ClosePopup();
+        });
+
+    </script>
+
+}

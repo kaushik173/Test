@@ -1,0 +1,5 @@
+RFDID	Number		175
+LinkID	Number		175
+Address	String	100	AddressStreet
+AgencyName	String	100	AgencyName
+LinkID2	String	50	175

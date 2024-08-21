@@ -1,0 +1,7 @@
+Grouping	String	100	4A
+County	String	100	All
+Candidate	Number		1000
+Qualified	Number		500
+Rate	Number		.5
+
+

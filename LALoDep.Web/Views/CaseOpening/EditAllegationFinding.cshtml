@@ -1,0 +1,212 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model  LALoDep.Models.CaseOpening.EditAllegationFindingViewModel
+@{
+    ViewBag.Title = "Edit Allegation Finding";
+    int tabIndex = 0;
+    int petitionId = 0;
+}
+<style>
+   
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QHEAllegation-form", @class = "form-inline  center-block" }))
+{
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Allegation Finding
+                    </span>
+                    <div class="widget-buttons form-inline">
+                        <span></span>
+                        
+
+                    </div>
+
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="allegationList">
+                            <tbody>
+                                <tr>
+                                    <td  colspan="2" class="text-align-right bold" valign="middle" style="vertical-align:central !important;" >Global Finding:</td>
+                                    <td >@Html.DropDownListFor(m => m.GlobalFindingCodeId, Model.Findings, "", new { @class = "form-control input-sm", style = "width:100%;", tabIndex = ++tabIndex })</td>
+                                </tr>
+                                @foreach (var petition in Model.Petitions)
+                                {
+
+                                    var allegations = Model.Allegations.Where(o => o.PetitionID == petition.PetitionID).ToList();
+                                    if (allegations.Count > 0)
+                                    {
+                                        <tr id="petition-@petition.PetitionID">
+                                            <th colspan="2">
+                                                <div class="">
+                                                    <table style="width:100%" class="inner-table">
+                                                        <tr>
+                                                            <td>
+                                                                @petition.PetitionFileDate.Value.ToString("d")
+                                                            </td>
+                                                            <td>@petition.PetitionDocketNumber</td>
+                                                            <td>@petition.LastName, @petition.FirstName</td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                            </th>
+                                            <th style="font-weight:normal;">@Html.DropDownList("PetitionGlobalFindingCodeId", Model.Findings, "", new { @class = "form-control input-sm", style = "width:100%;", tabIndex = ++tabIndex })</th>
+                                        </tr>
+                                        foreach (var allegation in allegations)
+                                        {
+
+                                            <tr>
+                                                <td>@allegation.AllegationTypeCodeValue</td>
+                                                <td> #@allegation.AllegationIdentifier  @allegation.NoteEntry </td>
+
+                                                <td>
+                                                    @Html.DropDownList("PetitionFindingCodeId", new SelectList(Model.Findings, "Value", "Text", allegation.AllegationFindingCodeID), "",
+                                                                                                                new
+                                                                                                                {
+                                                                                                                    @class = "form-control input-sm finding-code",
+                                                                                                                    style = "width:100%;",
+                                                                                                                    tabIndex = ++tabIndex,
+                                                                                                                    data_allegationtypecodeid = allegation.AllegationTypeCodeID,
+                                                                                                                    data_petitionid = allegation.PetitionID,
+                                                                                                                    data_allegationid = allegation.AllegationID,
+                                                                                                                    data_recordstateid = allegation.RecordStateID,
+                                                                                                                    data_allegationidentifier = allegation.AllegationIdentifier
+                                                                                                                })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_steps", new { id = Model.HearingID.ToEncrypt() })
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveContinue" type="submit" data-secure-id="@((int)SecurityToken.EditPetition)" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save/Main</button>
+        <button id="btnSaveReturn" type="submit" data-secure-id="@((int)SecurityToken.EditPetition)" class="btn btn-default v-bottom " tabindex="@(++tabIndex)">Save/Return</button>
+
+
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+
+
+
+
+        function getData(buttonID) {
+            var data = {
+                HearingID: $("#HearingID").val(),
+                GlobalFindingCodeId: $("#GlobalFindingCodeId").val(),
+                Allegations: [],
+                buttonID: buttonID
+            };
+
+            $("select.finding-code").each(function () {
+                var petitionId = $(this).data("petitionid");
+                var allegationId = $(this).data("allegationid");
+                var isChanged = $(this).IsValueChanged();
+                var findingCode = $(this).val();
+                var allegationTypeCodeID = $(this).data("allegationtypecodeid");
+                var allegationIdentifier = $(this).data("allegationidentifier");
+                
+                var ddlGlobalFinding = $("#petition-" + petitionId + " select#PetitionGlobalFindingCodeId");
+
+                if (ddlGlobalFinding.val() != '' || isChanged || $("#GlobalFindingCodeId").val() != '') {
+                    var allegation = {
+                        PetitionID: petitionId,
+                        AllegationID: allegationId,
+                        AllegationTypeCodeID: allegationTypeCodeID,
+                        IsChanged: isChanged,
+                        PetitionGlobalFindingCodeId: ddlGlobalFinding.val(),
+                        AllegationFindingCodeID: findingCode,
+
+                        AllegationIdentifier: allegationIdentifier
+                    }
+                    data.Allegations.push(allegation);
+                }
+
+            });
+
+            return data;
+        }
+
+        function saveData(buttonId) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+            if (hasFormChanged("QHEAllegation-form")) {
+                var data = getData(buttonId);
+                $.ajax({
+                    type: "POST", url: '/CaseOpening/EditAllegationFinding', data: data,
+                    success: function (result) {
+                        RequestSubmitted();
+                        if (result.isSuccess) {
+                            notifySuccess("Allegation saved successfully.");
+
+                            if (buttonId == 1) {
+                                window.location.href = "/Case/Main";
+
+
+                            } else if (buttonId == 2) {
+
+                                window.location.href = "/CaseOpening/EditAllegationFinding";
+
+
+                            }
+                        }
+                    }
+                });
+            }
+            else {
+                if (buttonId == 1) {
+                    window.location.href = "/Case/Main";
+
+
+                } else if (buttonId == 2) {
+
+                    notifyDanger("Nothing was changed.");
+
+
+
+                }
+
+            }
+        }
+
+        $("#btnSaveContinue").on("click", function () {
+            saveData(1)
+        });
+        $("#btnSaveReturn").on("click", function () {
+            saveData(2)
+        });
+
+
+        $(document).ready(function () {
+            setInitialFormValues("QHEAllegation-form");
+        });
+    </script>
+}
+<style>
+    .inner-table td {
+        border-width: 0px !important;
+        padding: 0px;
+    }
+</style>

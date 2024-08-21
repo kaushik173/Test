@@ -1,0 +1,14 @@
+Client	String	50	Roberts
+PD/APD#	String	50	PDW00287
+Appt Date	DateTime		07/01/03
+Status	String	50	Open
+Petition #	String	20	EA440
+Attorney	String	50	Stall
+Staff	String	100	Avila, Jose
+Date	DateTime		01/01/03
+Record Time Type	String	100	Close Case
+Hours	Number		2
+Miles	Number		5
+Work Detail Comment	Memo		eric
+WorkersSelected	String	300	Jones, Bob
+ClientsSelected	String	300	Vaive, Rick / Sittler, Darryl

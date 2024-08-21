@@ -1,0 +1,209 @@
+﻿@model LALoDep.Models.Inquiry.InvoiceVerifyViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";    
+}
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    #invoice-info tr td{
+        padding-bottom:10px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px;overflow-y:auto">
+        <div class="widget row">
+            @Html.HiddenFor(m => m.InvoiceID)
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"><strong>Department of the @Model.AgencyName</strong></span>
+            </div>
+            <div id="invoice-info" class="widget-body col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12 margin-bottom-20">
+                        <table>
+                            <tr>
+                                <td style="width:75px;">To: </td>
+                                <td>Revenue And Recovery</td>
+                            </tr>
+                            <tr>
+                                <td>From: </td>
+                                <td>@Model.AgencyName, Dependency Section</td>
+                            </tr>
+                            <tr>
+                                <td>Re: </td>
+                                <td>Cost of Legal Services by the @Model.AgencyName of County in the following case in the Juvenile Court of County.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-xs-6 margin-bottom-20">
+                        <table>
+                            <tr>
+                                <td style="width:100px;">HHSA Number: </td>
+                                <td>@Model.HHSANumber</td>
+                            </tr>
+                            <tr>
+                                <td>Case #: </td>
+                                <td>@Model.CaseNumber</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-6 margin-bottom-20">
+                        <table>
+                            <tr>
+                                <td style="width:75px;">JCATS #: </td>
+                                <td>@Model.JCATSNumber</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-12 margin-bottom-20">
+                        <table>
+                            <tr>
+                                <td style="width:75px;">Client: </td>
+                                <td>@Model.Client </td>
+                            </tr><tr>
+    <td style="width:75px;">Address: </td>
+    <td>@Model.Address</td>
+</tr><tr>
+    <td style="width:75px;">SSN: </td>
+    <td>@Model.SSN (Date Of Birth: @Model.DOB)</td>
+</tr>
+                        </table>
+                    </div>
+
+                    @foreach (var item in Model.ParentList)
+                    {
+                        <div class="col-xs-12 margin-bottom-20">
+                            <table>
+                                <tr>
+                                    <td style="width:75px;">Parent</td>
+                                    <td>@Html.Raw(item.Parent)</td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>@Html.Raw(item.Address)</td>
+                                </tr>
+                                <tr>
+                                    <td>SSN</td>
+                                    <td>@item.SSN (Date Of Birth: @item.DOB)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="col-md-12 margin-bottom-30">
+                        <table style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <td colspan="2"><b>Dates of Services</b></td>
+                                    <td><b>Type of Services</b></td>
+                                    <td class="text-center"><b>Amount</b></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.InvoiceDetails)
+                                {
+                                    <tr class="invoice-details">
+                                        <td style="width:200px;">
+                                            @Html.Hidden("hearingId", item.HearingID, new { @class = "hearingId" })
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.ServiceStartDate, new { @class = "form-control input-sm date-picker ServiceStartDate", style = "width:100%;", tabindex = 1, maxlength = "10", autofocus = "autofocus", data_old_value_on_pageload = item.ServiceStartDate })
+                                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            - @item.ServiceEndDate
+                                        </td>
+                                        <td>@item.ServiceType</td>
+                                        <td class="text-center">$ @item.Amount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><b>Total this billing period</b></td>
+                                    <td class="text-center"><b>$ @Model.InvoiceDetails.Sum(x => x.Amount)</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="col-md-12 margin-bottom-20">@Model.NoteEntry</div>
+                </div>          
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnUpdate" type="button" class="btn btn-primary default" tabindex=2>Update</button>
+        <button id="btnApprove" type="button" class="btn btn-default" tabindex=3>Approve</button>
+        <button id="btnClose" type="button" class="btn btn-default" tabindex=4>Close</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+        $("#btnClose").on("click", function () {
+            parent.ClosePopup();
+        });
+
+        $("#btnUpdate").on("click", function () {
+            var data = {
+                id: $("#InvoiceID").val(),
+                invoiceDetails: []
+            }
+
+            $(".invoice-details").each(function () {
+                if ($(this).find(".ServiceStartDate").IsValueChanged()) {
+                    var invoice = {
+                        HearingID: $(this).find(".hearingId").val(),
+                        ServiceStartDate: $(this).find(".ServiceStartDate").val(),
+                    }
+                    data.invoiceDetails.push(invoice);
+                }
+            });
+
+            if (data.invoiceDetails.length > 0) {
+                $.ajax({
+                    type: "POST", url: '/InvoiceQueue/UpdateInvoice', data: data, success: function (result) {
+                        if (result.isSuccess) {
+                            top.location.href = top.location.href;
+                        }
+                    }
+                });
+            }
+            else {
+                top.location.href = top.location.href;
+            }
+        });
+
+        $("#btnApprove").on("click", function () {
+            var data = {
+                id: $("#InvoiceID").val(),
+                invoiceDetails: []
+            }
+
+            $(".invoice-details").each(function () {
+                if ($(this).find(".ServiceStartDate").IsValueChanged()) {
+                    var invoice = {
+                        HearingID: $(this).find(".hearingId").val(),
+                        ServiceStartDate: $(this).find(".ServiceStartDate").val(),
+                    }
+                    data.invoiceDetails.push(invoice);
+                }
+            });
+
+            $.ajax({
+                type: "POST", url: '/InvoiceQueue/ApproveInvoice', data: data, success: function (result) {
+                    if (result.isSuccess) {
+                        top.location.href = top.location.href;
+                    }
+                }
+            });
+
+        });
+    </script>
+}

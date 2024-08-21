@@ -1,0 +1,146 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.MoreInfoOnPetitionViewModel
+
+@{
+    ViewBag.Title = "More Info <br/>On Petition";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "moreInfoOnPetition-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.PetitionFileDate, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PetitionFileDate, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 1, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.CloseDate, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CloseDate, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 2, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.PetitionDocketNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PetitionDocketNumber, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 3, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.PetitionTypeCodeValue, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PetitionTypeCodeValue, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 4, style = "width:100%" })
+                    </div>
+                       <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Child, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Child, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 5, style = "width:100%" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Petition Calendar</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="PetitionCalendarList">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PetitionList != null && Model.PetitionList.Count > 0)
+                            {
+                                foreach (var item in Model.PetitionList)
+                                {
+                                    <tr>
+                                        <td>@item.ItemDate</td>
+                                        <td>@item.ItemTime</td>
+                                        <td>@item.ItemType</td>
+                                        <td>@item.HearingType</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnCancel" type="submit" class="btn btn-primary v-bottom default" tabindex="6">Main Page</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        var origin_wrapper_height = 0, origin_content_height = 0;
+
+        $('#btnCancel').on("click", function () {
+            window.location.href = "/Case/Main";
+        });
+
+        $(document).ready(function () {
+            var oTable = $('#PetitionCalendarList').dataTable({
+                "searching": false,
+                "bSort": false,
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+            });
+
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                $('#PetitionCalendarList').css('width', '100%');
+
+                fitCalculatedHeightForSearchDataTable();
+
+            });
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                calc_height = $(window).height();
+                var _offset = 25;
+                origin_wrapper_height = $('body>div.container-fluid').height();
+                origin_content_height = $('#divSearchResult .dataTables_scrollBody').height();
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                //console.log("calc :" + calc_height + " offset: " + _offset);
+                calc_height = calc_height - _offset;
+                //console.log("total: " + calc_height);
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+                return calc_height;
+            }
+        });
+
+    </script>
+
+}

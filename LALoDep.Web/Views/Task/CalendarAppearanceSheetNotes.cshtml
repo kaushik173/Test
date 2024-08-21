@@ -1,0 +1,325 @@
+﻿@model LALoDep.Models.Task.AppearanceSheetNotesViewModel
+
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Appearance Notes";
+
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+}
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Model.NoteID > 0)
+        {
+            if (Model.CanEditFlag.HasValue && Model.CanEditFlag.Value == 1)
+            {
+                <button id="btnSave" type="submit" class="btn default btn-primary v-bottom " tabindex="10">Save</button>
+            }
+            if (Model.CanDeleteFlag.HasValue && Model.CanDeleteFlag.Value == 1)
+            {
+                <button id="btnDelete" type="submit" class="btn default btn-default v-bottom " tabindex="11">Delete</button>
+            }
+        }
+        else
+        {          <button id="btnSave" type="submit" class="btn default btn-primary v-bottom " tabindex="10">Save</button>
+
+        }
+        <button id="btnCancel" type="submit" class="btn  btn-default v-bottom " tabindex="11">Cancel</button>
+    </div>
+}
+
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AppearanceSheet", @class = "form-inline  center-block", data_val = "false" }))
+        {
+            if (Model.NotePerson != null && Model.NotePerson.Count() > 0)
+            {
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    @Model.NoteCodeTypeName  Roles
+                </span>
+
+            </div>
+            <div class="widget-body">
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                        <tbody>
+                            @foreach (var item in Model.NotePerson)
+                                    {
+                                    <tr class="trHearingAttendanceClients">
+
+                                        <td width="50"><input data-personid="@item.PersonID" data-notepersonid="@item.NotePersonID" type="checkbox" name="chkPerson@(item.PersonID)" class="chkPerson" @(item.NotePersonID > 0 ? "checked='checked'" : (Model.NoteID == 0 ? "checked='checked'" : "")) tabindex="1" /></td>
+                                        <td>
+                                            @item.PersonDisplay
+                                        </td>
+
+                                    </tr>
+                                    }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+            }
+
+            if (Model.PredeterminedAnswers != null && Model.PredeterminedAnswers.Count() > 0)
+            {
+               
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    @Model.NoteCodeTypeName  Predetermined Answers
+                </span>
+                <div class="widget-buttons">
+                    <input type="button" class="btn btn-info btn-sm btn-labeled"  id="btnShowAndHide" value="@(Model.PredeterminedAnswers.Any()?"Hide":"Show")"/>
+                       
+
+                </div>
+            </div>
+            <div class="widget-body" id="pnlBody" @(Model.PredeterminedAnswers.Any()?"":"style='display:none'")>
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                        <tbody>
+                            @foreach (var item in Model.PredeterminedAnswers)
+                                    {
+                                    <tr class="trHearingAttendanceClients">
+
+                                        <td>
+                                            <a class="answerLink" style="cursor:pointer">@item.PredeterminedAnswer</a>
+                                        </td>
+
+                                    </tr>
+                                    }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+            }
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    Note
+                </span>
+
+            </div>
+            <div class="widget-body">
+
+
+
+                <div class="row">
+
+
+                    @Html.TextAreaFor(m => m.NoteText, new { @class = "form-control  "+ ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 2, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+        </div><br /><br />
+        }
+    </div>
+</div>
+
+
+@section scripts{
+
+<script>
+    ApplySummernote();
+</script>
+    <script>
+       
+        setInitialFormValues('AppearanceSheet', true);
+        $('.answerLink').click(function () {
+
+            insertAtCaret('NoteText', $(this).text())
+
+        })
+        $('#btnDelete').click(function () {
+
+            confirmBox("Are you sure you want to delete?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Task/CalendarAppearanceSheetNotesDelete/@Model.NoteID' ,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Status=="Done") {
+                                self.parent.document.location.href = self.parent.document.location.href;
+                                self.parent.ClosePopup();
+                            }
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+                else {
+                }
+            });
+
+        })
+
+
+        function insertAtCaret(areaId, text) {
+         
+
+            if ($('.summernote').length > 0) {
+                $(".summernote").code(text);
+            } else {
+                var txtarea = document.getElementById(areaId);
+                var scrollPos = txtarea.scrollTop;
+                var caretPos = txtarea.selectionStart;
+
+                var front = (txtarea.value).substring(0, caretPos);
+                var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
+
+                txtarea.value = front + text + back;
+                caretPos = caretPos + text.length;
+                txtarea.selectionStart = caretPos;
+                txtarea.selectionEnd = caretPos;
+                txtarea.focus();
+                txtarea.scrollTop = scrollPos;
+
+            }
+        }
+        $("#btnCancel").on("click", function () {
+            self.parent.ClosePopup();
+
+        });
+        $("#btnSave").on("click", function () {
+            SaveData(1);
+
+        });
+        function SaveData(buttonId) {
+
+
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            var isvalid = Validation(buttonId);
+
+
+            if (isvalid) {
+                var params = GetDate();
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/CalendarAppearanceSheetNotes',
+                    data: { model: params },
+                    success: function (result) {
+
+                        if (result.Status == "Done") {
+
+
+                            self.parent.document.location.href = self.parent.document.location.href;
+
+                        } else {
+                            self.parent.document.location.href = result.URL;
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+        }
+
+        function Validation(buttonId) {
+            var isValid = true;
+
+            if (!hasFormChanged('AppearanceSheet')) {
+
+
+                notifyDanger('Nothing was changed.');
+                isValid = false;
+                return false;
+
+            }
+
+            if (('@Model.NoteTypeID' != '23756' && '@Model.NoteTypeID' != '23755') || '@Model.NoteID' === '0') {
+                if ($('.chkPerson:checked').length == '') {
+                    $('.chkPerson:first').focus();
+                    notifyDanger('At least one client must be checked.');
+                    return false;
+                }
+            }
+
+            if ($('#NoteText').GetText() == '') {
+                $('#NoteText').focus();
+                notifyDanger('Note is required.');
+                return false;
+            }
+            return isValid;
+        }
+        function GetDate() {
+
+
+
+            var model = {
+                NoteText: $('#NoteText').GetHtml(),
+                NoteID: '@Model.NoteID',
+                HearingID: '@Model.HearingID',
+                NoteTypeID: '@Model.NoteTypeID',
+
+
+                NotePerson: [],
+
+            }
+            $('.chkPerson').each(function () {
+
+                model.NotePerson.push({
+                    NotePersonID: $(this).attr('data-notepersonid'),
+                    PersonID: $(this).attr('data-personid'),
+                    Selected: $(this).is(':checked') ? 1 : 0,
+
+
+                });
+
+
+            })
+
+            return model;
+        }
+        $('#btnShowAndHide').click(function () {
+            if ($(this).val() == 'Hide') {
+                $('#pnlBody').hide();
+                $(this).val('Show')
+            } else {
+                $('#pnlBody').show();
+                $(this).val('Hide')
+            }
+
+        })
+
+    </script>
+}
+<style>
+    .widget-buttons .btn {
+    padding: 2px 15px !important;
+}
+</style>

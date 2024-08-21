@@ -1,0 +1,74 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.PetitionaAndRolePopUpVewModel
+
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px;overflow-y:auto">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"><strong>@Model.PersonNameLast, @Model.PersonNameFirst</strong></span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCase">
+                        <thead>
+                            <tr>
+                                <th>Petition Type</th>
+                                <th style="width:50px">Case #</th>
+                                <th style="width:50px">Close Date</th>
+                                <th>Close Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PetitionaDetailList != null && Model.PetitionaDetailList.Count > 0)
+                            {
+                                foreach (var item in Model.PetitionaDetailList)
+                                {
+                                    <tr>
+                                        <td>@item.Petitiontype</td>
+                                        <td>@item.PetitionNumber</td>
+                                        <td>@item.closedate.ToString("MM/dd/yyyy")</td>
+                                        <td>@item.closereason</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No data available in table</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>
+@section Scripts {
+    <script type="text/javascript">
+
+    </script>
+}
+
+
+
+
+

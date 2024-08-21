@@ -1,0 +1,12 @@
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\LALoDep.Domain.dll.config
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\LALoDep.Domain.dll
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\LALoDep.Domain.pdb
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\EntityFramework.dll
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\EntityFramework.SqlServer.dll
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\EntityFramework.xml
+D:\LA-Louisiana-Dependency\LALoDep.Domain\bin\Debug\EntityFramework.SqlServer.xml
+D:\LA-Louisiana-Dependency\LALoDep.Domain\obj\Debug\LALoDep.Domain.csproj.AssemblyReference.cache
+D:\LA-Louisiana-Dependency\LALoDep.Domain\obj\Debug\LALoDep.Domain.csproj.CoreCompileInputs.cache
+D:\LA-Louisiana-Dependency\LALoDep.Domain\obj\Debug\LALoDep.Domain.csproj.CopyComplete
+D:\LA-Louisiana-Dependency\LALoDep.Domain\obj\Debug\LALoDep.Domain.dll
+D:\LA-Louisiana-Dependency\LALoDep.Domain\obj\Debug\LALoDep.Domain.pdb

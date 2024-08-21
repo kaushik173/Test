@@ -1,0 +1,15 @@
+RequestedByFirstName	String	50	Charlie
+RequestedByLastName	String	50	Barrett
+RFDType	String	100	Assessment Report
+Clients	String	1000	Jim Jones, Terry Hatcher
+PetitionNumber	String	2500	12345A, 12345B
+NextHearingType	String	100	15Day/Rev
+NextHearingDateTime	DateTime		01/01/1999 10:00 AM
+NextHearingDepartment	String	100	1
+RFDDueDate	DateTime		01/01/1999
+RequestedForFirstName	String	30	Fred
+RequestedForLastName	String	50	Smith
+Children	String	1000	Sally Jones, Jessica Hatcher
+AgencyName	String	100	PD
+StartDateParm	DateTime		01/01/2000
+EndDateParm	DateTime		01/01/2001

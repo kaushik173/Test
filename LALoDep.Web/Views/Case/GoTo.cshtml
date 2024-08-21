@@ -1,0 +1,34 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.GoToViewModel
+@{
+    ViewBag.Title = "Go To";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+} 
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+               background-color: #fff !important;
+    }
+    body:before {
+     
+    background-color: #fff !important;
+}
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+
+@{ 
+
+    foreach (var item in Model.NavigationList)
+    {
+        <a class="btn btn-info btn-sm btn-block" target="_parent" href="/g/@(UserEnvironment.UserManager.CurrentSessionGuid)/@(item.GoToURL)/@Model.HearingID.ToEncrypt()?caseId=@(UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt())">@item.GoToDisplayName</a>
+    }
+}

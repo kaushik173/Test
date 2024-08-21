@@ -1,0 +1,28 @@
+﻿<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+@*<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-analytics.js"></script>*@
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-messaging.js"></script>
+
+
+<script type="text/javascript">
+
+    var firebaseConfig = {
+        apiKey: "AIzaSyCatFzycIsFvpTRBkJ93QgeiRAHL7pRYJ0",
+        authDomain: "jcats-test.firebaseapp.com",
+        databaseURL: "https://jcats-test.firebaseio.com",
+        projectId: "jcats-test",
+        storageBucket: "jcats-test.appspot.com",
+        messagingSenderId: "937220853094",
+        appId: "1:937220853094:web:9b1b6b86a18401539e0ca7",
+        measurementId: "G-YMFX7TGDY4"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    //firebase.analytics();
+    const messaging = firebase.messaging();    
+    messaging.usePublicVapidKey("BK0XqTJ34h-mVDsyUEnsiDvo-tz9agpaaoKXYR8bR4O8T9Gb9tsy2mUBT9Mbk-mA5MsKCZWJMcp3fVR2mjug8dM");    
+
+</script>
+
+
+<script src="~/Scripts/Application-Script/FCMNotification/init-notification.js?v=@Guid.NewGuid()"></script>

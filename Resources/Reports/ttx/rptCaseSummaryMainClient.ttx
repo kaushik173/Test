@@ -1,0 +1,11 @@
+ClientName	String	100	Doe, John
+CaseRole	String	50	Role
+DOB	DateTime		01/01/2000
+CaseClosedDate	DateTime		01/01/2000
+Gender	String	50	M
+Race	String	50	Caucasion
+Phone	String	50	330-2546
+AddressType	String	50	Caucasion
+Address	String	100	Caucasion
+Language	String	50	English
+GroupID	Number	1

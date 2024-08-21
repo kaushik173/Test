@@ -1,0 +1,9 @@
+GroupField	String	100	aaaaaa
+Ptn File Dt	DateTime		1/1/1999
+Case #	String	50	P1231234
+Client Type	String	100	Type Value
+Finding	String	100	Finding Value
+Dispo Result	String	100	Result Value
+Dept	String	100	12345
+Attorney	String	100	Adam, Smith
+GroupCount		Number	3

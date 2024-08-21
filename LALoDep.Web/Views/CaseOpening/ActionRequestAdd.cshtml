@@ -1,0 +1,227 @@
+﻿@using System.Data
+@model LALoDep.Models.CaseOpening.ActionRequestAddModel
+@{  bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+  ViewBag.Title = "Add AR ";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ARAdd", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Add Action Request
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="row">
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-3">
+
+                            @Html.LabelFor(m => m.RequestDate, "Request Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.RequestDate, new { @class = "form-control input-sm date-picker-control", tabindex = 1, style = "width: 100% !important;", maxlength = "10", disabled = "disabled" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+
+
+                        </div>   <div class="form-group col-md-2 col-sm-3  col-xs-3">
+
+                            @Html.LabelFor(m => m.RequestTypeID, "Request Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.RequestTypeID, new SelectList(Model.RequestTypeList, "CodeID", "CodeShortValue", Model.RequestTypeID), "", new { @class = "form-control input-sm newroleinput", tabindex = 2, autofocus = "autofocus", style = "width:100%" })
+
+
+                        </div>
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.HearingID, "Hearing", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingID, Model.HearingList, "", new { @class = "form-control input-sm newroleinput", tabindex = 3 , style = "width:100%" })
+
+
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.RequestByID, "Request By", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.RequestByID, Model.RequestByList, "", new { @class = "form-control input-sm newroleinput", tabindex = 4 , style = "width:100%" })
+
+
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.RequestForID, "Request For (current month_previous month)", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.RequestForID, Model.RequestForList, "", new { @class = "form-control input-sm newroleinput", tabindex = 5 , style = "width:100%" })
+
+
+                        </div>
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-3">
+
+                            @Html.LabelFor(m => m.DueDate, "Due Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control input-sm date-picker-control WeekendValidation", tabindex = 6, style = "width: 100% !important;", maxlength = "10",data_label="Due Date" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.LegalResearchTypeID, "Legal Research Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.LegalResearchTypeID, Model.LegalResearchTypeList, "", new { @class = "form-control input-sm newroleinput", tabindex = 7 , style = "width:100%" })
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Clients (Current Address)
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @foreach (DataRow item in Model.ClientAddressList.Rows)
+                    {
+                        <div class="form-group col-md-6 col-sm-6  col-xs-12 margin-bottom-5">
+
+
+                            <div class="form-label highLightBlue checkbox-onhighlight">
+                                @if (item["Closed"].ToString() == "1")
+                                {
+                                    <input type="checkbox" class="chkAddress" data-id="@item["RoleID1"].ToString()" id="chk@(item["RoleID1"].ToString())" tabindex="8" @if (Model.ClientAddressList.Rows.Count == 1) { <text> checked="checked" </text>   } disabled="disabled"/>
+
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="chkAddress" data-id="@item["RoleID1"].ToString()" id="chk@(item["RoleID1"].ToString())" tabindex="8" @if (Model.ClientAddressList.Rows.Count == 1) { <text> checked="checked" </text>  } />
+
+                                }
+
+                                <label for="chk@(item["RoleID1"].ToString())" style="margin-top: -6px">
+                                    @item["ClientDisplay"].ToString() @item["ClientAddress"].ToString()
+                                </label>
+                            </div>
+
+
+                        </div>
+
+
+                    }
+
+
+                    <div class="clearfix"></div>
+
+
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Request
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+                    <div class="row">
+
+                        @foreach (var item in Model.RequestList)
+                        {
+                            <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5">
+
+
+                                <div class="form-label bg-label">
+
+                                    <input type="checkbox" class="chkRequest" data-pageid="@item.CodeID" id="chk@(item.CodeID)" tabindex="8" />
+
+                                    <label for="chk@(item.CodeID)" style="margin-top: -6px">
+                                        @item.CodeShortValue
+                                    </label>
+                                </div>
+
+
+                            </div>
+
+                        }
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Request Note
+                    </span>
+
+                </div>
+                <div class="widget-body">
+                    
+                    @Html.TextAreaFor(model => model.RequestNote, new { @class = "form-control input-sm " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 9, style = "width: 100% !important;" })
+
+
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@if (!isDataEntry)
+{ @Html.Partial("_steps")}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="9">Submit</button>
+
+        <button id="btnSaveAndPrint" type="submit" class="btn btn-default  " tabindex="10">Submit/Print</button>
+        <button id="btnCancel" type="submit" class="btn btn-default  " tabindex="11">Cancel</button>
+
+
+
+    </div>
+   
+
+}
+
+@section scripts{<script>
+        var dataEntryQueryString = '@(isDataEntry?"dataentry=true":"")';
+</script>
+
+<script>
+    ApplySummernote();
+</script>
+<script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/ActionRequestAdd.js?v=" + Guid.NewGuid())"></script>
+}

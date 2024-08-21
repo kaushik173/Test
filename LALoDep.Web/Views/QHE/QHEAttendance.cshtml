@@ -1,0 +1,241 @@
+﻿@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.AttendanceViewModel
+
+@{
+    ViewBag.Title = "QHE Attendance";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "attandance-form", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+
+                    @Html.HiddenFor(m => m.HearingID)
+                    @Html.HiddenFor(m => m.AgencyID)
+
+                    @Html.HiddenFor(m => m.NoteID)
+                    @Html.HiddenFor(m => m.NoteEntityCodeID)
+                    @Html.HiddenFor(m => m.NoteEntityTypeCodeID)
+                    @Html.HiddenFor(m => m.EntityPrimaryKeyID)
+                    @Html.HiddenFor(m => m.NoteTypeCodeID)
+                    @Html.HiddenFor(m => m.NoteCaseID)
+                    @Html.HiddenFor(m => m.NoteRecordStateID)
+                    @Html.HiddenFor(m => m.HearingAttendanceID)
+                    @Html.HiddenFor(m => m.OldAppearingAttorneyID)
+                    @Html.HiddenFor(m => m.HearingAttandanceRoleID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 1, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 2, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingOfficer, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingOfficer, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 3, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 4, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppearingAttorneyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AppearingAttorneyID, Model.AppearingAttorney, "", new { @class = "form-control input-sm", tabindex = 5, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(m => m.NoteEntry, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.NoteEntry, new { tabindex = 6, style = "width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="attendanceList">
+                            <thead>
+                                <tr>
+                                    <th style="width:20px">Attended</th>
+                                    <th>Person</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.HearingAttendance != null && Model.HearingAttendance.Count > 0)
+                                {
+                                    foreach (var item in Model.HearingAttendance)
+                                    {
+                                        <tr data-isselected="@item.IsSelected"
+                                            data-attendanceid="@item.AttendanceID"
+                                            data-roleid="@item.RoleID"
+                                            class="@(item.RoleClient ==1? "highLightBlue":"")">
+                                            <td>
+                                                <input type="checkbox" id="IsSelected" name="IsSelected" class="attendance" @(item.IsSelected ? "checked=\"checked\"" : "") @(!item.IsEditable ? "disabled=\"disabled\"" : "") />
+                                                @*@Html.CheckBox("IsSelected", item.IsSelected, new { @class = "attendance"})*@
+                                            </td>
+                                            <td>@item.PersonNameLast @item.PersonNameFirst</td>
+                                            <td>@item.RoleType</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveContinue" type="submit" class="btn btn-primary v-bottom default" tabindex="6">Save/Continue</button>
+        <button id="btnSaveAndExit" type="button" class="btn btn-default v-bottom" tabindex="7">Save/Exit QHE</button>        
+        <button id="btnSaveAndNextQHECase" type="button" class="btn btn-default v-bottom " tabindex="8">Save/Next QHE Case</button>
+    </div>
+}
+
+@Html.Partial("_steps", new { id = Model.HearingID.ToEncrypt() })
+
+@section scripts
+{
+    <script type="text/javascript">
+        var wizardUrl = '';
+        $('.wizardstep a').on('click', function (e) {
+            e.preventDefault();
+            wizardUrl = $(this).attr('href');
+            saveData(4);
+        });
+        var entryPageId = '@TempData.Peek("SourcePage")';
+        function backToSourcePage() {
+            if (entryPageId == '1') {
+                document.location.href = '/Inquiry/MyJcatsAtty';
+            }
+            else {
+                document.location.href = '/Inquiry/MyCalendar?p=@TempData.Peek("PersonID")';
+            }
+        }
+
+        function GetData(buttonID) {
+
+            var data = {
+                'HearingID': $('#HearingID').val(),
+                'AgencyID': $("#AgencyID").val(),
+                'NoteID': $('#NoteID').val(),
+                'NoteEntityCodeID': $('#NoteEntityCodeID').val(),
+                'NoteEntityTypeCodeID': $('#NoteEntityTypeCodeID').val(),
+                'EntityPrimaryKeyID': $('#EntityPrimaryKeyID').val(),
+                'NoteTypeCodeID': $('#NoteTypeCodeID').val(),
+                'NoteCaseID': $('#NoteCaseID').val(),
+                'NoteRecordStateID': $('#NoteRecordStateID').val(),
+                'AppearingAttorneyID': $('#AppearingAttorneyID').val(),
+                'NoteEntry': $('#NoteEntry').val(),
+                'HearingAttendanceID': $("#HearingAttendanceID").val(),
+                'OldAppearingAttorneyID': $("#OldAppearingAttorneyID").val(),
+                'HearingAttandanceRoleID': $("#HearingAttandanceRoleID").val(),
+                'HearingAttendance': [],
+                'buttonID': buttonID
+            };
+            var attendence = $('#attendanceList > tbody > tr')
+            for (var index = 0; index < attendence.length; index++) {
+                var tr = attendence.eq(index);
+                var chkBox = tr.find('.attendance');
+                var attendanceList = {
+                    'RoleID': tr.data('roleid'),
+                    'AttendanceID': tr.data('attendanceid'),
+                    'IsSelected': chkBox.is(":checked")
+                };
+                data.HearingAttendance.push(attendanceList);
+            }
+
+            return data;
+        }
+
+        function saveData(buttonID) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("attandance-form")) {
+                if ($('#AppearingAttorneyID').val() == '' && $('.attendance:checked').length > 0) {
+                    $('#AppearingAttorneyID').focus();
+                    notifyDanger('Appearing Attorney is required.');
+                    return false;
+                }
+                else {
+                    var data = JSON.stringify(GetData(buttonID));
+                    $.ajax({
+                        type: "POST", dataType: 'json', url: '/QHE/QHEAttendanceSave', data: data, contentType: "application/json",
+                        success: function (result) {
+                            RequestSubmitted();
+                            if (result.isSuccess) {
+                                if (buttonID == 1)
+                                    window.location.href = "/QHE/QHEPlea/@Model.HearingID.ToEncrypt()";
+                                else if (buttonID == 2)
+                                    backToSourcePage();
+                                else if (buttonID == 3) {
+                                    if (result.nextHearingId != '') {
+                                        window.location.href = "/QHE/QHEHearing/" + result.nextHearingId;
+                                    } else {
+                                        backToSourcePage();
+                                    }
+                                }
+                                else if (buttonID == 4)
+                                    document.location.href = wizardUrl;
+                                else
+                                    window.location.href = window.location.href
+                            }
+                            else {
+                                notifyDanger("Something going wrong while proccesing data.");
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                if (buttonID == 1)
+                    window.location.href = "/QHE/QHEPlea/@Model.HearingID.ToEncrypt()";
+                else if (buttonID == 2)
+                    backToSourcePage();
+                else if (buttonID == 3) {
+                    $.ajax({
+                        type: "POST", url: '/QHE/NextQHECase', data: { id: $('#HearingID').val() },
+                        success: function (result) {
+                            if (result.nextHearingId != '') {
+                                window.location.href = "/QHE/QHEHearing/" + result.nextHearingId;
+                            } else {
+                                backToSourcePage();
+                            }
+                        }
+                    });
+                }
+                else if (buttonID == 4)
+                    document.location.href = wizardUrl;
+                else
+                    notifyDanger("Nothing has been changed.");
+            }
+
+        }
+
+        $('#btnSaveContinue').on("click", function () {
+            saveData(1);
+        });
+        $('#btnSaveAndExit').on("click", function () {
+            saveData(2);
+        });
+        $('#btnSaveAndNextQHECase').on("click", function () {
+            saveData(3);
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("attandance-form");
+        })
+    </script>
+
+}

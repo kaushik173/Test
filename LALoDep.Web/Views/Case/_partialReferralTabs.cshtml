@@ -1,0 +1,122 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model  LALoDep.Models.Case.ReferralAddEditStepsViewModel
+@using LALoDep.Models
+
+@if (Model == null)
+{
+    return;
+}
+
+@{
+    var showEventTab = false;
+    var index = 1;
+
+    var action = Model.ReferralHeader.NG_NavigationURL;
+    //switch (Model.ReferralModel.ReferralTypeCodeID.Value)
+    //{
+    //    case 24039:
+    //        action = "ReferralCSECAddEdit";
+    //        break;
+    //    case 24038:
+    //        action = "ReferralCareAddEdit";
+    //        break;
+    //    case 24040:
+    //        action = "ReferralAddEdit";
+    //        break;
+    //    case 24043:
+    //        showEventTab = true;
+    //        action = "ReferralImmigrationAdvisorAddEdit";
+    //        break;
+    //    case 24041:
+    //        action = "ReferralMHATAddEdit";
+    //        break;
+    //    case 24042:
+    //        action = "ReferralPeerAdvocateAddEdit";
+    //        break;
+
+    //}
+
+
+    var items = new List<LALoDep.Models.MenuItem> {
+        new MenuItem() { Action = action, Controller = "Case", Title= Model.ReferralHeader.ReferralHeader,        Tooltip = "Referral" }
+        , new MenuItem() { Action = "ReferralActivitySheet", Controller = "Case",  Title="Activity",              Tooltip = "Activity Sheet" },
+          new MenuItem() { Action = "ReferralAttachedFiles", Controller = "Case",  Tooltip = "Attached Files",Title="Files" }
+
+       };
+    if (showEventTab)
+    {
+        items.Insert(1, new MenuItem() { Action = "ReferralEventAddEdit", Controller = "Case", Title = "Events", Tooltip = "Referral Event Add/Edit" });
+    }
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div data-target="#simplewizard-steps" class="wizard" id="simplewizard">
+            <ul class="steps">
+                @foreach (var item in items)
+            {
+                    <li data-target="#simplewizardstep1" class="enable">
+                        <a href="@Url.Action(item.Action, item.Controller, new {id = Model.ReferralModel.ReferralID.ToEncrypt()})" class="" title="@item.Tooltip">
+                            <span class="step">@index</span> @item.Title
+                        </a>
+                        <span class="chevron"></span>
+                    </li>
+                    index++;
+
+
+
+                }
+
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+<style>
+    .wizard ul li .chevron {
+        border: 19px solid transparent;
+        border-left: 11px solid #d4d4d4;
+        border-right: 0;
+        display: block;
+        position: absolute;
+        right: -10px;
+        top: 0;
+        z-index: 1;
+    }
+</style>
+
+<br />
+
+
+
+
+
+
+<script>
+
+    $(function () {
+
+        $('#simplewizard a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).parent().addClass('active');
+
+            }
+        });
+        $('#ActivityLog').click(function () {
+            window.location.href = '/Case/ReferralActivitySheet/@(Model.ReferralModel.ReferralID.ToEncrypt())';
+        });
+        $('#btnAttachedFile').click(function () {
+            window.location.href = '/Case/ReferralAttachedFiles/@(Model.ReferralModel.ReferralID.ToEncrypt())';
+        });
+
+        $('#btnPrintNotes').on('click', function (e) {
+            var data = {
+                id: 0
+            }
+
+            $.download($('#hdnCurrentSessionGuidPath').val() + '/Note/PrintNotesWithoutNoteList/', data, "POST", 'target="_blank"');
+        });
+    });
+</script>

@@ -1,0 +1,542 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Task.IVEAttachmentsViewModel
+@{
+    ViewBag.Title = "Attach File";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"> Files</span>
+                <div class="widget-buttons">
+
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="Files">
+                        <thead>
+                            <tr>
+
+                                <th>File</th>
+                                <th>Description</th>
+                                <th width="50">Remove</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+
+    <div class="boxfloat text-center">
+
+
+        <button class="btn btn-primary v-bottom btn-normal  " id="btnUploadFile" data-toggle="modal" data-target="#myModalFileUpload">UPLOAD FILE TO JCATS</button>
+
+        <button class="btn btn-default   btn-normal " onclick="self.parent.location.href=self.parent.location.href">Close</button>
+
+
+    </div>
+
+}
+
+<style>
+    .fileList.overflow {
+        height: 250px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        margin-top: 80px !important;
+    }
+
+    .modal-body {
+        overflow: auto;
+    }
+</style>
+<input type="hidden" id="hdnType" value="1" />
+@section Scripts {
+    <script type="text/javascript">
+
+        var filesTable = $('#Files').dataTable({
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 20,
+            "bPaginate": true,
+            "ordering": true,
+
+            "columns": [
+
+
+
+                    {
+                        "data": "DocumentName",
+
+                        "render": function (data, type, full, meta) {
+                            return '<a href="javascript:;" data-url="' + full.Path + '" class="file-download" >' + data + '</a>';
+
+
+                        }
+                    },
+
+                    { "data": "Note"  }
+
+                 , {
+                     "data": "TitleIVeInvoiceID",
+                     "bSortable": false,
+                     "render": function (data, type, full, meta) {
+
+                         return ' <a class="btn btn-danger btn-xs deleteFile  "   data-id="' + full.TitleIVeInvoiceSupportingDocID + '"  ><i class="fa fa-trash-o"></i> Delete</a>';
+
+                     }
+                 }
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+        $('#btnUploadFile').click(function(){
+
+            BindFileUpload();
+        })
+
+        setTimeout(function(){
+            if( $('#Files tbody tr:eq(0) td').length==1){
+                $('#btnUploadFile').click();
+
+                setTimeout(function(){
+                    $('#fileMulti').focus();
+                    $('#fileMulti').click();
+                    $('#myModalFileUpload').modal('show');
+                },200)
+            }
+
+        },1000)
+
+
+
+
+
+        $(function () {
+
+            var errorMessage = "@TempData["ErrorMessage"]";
+            if(errorMessage!= ""){
+                notifyDanger(errorMessage);
+            }
+
+
+            populateFilesData(filesTable);
+            $('#btnUpload').on('click', function () {
+                populateFilesData(filesTable);
+                $('#myModalFileUpload').modal('hide');
+
+            });
+
+
+            $('body').on('click', '.deleteFile', function () {
+
+                var id = $(this).attr('data-id');
+                var googlefileid = $(this).attr('data-googlefileid');
+
+                confirmBox("Are you sure you want to delete?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Task/IVEDeleteFile/' + id,
+                            success: function (data) {
+                                if (data.Status == 'done') {
+                                    populateFilesData(filesTable);
+                                }
+                            },
+                            dataType: 'json'
+                        });
+                    }
+
+                });
+
+            });
+
+            $('body').on('click', '.file-download', function (e) {
+                e.preventDefault();
+                document.location.href = $(this).data('url');
+            });
+
+
+        });
+        function ReloadData() {
+            populateFilesData(filesTable);
+        }
+        function populateFilesData(tbl) {
+
+            $.ajax({
+                type: "POST", url: '/Task/IVEAttachmentsFiles',data:{'DocType':'@Model.DocumentType','TitleIVeItemID':'@Model.TitleIVeItemID','TitleIVeInvoiceID':'@Model.TitleIVeInvoiceID'}, dataType: 'json',
+                success: function (data) {
+                    setData(data, tbl);
+                    $('#loading').hide();
+                }
+            });
+
+        }
+
+        function setData(data, tbl) {
+            tbl.fnClearTable();
+            $('#ExistingFileName').val('');
+            if (data.data.length > 0) {
+                tbl.fnAddData(data.data);
+                showRowCount(tbl.fnSettings());
+
+                var fileNames=''
+                $(data.data).each(function(index,result){
+                    if(fileNames!='')
+                        fileNames+='{,}';
+                    fileNames+= result.CaseFileName
+                })
+                $('#ExistingFileName').val(fileNames);
+            }
+
+
+        }
+
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+        }
+
+        var getRowCount = function (settings) {
+            return settings.fnRecordsDisplay();
+        };
+
+        /* Show Row Count Next to Table Caption */
+        var showRowCount = function (settings) {
+            var rows = getRowCount(settings);
+            $(".row-count[data-parent-table='" + settings.sTableId + "']").html("(" + rows + ")");
+            if (parseInt(rows) > 2) {
+                $("#btn_" + settings.sTableId).show();
+            } else {
+                $("#btn_" + settings.sTableId).hide();
+            }
+        }
+
+
+    </script>
+
+    @Styles.Render("~/FileUpload/css")
+    @Scripts.Render("~/FileUpload/js")
+
+    <script>
+        $fileCount = 0;
+        function BindFileUpload() {
+            $('#fileupload').fileupload({
+                url: '/Task/IVEAttachFileUpload?DocType=@(Model.DocumentType)&TitleIVeItemID=@(Model.TitleIVeItemID)&TitleIVeInvoiceID=@Model.TitleIVeInvoiceID' ,
+                //maxFileSize: 5000000,
+                //maxFileSize: @(System.Web.Configuration.WebConfigurationManager.AppSettings["MaxFileUploadSizeInMB"].ToInt()* 1024 * 1024 ),// 15 mb
+                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|pdf|txt|docx|doc|xls|xlsx|csv|ppt|pptx})$/i,
+                maxFileSize: @Model.AttachFileMaxSize,
+                acceptFileTypes:/(\.|\/)(@Model.AttachFileTypes)$/i
+
+        });
+        $('#fileupload').unbind('fileuploadsubmit')
+        $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+            var inputs = data.context.find(':input');
+
+            var flag = true;
+            inputs.each(function () {
+
+                if ($(this).attr('required') == 'required' && $.trim($(this).val()).length == 0) {
+                    data.context.find('button').prop('disabled', false);
+
+                    notifyDanger($(this).attr('errormessage'));
+                    $(this).focus();
+                    flag = false;
+                    return false;
+                }
+            });
+            if (!flag)
+                return false;
+            if (flag) {
+                console.log(inputs)
+                data.formData = inputs.serializeArray();
+            }
+
+
+        });
+        $('#fileupload').unbind('fileuploadadd')
+        $('#fileupload').bind('fileuploadadd', function (e, data) {
+            $('#btnCancelBottom').removeClass('hidden');
+            $('#btnStartBottom').removeClass('hidden');
+            $('.filesHeader').removeClass('hidden');
+            $('#btnUpload').addClass('hidden');
+            $('.fileupload-progress').addClass('hidden');
+        });
+        $('#fileupload').unbind('fileuploadstopped')
+        $('#fileupload').bind('fileuploadstopped', function (e, data) {
+            $('.fileupload-progress').addClass('hidden');
+            $('#btnUpload').removeClass('hidden');
+            $('#btnUpload').click();
+            $('#btnCancelBottom').addClass('hidden');
+            $('#btnStartBottom').addClass('hidden');
+        })
+        }
+        $(function () {
+
+            $('#myModalFileUpload').on('hidden.bs.modal', function (e) {
+                $('#btnCancelBottom').addClass('hidden');
+                $('#btnStartBottom').addClass('hidden');
+                $('.filesHeader').addClass('hidden');
+                $('tbody.files').html('');
+
+                $fileCount = 0;
+                $('.fileList').removeClass('overflow');
+                $('#btnUpload').addClass('hidden');
+            });
+
+
+            $('#btnStartBottom').on('click', function () {
+                var message=IsDuplicateFileName();
+                if(message.length>0){
+                    confirmBox(message, function (result) {
+
+                        if (result) {
+                            $('.fileupload-progress').removeClass('hidden');
+                            $('#btnStart').click();
+                        }else{
+                            $('#myModalFileUpload').modal('hide');
+                        }
+
+                    });
+                }
+
+                else{
+                    $('.fileupload-progress').removeClass('hidden');
+                    $('#btnStart').click();
+                }
+
+            });
+            $('#btnCancelBottom').on('click', function () {
+                $('#btnCancel').click();
+                $('#btnCancelBottom').addClass('hidden');
+                $('#btnStartBottom').addClass('hidden');
+                $('.filesHeader').addClass('hidden');
+                $('tbody.files').html('');
+                $('.fileList').removeClass('overflow');
+                $('#btnUpload').addClass('hidden');
+                $fileCount = 0;
+            });
+
+            $('#myModalFileUpload').on('show.bs.modal', function () {
+                var _offset = 300;
+                var headerHeight = $(".navbar.navbar-fixed-top:first").height();
+                var modelHeight = $(window).height() - headerHeight - _offset;
+                $('.modal-body', this).css({ height: 100 + "%" });
+
+                _offset = 0;
+                var calcHeight = (modelHeight- _offset).toFixed(0);
+
+                $(".fileList", this).css({ height: calcHeight + "px" });
+                $(this).data("calc-height", calcHeight);
+
+            });
+
+            $('#myModalFileUpload').on('shown.bs.modal', function () {
+                var _offset = 80;
+                var headerHeight = $(".navbar.navbar-fixed-top:first").height() + _offset;
+                $('.modal-dialog', this).animate({ marginTop: headerHeight + "px !important;" },300);
+            });
+        });
+
+        function ReduceLengthOfString(str, ln) {
+            if (str.length > ln) {
+                return str.substring(0, ln) + '..';
+            }
+            return str;
+        }
+        function IsDuplicateFileName() {
+            var message='';
+            var fileNames='';
+            var $inputFileName = $('.inputFileName');
+            $inputFileName.each(function(){
+
+
+                if(Contains($('#ExistingFileName').val(),$(this).val())){
+                    if(fileNames!='')
+                        fileNames+=', ';
+                    fileNames+= $(this).val();
+                }
+            })
+            if(fileNames.length>0){
+                if(Contains(fileNames,',')){
+                    message='This case already has attached files with these "'+fileNames+'" exact same files name. Do you want to continue?';
+                }else{
+                    message='This case already has an attached file with this "'+fileNames+'" exact same file name. Do you want to continue?';
+                }
+            }
+
+
+
+            return message;
+
+
+
+
+        }
+    </script>
+
+    <script id="template-upload" type="text/x-tmpl">
+
+        {%
+        $fileCount++;
+        if($fileCount>4){
+        $('.fileList').addClass('overflow');
+        }
+        %}
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-upload fade">
+
+            <td>
+                <input type="hidden" value="{%=file.name  %}" class="inputFileName" />
+
+                <p class="name">{%=ReduceLengthOfString(file.name,15)   %}</p>
+                @*<strong class="error text-danger"></strong>*@
+            </td>
+
+            <td>
+                <input type="text" name="description[]" col="14" row="10" style="width:300px"> </input>
+            </td>
+            <td>
+                <strong class="error text-danger"></strong>
+                <p class="size">Processing...</p>
+                <div class="progress progress-striped active hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+            </td>
+            <td class="hidden">
+                {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+                {% } %}
+                {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+                {% } %}
+            </td>
+        </tr>
+        {% } %}
+
+    </script>
+    <!-- The template to display files available for download -->
+    <script id="template-download" type="text/x-tmpl">
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-download fade">
+
+            <td>
+                <p class="name">
+                    {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                    {% } else { %}
+                    <span>{%=ReduceLengthOfString(file.name,15)%}</span>
+                    {% } %}
+                </p>
+
+            </td>
+            <td></td>
+            <td>
+                Done
+            </td>
+
+        </tr>
+        {% } %}
+    </script>
+}
+<div class="modal fade" id="myModalFileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%;">
+        <div class="modal-content" style="width:auto !important;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Upload File</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form id="fileupload" method="POST" enctype="multipart/form-data">
+                        <div class="row fileupload-buttonbar">
+                            <div>
+                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                <span class="btn btn-primary fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Add files...</span>
+                                    <input type="file" name="files[]" id="fileMulti" multiple>
+                                </span>
+                                <button type="submit" id="btnStart" class="btn btn-success start hidden">
+                                    <i class="glyphicon glyphicon-upload"></i>
+                                    <span>Start upload</span>
+                                </button>
+                                <button type="reset" id="btnCancel" class="btn btn-warning cancel hidden">
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                    <span>Cancel upload</span>
+                                </button>
+
+                            </div>
+                            <!-- The global progress state -->
+                            <div class=" fileupload-progress fade hidden">
+                                <!-- The global progress bar -->
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                </div>
+                                <!-- The extended global progress state -->
+                                <div class="progress-extended">&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="fileList">
+                            <table role="presentation" class="table table-striped table-padding" style="border-bottom:solid 0px #fff !important;">
+                                <thead class="filesHeader hidden">
+                                    <tr>
+                                        <th width="">File</th>
+
+                                        <th>Description</th>
+                                        <th width="">Size/Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="files"></tbody>
+                            </table>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer text-align-center">
+                <button type="submit" id="btnStartBottom" class="btn btn-success start hidden">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" id="btnCancelBottom" class="btn btn-warning cancel hidden">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-primary hidden" id="btnUpload">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" id="ExistingFileName" value="" />

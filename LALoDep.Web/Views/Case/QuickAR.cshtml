@@ -1,0 +1,518 @@
+﻿@using LALoDep.Core.Custom.Extensions;
+@model LALoDep.Models.Case.QuickARModel
+@{
+    ViewBag.Title = "Quick AR";
+    int tabIndex = 0;
+}
+<style>
+    .form-inline .form-control {
+        width: 100%;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "quick-ar-form", @class = "form-inline center-block" }))
+{
+    @Html.Hidden("HearingReportFilingDueID", Model.HearingReportFilingDueID)
+    @Html.Hidden("EncryptHearingReportFilingDueID", Model.HearingReportFilingDueID.ToEncrypt())
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body">
+                    <div class="row">
+                        @Html.HiddenFor(m => m.RequestForID)
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.RequestDate, new { @class = "control-label" })
+                            <div class="form-label RequestDate">@Html.DisplayFor(m => m.RequestDate)</div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.RequestType, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.RequestType)</div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.Hearing, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.Hearing)</div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.RequestBy, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.RequestBy)</div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.RequestFor, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.RequestFor)</div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.DueDate, new { @class = "control-label" })
+                            <div class="form-label DueDate">@Html.DisplayFor(m => m.DueDate)</div>
+                        </div>
+
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-3  @(!Model.Completed?"hidden":"")">
+
+                            @Html.LabelFor(m => m.CompletedDate, "Completed Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.CompletedDate, new { @class = "form-control input-sm date-picker-control", tabindex = 6, style = "width: 100% !important;", maxlength = "10" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+
+                        </div>
+                        @if (!Model.Completed)
+                        {
+                            <div class="form-group col-md-1 col-sm-3  col-xs-4  ">
+
+                                @Html.LabelFor(m => m.Completed, "Completed", new { @class = "control-label" })
+                                <br />
+                                <input class="form-control"   id="Completed" name="Completed" tabindex="@( ++tabIndex)" type="checkbox"   >
+
+                               
+
+                            </div>
+                        }
+                        else
+                        {
+
+                            <input type="hidden" name="Completed" id="Completed" tabindex="3" value="true" />
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.AssociationTypeCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AssociationTypeCodeID, Model.AssociationTypeList, "", new { @class = "form-control newrolefield  input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.CareTaker, "Caretaker", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.CareTaker, new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control  newrolefield  input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.RoleDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.RoleDate, new { @class = "form-control newrolefield   input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.EmailAddress, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control newrolefield   input-sm", type = "email", tabindex = ++tabIndex })
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.Street, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Street, new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control  newrolefield  input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.StateID, new { @class = "control-label" })
+                            @*@Html.DropDownListFor(m => m.StateID, Model.StateList, "", new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })*@
+
+                            <select class="form-control newrolefield   input-sm" id="StateID" tabindex="@(++tabIndex )">
+                                @foreach (var item in Model.StateList)
+                                {
+                                    var codeId = item.Value.Split('|')[0];
+                                    var stateShort = item.Value.Split('|')[1];
+
+                                    <option value="@codeId" data-id="@stateShort" @(codeId.ToInt() == Model.StateID ? "selected=\"selected\"" : null)>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.CountryID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CountryID, Model.CountryList, "", new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Zip, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Zip, new { @class = "form-control newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.AddressPhone, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.AddressPhone, new { @class = "form-control phone_format newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.WorkPhone, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.WorkPhone, new { @class = "form-control phone_format newrolefield  input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.CellPhone, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CellPhone, new { @class = "form-control phone_format newrolefield   input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.Label("OR", new { @class = "control-label" })
+                            <div class="form-label hidden-xs hidden-md">&nbsp;</div>
+                        </div>
+                        <div class="form-group col-md-9">
+                            @Html.LabelFor(m => m.PlacementAgencyID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PlacementAgencyID, Model.PlacementAgencyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 no-padding">
+                            <div class="table-responsive">
+                                @Html.Hidden("ClientCount", Model.ClientList.Count())
+                                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClients">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>300</th>
+                                            <th>Dual</th>
+                                            <th>Last Seen</th>
+                                            <th>Visited Date</th>
+                                            <th>RT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            var count = 0;
+                                        }
+                                        @foreach (var client in Model.ClientList)
+                                        {
+                                            <tr>
+                                                <td>@client.ClientName</td>
+                                                <td>
+                                                    <input type="hidden" name="hidClientRoleID_@count" id="hidClientRoleID_@count" value="@client.ClientRoleID" />
+                                                    <input type="hidden" name="hidClientPersonID_@count" id="hidClientPersonID_@count" value="@client.ClientPersonID" />
+                                                    @if (client.HasNon602Flag.HasValue && client.HasNon602Flag.Value == 0)
+                                                    {
+                                                        @Html.CheckBox("chk300_" + count, new { @class = "chk300", tabindex = (++tabIndex), disabled = "disabled" })
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.CheckBox("chk300_" + count, new { @class = "chk300", tabindex = (++tabIndex), })
+
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (client.Has602Flag.HasValue && client.Has602Flag.Value == 0)
+                                                    {          @Html.CheckBox("chkDual_" + count, new { @class = "chkDual", tabindex = (++tabIndex), disabled = "disabled" })
+
+                                                    }
+                                                    else
+                                                    {          @Html.CheckBox("chkDual_" + count, new { @class = "chkDual", tabindex = (++tabIndex) })
+
+
+                                                    }
+
+                                                </td>
+                                                <td>@client.LastSeen</td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBox("VisitedDate_" + count, "", new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBox("chkRT_" + count, new { @class = "chkRT", tabindex = (++tabIndex) })
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6 no-padding">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    @Html.LabelFor(m => m.RecordTimeTypeID, new { @class = "control-label" })
+                                     <select class="form-control  recordtimefield  input-sm" data-val="true" data-val-number="The field RecordTimeTypeID must be a number." data-val-required="The RecordTimeTypeID field is required." id="RecordTimeTypeID" name="RecordTimeTypeID" style="width:100%" tabindex="@(++tabIndex)">
+                                        <option value=""></option>
+                                        @foreach (var item in Model.RecordTimeTypeList)
+                                        {
+                                            var value = item.Value.Split('|')[0];
+                                            <option value="@value" data-default-ive="@item.Value.Split('|')[1]" data-default-ive-can-change="@item.Value.Split('|')[2]">@item.Text</option>
+                                        }
+
+
+                                    </select>
+                                
+                                
+                                  </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(m => m.PhaseID, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.PhaseID, Model.PhaseList, "", new { @class = "form-control  recordtimefield input-sm", tabindex = ++tabIndex })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(m => m.Hours, "Hours (use quarters for partial hours)", new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Hours, new { @class = "form-control input-sm numeric-val recordtimefield ", type = "number", tabindex = ++tabIndex, data_secure_disablediffound_id = ((int)LALoDep.Custom.Security.SecurityToken.RecordTime_Hours) })
+                                </div>
+
+                                @if (Model.IVeEligibleList.Count() > 0)
+                                { 
+                                    <div class="form-group col-md-4">
+                                    @Html.LabelFor(m => m.WorkIVeEligibleCodeID, "IV-E Eligible", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.WorkIVeEligibleCodeID, new SelectList(Model.IVeEligibleList, "Value", "Text"), "", new { @class = "form-control input-sm", tabindex = 5, @style = "width:100%" })
+                                </div>
+
+                                }
+                                else
+                                {
+                                    @Html.HiddenFor(m => m.WorkIVeEligibleCodeID)
+
+                                }
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(m => m.RecordDate, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.RecordDate, new { @class = "form-control input-sm recordtimefield  date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(m => m.RecordTimeNote, new { @class = "control-label" })
+                                    @Html.TextAreaFor(m => m.RecordTimeNote, new { @class = "form-control input-sm recordtimefield " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = ++tabIndex })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Investigator Recommendation/Evaluation</span>
+                    <div class="widget-buttons">
+                        @if (string.IsNullOrEmpty(Model.RequestNote))
+                        {
+                            <button type="button" class="btn btn-sm btn-default" disabled="disabled">No Request Present</button>
+                        }
+                        else
+                        {
+                            <button id="btnRequestNote" type="button" class="btn btn-sm btn-default" data-note="@Model.RequestNote">View Request</button>
+                        }
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @Html.HiddenFor(m => m.InvestigatorEvaluationNoteID)
+                    @if (Model.Completed)
+                    {
+                        @Html.TextAreaFor(model => model.InvestigatorEvaluationNote, new { @class = "form-control input-sm " + ((Model.InvestigatorEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = ++tabIndex, style = "width: 100% !important;", disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(m => m.InvestigatorEvaluationNote, new { @class = "form-control input-sm " + ((Model.InvestigatorEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = ++tabIndex })
+                    }
+                 </div>
+            </div>
+        </div>
+    </div>
+                                            }
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save</button>
+        <button id="btnPrint" type="button" class="btn v-bottom btn-default" tabindex="@(++tabIndex)">Save/Print AR</button>
+        <button id="btnExit" type="button" class="btn v-bottom btn-default" tabindex="@(++tabIndex)">Save/Exit AR</button>
+    </div>
+}
+
+@section scripts{
+
+    <script>
+        var $exitUrl = '@Request.QueryString["page"]';
+    </script>
+
+
+
+    @{
+        var useHereMaps = System.Configuration.ConfigurationManager.AppSettings["UseHereMaps"];
+    }
+    @if (string.IsNullOrEmpty(useHereMaps) || (!string.IsNullOrEmpty(useHereMaps) && useHereMaps == "false"))
+    {
+        <script src="@Url.Content("//maps.googleapis.com/maps/api/js?key=" + LALoDep.Custom.UtilityFunctions.GetGoogleApiKeyFromConfig() + "&libraries=places")"></script>
+        <script type="text/javascript">
+            var placeSearch, autocomplete;
+            var componentForm = {
+                Street: 'short_name',
+                route: 'long_name',
+                City: 'long_name',
+                administrative_area_level_1: 'short_name',
+                country: 'long_name',
+                ZipCode: 'short_name'
+            };
+
+            function initAutocomplete() {
+
+
+                // Create the autocomplete object, restricting the search to geographical
+                // location types
+                autocomplete = new google.maps.places.Autocomplete(
+                   //type {!HTMLInputElement} */
+
+                    (document.getElementById('Street')),
+                    {
+                        types: ['geocode'],
+                        componentRestrictions: { country: "us" },//defalut,
+                    });
+
+                // When the user selects an address from the dropdown, populate the address
+                // fields in the form.
+
+                //set defult bound of seected state
+                setBoundByState();
+
+                autocomplete.addListener('place_changed', fillInAddress);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+
+            function fillInAddress() {
+
+                // Get the place details from the autocomplete object.
+                var place = autocomplete.getPlace();
+                // Get each component of the address from the place details
+                // and fill the corresponding field on the form.
+                var street = '';
+                var valZipCode = '';
+                var valCity = '';
+                var valState = '';
+
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+                    if (addressType == "street_number" || addressType == "route") {
+                        street = street + " " + place.address_components[i].long_name;
+                    }
+
+                    else if (addressType == "locality") {
+                        valCity = place.address_components[i].long_name;
+                        document.getElementById('City').value = valCity;
+                    }
+                    else if (addressType == "postal_code") {
+                        valZipCode = place.address_components[i].long_name;
+                        document.getElementById('Zip').value = valZipCode;
+                    }
+                    else if (addressType == "administrative_area_level_1") {
+                        valState = place.address_components[i].long_name;
+
+                        $('#StateID option:contains(' + valState + ')').prop('selected', true);
+                        setBoundByState();
+                    }
+                }
+                //set street
+                document.getElementById('Street').value = street;//substring(1);//remove firt ','
+            }
+
+            function setBoundByState() {
+
+                var geocoder = new google.maps.Geocoder();
+                var address = $('#StateID option:selected').text();// + ', ' + $('#CountryID option:selected').text();
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        //alert("location : " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng());
+                        var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
+                        autocomplete.setBounds(bounds);
+                    } else {
+                        //alert("Something got wrong " + status);
+                    }
+                });
+
+            }
+
+            $('#StateID').on('change', function () {
+
+                setBoundByState();
+            });
+
+            $(function () {
+                setTimeout(function () { $('#StateID option:contains("California")').prop('selected', true); }, 500);
+            })
+        </script>
+    }
+    else
+    {
+        <text>
+            <script>
+                var addressLookupAppId = '@System.Configuration.ConfigurationManager.AppSettings["HereMapAppId"]';
+                var addressLookupApiKey = '@System.Configuration.ConfigurationManager.AppSettings["HereMapApiKey"]';
+            </script>
+            <link href="~/assets/css/auto-Complete.css" rel="stylesheet" />
+            <script src="/assets/other/jquery-ui-1.10.4.custom.min.js"></script>
+
+            <script src="/assets/other/address-auto-complete.js"></script>
+
+            <script>
+                $("#CountryID").on("change", function () {
+                    if ($(this).val() == "2246") {
+                        $("#Street").initAddressAutoComplete(function (address) {
+                            var stateId = $("#StateID").val();
+                            console.log(address)
+                            for (var indx = 0; indx < $("#StateID option").length; indx++) {
+                                var option = $("#StateID option").eq(indx);
+                                if (address.state != undefined && option.attr('data-id').trim().toUpperCase() == address.state.toUpperCase()) {
+                                    stateId = option.val();
+                                    break;
+                                }
+                            }
+                            $("#StateID").val(stateId);
+                            $("#City").val(address.city);
+                            $("#Zip").val(address.postalCode);
+                        });
+                    }
+                    else {
+                        $("#Street").removeAddressAutoComplete();
+                    }
+                });
+
+                $(function () {
+
+
+
+                    $("#CountryID").trigger("change");
+                })
+
+            </script>
+        </text>
+    }
+
+    <script>
+        ApplySummernote();
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/QuickAR.js?v=" + Guid.NewGuid())"></script>
+
+}

@@ -1,0 +1,226 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model IEnumerable<LALoDep.Domain.pd_Note.pd_NoteGetByCaseID_spResult>
+@{
+    ViewBag.Title = "Notes";
+    var tabIndex = 1;
+}
+
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Notes</span>
+                <div class="widget-buttons pull-right">
+                   
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="noteList">
+                        <thead>
+                            <tr>
+                                <th class="gridSmall" style="width:50px">
+                                    <input type="checkbox" id="chkPrintNote" onclick="CheckAllNote()" tabindex="@(++tabIndex)" />@*data-secure-id="@((int)SecurityToken.AddNote)"*@
+                                    Print
+                                </th>
+                                <th>NoteDate</th>
+                                <th>Created By</th>
+                                <th>Type</th>
+                                <th>Subject</th>
+                                <th  style="width:50%">Note Entry</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count() > 0)
+                            {
+                                foreach (var item in Model.ToList())
+                                {
+                                    <tr data-noteid="@item.NoteID">
+                                        <td>
+                                            <input type="checkbox" class="form-control input-sm chkPrintNoteCalss" tabindex="@(++tabIndex)" />
+                                        </td>
+                                        <td>
+                                            @item.NoteDate
+                                        </td>
+                                        <td>@item.PersonNameFirst @item.PersonNameLast</td>
+                                        <td>
+                                            @if (item.NoteLinkFlag == 1)
+                                            {
+                                                <a href="@Url.Action("NoteAddEdit", "Note", new { id = item.NoteID.ToEncrypt()})">@item.NoteTypeCodeValue</a>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.NoteTypeCodeValue</span>
+                                            }
+                                        </td>
+                                        <td>@item.NoteSubject</td>
+                                        <td> 
+                                            @if (item.IsRTF == 0)
+                                            {
+                                                @*@Html.Raw(System.Text.RegularExpressions.Regex.Replace(item.NoteEntry, "<.*?>", String.Empty).Replace("\n", "<br/>"))*@
+                                                
+                                                 <span class="line-breaks">@item.NoteEntry</span>
+
+                                            }
+                                            else
+                                            {
+                                                <div style="position:relative;" class="noteEntryPlaceholder">
+                                                    @Html.Raw(item.NoteEntry)
+                                                </div>
+                                            }
+                                        </td>
+                                        <td style="width:30px">
+                                            @if (item.AllowDeleteFlag == 1)
+                                            {
+                                                <a href="javascript:void(0);" data-secure-id="@((int)SecurityToken.DeleteNote)" class="btn btn-danger btn-xs delete" data-id="@item.NoteID.ToEncrypt()"><i class="fa fa-trash-o"></i> Delete</a>
+                                            }
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnPrint" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Print</button>
+        <button id="AddNote" name="AddNote"  type="submit"  class="btn btn-default" data-secure-id="@((int)SecurityToken.AddNote)">Add Note</button> 
+        <button id="AddRecordTime" name="AddRecordTime" type="submit" class="btn btn-default" data-secure-id="@((int)SecurityToken.RecordTimeAdd)">Add Record Time</button>
+
+    </div>
+}
+<style>
+    .line-breaks {
+        white-space: pre-line;
+    }
+   
+</style>
+@section scripts
+    {
+    <script type="text/javascript">
+        $BaseURL = '/';
+        var origin_wrapper_heightL = 0, origin_content_heightL = 0;
+        function GetData() {
+            var data = '';
+            var count = 0;
+            var $noteTr = $("#noteList tbody tr");
+
+            for (var indx = 0; indx < $noteTr.length; indx++) {
+                $tr = $noteTr.eq(indx);
+                $IsPrint = $tr.find(".chkPrintNoteCalss");
+                if ($IsPrint.is(':checked')) {
+                    data = data + $tr.data("noteid") + ',';
+                    count++;
+                }
+            }
+            return data;
+        }
+
+        function CheckAllNote() {
+
+            if ($('#chkPrintNote').prop("checked") == true)
+                $(".chkPrintNoteCalss").prop("checked", true);
+            else
+                $(".chkPrintNoteCalss").prop("checked", false);
+
+        }
+
+        $('#btnPrint').on('click', function (e) {
+            if (GetData() != '') {
+                var data = {
+                    id: GetData()
+                }
+
+                $.download($('#hdnCurrentSessionGuidPath').val() + '/Note/PrintNotes/', data, "POST", 'target="_blank"');
+            }
+            else {
+                Notify('Select print.', 'bottom-right', '5000', 'blue', 'fa-frown-o', true);
+                return false;
+            }
+        });
+
+        $('#AddNote').on('click', function (e) {
+            window.location.href = "/Note/NoteAddEdit";
+        });
+        $('#AddRecordTime').on('click', function (e) {
+            window.location.href = "/Case/RecordTimeAdd?addNote=true";
+        });
+        
+        $('body').on('click', '.delete', function () {
+            var id = $(this).attr('data-id');
+            var tr = $(this).parent().parent();
+
+            confirmBox("Are you sure you want to remove selected records?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Note/NoteDelete/' + id,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.isSuccess) {
+                                tr.remove();
+                                Notify('Selected record delete successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+                else {
+
+                }
+            });
+        });
+
+        $(document).ready(function () {
+
+            var oTable = $('#noteList').dataTable({
+                "searching": false,
+                "bSort": false,
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+            });
+
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                $('#noteList').css('width', '100%');
+                fitCalculatedHeightForSearchDataTable();
+            });
+
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                if (oTable != null) {
+                    calc_height = $(window).height();
+                    var _offset = 25;
+
+                    $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                        $(this).siblings().each(function () {
+                            if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                                if ($(this).attr("id") == 'loading')
+                                    return;
+                                calc_height = calc_height - $(this).outerHeight(true);
+                            }
+                        });
+                        _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                    });
+
+                    calc_height = calc_height - _offset;
+                    $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                    oTable.fnAdjustColumnSizing();
+                }
+                return calc_height;
+            }
+        });
+    </script>
+}

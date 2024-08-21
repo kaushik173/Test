@@ -1,0 +1,311 @@
+﻿@model LALoDep.Models.CaseOpening.AddAppointmentCaseSearchViewModel
+@{
+    ViewBag.Title = "Search For Case";
+    var tabindex = 1;
+
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Add Appointment Case Search</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.AddNew)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency ", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%", autofocus = "autofocus" })
+
+                    </div>
+                   
+                    <div class="form-group ">
+                        @Html.LabelFor(m => m.AppointmentDate, "Appointment Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.AppointmentDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = tabindex++, style = "width:100% !important;", maxlength = "10" })
+                            <span class="input-group-addon datepicker-control-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PanelCase, "Panel Case ", new { @class = "control-label" })
+                        @Html.CheckBoxFor(m => m.PanelCase, new { @class = "form-control  ", tabindex = tabindex++ })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, "Department", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralSourceID, "Referral Source", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ReferralSourceID, Model.ReferralSourceList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%" })
+                    </div>
+
+                    <br /><br />
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" style="width:700px">
+                        <tr>
+                            <td></td>
+                            <th>
+                                Last Name (Exact)
+                            </th>
+                            <th>
+                                First Name
+                            </th>
+                            <th style="width:150px ">
+                                DOB
+
+                            </th>
+                            <th>
+                                OR Case #
+
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.ChildLastName1, "Child 1", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.ChildLastName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.ChildFirstName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.Child1DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td>@Html.TextBoxFor(m => m.CaseNumber1, new { @class = "form-control input-sm uppercase ", tabindex = tabindex++ })
+</td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.ChildLastName1, "Child 2", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.ChildLastName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.ChildFirstName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.Child2DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td>@Html.TextBoxFor(m => m.CaseNumber2, new { @class = "form-control input-sm", tabindex = tabindex++ })</td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.ChildLastName3, "Child 3", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.ChildLastName3, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.ChildFirstName3, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.Child3DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td>@Html.TextBoxFor(m => m.CaseNumber3, new { @class = "form-control input-sm", tabindex = tabindex++ })</td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.MotherLastName, "Mother", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.MotherLastName, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.MotherFirstName, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.MotherDOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.FatherLastName1, "Father 1", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.FatherLastName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.FatherFirstName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.Father1DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.LabelFor(m => m.FatherLastName2, "Father 2", new { @class = "control-label" })
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(m => m.FatherLastName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.FatherFirstName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.Father2DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+
+                }
+                <p></p>
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCase">
+                        <thead>
+                            <tr>
+                                <th>JCATS #</th>
+                                <th>Agency</th>
+                                <th>Case Role</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Case #</th>
+                                <th>Close Date</th>
+                                <th>Attorney</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Search</button>
+        @*<button id="searchAndAdd" type="submit" class="btn btn-default v-bottom " tabindex="11">Search/Add</button>*@
+        <button id="btnBypassAndAdd" type="submit" class="btn btn-default v-bottom hide" tabindex="@(tabindex++)">Bypass Search Results/Add New Case</button>
+        <button id="reset" type="submit" class="btn btn-default v-bottom" tabindex="@(tabindex++)"><u>R</u>eset</button>
+    </div>
+}
+
+
+@section scripts
+{
+
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/AddApptCase.js?v=" + Guid.NewGuid())"></script>
+}

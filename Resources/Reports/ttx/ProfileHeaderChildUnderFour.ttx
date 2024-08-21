@@ -1,0 +1,13 @@
+VisitDate	DateTime		01/01/2000
+ReportDate	DateTime		01/01/2000
+RequestingAttorney	String	100	ProfileType
+PreparedBy	String	100	Andy Barrett
+CaseNumber	String	100	Case Name
+CaseName	String	100	Case Name
+NextCourtDate	DateTime		01/01/2000
+Csw	String	100	Case Name
+FfaSw	String	100	Case Name
+Caretaker	String	100	Case Name
+CaretakerRelationship	String	100	Case Name
+CaretakerLanguage	String	100	Case Name
+CaretakerAddress	String	100	Case Name

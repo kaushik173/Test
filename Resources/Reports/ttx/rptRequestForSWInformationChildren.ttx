@@ -1,0 +1,9 @@
+LastName	String	50	LastName
+FirstName	String	50	FirstName
+DOB	DateTime		01/01/1985
+HHSA	String	50	HHSA123456
+SSN	String	20	123-45-7889
+MotherName	String	100	Parker, Sarah
+MotherDOB	DateTime		01/01/1960
+SWName	String	100	Last, First
+SWPhone	String	50	(777) 888-9999

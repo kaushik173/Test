@@ -1,0 +1,9 @@
+County	String	100	CountyName
+AgencyGroup	String	100	CountyName
+AgencyName	String	100	CountyName
+CandidateCases	Number		99999
+M0-6	Number		60606
+M7-12	Number		71271
+M13-18	Number		13181
+M19-24	Number		19241
+M25+	Number		25252

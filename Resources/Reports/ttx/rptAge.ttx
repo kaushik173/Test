@@ -1,0 +1,13 @@
+LastName	String	50	Smith
+FirstName	String	30	John
+DOB	DateTime		1/1/1999
+Age	Number		6
+DocketNumber	String	20	P1231234
+CaseNumber	String	20	09sfdoiui-090
+PetitionID	Number		1234
+Attorney	String	100	Adam, Smith
+Investigator	String	100	
+LegalAssistant	String	100	
+StartAge	String	50	
+EndAge	String	50	
+Agency	String	200	

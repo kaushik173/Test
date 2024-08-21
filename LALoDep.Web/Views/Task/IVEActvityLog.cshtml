@@ -1,0 +1,812 @@
+﻿@model  LALoDep.Models.IVEActvityLog.IVEActvityLogViewModel
+@{
+    ViewBag.Title = "Actvity Log";
+
+}
+<style>
+    .noborder td {
+        border: 0px !important;
+        padding: 2px;
+    }
+
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    table#activity-head {
+        width: 100%;
+        border: 0;
+        font-size: 115%;
+    }
+
+        table#activity-head th {
+            padding-right: 15px;
+            text-align: right;
+            border: none !important;
+        }
+
+        table#activity-head th, table#activity-head td {
+            padding-bottom: 10px;
+        }
+
+    .activity-sheet > tbody > tr > td {
+        padding: 0;
+    }
+
+        .activity-sheet > tbody > tr > td input {
+            min-width: 40px;
+            text-align: right;
+        }
+
+    .activity-sheet .activity-header {
+        min-width: 150px;
+        padding-left: 10px;
+    }
+
+
+    .activity-sheet .day-total {
+        text-align: right;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .activity-sheet .day-header {
+        width: 50px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .activity-sheet td.success, .activity-sheet th.success {
+        border-bottom: 2px solid #dff0d8 !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    td.danger, .activity-sheet th.danger {
+        border-bottom: 2px solid #f2dede !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .activity-sheet .child-total th {
+        background-color: #efefef;
+    }
+
+    .activity-sheet tfoot th {
+        font-weight: 700 !important;
+    }
+
+    .highlightGray {
+        background-color: #eee;
+    }
+</style>
+
+@Html.Hidden("hdnActivityLogID", Model.ActivityLogID)
+@Html.Hidden("hdnUseWorkHoursForActivityLog", Model.UseWorkHoursForActivityLog)
+@Html.Hidden("PersonID", Model.PersonID)
+@Html.Hidden("SaveSignatureNotAllowedMessage", Model.SaveSignatureNotAllowedMessage)
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget margin-left-10 margin-right-10">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    Activity Log
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                <h3 class="text-center no-margin-top"></h3>
+                <table id="activity-head">
+                    <tr>
+                        <th style="width:5%;">Name:</th>
+                        <td style="width:28%;">
+                            @Model.PersonName &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                            @*@if (Model.OKToSwitchToDifferentEmployee == 1)
+                                {
+                                }*@
+                            <a onclick="OpenCustomPopup('/Task/IVEActvityLogListAgencyEmployees?page=IVEActvityLog', 500, 500, 'Switch to different employee')" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.IVEChangePersonOnActivityLog)">Switch to different employee</a>
+
+
+                        </td>
+                        <td style="width:10%;"></td>
+                        <td style="width:23%;"></td>
+                        <th style="">Year:</th>
+                        <td style="width:220px;"><span id="spnYear" data-year="@Model.ActivityMonth.Year">@Model.ActivityMonth.Year</span></td>
+                    </tr>
+                    <tr>
+                        <th>Title:</th>
+                        <td><span id="spnTitle">@Model.Title</span></td>
+                        <th>County:</th>
+                        <td>@Html.DropDownListFor(m => m.AgencyCountyID, Model.AgencyCountyList, "", new { @class = "form-control input-sm" })</td>
+                        <th>Month:</th>
+                        <td id="monthPicker" data-date="@(Model.ActivityMonth.ToString("MM"))/@Model.ActivityMonth.ToString("yyyy")" data-date-format="mm/yyyy" data-date-viewmode="months" data-date-minviewmode="months">
+                            <span id="spnMonth" data-month="@Model.ActivityMonth.Month">@Model.ActivityMonth.ToString("MMMM") </span>
+                            <button id="btnMonth" type="button" class="btn btn-default btn-sm btn-link"><i class="fa fa-calendar"></i></button>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="dvActivity" class="dvActivity" style="display:none;">
+
+                    <div class="row">
+                        <div class="col-md-12 text-center"><h5><strong>Instructions:</strong> In the section below, enter the percentage of time you spent daily on each of the line items. The daily total should add up to 100%.</h5></div>
+                        <div class="col-md-12">
+                            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVEActivityLog-form" }))
+                            {
+                                <div id="activitySheet" class="table-responsive">
+                                    <div class="text-center">Loading..</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="dvActivity" class="dvActivity" style="display:none;">
+
+
+
+            <div class="row">
+                <div class="col-md-12 col-lg-12 ">
+
+                    <div class="widget margin-left-10 margin-right-10">
+                        <div class="widget-header bordered-bottom bordered-themeprimary">
+                            <span class="widget-caption">Monthly Summary</span>
+                        </div>
+                        <div class="widget-body">
+                            <div class="col-md-6 col-lg-4 col-md-offset-3 col-lg-offset-4" style="padding:0px">
+
+                                <table id="tblMontholySummary" class="table table-bordered table-condensed table-hover table-padding table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center" style="background:#c6c5c5"><strong>Total % of Time FFDRP Ineligible:</strong> <span id="TotalFFDRPTimeIneligible"></span></td>
+                                            <td class="text-center" style="background:#c6c5c5">
+                                                <strong> Total % of Time FFDRP Eligible:</strong>
+
+                                                <table class="noborder"
+                                                <tr>
+                                                    <td class="text-right">
+                                                        Case Specific:
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <span id="PercentCaseSpecific"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">
+                                                        Administrative:
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <span id="PercentAdministrative"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">
+                                                        Training:
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <span id="PercentTraining"></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                                @*<table id="tblMontholySummary" class="table table-bordered table-condensed table-hover table-padding table-striped" style="display:none">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-right">% of Time FFDRP Eligible (time worked) :</td>
+                                                <td id="FFDRPTimeWorked"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right">% of Time FFDRP Eligible (paid time-off) :</td>
+                                                <td id="FFDRPPaidTimeOff"></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th class="text-right"><b>Total % of time FFDRP Eligible :</b></th>
+                                                <th id="TotalFFDRPTimeEligible"></th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-right"><b>Total % of time FFDRP ineligible :</b></th>
+                                                <th id="TotalFFDRPTimeIneligible"></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>*@
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget margin-left-10 margin-right-10">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Certification</span>
+                </div>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+
+                            <div class="text-center margin-bottom-20"><i>To the best of my knowledge and belief, the facts stated are accurate and in full compliance with legal and FFDRP requirements.</i></div>
+                            <table style="width:100%">
+                                <tr>
+                                    <td><strong>SIGNATURE</strong></td>
+                                    <td style="width:30px;"></td>
+                                    <td><strong>DATE</strong></td>
+                                    <td style="width:30px;"></td>
+                                    <td style="width:30px;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom: 2px solid #000 !important;" class="padding-top-20">
+                                        <span id="spnEmpName" class="signature-text">
+                                            @if (!string.IsNullOrEmpty(Model.DateSignedEmployee))
+                                            {
+                                                @Model.EmployeeName
+                                            }
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                    <td id="tdEmpSignedDate" style="width:100px;border-bottom:2px solid  #000 !important;">
+                                        @(Model.DateSignedEmployee)
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <button id="btnSaveEmpSign" class="btn btn-sm btn-default save-signature @(string.IsNullOrEmpty(Model.DateSignedEmployee) ? "" : "hide")" data-signature-type="Employee">Save Signature</button>
+                                        <button id="btnRemoveEmpSign" class="btn btn-sm btn-default save-signature @((!string.IsNullOrEmpty(Model.DateSignedEmployee) && string.IsNullOrEmpty(Model.DateSignedSupervisor)) ? "" : "hide")" data-signature-type="Remove" data-ok-to-switch="@(Model.OKToSwitchToDifferentEmployee)">Remove Signature</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            @* <div class="text-center margin-bottom-10 margin-top-50"><strong style="font-size:12pt;">SUBSTANTIATION OF SUPERVISOR OR PANEL ADMINSTRATOR</strong></div>
+                                 <div class="text-center margin-bottom-20"><i>To the best of my knowledge and belief, the facts stated are accurate and in full compliance with legal and FFDRP requirements.</i></div>
+                                <table class="margin-bottom-20" style="width:100%; display:none">
+                                     <tr>
+                                         <td><strong>SIGNATURE OF SUPERVISOR OR PANEL ADMINISTRATOR</strong></td>
+                                         <td style="width:30px;"></td>
+                                         <td><strong>DATE</strong></td>
+                                         <td style="width:30px;"></td>
+                                         <td style="width:30px;"></td>
+                                     </tr>
+                                     <tr>
+                                         <td style="border-bottom: 2px solid #000 !important;" class="padding-top-20"> <span id="spnSupSignedName" class="signature-text">@Model.SupervisorSignedName</span></td>
+                                         <td></td>
+                                         <td id="tdSupSignedDate" style="width:100px;border-bottom:2px solid  #000 !important;">
+                                             @(Model.DateSignedSupervisor)
+                                         </td>
+                                         <td></td>
+                                         <td>
+                                             <button id="btnSaveSupSign" class="btn btn-sm btn-default save-signature @((!string.IsNullOrEmpty(Model.DateSignedEmployee) && string.IsNullOrEmpty(Model.DateSignedSupervisor)) ? "" : "hide")" data-signature-type="Super">Save Signature</button>
+                                         </td>
+                                     </tr>
+                                 </table>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section fixedfooter{
+
+    <div id="btn-section" class="boxfloat text-center  @(!string.IsNullOrEmpty(Model.DateSignedEmployee) || Model.UseWorkHoursForActivityLog == 1? "hide":"")">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnAddOtherCounty" type="button" class="btn btn-default v-bottom ">Add Row, Other County</button>
+    </div>
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function adjustInputHeight() {
+            $("#activitySheet table tr").each(function () {
+                var inHeight = $("td:first .activity-name", $(this)).outerHeight();
+                $(".activity-day", $(this)).css({ height: inHeight + "px", minHeight: "28px" });
+            });
+        }
+        function getActivityHeader() {
+
+            $("#btnAddOtherCounty").removeClass('btn-disabled')
+            var data = {
+                countyId: $("#AgencyCountyID").val(),
+                year: $("#spnYear").data('year'),
+                month: $("#spnMonth").data('month'),
+                PersonID:$("#PersonID").val()
+            };
+
+            $.ajax({
+                type: "POST", url: '@Url.Action("GetActivityHeader")', data: data, cache: false,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $(".page-container").removeClass("readonly");
+                        $('.readonly input.readonlyinput,.readonly select.readonlyinput').prop('disabled',false).removeClass("readonlyinput")
+                        $(".page-container").addClass(result.data.ReadOnly)
+                        $("#spnTitle").html(result.data.Title);
+                        if(result.data.AgencyCountyID>0){
+                            $("#AgencyCountyID").val(result.data.AgencyCountyID)
+                            $("#hdnActivityLogID").val(result.data.ActivityLogID);
+                            $("#hdnUseWorkHoursForActivityLog").val(result.data.UseWorkHoursForActivityLog);
+                        }
+                        var empSignedDate = result.data.DateSignedEmployee;
+                        var supSignedDate = result.data.DateSignedSupervisor;
+                        $('#SaveSignatureNotAllowedMessage').val(result.data.SaveSignatureNotAllowedMessage)
+                        if (empSignedDate == "") {
+                            $("#spnEmpName").html("");
+                            $("#btn-section").removeClass("hide");
+                            $("#btnSaveEmpSign").removeClass("hide");
+                            $("#btnSaveSupSign").addClass("hide");
+                            $("#btnRemoveEmpSign").addClass("hide");
+                        }
+                        else {
+                            $("#spnEmpName").html(result.data.EmployeeName);
+                            $("#btn-section").addClass("hide");
+                            $("#btnSaveEmpSign").addClass("hide");
+                            if (supSignedDate == "") {
+                                $("#btnSaveSupSign").removeClass("hide");
+                                $("#btnRemoveEmpSign").removeClass("hide");
+                            }
+                        }
+
+                        if (result.data.UseWorkHoursForActivityLog == 1) {
+                            $("#btn-section").addClass("hide");
+                        }
+
+
+                        $("#tdEmpSignedDate").html(empSignedDate);
+
+                        //$("#spnSupSignedName").html(result.data.SupervisorSignedName);
+                        //$("#tdSupSignedDate").html(supSignedDate);
+
+
+                        getActivitySheet(result.data.ActivityLogID, result.data.ActivityYear, result.data.ActivityMonth, null, function (result) {
+                            $("#activitySheet").html(result);
+                            if ($('.highlightGray').length > 0) {
+                                $("#btnAddOtherCounty").prop("disabled", true);
+                                $("#btnAddOtherCounty").addClass('btn-disabled')
+                            }
+                            ReadOnly();
+                        });
+                        ReadOnly();
+
+                    }
+                }
+            });
+        }
+
+        function ReadOnly(){
+            $('.readonly input,.readonly select').not(':disabled').addClass('readonlyinput').attr('disabled','disabled')
+        }
+
+        function getActivitySummary(activityLogId) {
+            $.ajax({
+                type: "POST", url: '@Url.Action("GetActivityMonthlySummary")', data: { activityLogId: activityLogId }, cache: false,
+                success: function (result) {
+
+
+                    if(result.PercentTraining!==null){
+                        $("#PercentTraining", "#tblMontholySummary").html(result.PercentTraining+'%');
+                        $("#PercentCaseSpecific", "#tblMontholySummary").html(result.PercentCaseSpecific+'%');
+                        $("#PercentAdministrative", "#tblMontholySummary").html(result.PercentAdministrative+'%');
+                        $("#TotalFFDRPTimeIneligible", "#tblMontholySummary").html(result.PercentFFDRPIneligible+'%');
+                    }else{
+                        $("#PercentTraining", "#tblMontholySummary").html('');
+                        $("#PercentCaseSpecific", "#tblMontholySummary").html('');
+                        $("#PercentAdministrative", "#tblMontholySummary").html('');
+                        $("#TotalFFDRPTimeIneligible", "#tblMontholySummary").html('');
+                    }
+
+                }
+            });
+        }
+
+        function getActivitySheet(activityLogId, year, month, parentLogDetailId, successCallback) {
+            if ($("#AgencyCountyID").val() > 1 && activityLogId>0) {
+                $(".dvActivity").show();
+                $(".boxfloat").show();
+                $("#activitySheet").html('<div class="text-center">Loading..<div>');
+                var data = {
+                    activityLogId: activityLogId,
+                    year: year,
+                    month: month,
+                    parentLogDetailId: parentLogDetailId,
+                    useWorkHoursForActivityLog: $("#hdnUseWorkHoursForActivityLog").val()
+                };
+
+                $.ajax({
+                    type: "POST", url: '@Url.Action("GetActivity")', data: data, cache: false,
+                    success: function (result) {
+                        successCallback(result);
+                        adjustInputHeight();
+                        setInitialFormValues("IVEActivityLog-form");
+                        ReadOnly()
+                    }
+                });
+
+                getActivitySummary(activityLogId);
+            }
+            else {
+                $(".dvActivity").hide();
+                $("#activitySheet").html("");
+                $("#FFDRPTimeWorked", "#tblMontholySummary").html('');
+                $("#FFDRPPaidTimeOff", "#tblMontholySummary").html('');
+                $("#TotalFFDRPTimeEligible", "#tblMontholySummary").html('');
+                $("#TotalFFDRPTimeIneligible", "#tblMontholySummary").html('');
+
+
+                $("#PercentTraining", "#tblMontholySummary").html('');
+                $("#PercentCaseSpecific", "#tblMontholySummary").html('');
+                $("#PercentAdministrative", "#tblMontholySummary").html('');
+                $("#TotalFFDRPTimeIneligible", "#tblMontholySummary").html('');
+                $(".boxfloat").hide();
+            }
+        }
+
+        function isFormValid() {
+            var isValid = true;
+            for (var indx = 0; indx < $(".day-total").length; indx++) {
+                var $th = $(".day-total").eq(indx);
+                var totalVal = $th.text().trim();
+                if (!isNaN(totalVal) && (Number(totalVal) > 0 && Number(totalVal) != 100)) {
+                    isValid = false;
+                    var day = $th.data('day');
+                    $("[name=Col" + day + "]:first").focus();
+                    notifyDanger("Total time for Day " + day + " needs to be 100%");
+                    break;
+                }
+            }
+
+            return isValid;
+        }
+
+        function getFormData() {
+            var data = [];
+            $("table tr", "#activitySheet").each(function () {
+                if ($(this).hasClass("data-row")) {
+                    var tr = $(this);
+                    var trData = tr.data();
+
+                    data.push({
+                        ActivityLogDetailID: trData.activityLogDetailId,
+                        ActivityLogID: trData.activityLogId,
+                        RowCodeID: trData.rawCodeId,
+                        InsertedByUserID: trData.insertedByUserId,
+                        RecordStateID: trData.recordStateId,
+                        SortOrder: trData.sortOrder,
+                        Col1: $(".day-1", tr).val(),
+                        Col2: $(".day-2", tr).val(),
+                        Col3: $(".day-3", tr).val(),
+                        Col4: $(".day-4", tr).val(),
+                        Col5: $(".day-5", tr).val(),
+                        Col6: $(".day-6", tr).val(),
+                        Col7: $(".day-7", tr).val(),
+                        Col8: $(".day-8", tr).val(),
+                        Col9: $(".day-9", tr).val(),
+                        Col10: $(".day-10", tr).val(),
+                        Col11: $(".day-11", tr).val(),
+                        Col12: $(".day-12", tr).val(),
+                        Col13: $(".day-13", tr).val(),
+                        Col14: $(".day-14", tr).val(),
+                        Col15: $(".day-15", tr).val(),
+                        Col16: $(".day-16", tr).val(),
+                        Col17: $(".day-17", tr).val(),
+                        Col18: $(".day-18", tr).val(),
+                        Col19: $(".day-19", tr).val(),
+                        Col20: $(".day-20", tr).val(),
+                        Col21: $(".day-21", tr).val(),
+                        Col22: $(".day-22", tr).val(),
+                        Col23: $(".day-23", tr).val(),
+                        Col24: $(".day-24", tr).val(),
+                        Col25: $(".day-25", tr).val(),
+                        Col26: $(".day-26", tr).val(),
+                        Col27: $(".day-27", tr).val(),
+                        Col28: $(".day-28", tr).val(),
+                        Col29: $(".day-29", tr).val(),
+                        Col30: $(".day-30", tr).val(),
+                        Col31: $(".day-31", tr).val(),
+                    });
+                }
+            });
+
+            return data;
+        }
+
+        function saveActivity(buttonId) {
+            if (!$("#btn-section").hasClass("hide")) {
+                var formData = getFormData();
+                $.ajax({
+                    type: "POST", url: '@Url.Action("IVEActvityLog")', data: JSON.stringify(formData), contentType: 'application/json', cache: false,
+                    success: function (result) {
+                        if (buttonId == 1) {
+                            if (result.isSuccess) {
+                                notifySuccess("Data saved successfully.");
+                                setInitialFormValues("IVEActivityLog-form");
+                                getActivitySummary($("#hdnActivityLogID").val());
+
+                            }
+                            else {
+                                notifyDanger(result.message);
+                            }
+                        }
+
+                        else {
+                            getActivityHeader();
+                        }
+                    }
+                });
+            }
+            else {
+                if (buttonId != 1) {
+                    getActivityHeader();
+                }
+            }
+        }
+
+        $("#AgencyCountyID").on("change", function () {
+            if (hasFormChanged("IVEActivityLog-form")) {
+                if (isFormValid()) {
+                    var countyId = $("#AgencyCountyID").val();
+                    $("#AgencyCountyID").data('old-value-on-pageload', countyId);
+                    saveActivity(2);
+                }
+                else {
+                    var countyId = $("#AgencyCountyID").data('old-value-on-pageload');
+                    $("#AgencyCountyID").val(countyId);
+                }
+            } else {
+                var countyId = $("#AgencyCountyID").val();
+                $("#AgencyCountyID").data('old-value-on-pageload', countyId);
+                getActivityHeader();
+            }
+        });
+
+        $("#activitySheet").on("keyup", ".activity-day", function (e) {
+            e = e || window.event;
+            if (e.which == 39) { // right arrow
+                $(this).closest('td').next().find('input').focus();
+
+            } else if (e.which == 37) { // left arrow
+                $(this).closest('td').prev().find('input').focus();
+
+            } else if (e.which == 40 || e.which == 13) { // down arrow OR Enter
+                $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+
+            } else if (e.which == 38) { // up arrow
+                $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+            }
+        });
+
+
+        $("#activitySheet").on("blur", ".activity-day", function () {
+            var val = Number($(this).val());
+            var txtData = $(this).data();
+            if (val > 100) {
+                $(this).val('');
+                $(this).focus();
+                notifyDanger("Value can not be more than 100%");
+                return;
+            }
+            else {
+                var total = 0;
+                $(".activity-log-" + txtData.activityLogId + ".day-" + txtData.day, "#activitySheet").each(function () {
+                    if ($(this).val() != "") {
+                        total += Number($(this).val());
+                    }
+                });
+
+                if (total > 100) {
+                    //$(this).val('');
+                    //$(this).focus();
+                    notifyDanger("Day total can not be more than 100%");
+                    //return;
+                }
+
+                $(".activity-log-" + txtData.activityLogId + ".day-total-" + txtData.day, "#activitySheet").html(total);
+            }
+        });
+
+        $("#activitySheet").on("click", ".btnToggleChild", function () {
+            $('i.fa', this).toggleClass("fa-plus-square-o").toggleClass("fa-minus-square-o");
+
+            var btn = $(this);
+            var btnData = btn.data();
+            var td = btn.parent().parent();
+            var parentActivityName = $(".activity-name", td).text();
+            if (btnData.collepsed) {
+                td.addClass("highLightBlue");
+                if (btnData.loaded) {
+                    $(".child-of-" + btnData.activityLogDetailId).show();
+                }
+                else {
+                    getActivitySheet(@Model.ActivityLogID, @Model.ActivityMonth.Year, @Model.ActivityMonth.Month, btnData.activityLogDetailId, function (result) {
+                        $("#tr-" + btnData.activityLogDetailId).after(result);
+                        $("#child-total-title-of-" + btnData.activityLogDetailId).html("Total " + parentActivityName);
+                        btn.data("loaded", true);
+                    });
+                }
+
+            }
+            else {
+                td.addClass("highLightBlue");
+                $(".child-of-" + btnData.activityLogDetailId).hide();
+            }
+
+            $(this).data('collepsed', !btnData.collepsed);
+        });
+
+        $('#monthPicker').datepicker().on('changeDate', function (ev) {
+            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            if (hasFormChanged("IVEActivityLog-form")) {
+                if (isFormValid()) {
+
+                    $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                    $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                    $("#spnYear").html(ev.date.getFullYear());
+                    $("#spnYear").data('year', ev.date.getFullYear());
+
+                    $('#monthPicker').datepicker('hide');
+
+                    setTimeout(function () {
+                        var oldDate = $("#monthPicker").data('date');
+                        $("#monthPicker").data('old-value-on-pageload', oldDate);
+                    }, 500);
+
+                    saveActivity(3);
+                }
+                else {
+                    $('#monthPicker').datepicker('hide');
+                    var oldDate = $("#monthPicker").data('old-value-on-pageload');
+                    setTimeout(function () {
+                        $("#monthPicker").data('date', oldDate);
+                        $("#monthPicker").datepicker("setValue", oldDate).datepicker("update")
+                    }, 500);
+
+                }
+            } else {
+
+                $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                $("#spnYear").html(ev.date.getFullYear());
+                $("#spnYear").data('year', ev.date.getFullYear());
+
+                $('#monthPicker').datepicker('hide');
+                setTimeout(function () {
+                    var oldDate = $("#monthPicker").data('date');
+                    $("#monthPicker").data('old-value-on-pageload', oldDate);
+                }, 500);
+
+                getActivityHeader();
+            }
+        });
+
+        $(".save-signature").on("click", function () {
+            //
+
+            if ($('#SaveSignatureNotAllowedMessage').val().length > 0) {
+                notifyDanger($('#SaveSignatureNotAllowedMessage').val());
+
+                return;
+            }
+            //data-signature-type="Remove" data-ok-to-switch
+
+            if($(this).data('signature-type')=='Remove')
+            {
+                if($(this).data('ok-to-switch')=='0')
+                {
+                    notifyDanger('You do not have permission to remove your own signature.  Please contact your supervisor or administrator and ask them to remove it for you.');
+
+                    return;
+
+                }
+            }
+            
+            if (hasFormChanged("IVEActivityLog-form")) {
+                if (!isFormValid()) {
+                    return false;
+                }
+                saveActivity(1);
+            }
+            var data = $(this).data();
+            setTimeout(function(){
+
+                $.ajax({
+                    type: "POST", url: '@Url.Action("SaveSignature")', data: { activityLogId: $("#hdnActivityLogID").val(), signatureType: data.signatureType }, cache: false,
+                    success: function (result) {
+                        if (result.isSuccess) {
+                            getActivityHeader();
+                            notifySuccess("Signature updated successfully.");
+                            if(data.signatureType=='Super'){
+                                $('#btnRemoveEmpSign').addClass("hide");
+                                $('#btnSaveSupSign').addClass("hide");
+                            }
+                        }
+                    }
+                });
+            },1000);
+
+
+        });
+
+
+        $("#btnSave").on("click", function () {
+            if (hasFormChanged("IVEActivityLog-form")) {
+                if (isFormValid()) {
+                    saveActivity(1);
+                }
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        });
+
+
+        $("#btnAddOtherCounty").on("click", function () {
+            $("#btnAddOtherCounty").prop("disabled", true);
+            $("#btnAddOtherCounty").addClass('btn-disabled')
+            $.get("@Url.Action("GetAddOtherCounty")", function (result) {
+                if (result.isSuccess) {
+                    var newTr = $('<tr class="data-row" data-raw-code-id="' + result.data.CodeID + '" data-activity-log-id=' + $("#hdnActivityLogID").val() + ' data-sort-order="' + result.data.SortOrder + '"></tr>');
+                    newTr.append('<td><span class="activity-name">' + result.data.CodeValue + '</span></td>');
+                    var year = $("#spnYear").data('year'), month = $("#spnMonth").data('month');
+                    var daysInMonth = new Date(year, month, 0).getDate();
+                    for (var day = 1; day <= daysInMonth; day++) {
+                        var tdClass = "", sheetDate = new Date(year, month - 1, day);
+
+                        var weekDay = sheetDate.getDay();
+                        if (weekDay == 0 || weekDay == 6) {
+                            tdClass = "danger";
+                        }
+                        var todayDate = new Date();
+                        if (sheetDate.getDate() == todayDate.getDate() && sheetDate.getMonth() == todayDate.getMonth() && sheetDate.getFullYear() == todayDate.getFullYear()) {
+                            tdClass = "success";
+                        }
+
+                        var td = '<td class="' + tdClass + '"><input type="text" name="Col' + day + '" autocomplete="off" data-day="' + day + '" data-activity-log-id="' + $("#hdnActivityLogID").val() + '" class="form-control number-only input-sm activity-day day-' + day + ' activity-log-' + $("#hdnActivityLogID").val() + '" value="" /></td>';
+                        newTr.append(td);
+                    }
+                    $("#activitySheet > table > tbody").append(newTr);
+
+                    setTimeout(function () {
+                        $("#btnAddOtherCounty").prop("disabled", true);
+                    }, 500);
+                }
+            });
+
+
+        });
+
+        $(window).on("resize", function () {
+            adjustInputHeight();
+        });
+
+        $(document).ready(function () {
+
+            var countyId = $("#AgencyCountyID").val();
+            $("#AgencyCountyID").data('old-value-on-pageload', countyId);
+            var date = $("#monthPicker").data('date');
+            $("#monthPicker").data('old-value-on-pageload', date);
+
+
+            getActivitySheet(@Model.ActivityLogID, @Model.ActivityMonth.Year, @Model.ActivityMonth.Month, null, function (result) {
+                $("#activitySheet").html(result);
+            });
+        });
+    </script>
+}

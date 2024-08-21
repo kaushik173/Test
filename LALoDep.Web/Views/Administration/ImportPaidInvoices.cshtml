@@ -1,0 +1,118 @@
+﻿@model LALoDep.Models.Administration.ImportPaidInvoicesViewModel
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "Import Paid Invoices";
+
+    var tabindex = 1;
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Upload Xls/Xlsx File</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "uploadForm", enctype = "multipart/form-data", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            <br />
+                            <button id="btnUpload" type="button" class="btn btn-primary v-bottom " tabindex="@(tabindex++)">Browse For File To Import</button>
+                            <input type="file" name="UploadFile" id="UploadFile" style="display:none" />
+                            <br />
+                        </div>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.NgInvoiceImportProcessRecords.Any())
+{
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption" id="countSearchResult"> Result</span>
+                </div>
+                <div class="widget-body col-xs-12" id="divResultDisplay">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblImport">
+                            <thead>
+                                <tr>
+                                    <th class="text-align-right">Total </th>
+                                    <th>Description </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.NgInvoiceImportProcessRecords)
+                                {
+                                <tr>
+                                    <td class="text-align-right">@item.Total</td>
+                                    <td>@item.Description</td>
+                                </tr>
+                            }
+                                
+
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+ 
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+       
+    </div>
+}
+@section scripts{
+  
+    <script type="text/javascript">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+               <text>
+        notifyDanger('@Model.ErrorMessage');
+        </text>
+            }
+    
+
+       $(document).ready(function () {
+            $('#tblImport .JcatsPersonID').select2();
+        });
+        $("#btnUpload").click(function () {
+
+            //if ($('#tblImport tbody tr').length > 0) {
+            //    confirmBox("Are you sure you want to browse for a new file and cancel imports of all records below?", function (result) {
+            //        if (result) {
+            //            $("#UploadFile").trigger('click');
+            //        }
+            //    });
+            //}
+            //else {
+            $("#UploadFile").trigger('click');
+          
+          //  }
+        });
+        $('#UploadFile').change(function () {
+            $('#loading').show();
+            $('#btnUpload').prop("disabled", true);
+            $('#uploadForm').submit();
+        });
+      
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

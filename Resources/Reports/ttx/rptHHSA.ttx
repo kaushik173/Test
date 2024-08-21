@@ -1,0 +1,12 @@
+Attorney	String	100	
+CaseID	Number		1
+ClientStartDate	DateTime		1/1/2001			
+Child	String	100	
+DocketNumber	String	20	
+HHSA	String	100	
+PetitionID	Number		
+Department	String	100	
+CaseNumber	String	100	
+Investigator	String	100	
+LegalAssistant	String	100	
+AgencyName	String	200	

@@ -1,0 +1,222 @@
+﻿ @model  LALoDep.Areas.Mobile.Models.MyCalendarViewModel
+     @{
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "My Calendar";
+}
+
+<style>
+    #myCalanderList td {
+        vertical-align: bottom;
+    }
+</style> 
+
+
+
+<div class="row">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">My Calendar - @Model.AttorneyPersonName </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "MyCalendar-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.AttorneyPersonName)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", tabindex = 1, maxlength = 10 })
+                            <span class="input-group-addon startdate-datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = 10 })
+                            <span class="input-group-addon enddate-datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="myCalanderTableDiv">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results </span>
+            
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="myCalanderListDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="myCalanderList">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Client</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-sm btn-primary default">Search</button>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+
+        var oTable = null;
+        var previousHearingDate = '';
+        function getDate(d) {
+            d = (d || new Date());
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            return (month < 10 ? '0' : '') + month + '/' +
+            (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+        }
+
+        function setData(data) {
+            oTable.fnClearTable();
+            previousHearingDate = '';
+            if (data.data != undefined && data.data.length > 0) {
+                oTable.fnAddData(data.data);
+            }
+            else {
+                if (data.ErrorMessage != undefined && data.ErrorMessage != "") {
+                    notifyDanger(data.ErrorMessage);
+                }
+                else {
+                    notifyInfo('No results found.');
+                }
+            }
+        }
+
+        function gatData() {
+            var fData = $('#MyCalendar-form').serialize();
+            return fData;
+        }
+        function loadData() {
+            var data = gatData();
+            $.ajax({
+                type: "POST", url: '@Url.Action("Index", "MyCalendar")', data: data,
+                success: function (data) {
+                    if (data.URL != undefined) {
+                        window.location.href = '/' + data.URL;
+                    } else { setData(data); }
+                }, dataType: 'json'
+            });
+        }
+
+        $(".startdate-datepicker-trigger").bind("click", function () {
+            if ($("#StartDate").val() == '') {
+                $("#StartDate").datepicker("setDate", getDate()).datepicker("update");
+            }
+            $("#StartDate").datepicker("show");
+        });
+
+        //$(".next").on("click", function () {
+        //    alert("call");
+        //    $("#EndDate").focus();
+        //});
+
+        $(".enddate-datepicker-trigger").bind("click", function () {
+            if ($("#EndDate").val() == '') {
+                $("#EndDate").datepicker("setDate", getDate()).datepicker("update");
+            }
+            $("#EndDate").datepicker("show");
+        });
+
+
+        $("#search").on("click", function () {
+            loadData();
+        });
+
+        $("#print").on("click", function () {
+            if (oTable.find("tbody tr:first td").length == 1) {
+                notifyDanger('No data to print');
+                return false;
+            }
+
+            data = {
+                StartDate: $("#StartDate").val(),
+                EndDate: $("#EndDate").val(),
+                AttorneyPersonName: $("#AttorneyPersonName").val()
+            };
+            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+           $.download($('#hdnCurrentSessionGuidPath').val()+'@Url.Action("PrintMyCalander", "MyCalendar")', data, "POST", _target);
+      
+            @*data = gatData();
+                $.ajax({
+                type: "POST", url: '@Url.Action("PrintMyCalander", "MyCalendar")', data: data, dataType: 'json',
+                success: function (returnValue) {
+                    if (returnValue.FileName != '') {
+                        window.location.href = '/Inquiry/Download?file=' + returnValue.FileName;
+                    }
+
+                },
+                error: function (returnValue) { }
+            });*@
+        });
+        $(document).ready(function () {
+            oTable = $('#myCalanderList').dataTable({
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                "bSort": false,
+                "bInfo": false,
+                "columns": [
+                        {
+                            "data": "EventTime",
+                            "render": function (data, type, full, meta) {
+                                if (previousHearingDate != full.HearingDate) {
+                                    previousHearingDate = full.HearingDate;
+                                    return full.EventDate + '<br /><span class="pull-right">' + full.EventTime + '</span>';
+                                }
+                                else {
+                                    return '<span class="pull-right">' + full.EventTime + '</span>';
+                                }
+                            }
+                        },
+                        {
+                            "data": "HearingType",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="@Url.Action("HearingAddEdit","Case")/' + full.HearingID + '?caseId=' + full.CaseID + '">' + data + '</a>'
+                            }
+                        },
+                        {
+                            "data": "Clients",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="@Url.Action("CaseInfo", "Case")/' + full.CaseID + '">' + data + '</a>'
+                            }
+                        }
+
+                ],
+                "loadingRecords": "Loading...",
+                "processing": "Processing...",
+                "deferRender": true
+            });
+
+            // Load the My Calander list
+            loadData();
+
+        });
+    </script>
+}
+
+

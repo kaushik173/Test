@@ -1,0 +1,243 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.QHEAllegationViewModel
+@{
+    ViewBag.Title = "QHE Allegations";
+    int tabIndex = 0;
+    int petitionId = 0;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QHEAllegation-form", @class = "form-inline  center-block" }))
+{
+    @Html.HiddenFor(m => m.HearingID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Hearing</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingJudge, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingJudge, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <div class="row form-horizontal">
+                        <div class="col-md-6 col-md-offset-6 padding-5">
+                            <label class="col-xs-6 col-sm-4 control-label">Global Finding: </label>
+                            <div class="col-xs-6 col-sm-8 no-padding">
+                                @Html.DropDownListFor(m => m.GlobalFindingCodeId, Model.Findings, "", new { @class = "form-control input-sm", style = "width:100%;", tabIndex = ++tabIndex })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="allegationList">
+                            <tbody>
+                                @foreach (var allegation in Model.Allegations)
+                                {
+                                    if (allegation.PetitionID != petitionId)
+                                    {
+                                        petitionId = allegation.PetitionID;
+                                        <tr id="petition-@allegation.PetitionID">
+                                            <th>
+                                                <div class="row">
+                                                    <div class="col-xs-2 no-padding-left">@allegation.PetitionFileDate </div>
+                                                    <div class="col-xs-2">@allegation.PetitionNumber</div>
+                                                    <div class="col-xs-8">@allegation.ChildLastName, @allegation.ChildFirstName</div>
+                                                </div>
+                                            </th>
+                                            <th style="font-weight:normal;">@Html.DropDownList("PetitionGlobalFindingCodeId", Model.Findings, "", new { @class = "form-control input-sm", style = "width:100%;", tabIndex = ++tabIndex })</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>@allegation.AllegationTypeCodeValue</td>
+                                        <td>
+                                            @Html.DropDownList("PetitionFindingCodeId", new SelectList(Model.Findings, "Value", "Text", allegation.AllegationFindingCodeID), "",
+                                                                                                                new
+                                                                                                                {
+                                                                                                                    @class = "form-control input-sm finding-code",
+                                                                                                                    style = "width:100%;",
+                                                                                                                    tabIndex = ++tabIndex,
+                                                                                                                    data_allegationtypecodeid = allegation.AllegationTypeCodeID,
+                                                                                                                    data_petitionid = allegation.PetitionID,
+                                                                                                                    data_allegationid = allegation.AllegationID,
+                                                                                                                    data_recordstateid = allegation.RecordStateID
+                                                                                                                })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_steps", new { id = Model.HearingID.ToEncrypt() })
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveContinue" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save/Continue</button>
+        <button id="btnSaveExit" type="button" class="btn btn-default v-bottom" tabindex="@(++tabIndex)">Save/Exit QHE</button>
+        <button id="btnSaveNextQHE" type="button" class="btn btn-default v-bottom default" tabindex="@(++tabIndex)">Save/Save/Next QHE Case</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        var wizardUrl = '';
+        $('.wizardstep a').on('click', function (e) {
+            e.preventDefault();
+            wizardUrl = $(this).attr('href');
+
+            saveData(4);
+
+        });
+
+        var entryPageId = '@TempData.Peek("SourcePage")';
+        function backToSourcePage() {
+            if (entryPageId == '1') {
+                document.location.href = '/Inquiry/MyJcatsAtty';
+            }
+            else {
+                document.location.href = '/Inquiry/MyCalendar?p=@TempData.Peek("PersonID")';
+            }
+        }
+
+        function getData(buttonID) {
+            var data = {
+                HearingID: $("#HearingID").val(),
+                GlobalFindingCodeId: $("#GlobalFindingCodeId").val(),
+                Allegations: [],
+                buttonID: buttonID
+            };
+
+            $("select.finding-code").each(function () {
+                var petitionId = $(this).data("petitionid");
+                var allegationId = $(this).data("allegationid");
+                var isChanged = $(this).IsValueChanged();
+                var findingCode = $(this).val();
+                var allegationTypeCodeID = $(this).data("allegationtypecodeid");
+
+                var ddlGlobalFinding = $("#petition-" + petitionId + " select#PetitionGlobalFindingCodeId");
+
+                if (ddlGlobalFinding.val() != '' || isChanged) {
+                    var allegation = {
+                        PetitionID: petitionId,
+                        AllegationID: allegationId,
+                        AllegationTypeCodeID: allegationTypeCodeID,
+                        IsChanged: isChanged,
+                        PetitionGlobalFindingCodeId: ddlGlobalFinding.val(),
+                        AllegationFindingCodeID: findingCode
+                    }
+                    data.Allegations.push(allegation);
+                }
+
+            });
+
+            return data;
+        }
+
+        function saveData(buttonId) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+            if (hasFormChanged("QHEAllegation-form")) {
+                var data = getData(buttonId);
+                $.ajax({
+                    type: "POST", url: '/QHE/QHEAllegations/', data: data,
+                    success: function (result) {
+                        RequestSubmitted();
+                        if (result.isSuccess) {
+                            if (buttonId == 1) {
+                                window.location.href = "@Url.Action(MVC.QHE.QHENextHearing(Model.HearingID.ToEncrypt()))";
+                            }
+                            else if (buttonId == 2) {
+                                backToSourcePage();
+                            }
+                            else if (buttonId == 3) {
+                                if (result.nextHearingId != '') {
+                                    window.location.href = "/QHE/QHEHearing/" + result.nextHearingId;
+                                } else {
+                                    backToSourcePage();
+                                }
+                            } else if (buttonId == 4) {
+                                document.location.href = wizardUrl;
+                            }
+                            else {
+                                notifySuccess("Hearing allegation saved successfully.");
+                            }
+                        }
+                    }
+                });
+            }
+            else {
+                if (buttonId == 1) {
+                    window.location.href = '@Url.Action(MVC.QHE.QHENextHearing(Model.HearingID.ToEncrypt()))';
+                }
+                else if (buttonId == 2) {
+                    backToSourcePage();
+                }
+                else if (buttonId == 3) {
+                    $.ajax({
+                        type: "POST", url: '/QHE/NextQHECase', data: { id: $('#HearingID').val() },
+                        success: function (result) {
+                            if (result.nextHearingId != '') {
+                                window.location.href = "/QHE/QHEHearing/" + result.nextHearingId;
+                            } else {
+                                backToSourcePage();
+                            }
+                        }
+                    });
+                }
+                else if (buttonId == 4) {
+                    document.location.href = wizardUrl;
+                }
+                else {
+                    notifyDanger("Nothing has been changed.");
+                }
+            }
+        }
+
+        $("#btnSaveContinue").on("click", function () {
+            saveData(1)
+        });
+
+        $("#btnSaveExit").on("click", function () {
+            saveData(2)
+        });
+
+        $("#btnSaveNextQHE").on("click", function () {
+            saveData(3)
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("QHEAllegation-form");
+        });
+    </script>
+}

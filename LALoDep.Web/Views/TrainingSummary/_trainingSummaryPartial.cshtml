@@ -1,0 +1,70 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_Training.pd_TrainingGetSummary_spResult>
+@{
+    Layout = null;
+}
+@if (Model.Any())
+{
+    var previosCase = string.Empty;
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="trainingSummary">
+            <tbody>
+                @foreach (var item in Model.ToList())
+                {
+                    if (previosCase != item.RoleType)
+                    {
+                        <tr>
+                            <th class="label-default">@item.RoleType</th>
+                            <th class="label-default text-align-right">Total</th>
+                            <th class="label-default text-align-right">
+                                Attorney
+                                Trial
+                                Skills
+                            </th>
+                            <th class="label-default text-align-right">
+                                Competence
+                                Issues
+                            </th>
+                            <th class="label-default text-align-right">
+                                Elimination
+                                of Bias
+                            </th>
+                            <th class="label-default text-align-right">Ethics</th>
+                            <th class="label-default text-align-right">General </th>
+                            <th class="label-default text-align-right">Law  Office Mgmt</th>
+                            <th class="label-default text-align-right">Substance Abuse</th>
+                            <th class="label-default text-align-right">Substantive Law</th>
+                            <th class="label-default text-align-right">Other</th>
+
+                        </tr>
+                    }
+                    <tr>
+                        <td><a href="/Administration/MyTraining/@item.PersonID.ToEncrypt()">@item.PersonNameDisplay</a></td>
+                        <td class="text-align-right">@item.Total</td>
+                        <td class="text-align-right">@item.ATS</td>
+                        <td class="text-align-right">@item.CI</td>
+                        <td class="text-align-right">@item.Bias</td>
+                        <td class="text-align-right">@item.Ethics</td>
+                        <td class="text-align-right">@item.General</td>
+                        <td class="text-align-right">@item.LOM</td>
+                        <td class="text-align-right">@item.SA</td>
+                        <td class="text-align-right">@item.SL</td>
+                        <td class="text-align-right">@item.Other
+                        </td>
+                    </tr>
+                    previosCase = item.RoleType;
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+}
+else
+{
+    @:No Records
+}
+
+
+

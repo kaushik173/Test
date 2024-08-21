@@ -1,0 +1,859 @@
+﻿@model  LALoDep.Models.Task.IVEInvoiceViewModel
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "IVEInvoice";
+}
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+
+    .box-border-left.top {
+        border-top: solid 3px #000000;
+    }
+     
+      .box-border-left.middle {
+        border-bottom: solid 1px #000000 !important;
+    }
+    .box-border-left.bottom {
+        border-bottom: solid 3px #000000;
+    }
+    .box-border-left td:first-child {
+        border-left: solid 3px #000000;
+    }
+
+    .box-border-left td:last-child {
+        border-right: solid 3px #000000;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVEInvoice-form", @class = "form-inline  center-block" }))
+{
+    <div class="widget margin-left-10 margin-right-10">
+        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+            <span class="widget-caption">
+                Search
+            </span>
+            <div class="widget-buttons">
+                &nbsp;
+            </div>
+        </div>
+        <div class="widget-body">
+            <table class="tblForm">
+                <tr>
+
+                    <th style="padding-left: 6px;">Activity Year/Month:</th>
+
+                    <td style="padding-top: 6px;" id="monthPicker" data-date="@(Model.ActivityMonth.ToString("MM"))/@Model.ActivityMonth.ToString("yyyy")" data-date-format="mm/yyyy" data-date-viewmode="months" data-date-minviewmode="months">
+                        <span id="spnYear" data-year="@Model.ActivityMonth.Year">@Model.ActivityMonth.Year</span>
+                        <span id="spnMonth" data-month="@Model.ActivityMonth.Month">@Model.ActivityMonth.ToString("MMMM") </span>
+                        <button id="btnMonth" type="button" class="btn btn-default btn-sm btn-link"><i class="fa fa-calendar"></i></button>
+                    </td>
+                    <th>County:</th>
+                    <td>@Html.DropDownListFor(m => m.AgencyCountyEncryptedID, Model.AgencyCountyList, "", new { @class = "form-control input-sm" })</td>
+
+                </tr>
+
+
+            </table>
+        </div>
+    </div>
+    if (Model.TitleIVeInvoiceID.HasValue && Model.TitleIVeInvoiceID > 0)
+    {
+
+
+        <div class="widget margin-left-10 margin-right-10  @(Model.ReadOnly.ToInt()==1?"readonly":"") ">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    Invoice And Verification
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                @Html.HiddenFor(m => m.TitleIVeInvoiceID)
+                @Html.HiddenFor(m => m.AgencyCountyID)
+                @Html.HiddenFor(m => m.AgencyGroupID)
+                @Html.HiddenFor(m => m.ContractorSigningPersonID)
+                @Html.HiddenFor(m => m.ContractorSigningDate)
+                @Html.HiddenFor(m => m.JCCSigningPersonID)
+                @Html.HiddenFor(m => m.JCCSigningDate)
+                @Html.HiddenFor(m => m.InvoiceMonth)
+
+
+                @*<h2 class="text-center no-margin-top ">@Model.ContractorName</h2>
+                    <h4 class="text-center no-margin-top">@Model.ContractorStreetAddress</h4>
+                    <h4 class="text-center no-margin-top">@Model.ContractorCityStateZipCode</h4>
+                    <h4 class="text-center no-margin-top">@Model.ContractorTelephone</h4>
+                    <hr />*@
+                <br />
+                <h4 class="text-center no-margin-top">
+                    I am the agent of the @Model.AgencyGroup, Contractor with the State of California in the contract identified below.
+                    I have been authorized to make this verification on behalf of the Contractor.
+
+                </h4>
+                <center>
+                    <table style="width: 1000px;" class="tblForm">
+
+                        <tr>
+                            <td class="text-align-right">
+                                Standard Agreement #:
+
+                            </td>
+                            <td style="width:200px;">
+
+                                @Html.TextBoxFor(m => m.StandardAgreementNbr, new { @class = "form-control input-sm  ", tabindex = 1, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td colspan="3">
+                                <input type="checkbox" id="chkContractedDirectlyWithCourt" disabled="disabled" @(Model.ContractdirectlyWithCourt.HasValue ? Model.ContractdirectlyWithCourt.Value == 1 ? "checked" : "" : "") />                            Contracted Directly with Court
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-align-right">
+                                Superior Court of California, County of:
+
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.AgencyCounty, new { @class = "form-control input-sm  ", tabindex = 2, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-align-right">
+                                Invoice Date:
+
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.InvoiceDate, "{0:d}", new { @class = "form-control input-sm  ", tabindex = 3, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-align-right">
+                                Invoice ID:
+
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.DisplayInvoiceID, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-align-right">
+                                Invoice Period:
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.InvoicePeriod, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                            </td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="bold text-align-right" style="font-size:12pt;">
+                                Expenses for this Period
+
+                            </td>
+                            <td></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr class="box-border-left top">
+                            <td class=" text-align-right">
+
+                                <a href="/Task/IVEPersonnel/@Model.TitleIVeInvoiceID.Value.ToEncrypt()?backtoinvoice=@(Request.Url.AbsoluteUri.ToEncrypt())">Personnel:</a>
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.Personnel, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+
+
+
+                            </td>
+                            <td>
+                                @if (Model.PersonnelUploadButton.IsNullOrEmpty())
+                                {
+                                    Model.PersonnelUploadButton = "Upload Doc";
+                                }
+                                <a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=Personnel&TitleIVeItemID=&TitleIVeInvoiceID=@(Model.TitleIVeInvoiceID.Value.ToEncrypt())', '@Model.PersonnelUploadButton')">@Model.PersonnelUploadButton</a>
+
+
+
+                            </td>
+                            <td class="text-align-right">
+                                Non-Attorney Training:
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.NonAttorneyTrainingAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="box-border-left">
+                            <td class=" text-align-right">
+                                <a href="/Task/IVEProfessionalServices/@Model.TitleIVeInvoiceID.Value.ToEncrypt()?backtoinvoice=@(Request.Url.AbsoluteUri.ToEncrypt())">Professional Services:</a>
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.ProfessionalServices, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+                            </td>
+                            <td>
+                                @if (Model.ProfServiceUploadButton.IsNullOrEmpty())
+                                {
+                                    Model.ProfServiceUploadButton = "Upload Doc";
+                                }
+                                <a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=ProfService&TitleIVeItemID=&TitleIVeInvoiceID=@(Model.TitleIVeInvoiceID.Value.ToEncrypt())', '@Model.ProfServiceUploadButton')">@Model.ProfServiceUploadButton</a>
+
+
+
+                            </td>
+                            <td class="text-align-right">
+                                California Title IV-E Eligibility Rate (@Model.CAEligibilityRate.ToString("0.00")%):
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.NonAttorneyTrainingEligibilityAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr class="box-border-left">
+                            <td class=" text-align-right">
+                                <a href="/Task/IVEOperatingExpenses/@(Model.TitleIVeInvoiceID.ToEncrypt())?backtoinvoice=@(Request.Url.AbsoluteUri.ToEncrypt())"> Operating Expenses:</a>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.OperationalExpenses, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+                            </td>
+                            <td>
+                                @if (Model.OpExpenseUploadButton.IsNullOrEmpty())
+                                {
+                                    Model.OpExpenseUploadButton = "Upload Doc";
+                                }
+                                <a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=OpExpense&TitleIVeItemID=&TitleIVeInvoiceID=@(Model.TitleIVeInvoiceID.Value.ToEncrypt())', '@Model.OpExpenseUploadButton')">@Model.OpExpenseUploadButton</a>
+
+
+
+                            </td>
+                            <td class="text-align-right">
+                                Federal IV-E Administrative Reimbursement Rate (50%):
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.NonAttorneyTrainingReimbursement, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr class="box-border-left middle">
+                            <td class=" text-align-right">
+                                <a href="/Task/IVETravelExpenses/@(Model.TitleIVeInvoiceID.ToEncrypt())?backtoinvoice=@(Request.Url.AbsoluteUri.ToEncrypt())">Travel Expenses:</a>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.TravelExpenses, "{0:0.00}", new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td>
+                                @if (Model.TravelUploadButton.IsNullOrEmpty())
+                                {
+                                    Model.TravelUploadButton = "Upload Doc";
+                                }
+                                <a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=Travel&TitleIVeItemID=&TitleIVeInvoiceID=@(Model.TitleIVeInvoiceID.Value.ToEncrypt())', '@Model.TravelUploadButton')">@Model.TravelUploadButton</a>
+
+                                &nbsp;
+
+                            </td>
+                            <td class="text-align-right">&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                     
+                        <tr class="box-border-left">
+                            <td class="text-align-right" style="border-top:2px solid  #000 !important;">
+                                Total Expenses:
+
+
+                            </td>
+                            <td style="border-top:solid 2px #000 !important;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.TotalExpenses, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-align-right">
+                                Attorney Training:
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AttorneyTrainingAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="box-border-left">
+                            <td class=" text-align-right">
+                                California Title IV-E Eligibility Rate (@Model.CAEligibilityRate.ToString("0.00")%):
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.CaliforniaEligibilityAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-align-right">
+                                California Title IV-E Eligibility Rate (@Model.CAEligibilityRate.ToString("0.00")%):
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AttorneyTrainingEligibilityAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="box-border-left bottom">
+                            <td class=" text-align-right">
+                                Federal IV-E Administrative Reimbursement Rate (50%):
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.IVeReimburseAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-align-right">
+                                Federal IV-E Administrative Reimbursement Rate (75%):
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AttorneyTrainingReimbursement, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+                                </div>
+                            </td>
+
+
+                        </tr>
+
+
+                        <tr>
+                            <td class="bold text-align-right">
+                                Invoice Adjustment:
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AdjustmentAmount, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-align-right"></td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="bold text-align-right" style="font-size:16pt">
+                                Amount Due:
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AmountDue, "{0:0.00}", new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;    font-size: 12pt;   font-weight: bold; ", disabled = "disabled" })
+
+                                </div>
+                            </td>
+                            <td></td>
+                            <td class="text-align-right"></td>
+                            <td></td>
+                        </tr>
+
+
+
+
+
+
+
+
+                    </table>
+                </center>
+
+
+
+                <div class="padding-10" style="width:75%;margin:0px auto;">
+                    <h4 class="no-margin-top">
+                        Attached hereto are the following documents reflecting the Contractor's activity pursuant to this agreement, for the period stated above:
+
+
+                    </h4>
+                    <ul>
+                        <li>
+                            Supporting Documentation (receipts, invoices, travel expense claims, and activity logs, proof of payments)
+
+                        </li>
+                        <li>
+                            Personnel Sheet, Professional Services Sheet, Operating Expenses Sheet, Travel Expenses Sheet
+
+                        </li>
+                    </ul>
+                    <strong style="font-size:12pt;">   SIGNATURE OF DULY AUTHORIZED REPRESENTATIVE</strong>
+                    <p>
+                        I hereby certify under penalty of perjury that the items and totals listed in the foregoing and attached documents are covered billable activities limited to legal representation that are directly related to issues and causes of action over which the juvenile court has statutory jurisdiction. Legal representation of the parent or child, or services in support of representation of the parent or child in administrative or judicial proceedings outside the scope of the juvenile court’s statutory jurisdiction are not being claimed. No expenses were claimed for reimbursement for costs incurred to assist, promote, or deter union organizing. The records documenting these public fund expenditures are on file and are available for review by state and/or federal government upon request.
+                    </p>
+                    <br /><br />
+                    <table style="width:100%;" class="tblForm">
+                        <tr>
+                            <td style="width:50%">
+
+
+                                <span class="signature-text">
+                                    @if (Model.ContractorSigningDate.HasValue)
+                                    {
+                                        @Model.ContractorName
+                                    }
+                                </span>
+
+
+
+
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+
+                                @if (Model.ContractorSigningDate.HasValue)
+                                    {
+                                    <span>@Model.ContractTitle</span>
+                                }
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+
+
+                                @if (Model.ContractorSigningDate.HasValue)
+                                    {
+                                    <span>@Model.ContractorSigningDate.Value.ToString("d")</span>
+                                }
+                            </td>
+                            <td>
+                                @Html.HiddenFor(o => o.SignatureType)
+                                @if (Model.ShowAgencySignatureButton.HasValue && Model.ShowAgencySignatureButton.Value == 1)
+                                    {
+                                    //if (Model.IsUserSignatureExists)
+                                    //{
+                                    <button id="btnSaveAgencySignature" type="button" class="btn btn-default v-bottom " data-signature-type="Contractor">Save Signature</button>
+
+                                        @*}
+                                            else
+                                            {
+                                                <button id="btnSaveAgencySignature" type="button" class="btn btn-default v-bottom " data-signature-type="Contractor" disabled="disabled">Save Signature</button>
+
+                                            }*@
+                                }
+                                else if (Model.ContractorSigningPersonID.HasValue && Model.JCCSigningPersonID.HasValue)
+                                {
+                                    <button id="btnRemoveAgencySignature" type="button" class="btn btn-default v-bottom " data-signature-type="Nono" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.InvoiceApprovedJCC)">Remove Signature</button>
+
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                SIGNATURE
+
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                TITLE
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                DATE
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tblForm">
+                        <tr>
+                            <td>
+                                Federal ID #:
+
+                            </td>
+                            <td style="width:150px">
+                                @Html.TextBox("SignatureContractorFederalIDNumber", Model.FederalIDNumber, new { @class = "form-control input-sm  ", tabindex = 2, style = "width:100%;", @readonly = "readonly" })
+
+
+
+                            </td>
+                            <td></td>
+
+                        </tr>
+                    </table>
+                    <br />
+                    <strong style="font-size:12pt;background-color:#aaa;display:block;padding:5px;">   ONLY FOR VENDORS CONTRACTED DIRECTLY WITH THE COURT</strong>
+
+                    <strong style="font-size:12pt;">     SIGNATURE OF COURT REPRESENTATIVE</strong>
+                    <p>
+                        I declare under the penalty of perjury under the laws of the State of California that the foregoing and attached documents are true and correct.
+                    </p>
+                    <table style="width:100%;" class="tblForm">
+                        <tr>
+
+
+                            <td colspan="4" class="text-align-right">Court Contract Agreement # with JCC:</td>
+                            <td style="width:150px">
+
+                                @Html.TextBoxFor(m => m.CourtContractAgreementNbr, new { @class = "form-control input-sm  ", tabindex = 1, style = "width:100%;" })
+
+
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">
+
+                                <br /><br />
+
+                                <span class="signature-text">
+                                    @if (Model.CourtSigningDate.HasValue)
+                                    {
+                                        @Model.CourtSigningPerson
+                                    }
+                                </span>
+
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+                                @if (Model.CourtSigningDate.HasValue)
+                                {
+                                    <span>@Model.CourtSigningTitle</span>
+                                }
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+                                @if (Model.CourtSigningDate.HasValue)
+                                {
+                                    <span>@Model.CourtSigningDate.Value.ToString("d")</span>
+                                }
+                            </td>
+                            <td style="width:50px"></td>
+                        </tr>
+                        <tr>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                SIGNATURE
+
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                TITLE
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                DATE
+                            </td>
+                            <td style="width:50px"></td>
+                        </tr>
+                    </table><br /><br />
+
+
+                    <strong style="font-size:12pt;">      SIGNATURE OF AUTHORIZED JCC REPRESENTATIVE</strong>
+                    <p>
+                        Payment is conditionally approved subject to final review as follows:
+                    </p>
+                    <table style="width:100%;" class="tblForm">
+                        <tr>
+
+
+                            <td colspan="4" class="text-align-right">
+                                Total Payment:
+                            </td>
+                            <td style="width:150px">
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.TextBoxFor(m => m.AmountDue, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5"><br /><br /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%">
+
+
+                                <span class="signature-text">
+                                    @if (Model.JCCSigningDate.HasValue)
+                                    {
+                                        @Model.JCCPersonName
+                                    }
+                                </span>
+
+
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+
+                                @if (Model.JCCSigningDate.HasValue)
+                                {
+                                    <span>@Model.JCCTitle</span>
+                                }
+
+                            </td>
+                            <td style="width:50px"></td>
+                            <td style="width:150px">
+                                @if (Model.JCCSigningDate.HasValue)
+                                {
+                                    <span>@Model.JCCSigningDate.Value.ToString("d")</span>
+                                }
+
+                            </td>
+                            <td>
+                                @if (Model.ShowJCCSignatureButton.HasValue && Model.ShowJCCSignatureButton.Value == 1)
+                                {
+
+                                    <button id="btnSaveJCCSignature" type="button" class="btn btn-default v-bottom " data-signature-type="JCC" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.InvoiceApprovedJCC)">Save Signature</button>
+
+
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                SIGNATURE
+
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                TITLE
+                            </td>
+                            <td></td>
+                            <td style="border-top:2px solid  #000 !important;" class="bold">
+                                DATE
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-align-center" colspan="5">
+                                Except for review by the California Department of Social Services or an audit of the program by state or federal officials, the information contained in these documents is confidential, privileged and only for the intended recipient. The information may not be used, published or redistributed without the prior written consent of the Judicial Council of California.
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    }
+}
+@section fixedfooter{
+    @if (Model.TitleIVeInvoiceID.HasValue && Model.TitleIVeInvoiceID > 0 && Request.QueryString["backtostatus"] == null)
+    { <div class="boxfloat text-center">
+            @if (!Model.JCCSigningPersonID.HasValue)
+            {    <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+            <button id="btnClaimForm" type="submit" class="btn btn-default v-bottom ">Claim Form</button>
+
+            }
+
+        </div>
+    }
+    else if (Request.QueryString["backtostatus"] != null)
+    {<div class="boxfloat text-center">
+            <button id="btnBack" type="button" onclick="document.location.href='@Request.QueryString["backtostatus"].ToDecrypt()'" class="btn btn-primary v-bottom default">Back</button>
+        </div>
+    }
+}
+
+@section scripts{
+
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+    <script>
+        $(function () {
+            $('.CurrencyFormat').formatCurrency();
+            setInitialFormValues("IVEInvoice-form");
+            $('#btnSave').click(function (e) {
+                e.preventDefault();
+                $('#SignatureType').val('');
+                SaveIveInvoice(1)
+            });
+            $('#btnClaimForm').click(function (e) {
+                e.preventDefault();
+                document.location.href = "/Task/IVEClaimForm/@(Model.TitleIVeInvoiceID.ToEncrypt())"
+            });
+            $('#btnRemoveAgencySignature').click(function (e) {
+                e.preventDefault();
+                confirmBox("Are you sure you want to remove agency signature?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '@Url.Action("IVeInvoiceInsertRemoveAgencySignature", new { TitleIVeInvoiceID =Model.TitleIVeInvoiceID})',
+                            success: function (result) {
+
+                                if (result.Status == "Done") {
+
+                                    notifySuccess('Data Saved Successfully!.');
+
+                                    RequestSubmitted();
+
+                                    document.location.href = document.location.href;
+
+                                } else {
+                                    document.location.href = result.URL;
+
+                                }
+                            },
+                            dataType: 'json'
+                        });
+                    }
+                });
+
+            });
+            $('#btnSaveJCCSignature').click(function (e) {
+                e.preventDefault();
+                $('#JCCSigningDate').val('@DateTime.Now.ToString("d")');
+                $('#SignatureType').val($(this).attr('data-signature-type'));
+
+                $('#JCCSigningPersonID').val('@(LALoDep.Custom.UserEnvironment.UserManager.UserExtended.UserID)')
+                SaveIveInvoice(2)
+            });
+            $('#btnSaveAgencySignature').click(function (e) {
+                e.preventDefault();
+                $('#SignatureType').val($(this).attr('data-signature-type'));
+
+                $('#ContractorSigningDate').val('@DateTime.Now.ToString("d")');
+                $('#ContractorSigningPersonID').val('@(LALoDep.Custom.UserEnvironment.UserManager.UserExtended.UserID)')
+                SaveIveInvoice(2)
+            });
+            $('#monthPicker').datepicker().on('changeDate', function (ev) {
+                var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+
+                $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                $("#spnYear").html(ev.date.getFullYear());
+                $("#spnYear").data('year', ev.date.getFullYear());
+
+                $('#monthPicker').datepicker('hide');
+                setTimeout(function () {
+                    var oldDate = $("#monthPicker").data('date');
+                    $("#monthPicker").data('old-value-on-pageload', oldDate);
+                }, 500);
+
+                if ($('#AgencyCountyEncryptedID').val().length > 0) {
+                    document.location.href = '/Task/IVEInvoice?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year') + '&AgencyCountyID=' + $('#AgencyCountyEncryptedID').val();
+
+                }
+                else {
+                    document.location.href = '/Task/IVEInvoice?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year');
+
+                }
+            });
+
+            $('#AgencyCountyEncryptedID').change(function (e) {
+                e.preventDefault();
+                if ($('#AgencyCountyEncryptedID').val().length > 0) {
+                    document.location.href = '/Task/IVEInvoice?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year') + '&AgencyCountyID=' + $('#AgencyCountyEncryptedID').val();
+
+                }
+                else {
+                    document.location.href = '/Task/IVEInvoice?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year');
+
+                }
+            });
+
+            $('.readonly input,.readonly select').attr('disabled', 'disabled')
+        })
+        function GetFormData() {
+            $('#IVEInvoice-form :disabled').addClass('disabled-fields')
+            $('.disabled-fields').prop('disabled', false);
+            var data = $('#IVEInvoice-form').serialize();
+            $('.disabled-fields').prop('disabled', true);
+            return data;
+        }
+        function SaveIveInvoice(buttonId) {
+            if (!hasFormChanged("IVEInvoice-form")) {
+
+                notifyDanger("Nothing was changed");
+                return false;
+            }
+            $('.CurrencyFormat').toNumber();
+            var formData = GetFormData();
+            $.ajax({
+                type: "POST", url: '@Url.Action("IVEInvoice")', data: formData,
+                success: function (result) {
+
+                    if (result.Status == "Done") {
+
+                        notifySuccess('Data Saved Successfully!.');
+
+                        RequestSubmitted();
+                        $('.CurrencyFormat').formatCurrency();
+                        if (buttonId == 2) {
+                            document.location.href = document.location.href;
+                        }
+
+                    } else {
+                        document.location.href = result.URL;
+
+                    }
+                },
+                dataType: 'json'
+            });
+
+        }
+
+    </script>
+}

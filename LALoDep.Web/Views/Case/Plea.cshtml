@@ -1,0 +1,196 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.PleaViewModel
+
+@{
+    ViewBag.Title = "Pleas";
+    var tabIndex = 0;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "pleas-form", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Pleas</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @Html.HiddenFor(m => m.HearingID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.CaseID)
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", tabindex = ++tabIndex, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", tabindex = ++tabIndex, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingJudge, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingJudge, new { @class = "form-control input-sm", disabled = "disabled", tabindex = ++tabIndex, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", tabindex = ++tabIndex, style = "width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <div class="form-horizontal col-md-offset-6 col-md-6 padding-5">
+                        @Html.LabelFor(m => m.GloabalPleaTypeCodeID, "Global Plea", new { @class = "control-label col-xs-4 text-align-right" })
+                        <div class="col-xs-8 no-padding">
+                            @Html.DropDownListFor(m => m.GloabalPleaTypeCodeID, Model.GloabalPlea, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="hearingPleaList">
+                            <tbody>
+                                @if (Model.HearingRespondentList != null && Model.HearingRespondentList.Count > 0)
+                                {
+                                    var personId = 0;
+                                    foreach (var respondent in Model.HearingRespondentList)
+                                    {
+                                        if (personId != respondent.PersonID)
+                                        {
+                                            personId = respondent.PersonID.Value;
+                                            <tr>
+                                                <th>@respondent.RoleType</th>
+                                                <th>@respondent.PersonNameLast,  @respondent.PersonNameFirst</th>
+                                                <th style="font-weight:normal;">
+                                                    @Html.DropDownList("PleaTypeID_" + respondent.PersonID, Model.GloabalPlea, "",
+                                                                                                       new
+                                                                                                       {
+                                                                                                           @class = "form-control input-xs plea-respondent",
+                                                                                                           tabindex = ++tabIndex, 
+                                                                                                           data_personid = respondent.PersonID
+                                                                                                       })
+                                                </th>
+                                            </tr>
+                                        }
+
+                                        var child = Model.HearingChildernList.FirstOrDefault(x => x.PetitionID == respondent.PetitionID);
+                                        if (child != null)
+                                        {
+                                            <tr>
+                                                <td>@child.Role</td>
+                                                <td>@child.PersonNameLast,  @child.PersonNameFirst</td>
+                                                <td>
+                                                    @Html.DropDownList("PleaTypeID", new SelectList(Model.GloabalPlea, "Value", "Text", respondent.PleaTypeID), "",
+                                                                 new
+                                                                 {
+                                                                     @class = "form-control input-xs plea-child",
+                                                                     tabindex = ++tabIndex,
+                                                                     data_personid = respondent.PersonID,
+                                                                     data_petitionid = respondent.PetitionID,
+                                                                     data_pleaid = respondent.PleaID,
+                                                                     data_petitionroleid = respondent.PetitionRoleID
+                                                                 })
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveReturn" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        function getData() {
+            var data = {
+                HearingID: $('#HearingID').val(),
+                GloabalPleaTypeCodeID: $('#GloabalPleaTypeCodeID').val(),                
+                HearingRespondentList: [],
+                HearingRespondentGlobalList: []
+
+            }
+
+            $("table#hearingPleaList tbody tr select").each(function (e) {
+                var ddlPlea = $(this);
+                if (ddlPlea.hasClass("plea-respondent")) {
+                    if (ddlPlea.val() != '') {
+                        var plea = {
+                            PleaTypeID: ddlPlea.val(),
+                            PersonID: ddlPlea.data("personid")
+                        }
+                        data.HearingRespondentGlobalList.push(plea);
+                    }
+                }
+
+                if (ddlPlea.hasClass("plea-child")) {
+                    var plea = {
+                        PleaTypeID: ddlPlea.val(),
+                        PetitionID: ddlPlea.data("petitionid"),
+                        PleaID: ddlPlea.data("pleaid"),
+                        PetitionRoleID: ddlPlea.data("petitionroleid"),
+                        PersonID: ddlPlea.data("personid")
+                    }
+                    data.HearingRespondentList.push(plea);
+                }
+            });
+            return data;
+        }
+
+        function saveData() {
+            if (!IsValidFormRequest()) {
+                return;
+            }
+
+            if (hasFormChanged('pleas-form')) {
+                var data = getData();
+                $.ajax({
+                    type: "POST", url: '/Case/Plea', data: data,
+                    success: function (result) {
+                        RequestSubmitted();
+                        if (result.isSuccess) {
+                            window.location.href = window.location.href;
+                        }
+                    }
+                });
+            }
+            else {
+                notifyDanger('Nothing has been changed.');
+            }
+        }
+
+        $('#btnCancel').on("click", function () {
+            window.location.href = "/Case/Main";
+        });
+
+        $("#btnSaveReturn").on("click", function () {
+            saveData();
+        });
+        $(document).ready(function () {
+            setInitialFormValues("pleas-form");
+        });
+
+    </script>
+
+}

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<LALoDep.Domain.ref_Referral.ref_ReferralEventCalendarSearch_spResult>
+@{
+    Layout = null;
+
+    if (Model.Any())
+    {
+
+        var groupIds = Model.Select(o => o.GroupID).Distinct();
+        foreach (var groupId in groupIds)
+        {
+            var records = Model.Where(o => o.GroupID == groupId).ToList();
+            <tr>
+                <td colspan="8" class="grp-header">@records.FirstOrDefault().GroupDisplay</td>
+            </tr>
+            foreach (var record in records)
+            {
+                <tr class="ref-row-item">
+                    <td class="text-align-right">@record.EventTime</td>
+                    <td>@record.ReferralType</td>
+                    <td><a href="javascript:;" data-id="@record.CaseID" data-evtid="@record.ReferralEventID" data-refid="@record.ReferralID" class="link-ref-edit"> @record.EventType </a></td>
+                    <td>@record.EventLocation </td>
+                    <td>@record.PetitionDocketNumber</td>
+                    <td>@record.ClientPresent</td>
+                    <td>@record.AppearingStaffAtty</td>
+                </tr>
+            }
+        }
+    }
+    else
+    {
+       <tr class="odd"><td valign="top" colspan="12" class="text-center dataTables_empty">No results</td></tr>
+    }
+}
+
+
+
+
+
+
+
+

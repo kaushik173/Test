@@ -1,0 +1,119 @@
+﻿@using System.Data
+@model LALoDep.Models.Case.CopyCaseTransferViewModel
+@{  bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+    ViewBag.Title = "Copy Case Transfer";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CopyCaseTransferForm", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Copy Case Transfer
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="row">
+                        <div class="form-group col-md-6 col-sm-6  col-xs-6">
+
+                            @Html.LabelFor(m => m.TransferToID, "Transfer To", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.TransferToID, Model.TransferToList, "", new { @class = "form-control input-sm ", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+
+
+                        </div>
+
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-6">
+
+                            @Html.LabelFor(m => m.TransferDate, "Transfer Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.TransferDate, new { @class = "form-control input-sm date-picker-control ", tabindex = 2, style = "width: 100% !important;", maxlength = "10", data_label = "Transfer Date" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Clients To Be Included in Copy Case Transfer
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @foreach (var item in Model.ClientList)
+                    {
+                        <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5">
+
+
+                            <div class="form-label highLightBlue checkbox-onhighlight">
+
+
+                                <input type="checkbox" class="chkClient" data-id="@item.PersonID" id="chk@(item.PersonID)" tabindex="3" />
+
+
+
+                                <label for="chk@(item.PersonID)" style="margin-top: -6px">
+                                    @item.PersonDisplay
+                                </label>
+                            </div>
+
+
+                        </div>
+
+
+                    }
+
+
+                    <div class="clearfix"></div>
+
+
+
+                </div>
+            </div>
+
+
+
+        }
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="9">Transfer</button>
+
+        <button id="btnCancel" type="submit" class="btn btn-default  " tabindex="11">Cancel/Back</button>
+
+
+
+    </div>
+
+
+}
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/CopyCaseTransfer.js?v=" + Guid.NewGuid())"></script>
+}

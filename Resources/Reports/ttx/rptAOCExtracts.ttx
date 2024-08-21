@@ -1,0 +1,5 @@
+Attorney	String	200	Test Report Title
+Date	String	20	08/30/02
+In Court Time	String	20	11.5
+Case Number	String	20	AAA 111
+Hearing Type Code	Number		9

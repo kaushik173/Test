@@ -1,0 +1,133 @@
+﻿
+.loginDiv {
+    margin-top: 180px;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 5px;
+    height: 40px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    transition: 0.2s ease-in-out;
+}
+
+    .form-box input[type="checkbox"] {
+        height: 15px;
+    }
+
+.loginbox-textbox {
+    padding: 0px !important;
+}
+
+.form-box input:focus {
+    outline: 0;
+    background: #eee;
+}
+
+.form-box input[type="text"] {
+    border-radius: 5px 5px 0 0;
+    text-transform: lowercase;
+}
+
+.form-box input[type="password"] {
+    border-radius: 0 0 5px 5px;
+    border-top: 0;
+}
+
+.form-box button.login {
+    margin-top: 15px;
+    padding: 10px 20px;
+}
+
+.loginbox-bottom {
+    border-top: dotted 1px #cccccc;
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+.login-container .loginbox {
+    height: 326px !important;
+}
+
+body {
+    /*background-color: #0D3B5F !important;*/
+    background-color: white !important;
+}
+
+    body:before {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        /*background-color: #0D3B5F !important;*/
+        background-color: white !important;
+    }
+
+.loginbox {
+    border-radius: 10px;
+}
+
+.loginbox-textbox.username .input-group {
+    border: solid 1px #ccc;
+    border-top-right-radius: 7px !important;
+    border-top-left-radius: 7px !important;
+    background: #ffffff !important;
+}
+
+.loginbox-textbox input, .loginbox-textbox .input-group-addon {
+    background: #ffffff !important;
+}
+
+.loginbox-textbox.username .input-group input {
+    border: 0px;
+    border-top-right-radius: 7px !important;
+}
+
+.loginbox-textbox.username .input-group-addon {
+    border: 0px;
+    background: #ffffff;
+    border-top-left-radius: 7px !important;
+    border-bottom-left-radius: 7px !important;
+}
+
+.loginbox-textbox.password .input-group {
+    border: solid 1px #ccc;
+    border-top: solid 0px #ccc;
+    border-bottom-right-radius: 7px !important;
+    border-bottom-left-radius: 7px !important;
+    background: #ffffff;
+}
+
+    .loginbox-textbox.password .input-group input {
+        border: 0px;
+        border-bottom-right-radius: 7px !important;
+    }
+
+.loginbox-textbox.password .input-group-addon {
+    border: 0px;
+    background: #eee;
+    border-top-left-radius: 7px !important;
+    border-bottom-left-radius: 7px !important;
+}
+
+.login-container .loginbox {
+    background: #fbfbfb none repeat scroll 0 0 !important;
+    height: 350px !important;
+    padding: 20px;
+    border: 1px solid #ebebeb !important;
+    box-shadow: none;
+}
+
+.login-container .loginbox {
+    width: 352px !important;
+}
+
+.loginbox-bottom a {
+    color: #808080;
+}

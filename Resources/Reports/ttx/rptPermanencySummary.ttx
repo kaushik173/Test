@@ -1,0 +1,6 @@
+Branch	String	50	Branch 33
+TotalCases	Number		1000
+PermanencyCases	Number		133
+StartDate	DateTime		01/01/1998
+EndDate	DateTime		01/01/2001
+Agency	String	200	Agency 1

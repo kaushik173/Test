@@ -1,0 +1,286 @@
+﻿@model LALoDep.Models.Task.SCCInvoiceAddEditViewModel
+@{
+    ViewBag.Title = "SCC Invoice Add/Edit";
+    int tabindex = 0;
+    Layout = "~/views/shared/_Popup.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Invoice</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "SCCInvoiceAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.SCCInvoiceID)
+                    @Html.HiddenFor(m => m.ReferralSourceCodeID)
+                    @Html.HiddenFor(m => m.CourtNumber)
+                    @Html.HiddenFor(m => m.AttorneyPersonID)
+                    @Html.HiddenFor(m => m.AttorneyFirstName)
+                    @Html.HiddenFor(m => m.AttorneyLastName)
+                    @Html.HiddenFor(m => m.AttorneyPhoneNumber)
+                    @Html.HiddenFor(m => m.AttorneySSNTaxID)
+                    @Html.HiddenFor(m => m.AttorneyBarNumber)
+
+                    <div class="row" id="divSearchResult">
+                        <div class="row">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="clientList">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50%">Client</th>
+                                        <th>Current Petition Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Clients != null && Model.Clients.Count > 0)
+                                    {
+                                        var count = 0;
+                                        foreach (var client in Model.Clients)
+                                        {
+                                            var isChecked = (client.Selected == 1
+                                                        || (!Model.SCCInvoiceID.HasValue && Model.Clients.Count == 1 && !string.IsNullOrEmpty(client.PetitionDocketNumber))); //Default check if only 1 record and not disabled in ADD mode
+
+                                            <tr>
+                                                <td>
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name="chkClient@(count)" data-indx="@(count)" id="IsSelected" @(isChecked ? "checked='checked'" : "") class="input-sm chk-client" tabindex="@(++tabindex)" autofocus="autofocus" @(string.IsNullOrEmpty(client.PetitionDocketNumber) ? "disabled=\"disabled\"" : "") />
+                                                        &nbsp;@client.ClientDisplay
+                                                    </label>
+                                                    <input type="hidden" name="RoleID@(count)" value="@client.RoleID" />
+                                                    <input type="hidden" name="RoleTypeCodeID@(count)" value="@client.RoleTypeCodeID" />
+                                                    <input type="hidden" name="ClientName@(count)" value="@client.ClientName" />
+                                                    <input type="hidden" name="SCCInvoiceClientID@(count)" value="@client.SCCInvoiceClientID" />
+
+                                                    <input type="hidden" id="PetitionCloseDate@(count)" name="PetitionCloseDate@(count)" value="@client.PetitionCloseDate" />
+                                                </td>
+                                                <td>@(string.IsNullOrEmpty(client.PetitionDate) ? "Petition Needed" : client.PetitionDate)</td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="ClientCount" value="@Model.Clients.Count()" />
+                        </div>
+                    </div>
+                    <div class="row padding-top-10">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceNumber, new { @class = "control-label" })
+                            @Html.TextBox("SCCInvoiceNumberText", Model.SCCInvoiceNumber, new { @class = "form-control input-sm", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.SCCInvoiceNumber)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceDateSubmitted, new { @class = "control-label" })
+                            @Html.TextBox("SCCInvoiceDateSubmittedText", Model.SCCInvoiceDateSubmitted, new { @class = "form-control input-sm", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.SCCInvoiceDateSubmitted)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceRateID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SCCInvoiceRateID, new SelectList(Model.InvoiceType, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabindex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceSubmittedByPersonID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SCCInvoiceSubmittedByPersonID, new SelectList(Model.AttorneyList, "AttorneyPersonID", "Attorney"), "", new { @class = "form-control input-sm", tabindex = ++tabindex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceDepartmentCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SCCInvoiceDepartmentCodeID, Model.Department, "", new { @class = "form-control input-sm", tabindex = ++tabindex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceNextHearingDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoiceNextHearingDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoicePetitionFileDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoicePetitionFileDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceAppointmentDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoiceAppointmentDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceServiceHearingDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoiceServiceHearingDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceFirstRPPDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoiceFirstRPPDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SCCInvoiceReliefDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SCCInvoiceReliefDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        @if (Model.SCCInvoiceID.HasValue)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SCCInvoicePaidDate, new { @class = "control-label" })
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.SCCInvoicePaidDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabindex, maxlength = "10" })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.SCCInvoiceID.HasValue)
+                        {
+                            <div class="form-group col-md-12">
+                                @Html.LabelFor(m => m.AdminNote, new { @class = "control-label" })
+                                @Html.TextAreaFor(m => m.AdminNote, new { @class = "form-control ", tabindex = ++tabindex, cols = 144, style = "width:100%" })
+                                @Html.HiddenFor(m => m.AdminNoteID)
+                            </div>
+                        }
+
+                        <div class="form-group col-md-12 col-xs-12">
+                            @Html.LabelFor(m => m.AttorneyNote, new { @class = "control-label" })
+                            @if (Model.SCCInvoiceID.HasValue)
+                            {
+                                @Html.TextAreaFor(m => m.AttorneyNote, new { @class = "form-control  ", tabindex = ++tabindex, cols = 144, style = "width:100%", disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.TextAreaFor(m => m.AttorneyNote, new { @class = "form-control  ", tabindex = ++tabindex, cols = 144, style = "width:100%", })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Invoice History</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="SCCInvoiceHistoryList">
+                        <thead>
+                            <tr>
+                                <th>Invoice Date</th>
+                                <th>Invoice #</th>
+                                <th>Invoice Type</th>
+                                <th style="text-align:right">Invoice Amount</th>
+                                <th>Invoice Status</th>
+                                <th>Client(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SSCInvoiceList != null && Model.SSCInvoiceList.Count > 0)
+                            {
+                                foreach (var item in Model.SSCInvoiceList)
+                                {
+                                    <tr @if (Model.SCCInvoiceID == item.SCCInvoiceID) { <text>class="highLightYellow"  </text>}>
+                                        <td>@item.SCCInvoiceDateSubmitted</td>
+                                        <td>@item.SCCInvoiceID</td>
+                                        <td>@item.InvoiceRateType</td>
+                                        <td style="text-align:right">@item.InvoiceAmount</td>
+                                        <td>@item.InvoiceStatus</td>
+                                        <td>@item.ClientList</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (!Model.SCCInvoiceID.HasValue)
+        {
+            <button id="btnSubmit" type="submit" class="btn btn-primary v-bottom default" onclick="Save(22591)" tabindex="@(++tabindex)">Submit</button>
+            <button id="btnSubmitPrint" type="submit" class="btn btn-default v-bottom  " onclick="Save(22591)" tabindex="@(++tabindex)">Submit Print</button>
+
+        }
+        else
+        {
+            <button id="btnPrint" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabindex)">Print</button>
+            if (Model.SCCInvoiceStatusCodeID == 22595)
+            {  <button id="btnPaid" type="submit" class="btn btn-default v-bottom " tabindex="@(++tabindex)" onclick="Save(22596)">Paid</button>
+
+            }
+            if (Model.SCCInvoiceStatusCodeID == 22591)
+            {
+                <button id="btnApprove" type="submit" class="btn btn-default v-bottom " onclick="Save(22592)" tabindex="@(++tabindex)">Approve</button>
+                <button id="btnDeny" type="submit" class="btn btn-default v-bottom " onclick="Save(22594)" tabindex="@(++tabindex)">Deny</button>
+
+            }
+            if (Model.SCCInvoiceStatusCodeID == 22592)
+            {
+                <button id="btnApprove" type="submit" class="btn btn-default v-bottom " onclick="Save(22595)" tabindex="@(++tabindex)">Submit For Payment</button>
+
+            }
+            if (Model.SCCInvoiceStatusCodeID == 22595)
+            {
+                <button id="btnApprove" type="submit" class="btn btn-default v-bottom " onclick="Save(22597)" tabindex="@(++tabindex)">Void</button>
+
+            }
+        }
+
+        <button id="btnCancel" type="button" class="btn v-bottom " tabindex="@(++tabindex)" onclick="self.parent.ClosePopup();">Exit</button>
+    </div>
+}
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/SCCInvoiceAddEdit.js?v=" + Guid.NewGuid())"></script>
+}
+
+<style>
+    .highLightYellow td{background: rgb(243, 247, 180) !important;}
+</style>
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>

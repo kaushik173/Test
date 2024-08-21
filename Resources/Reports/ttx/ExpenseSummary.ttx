@@ -1,0 +1,8 @@
+ExpenseMonth	String	50	Jan
+ExpenseYear	Number		2000
+AmountAuthorized	Currency		200.0000
+AmountForwardedToAccounting	Currency		200.0000
+AmountPaid	Currency		100.0000
+StartDate	String	50	Start Date: 01/01/1999
+EndDate	String	50	End Date: 01/01/1999
+AgencyName	String	200	PD

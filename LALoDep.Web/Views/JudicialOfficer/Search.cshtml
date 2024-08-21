@@ -1,0 +1,203 @@
+﻿@model LALoDep.Models.Administration.JudicialOfficerListViewModel
+@{
+    ViewBag.Title = "Judicial Officer List";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Judicial Officer Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "JudicialOfficer-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="judicialOfficerView">
+                        <thead>
+                            <tr>
+                                <th class="">Last Name</th>
+                                <th class="">First Name</th>
+                                <th class="">Start Date</th>
+                                <th class="">End Date</th>
+                                <th class="" style="width: 50px;"></th>
+                                <th class="" style="width: 50px;"></th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="4" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.ViewJudicialOfficer)">Search</button>
+        <button id="btnAdd" type="button" class="btn btn-default v-bottom" tabindex="4" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.AddJudicialOfficer)">Add Judicial Officer</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+
+        var oTable = $('#judicialOfficerView').dataTable({
+            "searching": false,
+            "bSort": false,
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+            "columns": [
+                {
+                    "data": "PersonNameLast",
+                    "render": function (data, type, full, meta) {
+                        return ('<a href="@Url.Action(MVC.JudicialOfficer.AddEdit())/' + full.PersonID + '">' + data + '</a>');
+                    }
+                },
+                { "data": "PersonNameFirst" },
+                { "data": "RoleStartDate" },
+                { "data": "RoleEndDate" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return (' <a class="btn btn-info btn-xs dept" href="/Users/Department/' + full.PersonID + '?pageid=1" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.ViewCourtDepartment)"><i class="fa fa-edit"></i> Dept</a>');
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return (' <a class="btn btn-info btn-xs contact" href="/Users/UserContact/' + full.PersonID + '?pageid=1" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.ViewContactInformation)"><i class="fa fa-edit"></i> Contact</a>');
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return (' <button class="btn btn-danger btn-xs delete" data-id="' + full.PersonID + '" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.DeleteJudicialOfficer)"><i class="fa fa-trash-o"></i> Delete</button>');
+                    }
+                },
+            ],
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+
+        function getData() {
+            var data = $('#JudicialOfficer-search-form').serialize();
+            return data;
+        }
+
+        function setData(data) {
+            oTable.fnClearTable();
+            if (data.data.length > 0) {
+                oTable.fnAddData(data.data);
+                fitCalculatedHeightForSearchDataTable();
+            } else
+                notifyInfo('No results found.');
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                calc_height = calc_height < 250 ? 250 : calc_height;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+
+        function loadData() {
+            IPadKeyboardFix();
+
+            var data = getData();
+
+            $.ajax({
+                type: "POST", url: '@Url.Action(MVC.JudicialOfficer.Search())', data: data,
+                success: function (data) {
+                    setData(data);
+                },
+                dataType: 'json'
+            });
+        }
+
+        $("#btnSearch").on("click", function () {
+            var formInvalid = $('#LastName').val().length == 0
+                                && $('#FirstName').val().length == 0
+                                && $('#AgencyID').val().length == 0;
+
+            if (formInvalid) {
+                notifyDanger('At least one search parameter is required.');
+                return false;
+            } else {
+                loadData();
+                return true;
+            }
+        });
+
+        $("#judicialOfficerView").on("click", ".delete", function () {
+            $this = $(this);
+            confirmBox("Are you sure want to delete?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '@Url.Action(MVC.JudicialOfficer.DeleteJudicialOfficer())/'+$this.data("id"),
+                        success: function (data) {
+                            if (data.isSuccess) {
+                                notifySuccess("Judicial officer is deleted successfuly");
+                                loadData(); // Reload grid
+                            }
+                        },
+                        dataType: 'json'
+                    });
+                }
+            });
+        });
+
+        $("#btnAdd").on("click", function () {
+            window.location.href = "@Url.Action(MVC.JudicialOfficer.AddEdit())";
+        });
+    </script>
+}

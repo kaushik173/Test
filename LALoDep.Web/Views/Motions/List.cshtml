@@ -1,0 +1,77 @@
+﻿@model LALoDep.Models.Case.MotionViewModel
+@{
+    ViewBag.Title = "Motion";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+        padding-top: 2px;
+        padding-right: 15px;
+        padding-bottom: 2px;
+        padding-left: 15px;
+    }
+</style>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Motions</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MotionsView">
+                        <thead>
+                        <tr>
+                            <th class="">File Date</th>
+                            <th class="">Close Date</th>
+                            <th class="">Case #</th>
+                            <th class="">Type #</th>
+                            <th class="">Child #</th>
+                            <th class="" style="width: 50px;"></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="PartialTable">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="motionFor"></span>
+                <div class="widget-buttons ">
+                    <button id="btnAdd" type="button" class="btn v-bottom" tabindex="1" style="display:none;">Add Motion</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MotionsListView">
+                        <thead>
+                            <tr>                               
+                                <th>File Date</th>
+                                <th>Motion Type</th>
+                                <th>Requested By</th>
+                                <th>Decision</th>
+                                <th>Decision Date</th>
+                                <th style="width:30px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $canDeleteAccess = '@Model.CanDeleteAccess';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/Motions.js?v=" + Guid.NewGuid())"></script>
+}

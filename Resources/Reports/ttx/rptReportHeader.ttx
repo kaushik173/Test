@@ -1,0 +1,4 @@
+ParameterLabel	String	250	Start Date
+ParameterValue	String	250	01/01/2002
+ReportTitle	String	250	Title of Report
+ReportDefFlag	Number		1

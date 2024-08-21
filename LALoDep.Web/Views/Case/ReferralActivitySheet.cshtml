@@ -1,0 +1,138 @@
+﻿@model  LALoDep.Models.Case.ReferralActivitySheetViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Activity Sheet";
+}
+
+@Html.Action("ReferralTabs", "Case", new { id = ViewBag.ReferralID })
+
+
+<div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+    <div class="widget row">
+
+
+        <div class="widget-body col-xs-12">
+            <div class="form-inline  text-right">
+                <div class="form-group">
+                    <label class="control-label" for="FilterByStaffType" style="float:left;position:relative;top:5px;margin-right:10px;">Filter By Staff Type:</label>
+                    @Html.DropDownListFor(m => m.FilterByStaffType, Model.WorkGetFilterByStaffTypeList, new { @class = "form-control input-sm", tabindex = 1, style = "float:left;" })
+
+
+                </div>
+            </div>
+            <div class="table-responsive" id="tableData">
+                @if (Model != null && Model.WorkList.Count() > 0)
+            {        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                        @{
+
+                            var workDate = Model.WorkList.Select(o => new { o.WorkStartDate,o.WorkDescriptionCodeValue}).Distinct();
+                            foreach (var groupHeader in workDate)
+                            {
+                                var records = Model.WorkList.Where(o => o.WorkStartDate == groupHeader.WorkStartDate && o.WorkDescriptionCodeValue== groupHeader.WorkDescriptionCodeValue).ToList();
+                    <thead>
+                        <tr>
+                            <th colspan="1">@groupHeader.WorkStartDate @groupHeader.WorkDescriptionCodeValue </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in records)
+                                    {
+
+                                    <tr>
+                                        <td width="300px">  @Html.Raw(item.NoteDisplay)</td>
+                                        @*<td>@(item.WorkNote!=null?item.WorkNote.Replace("\r\n", "<br/>"):"")</td>*@
+                                    </tr>
+
+                                    }
+                    </tbody>
+                            }
+
+                        }
+                    </table>
+
+                            }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="1">Return to Referral List</button>
+        <button id="btnAddActivity" type="submit" class="btn btn-default v-bottom " tabindex="2">Add Activty</button>
+    </div>
+}
+@section scripts{
+    <script>
+        fitCalculatedHeightForSearchDataTable();
+
+        $(window).bind('resize', function () {
+            fitCalculatedHeightForSearchDataTable();
+        });
+        $('#btnBackToCalendar').click(function () {
+
+            window.location.href = '/Case/ReferralList';
+        })
+        $('#btnAddActivity').click(function () {
+            var _offset = 50;
+            var headerHeight = $(".navbar.navbar-fixed-top:first").height();
+            var modelHeight = $(window).height() - headerHeight - _offset;
+
+            OpenCustomPopup($('#hdnCurrentSessionGuidPath').val() + '/Case/RecordTimeAdd?popup=true&ReferralID=@(ViewBag.EncryptReferralID))', 1000, modelHeight, 'Add Activity');
+        })
+
+
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            calc_height = $(window).height();
+            var _offset = 25;
+            origin_wrapper_height = $('body>div.container-fluid').height();
+            origin_content_height = $('#tableData').height();
+
+            $("#tableData").children().first().parentsUntil("body").each(function () {
+
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        //console.log(calc_height + " - " + $(this).outerHeight(true));
+                        if ($(this).attr("id") == 'loading')
+                            return;
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            //console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            //console.log("total: " + calc_height);
+            // calc_height = calc_height < 250 ? 250 : calc_height;
+
+            $('#tableData').css('max-height', calc_height + 'px');
+
+            return calc_height;
+        }
+
+        $('#FilterByStaffType').change(function () {
+
+            $.get(document.location.href + '?filterByStaffType=' + $('#FilterByStaffType').val(), function (data) {
+                $('#tableData').html($(data).find('#tableData').html());
+                fitCalculatedHeightForSearchDataTable();
+            });
+        })
+    </script>}
+<style>
+    .modal-dialog {
+        margin-top: 0px !important;
+    }
+
+    .modal-body {
+        padding: 0px !important;
+    }
+</style>

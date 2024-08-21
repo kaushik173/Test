@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Jcats.SD.Domain.com_Jcats.JcatsTutorialGetList_spResult>
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Tutorials";
+
+
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Tutorial-form" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Tutorials</span>
+                    <div class="widget-buttons"></div>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive form-group">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Description</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td style="width:200px">
+                                                <a href="/Help/DownloadTutorials?file=@item.FileName" target="_blank"> @item.Title</a>
+                                            </td>
+
+                                            <td>@item.Description</td>
+                                        </tr>
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    <tr><td align="center" colspan="7">No data available</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section fixedfooter{
+
+}
+
+@section Scripts {
+
+}

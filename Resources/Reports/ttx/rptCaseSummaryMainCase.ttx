@@ -1,0 +1,9 @@
+AgencyName	String	100	Public Defender
+CaseNumber	String	50	2001J3P1234
+AppointmentDate	DateTime		01/01/2000
+CaseClosedDate	DateTime		01/01/2000
+PanelCase	String	50	Yes
+Department	String	50	1
+LeadAttorney	String	100	Last, First
+CaseName	String	100	CaseName
+GroupID	Number	0

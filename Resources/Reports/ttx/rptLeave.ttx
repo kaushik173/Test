@@ -1,0 +1,9 @@
+LeaveStartDate	DateTime		01/01/2001
+PersonName	String	100	Malvina, Abbott
+Reason	String	100	Vacation
+ReturnDateTime	DateTime		01/31/2001
+StartDateParm	DateTime		01/01/2001
+EndDateParm	DateTime		01/31/2001
+AgencyName	String	500	Agency Name
+BranchParm	String	100	South County
+GroupDate	DateTime		01/01/2001

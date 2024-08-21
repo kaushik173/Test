@@ -1,0 +1,119 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_CaseLoad.MyCaseloadGetVersion2_spResult>
+@{
+    Layout = null;
+    var previosCase = string.Empty;
+    var previousClient = string.Empty;
+}
+@if (Model.Any())
+{
+
+    <span id="spanHeaderText" style="display:none">
+        @(Model.Select(x => x.ResultHeader).FirstOrDefault())
+
+
+    </span>
+}
+
+
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="CalendarData">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Age</th>
+                <th>DOB</th>
+                <th>Gen</th>
+                <th>Status</th>
+                <th>Case #</th>
+                <th>Ptn Type</th>
+                <th>Ptn File Dt</th>
+                <th>NCDate </th>
+                <th>NCType </th>
+                <th>Last Contact</th>
+                <th>Last AR Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ToList())
+            {
+                if (previousClient != item.ClientName || previosCase!=item.CaseID.ToString())
+                {
+                    <tr>
+                        <td><a href="/Case/Main/@item.CaseID.ToEncrypt()">@item.ClientName</a></td>
+                        <td class="">@item.ClientAge</td>
+                        <td>@item.ClientDOB</td>
+                        <td>@item.ClientSex</td>
+                        <td>
+                            @item.ClientStatus
+                        </td>
+                        <td>
+                            @item.PetitionDocketNumber
+                        </td>
+                        <td>
+                            @item.PetitionType
+                        </td>
+                        <td>
+                            @item.PetitionFileDate
+                        </td>
+                        <td>
+                            @item.NextCourtDate
+                        </td>
+                        <td>
+                            @item.NextCourtType
+                        </td>
+                        <td>
+                            @item.LatestContactDate
+                        </td>
+                        <td>
+                            @item.AREndDate
+                        </td>
+                    </tr>
+
+                }
+                else
+                {
+                    <tr>
+                        <td> </td>
+                        <td class=""> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @item.PetitionType
+                        </td>
+                        <td>
+                            @item.PetitionFileDate
+                        </td>
+                        <td>
+                            @item.NextCourtDate
+                        </td>
+                        <td>
+                            @item.NextCourtType
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+
+                previousClient = item.ClientName;
+                previosCase = item.CaseID.ToString();
+            }
+        </tbody>
+
+    </table>
+</div>
+
+
+
+
+
+
+
+ 
+
+
+

@@ -1,0 +1,79 @@
+﻿@using LALoDep.Custom
+    
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic -->
+    <meta charset="UTF-8">
+    <title>Jcats Louisiana Dependency</title>
+    <meta name="keywords" content="Jcats Louisiana Dependency" />
+    <meta name="description" content="Jcats Louisiana Dependency">
+    <meta name="author" content="Canyon Solutions Inc.">
+
+    <!-- Mobile Metas -->
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="/assets/fonts/Open-Sans/css/fonts.css" rel="stylesheet" />
+    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">*@
+    @Styles.Render("~/assets/css/styles")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/assets/js/scripts")
+    @*@Scripts.Render("~/DeviceDetector/js")*@
+
+    @Scripts.Render("~/scripts/js")
+
+    @{
+        @*var themeUrl = Jcats.SD.UI.Custom.UserEnvironment.UserManager.UserExtended.ThemeUrl;
+            if (!string.IsNullOrEmpty(themeUrl))
+            {
+
+                <link id="skin-link" rel="stylesheet" type="text/css" href="@themeUrl" />
+            }*@
+
+    }
+    <!-- RUM Code
+        @*<script>(function(n,i,v,r,s,c,x,z){x=window.AwsRumClient={q:[],n:n,i:i,v:v,r:r,c:c};window[n]=function(c,p){x.q.push({c:c,p:p});};z=document.createElement('script');z.async=true;z.src=s;document.head.insertBefore(z,document.head.getElementsByTagName('script')[0]);})('cwr','ada671fe-a26d-4cbb-96e4-d2d69b90a71b','1.0.0','us-west-2','https://client.rum.us-east-1.amazonaws.com/1.2.1/cwr.js',{sessionSampleRate:1,guestRoleArn:"arn:aws:iam::286799285509:role/RUM-Monitor-us-west-2-286799285509-4947736549461-Unauth",identityPoolId:"us-west-2:242d3967-2d85-4367-afb1-9100bce87325",endpoint:"https://dataplane.rum.us-west-2.amazonaws.com",telemetries:["performance","errors","http"],allowCookies:true,enableXRay:false});</script>*@
+     -->
+    @RenderSection("head", false)
+
+
+</head>
+    @*<body class="@Jcats.SD.UI.Custom.UserEnvironment.UserManager.UserExtended.ZoomCssClass">*@
+    <body  class="@(UserEnvironment.UserManager.UserExtended.HyperlinkUnderline?"enableHyperlinkUnderline":"")" ><input type="hidden" id="hdnCurrentSessionGuid" value="@(UserEnvironment.UserManager.CurrentSessionGuid)" />
+        <div class="container-fluid">
+
+            <section class="main-container row">
+
+                <div class="page-container">
+                    <div id="loading" style="display: none; position: fixed; ">
+                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                    </div>
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+        <div class="fixedbar">
+            @RenderSection("fixedfooter", required: false)
+        </div>
+        @RenderSection("scripts", false)
+        @Html.Partial("_Tracking")
+
+
+
+        <script>
+            @*var secureIds = @if(Jcats.SD.UI.Custom.UserEnvironment.UserManager.JsonTokens().Count()>0) { @Html.Raw(Jcats.SD.UI.Custom.UserEnvironment.UserManager.JsonTokens())} else {<text>[]</text>};
+            $count = 1;
+            $(document).ajaxComplete(function (event, xhr, settings) {
+                hideAllUnAuthorizedInputElements(secureIds);
+                removeLinkFromUnAuthorizedAnchorElements(secureIds);
+            });
+            hideAllUnAuthorizedInputElements(secureIds);
+            removeLinkFromUnAuthorizedAnchorElements(secureIds);*@
+
+        </script>
+
+        <input type="hidden" id="hdnCurrentSessionGuidPath" value="/g/@(UserEnvironment.UserManager.CurrentSessionGuid)" />
+        <input type="hidden" id="hdnCurrentSessionGuid" value="@(UserEnvironment.UserManager.CurrentSessionGuid)" />
+
+    </body>
+    </html>

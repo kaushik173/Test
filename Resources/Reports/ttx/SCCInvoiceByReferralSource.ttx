@@ -1,0 +1,16 @@
+InvoiceAmount	Currency		14000.0000
+AddressName	String	200	Children Law Center
+AddressStreet	String	200	100 West Way
+AddressCSZ	String	200	Los Angeles, California 22222
+ContractNumber	String	50	A-23233
+InvoiceNumber	String	50	121231-2
+County	String	50	Los Angeles
+OfficerRole	String	50	Financial Officer
+FOName	String	100	Esther Wu
+FOEmail	String	50	wue@clcla.org
+FOPhone	String	50	(323) 980-1717
+TaxID	String	50	343232234-33
+AOCAdmin	String	100	Melanie Jones
+DearAOCAdmin	String	100	Dear Ms. Jones
+StartDate	DateTime		01/01/1999
+EndDate	DateTime		01/01/1999

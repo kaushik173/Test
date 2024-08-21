@@ -1,0 +1,116 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.PosViewModel
+@using LALoDep.Core.Custom.Extensions
+
+@{
+    ViewBag.Title = "Opinions";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "pleas-form", @class = "form-inline  center-block" }))
+                {
+                    <input type="hidden" name="hdnHearingID" id="hdnHearingID" value="@Model.HearingID.ToEncrypt()" />
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.CaseID)
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 1, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 2, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingJudge, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingJudge, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 3, style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", tabindex = 4, style = "width:100%" })
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">People On Hearing</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="peopleOnHearingList">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Court Positions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PeopleOnHearingList != null && Model.PeopleOnHearingList.Count > 0)
+                            {
+                                foreach (var item in Model.PeopleOnHearingList)
+                                {
+                                    <tr>
+                                        <td>@item.PersonNameFirst @item.PersonNameLast (@item.RoleType)</td>
+                                        <td>
+                                            <a data-id="@item.RoleID.ToEncrypt()"
+                                               data-hearingopinionid="@item.HearingOpinionID.ToEncrypt()"
+                                               data-noteid="@item.NoteID.ToEncrypt()"                                               
+                                               class="opinionsLink" href="javascript:void(0)">
+                                                @if (item.HearingOpinionID != 0)
+                                                {<text>Edit</text>}
+                                                else
+                                                {<text>Create</text>}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnCancel" type="submit" class="btn btn-primary v-bottom default" tabindex="5">Cancel</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+
+        function RefreshGrid() {
+            ClosePopup();
+            window.location.href = '/Case/Pos/' + $('#hdnHearingID').val();
+        }
+
+        $('body').on('click', '.opinionsLink', function () {
+            OpenPopup('/Case/HearingOpinion/' + $(this).attr('data-id') + '?opinionid=' + $(this).attr('data-hearingopinionid') + '&enhearingID=' + $('#hdnHearingID').val() + '&ennoteID=' + $(this).attr('data-noteid'), 'Hearing Note');
+        });
+
+        $('#btnCancel').on("click", function () {
+            window.location.href = "/Case/Main";
+        });
+
+    </script>
+}

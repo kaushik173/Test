@@ -1,0 +1,86 @@
+﻿@model  LALoDep.Models.Inquiry.CaseLoadManagementViewModel
+
+@{
+    ViewBag.Title = "CaseLoad<br/> Management";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "caseloadManagement", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                    <div class="row">
+
+                        <div class="form-group col-md-4 col-sm-6">
+                            @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AgencyID, new SelectList(Model.AgencyList, "AgencyID", "AgencyName"), "", new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divAttorney">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Results
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12" id="caseloadData">
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+
+        $(function () {
+            simpleStorage.deleteKey('myCaseLoadDataV2'+ GetWindowID());
+            //$('.daterange').daterangepicker({ autoClose: true }, function (start, end) {
+            //    $('#StartDate').val(start.format('MM/DD/YYYY'));
+            //    $('#EndDate').val(end.format('MM/DD/YYYY'));
+            //});
+
+            function loadData() {
+                var $form = $('#caseloadManagement');
+
+                $.ajax({
+                    type: "POST", url: '/Inquiry/CaseloadManagement', data: $form.serialize(), success: function (data) {
+                        $('#caseloadData').html(data);
+                    }
+                });
+            }
+
+            $('#AgencyID').on("change", function (e) {
+                e.preventDefault();
+                loadData();
+            });
+
+            if ($('#AgencyID option').length = 2 && $('#AgencyID').val()!="") {
+                loadData();
+            }
+        });
+    </script>
+
+}
+

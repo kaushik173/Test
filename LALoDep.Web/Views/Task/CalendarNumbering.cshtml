@@ -1,0 +1,102 @@
+﻿@model LALoDep.Models.Task.CalendarNumberingViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Calendar Numbering";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "searchCalendarNumbering-form", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })<br />
+                            @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm ",autofocus= "autofocus", tabindex = 1, data_selected = Model.AgencyID })
+
+
+                        </div>  <div class="form-group">
+                            @Html.LabelFor(m => m.Date, "Date", new { @class = "control-label" })
+                            <div class="input-group">
+                              
+                                @Html.TextBoxFor(m => m.Date, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 2 })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DepartmentID, "Department", new { @class = "control-label" })<br />
+                            @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm ", tabindex = 3, data_selected = Model.DepartmentID })
+
+
+                        </div> 
+                       
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult">Search Result</span>
+                <div class="widget-buttons">
+
+
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+                        <thead>
+                            <tr>
+                                <th class="" data-col="CalNbr">CAL #</th>
+                                <th class="" data-col="CaseNbr">Case #</th>
+                                <th class="" data-col="HearingType">Hearing Type</th>
+                                <th class="" data-col="CaseName">Case Name</th>
+                                <th class="" data-col="Minors">Minor Names</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+         <button id="btnSearch" type="submit" class="btn btn-primary  default v-bottom " tabindex="5">Search </button>
+        <button id="btnSave" type="submit" class="btn btn-default    v-bottom hidden " tabindex="6">Save </button>
+ </div>
+}
+
+@section scripts
+{
+    
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/CalendarNumbering.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

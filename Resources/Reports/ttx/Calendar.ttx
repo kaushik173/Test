@@ -1,0 +1,22 @@
+EventDate	Date		01/01/1999
+EventTime	Date		1:30PM
+EventType	String	50	Hearing
+HearingType	String	100	C/26
+Department	String	100	1
+Petitions	String	1000	00000
+Children	String	1000	Geena Gold
+Clients	String	1000	Geena Gold
+Result	String	100	Completed
+CaseID	Number		304
+HearingID	Number		440
+StartDateParameter	String	50	01/01/1999
+EndDateParameter	String	50	01/01/1999
+LastNameParameter	String	50	Barrett
+FirstNameParameter	String	30	Charlie
+Hearing2Type	String	100	Juris
+Hearing2DateTime	Date		01/01/1999
+Hearing3Type	String	100	Juris
+Hearing3DateTime	Date		01/01/1999
+CaseNumber	String	50	12345
+Hearing2Department	String	100	1
+Hearing3Department	String	100	1

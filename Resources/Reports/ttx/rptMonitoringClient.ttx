@@ -1,0 +1,5 @@
+RFDID	Number		175
+Client	String	100	AddressStreet
+Age	Number		10
+LinkID	Number		175
+LinkID2	String	50	175

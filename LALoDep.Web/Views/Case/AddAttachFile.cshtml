@@ -1,0 +1,145 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.AttachPathEditViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Edit File</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editfileform", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.RecordStateID)
+                      @Html.HiddenFor(m => m.CaseFileID)
+
+
+                    <div class="form-group  col-xs-12">
+                        @Html.LabelFor(m => m.FileName, "File Name", new { @class = "control-label" })
+                        @Html.DisplayFor(m => m.FileName, new { @class = "control-label" })
+
+                    </div>
+                    <br />
+
+                    <div class="form-group  col-xs-4">
+                        @Html.LabelFor(m => m.RoleID, "Role", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RoleID, Model.RoleList, "", new { @class = "form-control input-sm", style = "width:100%;", tabindex = 1, autofocus = "autofocus" })
+                    </div>
+
+                    <div class="form-group col-xs-4">
+                        @Html.LabelFor(m => m.FileDate, "File Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.FileDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 2, maxlength = "10", })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        @Html.LabelFor(m => m.CategoryID, "Category", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.CategoryID, Model.CategoryList, "", new { @class = "form-control input-sm", style = "width:100%;", tabindex = 3 })
+                    </div>
+                    <br />
+                    <div class="form-group col-xs-12">
+                        @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control input-sm", style = "width:100%;", tabindex = 4 })
+                    </div>
+
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.AttachFileAdd)" tabindex="10" data-toggle="modal" data-target="#myModalFileUpload">Save</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function getData() {
+            var data = $("#editfileform").serialize();
+
+
+            return data;
+        }
+
+        function isValid() {
+            if ($("#CategoryID").val().length == 0) {
+                $("#CategoryID").focus();
+                notifyDanger('Category is required.');
+                return false;
+            }
+
+
+            if ($("#FileDate").val().length == 0) {
+                $("#FileDate").focus();
+                notifyDanger('File Date is required.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function saveData(buttonId) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged('editfileform')) {
+                if (isValid()) {
+                    var data = getData();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Case/EditAttachFile/',
+                        data: data,
+                        success: function(data) {
+                            RequestSubmitted();
+                            if (data.Status == 'Done') {
+                                self.parent.notifySuccess('File Updated Successfully!');
+                                self.parent.ReloadData();
+                                self.parent.ClosePopup();
+                            }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+                    });
+                }
+            } else {
+
+                self.parent.notifySuccess('File Updated Successfully!');
+                self.parent.ReloadData();
+                self.parent.ClosePopup();
+
+            }
+        }
+
+        $('body').on('click', '#btnSave', function() {
+            saveData(1);
+        });
+
+
+        $(document).ready(function() {
+            setInitialFormValues("editfileform");
+        });
+    </script>
+}

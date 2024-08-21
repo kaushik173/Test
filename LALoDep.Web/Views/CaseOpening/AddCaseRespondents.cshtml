@@ -1,0 +1,253 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.CaseOpening.AddChildOrParentsViewModel
+@{
+
+    bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+    ViewBag.Title = "Add Child/Parents";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+
+    @@media (max-width: 1024px) {
+        .form-text {
+            width: 80px !important;
+        }
+
+        .form-ApptDate {
+            width: 100px !important;
+        }
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Add Child/Parents</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(o => o.IsChildAdded)
+                    @Html.HiddenFor(o => o.IsRoleClientAdded)
+                    @Html.HiddenFor(o => o.IsCnAdded)
+
+                    @Html.HiddenFor(m => m.DOBRequiredForChildren)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRespondent">
+                            <thead>
+                                <tr>
+                                    <th width="50">
+                                        Client
+                                    </th>@if (Model.IsVisibleCnCheckbox)
+                                    {
+                                        <th width="30">
+                                            CN
+                                        </th>
+                                    }
+
+                                    <th width="150" class=" form-text">
+                                        Last Name
+                                    </th>
+                                    <th width="150" class=" form-text">
+                                        First Name
+
+                                    </th>
+                                    <th width="100">
+                                        DOB
+
+                                    </th>
+                                    <th width="100">
+                                        Race
+
+                                    </th>
+                                    <th width="60">
+                                        Gender
+
+                                    </th>
+                                    <th width="100">
+                                        Role
+
+                                    </th>
+                                    <th width="100">
+                                        Designated Day
+
+                                    </th>
+                                    <th width="100" class=" form-ApptDate">
+                                        Start/Appt Date
+
+                                    </th>
+                                    <th width="30">
+                                        SS
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var index = 0;
+                                }
+                                @foreach (var item in Model.AddChildOrParentList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.CheckBoxFor(model => item.IsClient, new { tabindex = 1, @class = "item_IsClient" })
+                                        </td>
+                                        @if (Model.IsVisibleCnCheckbox)
+                                        {
+
+                                            <td>
+                                                @Html.CheckBoxFor(model => item.IsCn, new { tabindex = 1, @class = "item_IsCn" })
+                                            </td>
+                                        }
+                                        <td>
+                                            @if (index == 0)
+                                            {
+                                                @Html.TextBoxFor(model => item.LastName, new { @class = "form-control input-sm form-text", tabindex = 1, autofocus = "autofocus" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => item.LastName, new { @class = "form-control input-sm form-text", tabindex = 1 })
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => item.FirstName, new { @class = "form-control input-sm form-text", tabindex = 1 })
+
+
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.DOB, new { @class = "form-control input-sm  input-sm date-picker-control DOBValidation", tabindex = 1, style = "width:100% !important;", maxlength = "10" })
+                                                <span class="input-group-addon datepicker-control-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+
+
+
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.RaceID, Model.RaceList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%" })
+
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.SexID, Model.SexList, "", new { @class = "form-control input-sm item_SexID setSelectedValue", tabindex = 1, style = "width:98%", data_default_value = (item.SexID > 0 ? item.SexID.ToString() : "") })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.RoleID, Model.RoleList, "", new { @class = "form-control input-sm item_RoleID setSelectedValue", tabindex = 1, style = "width:98%", data_default_value = (item.RoleID > 0 ? item.RoleID.ToString() : "") })
+
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.DesignatedDayID, Model.DesignatedDayList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%" })
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.StartOrApptDate, new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = 1, style = "width:100% !important;", maxlength = "10" })
+                                                <span class="input-group-addon datepicker-control-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+
+
+                                        </td>
+                                        <td>
+                                            @Html.CheckBoxFor(model => item.IsSs, new { tabindex = 1 })
+
+
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Children/Guardians In Case</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRespondentData">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Start/Appt Date</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.RespondentList)
+                            {
+                                <tr class="@if(item.RoleClient==1){<text>highLightBlue</text>}">
+                                    <td  >@item.Role</td>
+                                    <td>@item.PersonNameLast</td>
+                                    <td>@item.PersonNameFirst</td>
+                                    <td>@item.RoleStartDate.ToDefaultFormat()</td>
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+
+    @if (!isDataEntry)
+    {
+        <div class="boxfloat text-center">
+            <button id="saveAndContinue" type="submit" class="btn btn-primary v-bottom default" tabindex="7">Save/Continue</button>
+            <button id="saveAndAdd" type="submit" class="btn btn-default v-bottom " tabindex="7">Save/Add More</button>
+        </div>
+    }
+    else
+    {
+        <div class="boxfloat text-center">
+            <button id="saveAndPetition" type="submit" class="btn btn-primary v-bottom default" tabindex="7"> Save/Go To Petition List</button>
+            <button id="saveAndAssociation" type="submit" class="btn btn-default v-bottom " tabindex="7"> Save/Go To Association </button>
+            <button id="saveAndAdd" type="submit" class="btn btn-default v-bottom " tabindex="7">Save and Add More</button>
+        </div>
+    }
+}
+@if (!isDataEntry)
+{
+    @Html.Partial("_steps")
+}
+
+@section scripts
+{
+
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/AddCaseRespondents.js?v=" + Guid.NewGuid())"></script>
+}
+
+

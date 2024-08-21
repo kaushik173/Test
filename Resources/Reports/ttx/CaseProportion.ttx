@@ -1,0 +1,7 @@
+AgencyRegion	String	100	1
+AgencyCounty	String	100	1
+AgencyGroup	String	100	1
+AgencyName	String	100	1
+Year	String	10	1
+Cases	Number		440
+UserAgencyName	String	100	AOC

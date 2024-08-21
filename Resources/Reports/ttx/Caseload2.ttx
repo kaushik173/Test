@@ -1,0 +1,27 @@
+AttorneyFirstName	String	50	First Name
+AttorneyLastName	String	50	Last Name
+CaseNumber	String	50	47474838
+Clients	String	250	Last, First
+Petitions	String	250	12345A, 12345B
+Children	String	2000	First Last, First Last
+Hearing1Type	String	100	6M/Rev
+Hearing1DateTime	DateTime		01/01/1999
+Hearing1Department	String	100	1
+Hearing2Type	String	100	6M/Rev
+Hearing2DateTime	DateTime		01/01/1999
+Hearing2Department	String	100	1
+Hearing3Type	String	100	6M/Rev
+Hearing3DateTime	DateTime		01/01/1999
+Hearing3Department	String	100	1
+Investigator	String	2000	InvFirst
+HearingTypeParameter	String	100	HearingTypeParameter	
+HearingDateParameter	String	100	HearingDateParameter
+AttorneyParameter	String	100	AttorneyParameter
+InvestigatorParameter	String	100	InvestigatorParameter
+AgencyName	String	250	PD
+CaseStatus	String	50	Open
+AppointmentStartDate	DateTime		01/01/2000
+AppointmentEndDate	DateTime		01/01/2001
+RoleType	String	100	Role Type Parm
+CaseName	String	100	Last, First
+Department	String	100	Department 1

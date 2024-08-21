@@ -1,0 +1,11 @@
+﻿@model List<LALoDep.Domain.pd_Note.NG_pd_NoteGetByCaseIDASPPageName_spResult>
+@{
+    Layout = null;
+}
+@if (Model.Count > 0)
+{
+    <a class="wave in note-detail  " title="Notes" href="#" data-detail-url="/Note/PageNoteDetail?noteId=@(Model[0].NoteID)&actionRoute=@(ViewBag.ActionRoute)">
+        <i class="icon fa fa-envelope"></i>
+        <span class="badge">@Model.Count</span>
+    </a>   
+}

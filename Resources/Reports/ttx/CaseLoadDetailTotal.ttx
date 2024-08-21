@@ -1,0 +1,5 @@
+LastName	String	50	Barrett
+FirstName	String	50	Charlie
+PetitionCount	Number		3
+ID	Number		83838
+RoleType	String	50	Child

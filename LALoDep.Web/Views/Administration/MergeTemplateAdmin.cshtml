@@ -1,0 +1,168 @@
+﻿@model LALoDep.Models.Administration.MergeTemplateViewModel
+@{
+    ViewBag.Title = "Merge Template Admin";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">  Search</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-cleanup-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.Agencies, "", new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row form-inline  center-block">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">  Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="tblResult">
+                        <thead>
+                            <tr>
+
+                                <th>Document Name</th>
+                                <th style="width:150px !important;">Upload/Download</th>
+                                <th>Data Source</th>
+                                <th style="width:200px !important;">Add New Merge Document </th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Search</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+            hideAllUnAuthorizedInputElements(secureIds);
+        }
+        var tblResult = $('#tblResult').dataTable({
+            "ordering": false,
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 10,
+            "bPaginate": true,
+            "columns": [
+                { "data": "DocumentName" },
+                {
+                    "data": "ReportID",
+                    "mData": null,
+
+                    "mRender": function (data, type, full) {
+                        return '<a   class="lnkedit" >Upload/Download</a>';
+
+                    }
+                },
+                { "data": "DataSource" },
+               {
+                   "data": "EncryptedQuickNoteID",
+
+
+                   "mRender": function (data, type, full) {
+                       return '<a data-id="' + full.EncryptedReportID + '" class="lnkcopy btn btn-info btn-sm" >Create New Document - Use As Template</a>';
+
+                   }
+               }
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+        function getData() {
+            var data = $('#case-cleanup-search-form').serialize();
+            return data;
+        }
+
+        function loadData() {
+            var data = getData();
+            $.ajax({
+                type: "POST", url: '/Administration/MergeTemplateAdmin', data: data, success: function (result) {
+                    setData(result);
+                }
+            });
+        }
+        function setData(data) {
+            tblResult.fnClearTable();
+
+            console.log(data)
+            if (data.data.length > 0) {
+
+                tblResult.fnAddData(data.data);
+            }
+
+
+
+
+
+        }
+
+        $("#btnSearch").on("click", function () {
+            loadData();
+        });
+
+
+        $(function () {
+            loadData();
+            $('body').on('click', 'a.lnkcopy', function () {
+
+              
+                var data = getData();
+
+                $.ajax({
+                    type: "POST", url: '/Administration/MergeTemplateAdminCopy/' + $(this).attr('data-id'), data: data, success: function (result) {
+                        if (result.Status == "Done") {
+                            document.location.href = result.URL;
+                        }
+                    }
+                });
+            });
+        })
+
+
+
+    </script>
+}
+<style>
+    .col-xs-12 .col-sm-12 {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+</style>

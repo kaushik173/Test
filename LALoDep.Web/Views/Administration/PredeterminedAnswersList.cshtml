@@ -1,0 +1,248 @@
+﻿@model LALoDep.Models.Administration.PredeterminedAnswersViewModel
+@{
+    ViewBag.Title = "Predetermined Answers List";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">  Search</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-cleanup-search-form", @class = "form-inline  center-block" }))
+                {  <div class="form-group">
+                    @Html.LabelFor(m => m.AgencyGroupID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.AgencyGroupID, Model.AgencyGroupList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1 })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.AgencyID, Model.Agencies, "", new { @class = "form-control input-sm", tabindex = 2 })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.NoteTypeID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.NoteTypeID, Model.NoteTypeList, "", new { @class = "form-control input-sm", tabindex = 2 })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.HearingTypeGroupID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.HearingTypeGroupID, Model.HearingTypeGroupList, "", new { @class = "form-control input-sm", tabindex = 2 })
+                </div>                <div class="form-group">
+                    @Html.LabelFor(m => m.HearingTypeID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", tabindex = 2 })
+                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientTypeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ClientTypeID, Model.ClientTypeList, "", new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row form-inline  center-block">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">  Active</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="tblActive">
+                        <thead>
+                            <tr>
+
+                                <th style="width:30px !important;">Seq</th>
+                                <th>Predetermined Answer</th>
+                                <th   style="width:400px !important;">Short Value</th>
+                                <th style="width:50px !important;"> </th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">  Inactive</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="tblInactive">
+                        <thead>
+                            <tr>
+
+                                <th style="width:30px !important;">Seq</th>
+                                <th>Predetermined Answer</th>
+                                <th style="width:400px !important;">Short Value</th>
+                                <th style="width:50px !important;"> </th>
+
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Search</button>
+        <button id="btnAdd" type="button" class="btn btn-default v-bottom" tabindex="4">Add New Answer</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+            hideAllUnAuthorizedInputElements(secureIds);
+        }
+        var tblActive = $('#tblActive').dataTable({
+            "ordering": false,
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 10,
+            "bPaginate": true,
+            "columns": [
+                { "data": "Seq" },
+                {
+                    "data": "PredeterminedAnswer",
+                    "mData": null,
+
+                    "mRender": function (data, type, full) {
+                        return '<a href="/Administration/PredeterminedAnswersAddEdit/' + full.EncryptedQuickNoteID + '" class="lnkedit" >' + full.PredeterminedAnswer + '</a>';
+
+                    }
+                },
+                { "data": "ShortValue" },
+               {
+                   "data": "EncryptedQuickNoteID",
+
+
+                   "mRender": function (data, type, full) {
+                       return '<a data-id="' + full.EncryptedQuickNoteID + '" class="lnkcopy btn btn-info btn-sm" >Copy</a>';
+
+                   }
+               }
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+        var tblInactive = $('#tblInactive').dataTable({
+            "ordering": false,
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 10,
+            "bPaginate": true,
+            "columns": [
+                { "data": "Seq" },
+                {
+                    "data": "PredeterminedAnswer",
+                    "mData": null,
+
+                    "mRender": function (data, type, full) {
+                        return '<a href="/Administration/PredeterminedAnswersAddEdit/' + full.EncryptedQuickNoteID + '" class="lnkedit" >' + full.PredeterminedAnswer + '</a>';
+
+                    }
+                },
+                { "data": "ShortValue" },
+               {
+                   "data": "EncryptedQuickNoteID",
+
+
+                   "mRender": function (data, type, full) {
+                       return '<a href="/Administration/PredeterminedAnswerCopy/' + full.EncryptedQuickNoteID + '" class="lnkedit btn btn-info btn-sm" >Copy</a>';
+
+                   }
+               }
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+        function getData() {
+            var data = $('#case-cleanup-search-form').serialize();
+            return data;
+        }
+
+        function loadData() {
+            var data = getData();
+            $.ajax({
+                type: "POST", url: '/Administration/PredeterminedAnswersList', data: data, success: function (result) {
+                    setData(result);
+                }
+            });
+        }
+        function setData(data) {
+            tblInactive.fnClearTable();
+            tblActive.fnClearTable();
+            console.log(data)
+            if (data.length > 0) {
+                if (data[0].data.length > 0) {
+
+                    tblActive.fnAddData(data[0].data);
+                }
+                if (data[1].data.length > 0) {
+                    tblInactive.fnAddData(data[1].data);
+                }
+
+            }
+
+
+        }
+        $("#HearingTypeID").on("change", function () {
+            if ($(this).val() > 0) {
+                $('#HearingTypeGroupID').val('')
+            }
+        });
+        $("#btnSearch").on("click", function () {
+            loadData();
+        });
+
+        $("#btnAdd").on("click", function () {
+            document.location.href = '/Administration/PredeterminedAnswersAddEdit';
+        });
+        $(function () {
+            loadData();
+            $('body').on('click', 'a.lnkcopy', function () {
+                $.ajax({
+                    type: "POST", url: '/Administration/PredeterminedAnswerCopy/' + $(this).attr('data-id'), success: function (result) {
+                        if (result.Status == "Done") {
+                            document.location.href = result.URL;
+                        }
+                    }
+                });
+            });
+        })
+
+
+
+    </script>
+}
+<style>
+    .col-xs-12 .col-sm-12 {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+</style>

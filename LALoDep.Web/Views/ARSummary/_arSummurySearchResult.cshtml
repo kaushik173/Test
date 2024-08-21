@@ -1,0 +1,52 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_ARSummary.pd_HearingReportFilingDueGetSummary_spResult>
+@{
+    Layout = null;
+}
+@if (Model.Any())
+{
+    var previosRoleType = string.Empty;
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="CalendarData">
+            <tbody>
+                @foreach (var item in Model.ToList())
+                {
+                    if (previosRoleType != item.RoleType)
+                    {
+                        <tr>
+                            <th>@item.RoleType</th>
+                            <th>Total Due</th>
+                            <th>Past Due</th>
+                            <th>7 Days</th>
+                            <th>30 Days</th>
+                            <th>60 Days</th>
+                            <th>90 Days</th>
+                            <th>180 Days</th>
+                            <th>180+ Days</th>
+                        </tr>
+                    }
+                    <tr data-id="@item.PersonID.ToEncrypt()">
+                        <td><a class="person-name" href="Task/MyARQueue/@item.PersonID.ToEncrypt()">@item.PersonNameFirst</a></td>
+                        <td class="">@item.TotalDue</td>
+                        <td class="">@item.PastDue</td>
+                        <td>@item.DuePrior7Days</td>
+                        <td>@item.DuePrior30Days</td>
+                        <td>@item.DuePrior60Days</td>
+                        <td>@item.DuePrior90Days</td>
+                        <td>@item.DuePrior180Days</td>
+                        <td>@item.DueAfter180Days </td>
+                    </tr>
+                    previosRoleType = item.RoleType;
+                }
+            </tbody>
+
+        </table>
+    </div>
+}
+else
+{
+    @:No Records
+}
+
+
+

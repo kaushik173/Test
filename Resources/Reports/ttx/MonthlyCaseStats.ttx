@@ -1,0 +1,15 @@
+NewParentClients	Number		80
+NewParentPetitions	Number		80
+NewMinorClients	Number		80
+NewMinorPetitions	Number		80
+ClientsTerminated	Number		80
+PetitionsTerminated	Number		80
+PanelParentClients	Number		80
+PanelParentPetitions	Number		80
+PanelMinorClients	Number		80
+PanelClientsTerminated	Number		80
+PanelPetitionsTerminated	Number		80
+AgencyName	String	250	PD
+StartDate	String	100	Start Date: 1/1/1990
+EndDate	String	100	End Date: 1/1/1990
+PanelMinorPetitions	Number		80

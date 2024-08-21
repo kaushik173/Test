@@ -1,0 +1,8 @@
+ReportTitle	String	200	This Is The Report Title
+ReportNameLabel	String	200	Title:
+ReportName	String	200	This Is The Report Title
+ReportDescriptionLabel	String	200	Description:
+ReportDescription	Memo		This Is The Report Description
+ReportDefGroup	String	200	Report Def Grouping
+ReportDefLabel	String	200	Report Def Label
+ReportDefValue	Memo		This is the actual definition of the report label.  ie  All felony arraingment hearings within date range but do not include probation violations.

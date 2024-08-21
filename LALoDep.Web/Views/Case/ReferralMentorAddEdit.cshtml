@@ -1,0 +1,449 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.ReferralAddEditViewModel
+@{
+    ViewBag.Title = ViewBag.DisplayTitle;
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+
+    .tblDataDisplay td {
+        padding-bottom: 5px;
+    }
+
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+
+    .form-group span {
+        margin-right: 10px;
+    }
+</style>
+@Html.Action("ReferralTabs", "Case", new { id = Model.ReferralID })
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.ReferralHeader.ReferralHeader</span>
+                <div class="widget-buttons">
+
+                </div>
+            </div>
+
+            <div class="widget-body col-xs-12">
+                <table class="tblDataDisplay" style="width:100%;">
+                    <tr>
+                        <td width="150">
+                            <strong>
+                                Firm / Dept:
+                            </strong>
+                        </td>
+                        <td>
+                            @Model.ReferralHeader.FirmDept
+
+                        </td>
+                        <td style="width:400px;text-align:right;">
+                            <a id="btnPrintNotes" class="btn  btn-default  btn-sm"> View Case Notes </a>
+                            <a id="ActivityLog" class="btn  btn-default  btn-sm"> @Model.ReferralHeader.ActivityLog </a>
+                            <a id="btnAttachedFile" class="btn  btn-default btn-sm"> @Model.ReferralHeader.AttachedFile </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                Client Info:
+                            </strong>
+                        </td>
+                        <td colspan="2">
+                            @Model.ReferralHeader.ClientInfo
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                Client Address:
+                            </strong>
+                        </td>
+                        <td colspan="2">
+                            @Model.ReferralHeader.ClientAddress
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                Next Court Dates:
+                            </strong>
+                        </td>
+                        <td colspan="2">
+                            @Model.ReferralHeader.NextCourtDates
+
+                        </td>
+                    </tr>
+                </table>
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblSubpoena">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.ReferralContactInfoList)
+                            {
+                                <tr>
+                                    <td>@item.RoleDisplay</td>
+                                    <td>@item.NameDisplay</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.Email</td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ReferralAddEdit-form", @class = "form-inline  center-block" }))
+{
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+
+
+                <div class="widget-body col-xs-12">
+
+                    @Html.HiddenFor(m => m.ReferralID)
+                    <input name="RoleID" id="RoleID" value="@Model.RoleID" type="hidden" />
+                    <input name="ReferralTypeCodeID" id="ReferralTypeCodeID" value="@Model.ReferralTypeCodeID" type="hidden" />
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralRequestDate, "Request Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @if (Model.ReferralID.HasValue && Model.ReferralID.Value > 0)
+                            {
+                                @Html.TextBoxFor(m => m.ReferralRequestDate, "{0:d}", new { @class = "form-control input-sm date-picker", @readonly = "readonly", tabindex = 1, maxlength = "10", autofocus = "autofocus" })
+
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.ReferralRequestDate, "{0:d}", new { @class = "form-control input-sm date-picker", @readonly = "readonly", tabindex = 1, maxlength = "10", autofocus = "autofocus" })
+
+                            }
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralRequestedByPersonID, "Request By", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ReferralRequestedByPersonID, Model.ReferralRequestedByList, "", new { @class = "form-control input-sm", tabindex = 2, @style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralRequestedForPersonID, "Request For", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ReferralRequestedForPersonID, Model.ReferralRequestedForList, "", new { @class = "form-control input-sm", tabindex = 3, @style = "width:100%" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralDueDate, "Due Date", new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.ReferralDueDate, "{0:d}", new { @class = "form-control input-sm date-picker", tabindex = 4, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    @if (Model.ReferralID.HasValue && Model.ReferralID.Value > 0)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEndDate, "Completed", new { @class = "control-label" })
+                            @if (Model.ReferralEndDate.HasValue)
+                            {
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(m => m.ReferralEndDate, "{0:d}", new { @class = "form-control input-sm date-picker", tabindex = 4, maxlength = "10" })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            }
+                            else
+                            { <br />
+                                @Html.HiddenFor(m => m.ReferralEndDate)
+
+                                @Html.CheckBox("chkCompleted", new { tabindex = 5 })
+
+                            }
+
+                        </div>
+
+                    }
+                    <div class="clearfix"></div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption"> Referal Status</span>
+                    <div class="widget-buttons">
+
+                    </div>
+                </div>
+
+                <div class="widget-body col-xs-12">
+
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblReferralStatus">
+                            <thead>
+                                <tr>
+                                    <th style="width:300px">Status</th>
+                                    <th>Status Date</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.ReferralStatusGetHistoryList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.HiddenFor(m => item.ReferralStatusID)
+
+                                            @Html.DropDownListFor(m => item.ReferralStatusCodeID, Model.ReferralStatusList, "", new { @class = "form-control input-sm ddlSelected", tabindex = 6, @style = "width:100%", data_selected = item.ReferralStatusCodeID })
+
+
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+
+                                                @Html.TextBoxFor(m => item.ReferralStatusDate, "{0:d}", new { @class = "form-control input-sm date-picker", tabindex = 6, maxlength = "10" })
+                                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+
+                                        </td>
+
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.ReferralID.HasValue && Model.ReferralID.Value > 0)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption"> Internal Note</span>
+                        <div class="widget-buttons">
+
+                        </div>
+                    </div>
+
+                    <div class="widget-body col-xs-12">
+
+
+
+                        <div class="form-group col-md-12">
+                             @Html.TextAreaFor(m => m.ReferralInternalNote, new { @class = "form-control input-sm", tabindex = 18, @style = "width:100%" })
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="19">Save</button>
+        <button id="btnCancel" type="submit" class="btn  v-bottom " tabindex="20">Cancel</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script>
+
+        function compareDates(start, end) {
+            var startDate = new Date(start);
+            var endDate = new Date(end);
+            if (endDate < startDate) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function SaveData() {
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($('#ReferralRequestedByPersonID').val() == '') {
+                notifyDanger('Request By is required.');
+                $("#ReferralRequestedByPersonID").focus();
+                return false;
+            }
+            if ($('#ReferralRequestedForPersonID').val() == '') {
+                notifyDanger('Request For is required.');
+                $("#ReferralRequestedForPersonID").focus();
+                return false;
+            }
+
+            var flag = true;
+        var ReferralStatusGetHistoryList = [];
+            $('#tblReferralStatus tbody tr').each(function () {
+
+                $tr = $(this);
+                if ($tr.find('#item_ReferralStatusCodeID').val() !== '' || $tr.find('#item_ReferralStatusDate').val() !== '') {
+                    if ($tr.find('#item_ReferralStatusCodeID').val() == '') {
+                        notifyDanger('Both Status and Status Date are required if one is entered.');
+                        $tr.find('#item_ReferralStatusCodeID').focus();
+                        flag = false;
+                        return false;
+                    }
+                    if ($tr.find('#item_ReferralStatusDate').val() == '') {
+                        notifyDanger('Both Status and Status Date are required if one is entered.');
+                        $tr.find('#item_ReferralStatusDate').focus();
+                        flag = false;
+                        return false;
+                    }
+
+                    if ($tr.find('#item_ReferralStatusDate').val().length > 0 && moment($tr.find('#item_ReferralStatusDate').val()) > moment()) {
+
+                        notifyDanger('Status Date can not be a future date.');
+                        $tr.find('#item_ReferralStatusDate').focus();
+                        flag = false;
+                        return false;
+                    }
+
+
+                    
+
+                }
+
+                if ($tr.find('#item_ReferralStatusCodeID').IsValueChanged() || $tr.find('#item_ReferralStatusDate').IsValueChanged()) {
+                    ReferralStatusGetHistoryList.push({
+                        'ReferralStatusDate': $tr.find('#item_ReferralStatusDate').val(),
+                        'ReferralStatusCodeID': $tr.find('#item_ReferralStatusCodeID').val(),
+                        'ReferralStatusID': $tr.find('#item_ReferralStatusID').val(),
+                    });
+                }
+
+            });
+
+            if (!flag)
+                return flag;
+            if (!hasFormChanged('ReferralAddEdit-form')) {
+                window.location.href = "/Case/ReferralList";
+                return false;
+            }
+
+            var data = $('#ReferralAddEdit-form').serializeFormObject();
+            data.ReferralStatusGetHistoryList = ReferralStatusGetHistoryList;
+
+            $.ajax({
+                type: "POST",
+                url: '/Case/ReferralMentorAddEdit',
+                data: data,
+                success: function (result) {
+                    if (result.isSuccess) {
+
+                        RequestSubmitted();
+
+
+                        RedirectToBackPage();
+                    }
+                },
+                dataType: 'json'
+            });
+        }
+
+        $('#btnSave').on('click', function () {
+            SaveData();
+        });
+        $('#btnCancel').on('click', function () {
+            RedirectToBackPage();
+        });
+
+        function RedirectToBackPage()
+        {
+
+            @if (Request.QueryString["backPageUrl"] != null)
+            {
+                <text>
+                 window.location.href = "@Request.QueryString["backPageUrl"]";
+                </text>
+            }
+            else
+            {
+                 <text>
+                      window.location.href = "/Case/ReferralList";
+                 </text>
+            }
+        }
+
+        $('.chkFlag').on('click', function () {
+            $('#' + $(this).attr('id')).val($(this).is(':checked') ? 1 : 0)
+        });
+        $('#chkCompleted').on('click', function () {
+            if ($(this).is(':checked'))
+                $('#ReferralEndDate').val('@DateTime.Now.ToString("d")')
+            else
+                $('#ReferralEndDate').val('')
+        });
+        $('.ddlSelected').each(function () {
+            $(this).val($(this).data('selected'));
+        })
+
+
+        setInitialFormValues('ReferralAddEdit-form', true);
+    </script>
+}

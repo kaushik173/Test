@@ -1,0 +1,157 @@
+﻿@model LALoDep.Models.Case.LegalNumberAddEditViewModel
+@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+
+
+@{
+    ViewBag.Title = "User <br/> Legal Numbers";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">User</span>
+                <div class="widget-buttons pull-right ">
+                    <input type="button" class="btn btn-default padding-5" name="AddLegalNumber" value="Add Legal Number For @Model.FirstName @Model.LastName" id="btnaddLegal" />
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "legalNumber-form", @class = "form-inline  center-block" }))
+                {
+                    <input type="hidden" name="hdnPersonID" id="hdnPersonID" value="@LALoDep.Core.Custom.Utility.Utility.Encrypt(Model.PersonID.ToString())" />
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = 1, style = "width:100%", autofocus = "autofocus", disabled = "disabled" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2, style = "width:100%", disabled = "disabled" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Legal Numbers For @Model.FirstName @Model.LastName</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="legalNumbersList">
+                        <thead>
+                            <tr>
+                                <th class="">Type</th>
+                                <th class="">Number</th>
+                                <th class="" style="width: 30px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.LegalNumbers != null && Model.LegalNumbers.Count > 0)
+                            {
+                                foreach (var item in Model.LegalNumbers)
+                                {
+                                    <tr>
+                                        <td><a href="/Case/LegalNumberEdit/@item.LegalNumberID.ToEncrypt()?pageID=@ViewBag.PageID">@item.LegalNumberTypeCodeValue</a></td>
+                                        <td>@item.LegalNumberEntry</td>
+                                        <td><a style="cursor:pointer;" class="btn btn-danger btn-xs delete" data-secure-id="@((int)SecurityToken.DeleteLegalNumber)" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.LegalNumberID.ToString())"><i class="fa fa-trash-o"></i> Delete</a></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnCancel" type="submit" class="btn btn-primary v-bottom default">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        var $PageID = '@ViewBag.PageID';
+        var origin_wrapper_height = 0, origin_content_height = 0;
+
+        $('#btnaddLegal').on("click", function () {
+            window.location.href = '/Case/LegalNumberAdd/' + $('#hdnPersonID').val() + '?pageID=' + $PageID;
+        });
+
+        $('#btnCancel').on("click", function () {
+            window.location.href = '/Users/Search';
+        });
+
+        $('body').on('click', '.delete', function () {
+            var id = $(this).attr('data-id');
+            var tr = $(this).parent().parent();
+            confirmBox("Are you sure you want to remove selected records?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Case/LegalNumberDeleteForPerson/' + id,
+                        dataType: "json",
+                        success: function (data) {
+                            tr.remove();
+                            notifySuccess('Record delete successfully.');
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            var oTable = $('#legalNumbersList').dataTable({
+                "searching": false,
+                "bSort": false,
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+            });
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                $('#legalNumbersList').css('width', '100%');
+                fitCalculatedHeightForSearchDataTable();
+            });
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                calc_height = $(window).height();
+                var _offset = 25;
+                origin_wrapper_height = $('body>div.container-fluid').height();
+                origin_content_height = $('#divSearchResult .dataTables_scrollBody').height();
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            //console.log(calc_height + " - " + $(this).outerHeight(true));
+
+                            //console.log($(this).siblings());
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                //console.log("calc :" + calc_height + " offset: " + _offset);
+                calc_height = calc_height - _offset;
+                calc_height = calc_height < 250 ? 250 : calc_height;
+                //console.log("total: " + calc_height);
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+                return calc_height;
+            }
+        });
+
+    </script>
+}

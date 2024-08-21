@@ -1,0 +1,464 @@
+﻿@using System.Web.Script.Serialization
+@using LALoDep.Core.Custom.Extensions
+@using Jcats.SD.UI.ViewModels
+@using LALoDep.Custom
+
+
+@{
+    var customTheme = new CustomThemeModel { PrimaryFontColor = "#ffffff", PrimaryColor = "#0000ff", SecondaryColor = "#0000ff", SecondaryFontColor = "#ffffff" };
+
+    var themeUrl = UserEnvironment.UserManager.UserExtended.ThemeUrl;
+    if (!string.IsNullOrEmpty(themeUrl))
+    {
+        if (!themeUrl.Contains("/assets/css/skins/"))
+        {
+            try
+            {
+                customTheme = new JavaScriptSerializer().Deserialize<Jcats.SD.UI.ViewModels.CustomThemeModel>(themeUrl);
+            }
+            catch
+            {
+
+            }
+
+        }
+    }
+
+
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="col-md-12 col-sm-12">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Select an existing theme
+                    </span>
+
+                </div>
+                <div class="widget-body theme-area-big">
+                    <ul class="colorpicker" id="skin-changer">
+                        <li><span class="colorpick-btn" style="background-color:#5DB2FF;" rel="/assets/css/skins/blue.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#2dc3e8;" rel="/assets/css/skins/azure.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#03B3B2;" rel="/assets/css/skins/teal.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#53a93f;" rel="/assets/css/skins/green.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#FF8F32;" rel="/assets/css/skins/orange.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#cc324b;" rel="/assets/css/skins/pink.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#AC193D;" rel="/assets/css/skins/darkred.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#8C0095;" rel="/assets/css/skins/purple.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#0072C6;" rel="/assets/css/skins/darkblue.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#585858;" rel="/assets/css/skins/gray.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#474544;" rel="/assets/css/skins/black.min.css"></span></li>
+                        <li><span class="colorpick-btn" style="background-color:#001940;" rel="/assets/css/skins/deepblue.min.css"></span></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                    <script>
+                        // Theme changing event.
+                        $('#skin-changer.colorpicker .colorpick-btn').on('click', function (e) {
+                            e.preventDefault();
+
+                            var themeUrl = $(this).attr('rel');
+                            $.ajax({
+                                type: "POST",
+                                url: '/Home/SelectTheme',
+                                data: { 'ThemeUrl': themeUrl },
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.Result == 'OK') {
+                                        document.location.href = document.location.href;
+                                    } else {
+                                        Notify(data.Message, 'bottom-right', '3000', 'danger', 'fa-warning', true);
+
+                                    }
+                                }
+                            });
+                            return false;
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Make your own theme
+                    </span>
+
+                </div>
+                <div class="widget-body .colorpickerplugin">
+
+                    <table class=" ">
+                        <tr>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Primary Color:
+                            </th>
+                            <td valign="middle" width="100" style="vertical-align: middle;">
+
+                                <input id="PrimaryColor" value="@customTheme.PrimaryColor" />
+
+
+                            </td>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Font Color:
+                            </th>
+                            <td valign="middle" class=" theme-area-big" style="vertical-align: middle;">
+                                <ul class="colorpicker">
+                                    <li>
+
+                                        <a class="colorpick-btn primaryFontColorBlack" style="background-color:#000000;"></a>
+                                    </li>
+                                    <li><a class="colorpick-btn primaryFontColorWhite" style="background-color:#ffffff;border: solid 1px #000000"></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Secondary Color:
+                            </th>
+                            <td valign="middle" style="vertical-align: middle;">
+                                <input id="SecondaryColor" value="@customTheme.SecondaryColor" />
+
+                            </td>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Font Color:
+                            </th>
+                            <td valign="middle" class=" theme-area-big" style="vertical-align: middle;">
+                                <ul class="colorpicker">
+                                    <li><a class="colorpick-btn secondaryFontColorBlack" style="background-color:#000000;"></a></li>
+                                    <li><a class="colorpick-btn secondaryFontColorWhite" style="background-color:#ffffff;border: solid 1px #000000"></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+
+                                <button id="btnApply" type="submit" class="btn btn-primary v-bottom  default" tabindex="1">
+                                    Apply
+                                </button>
+
+                                <button id="btnReset" type="submit" class="btn  v-bottom  default" tabindex="14">
+                                    Reset
+                                </button>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Reports
+                    </span>
+
+                </div>
+                <div class="widget-body .colorpickerplugin">
+
+                    <table class=" ">
+                        <tr>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                When generating reports:
+                            </th>
+                            <td valign="middle" style="vertical-align: middle;">
+                                <input type="radio" name="print" class="rbtnPrintDocumentOn" data-option="SameWindow" style="position: relative;top:5px" id="rbtnSameWindow" @if (UserEnvironment.UserManager.UserExtended.PrintDocumentOn == "SameWindow") { <text> checked="checked" </text>   } />  Open in the same window (includes open/save dialog option)<br />
+                                <input type="radio" name="print" class="rbtnPrintDocumentOn" data-option="NewWindow" style="position: relative;top:5px" id="rbtnNewWindow" @if (UserEnvironment.UserManager.UserExtended.PrintDocumentOn == "NewWindow" || UserEnvironment.UserManager.UserExtended.PrintDocumentOn.IsNullOrEmpty()) { <text> checked="checked" </text>      } />
+                                Open in a new window (excludes open/save dialog option)
+
+
+
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Layout
+                    </span>
+
+                </div>
+                <div class="widget-body .colorpickerplugin">
+
+                    <table class="">
+                        <tr>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Presentation Format:
+                            </th>
+                            <td valign="middle" style="vertical-align: middle;">
+                                <input type="radio" name="pagelayout" class="rbtnPageLayout" data-option="Standard" style="position: relative;top:5px" id="rbtnRegular" @if (UserEnvironment.UserManager.UserExtended.PageLayout == "Standard" || UserEnvironment.UserManager.UserExtended.PageLayout.IsNullOrEmpty()) { <text> checked="checked" </text>    } /> Standard<br />
+                                <input type="radio" name="pagelayout" class="rbtnPageLayout" data-option="Compact" style="position: relative;top:5px" id="rbtnCondensed" @if (UserEnvironment.UserManager.UserExtended.PageLayout == "Compact") { <text> checked="checked" </text>       } />
+                                Compact
+
+
+
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div> 
+        <div class="col-md-12 col-sm-12">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Hyperlinks
+                    </span>
+
+                </div>
+                <div class="widget-body .colorpickerplugin">
+
+                    <table class="">
+                        <tr>
+                            <th width="150" valign="middle" style="vertical-align: middle;">
+                                Underline for Hyperlinks:
+                            </th>
+                            <td valign="middle" style="vertical-align: middle;">
+                                <input type="radio" name="hyperlinkUnderline" class="rbtnHyperlinkUnderline" data-option="Yes" style="position: relative;top:5px" id="rbtnHyperlinkUnderlineYes" @if (UserEnvironment.UserManager.UserExtended.HyperlinkUnderline) { <text> checked="checked" </text>     } /> Yes<br />
+                                <input type="radio" name="hyperlinkUnderline" class="rbtnHyperlinkUnderline" data-option="No" style="position: relative;top:5px" id="rbtnHyperlinkUnderlineNo" @if (UserEnvironment.UserManager.UserExtended.HyperlinkUnderline==false) { <text> checked="checked" </text>        } />
+                                No
+
+
+
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+<style>
+    .colorpick-btn {
+        cursor: pointer;
+    }
+
+    .theme-area-big ul {
+        padding: 0px;
+        margin: 0px;
+    }
+
+        .theme-area-big ul li {
+            list-style: none;
+            float: left;
+            margin: 10px;
+        }
+
+        .theme-area-big ul li {
+            list-style: none;
+        }
+
+            .theme-area-big ul li .colorpick-btn {
+                display: block;
+                width: 36px;
+                height: 36px;
+                margin: 0;
+                padding: 0;
+                -webkit-border-radius: 0;
+                -webkit-background-clip: padding-box;
+                -moz-border-radius: 0;
+                -moz-background-clip: padding;
+                border-radius: 0;
+                background-clip: padding-box;
+                position: relative;
+                -webkit-transition: all ease .1s;
+                -moz-transition: all ease .1s;
+                -o-transition: all ease .1s;
+                transition: all ease .1s;
+            }
+</style>
+
+<input type="hidden" id="hidPrimaryColor" value="@customTheme.PrimaryColor" />
+<input type="hidden" id="hidPrimaryFontColor" value="@customTheme.PrimaryFontColor" />
+<input type="hidden" id="hidSecondaryColor" value="@customTheme.SecondaryColor" />
+<input type="hidden" id="hidSecondaryFontColor" value="@customTheme.SecondaryFontColor" />
+@section fixedfooter{
+
+}
+@section scripts{
+
+    <script src="/assets/js/colorpicker/spectrum.js"></script>
+    <link href="/assets/js/colorpicker/spectrum.css" rel="stylesheet" />
+
+    <script>
+        $(function () {
+
+            $('#PrimaryColor').change(function () {
+
+                $('#hidPrimaryColor').val($(this).spectrum("get").toHexString());
+
+            });
+
+            $('.rbtnPrintDocumentOn').click(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/SavePrintDocumentOn/' + $(this).attr('data-option'),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Result == 'OK') {
+                            document.location.href = document.location.href;
+                        } else {
+                            Notify(data.Message, 'bottom-right', '3000', 'danger', 'fa-warning', true);
+
+                        }
+                    }
+                });
+            });
+            $('.rbtnPageLayout').click(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/SavePageLayout/' + $(this).attr('data-option'),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Result == 'OK') {
+                            document.location.href = document.location.href;
+                        } else {
+                            Notify(data.Message, 'bottom-right', '3000', 'danger', 'fa-warning', true);
+
+                        }
+                    }
+                });
+            });
+            $('.rbtnHyperlinkUnderline').click(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/SaveHyperlinkUnderline/' + $(this).attr('data-option'),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Result == 'OK') {
+                            document.location.href = document.location.href;
+                        } else {
+                            Notify(data.Message, 'bottom-right', '3000', 'danger', 'fa-warning', true);
+
+                        }
+                    }
+                });
+            });
+            
+            $('#SecondaryColor').change(function () {
+
+                $('#hidSecondaryColor').val($(this).spectrum("get").toHexString());
+
+            });
+            $('.secondaryFontColorBlack').click(function () {
+                $('.secondaryFontColorWhite').css({
+                    'border': 'solid 1px #000'
+                });
+                $(this).css({
+                    'border': 'solid 5px #aaa'
+                });
+                $('#hidSecondaryFontColor').val('#000000');
+            });
+            $('.secondaryFontColorWhite').click(function () {
+
+                $('.secondaryFontColorBlack').css({
+                    'border': 'solid 0px #aaa'
+                });
+                $(this).css({
+                    'border': 'solid 5px #aaa'
+                });
+                $('#hidSecondaryFontColor').val('#ffffff');
+            });
+            $('.primaryFontColorBlack').click(function () {
+                $('.primaryFontColorWhite').css({
+                    'border': 'solid 1px #000'
+                });
+                $(this).css({
+                    'border': 'solid 5px #aaa'
+                });
+                $('#hidPrimaryFontColor').val('#000000');
+            });
+            $('.primaryFontColorWhite').click(function () {
+
+                $('.primaryFontColorBlack').css({
+                    'border': 'solid 0px #aaa'
+                });
+                $(this).css({
+                    'border': 'solid 5px #aaa'
+                });
+                $('#hidPrimaryFontColor').val('#ffffff');
+            });
+
+
+            $('#btnApply').click(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/ApplyTheme',
+                    data: {
+                        'PrimaryColor': $('#hidPrimaryColor').val(),
+                        'PrimaryFontColor': $('#hidPrimaryFontColor').val(),
+                        'SecondaryColor': $('#hidSecondaryColor').val(),
+                        'SecondaryFontColor': $('#hidSecondaryFontColor').val(),
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Result == 'OK') {
+                            document.location.href = document.location.href;
+                        } else {
+                            Notify(data.Message, 'bottom-right', '3000', 'danger', 'fa-warning', true);
+
+                        }
+                    }
+                });
+            });
+            $('#btnReset').click(function () {
+
+                $('#skin-changer.colorpicker .colorpick-btn:first').click();
+            });
+
+
+            if ($('#hidPrimaryFontColor').val() == '#000000') {
+                $('.primaryFontColorBlack').css({
+                    'border': 'solid 5px #aaa'
+                });
+            }
+            if ($('#hidPrimaryFontColor').val() == '#ffffff') {
+                $('.primaryFontColorWhite').css({
+                    'border': 'solid 5px #aaa'
+                });
+            }
+
+
+            if ($('#hidSecondaryFontColor').val() == '#000000') {
+                $('.secondaryFontColorBlack').css({
+                    'border': 'solid 5px #aaa'
+                });
+            }
+            if ($('#hidSecondaryFontColor').val() == '#ffffff') {
+                $('.secondaryFontColorWhite').css({
+                    'border': 'solid 5px #aaa'
+                });
+            }
+            $('#SecondaryColor').spectrum();
+            $('#PrimaryColor').spectrum();
+        })
+    </script>
+}
+
+

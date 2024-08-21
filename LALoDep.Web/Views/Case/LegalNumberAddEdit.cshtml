@@ -1,0 +1,75 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.LegalNumberAddEditViewModel
+@{
+    ViewBag.Title = ((Model.LegalNumberID == 0) ? "Add " : "Edit ") + "Legal Number";
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    @if (Model.LegalNumberID == 0)
+                    {
+                        <text>Add Legal Number</text>
+                    }
+
+                    else
+                    {
+                        <text>Edit Legal Number</text>
+                    }
+
+                    @Html.Raw(ViewBag.PersonName != null ? " for <b>"+ ViewBag.PersonName+"</b>" : null)
+                </span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "legalNumberAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(o => o.PersonID)
+                    @Html.HiddenFor(o => o.AgencyID)
+                    @Html.HiddenFor(o => o.LegalNumberID)
+                    @Html.HiddenFor(o => o.RecordStateID)
+                    <input type="hidden" name="hdnPersonID" id="hdnPersonID" value="@LALoDep.Core.Custom.Utility.Utility.Encrypt(Model.PersonID.ToString())" />
+                    <input type="hidden" name="hdnPageID" id="hdnPageID" value="@LALoDep.Core.Custom.Utility.Utility.Encrypt(ViewBag.PageID.ToString())" />
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.LegalNumberTypeCodeID, "Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.LegalNumberTypeCodeID, Model.LegalNumberTypeList, "", new { @class = "form-control input-sm required", tabindex = 1, style = "width:100%", autofocus = "autofocus" })
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.LegalNumberEntry, "Number", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LegalNumberEntry, new { @class = "form-control input-sm  required ", tabindex = 2, style = "width:100%" ,maxlength="50"})
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.LegalNumberComment, "Comment", new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.LegalNumberComment, new { @class = "form-control input-sm  ", tabindex = 3, style = "width:100%",maxlength="500" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="4" data-secure-id="@((int)SecurityToken.AddLegalNumber)">Save</button>
+        <button id="btnSaveAndAdd" type="button" class="btn btn-default v-bottom " tabindex="5" data-secure-id="@((int)SecurityToken.AddLegalNumber)">Save/Add New</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="6" data-secure-id="@((int)SecurityToken.ViewLegalNumber)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        var $BaseURL = '/';
+        var $PageID = '@ViewBag.PageID';
+
+    </script>
+<script src="@Url.Content("~/Scripts/Application-Script/Case/LegalNumberAddEdit.js?v=" + Guid.NewGuid())"></script>
+
+
+
+}
+
+

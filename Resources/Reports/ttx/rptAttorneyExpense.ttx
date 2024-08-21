@@ -1,0 +1,16 @@
+Clients	Memo		Mom Platinum
+RequestedByFirstName	String	50	Olivia
+RequestedByLastName	String	50	Gilliam
+Petitions	Memo		CSI022A, CSI022B
+CaseNumber	String	50	2001J3C0094
+AmountAuthorized	Number		150.0000
+DateAuthorized	DateTime		01/02/2000
+ProviderName	String	200	Heller, Beatriz  PH. D.
+ExpenseType	String	100	Bonding Study
+PanelCase	String	10	No
+DateForwardedToAccounting	DateTime		01/04/2000
+AmountPaid	Number		150.0000
+DatePaid	DateTime		01/05/2000
+StartDateParameter	String	100	Start Date:  01/01/2000
+EndDateParameter	String	100	End Date:  01/31/2000
+AgencyName	String	200	Public Defender

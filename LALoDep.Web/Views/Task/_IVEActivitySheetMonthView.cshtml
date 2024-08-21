@@ -1,0 +1,93 @@
+﻿@using LALoDep.Core.Custom.Extensions;
+@model LALoDep.Models.IVEActvityLog.IVEActvitySheetViewModel
+@{
+    var daysInMonth = DateTime.DaysInMonth(Model.ActivityMonth.Year, Model.ActivityMonth.Month);
+    var readOnly = Model.UseWorkHoursForActivityLog == 1 ? "readonly=\"readonly\"" : "";
+}
+
+
+
+<table id="activity-@Model.ActivityLogID" class="activity-sheet table">
+    <thead>
+        <tr>
+            <th class="activity-header text-right">Day of the Month</th>
+            @for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateTime(Model.ActivityMonth.Year, Model.ActivityMonth.Month, day);
+                var dayName = date.ToString("ddd");
+
+                var tdClass = "";
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    tdClass = "danger";
+                }
+                tdClass = date == DateTime.Today ? "success" : tdClass;
+
+                <th class="day-header @tdClass" rowspan="2">
+                    <div style="font-size:90%;">@day </div>
+                    <div style="font-size:75%;" class="text-muted">@dayName</div>
+                </th>
+            }
+        </tr>
+        <tr>
+            <th>Activity</th>
+        </tr>
+    </thead>
+    @if (Model.IVeActivityLogDetails != null && Model.IVeActivityLogDetails.Any())
+    {
+        <tbody>
+            @foreach (var item in Model.IVeActivityLogDetails)
+            {
+                <tr id="tr-@item.ActivityLogDetailID" class="data-row" data-activity-log-detail-id="@item.ActivityLogDetailID" data-activity-log-id="@item.ActivityLogID" data-raw-code-id="@item.RowCodeID" data-inserted-by-user-id="@item.InsertedByUserID" data-record-state-id="@item.RecordStateID" data-sort-order="@item.SortOrder">
+                    <td class="@(item.Code.FirstOrDefault().CodeValue=="Dependency Other County/Program"?"highlightGray":"")">
+                        <span class="activity-name">@Html.Raw(item.Code.FirstOrDefault().CodeValue)</span>
+                        @*<div class="pull-right"><button type="button" data-activity-log-detail-id="@item.ActivityLogDetailID" data-collepsed="true" class="btnToggleChild btn btn-link btn-sm"><i class="fa fa-plus-square-o"></i></button></div>*@
+                    </td>
+                    @for (int day = 1; day <= daysInMonth; day++)
+                    {
+                        var date = new DateTime(Model.ActivityMonth.Year, Model.ActivityMonth.Month, day);
+                        var tdClass = "";
+                        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                        {
+                            tdClass = "danger";
+                        }
+                        tdClass = date == DateTime.Today ? "success" : tdClass;
+
+                        <td class="@tdClass">
+                            <input type="text" name="Col@(day)" @readOnly autocomplete="off" data-day="@day" data-activity-log-id="@Model.ActivityLogID" class="form-control number-only input-sm activity-day day-@day activity-log-@Model.ActivityLogID" value="@(item.GetPropertyValue<decimal?>("Col" + day))" />
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="text-right">Total Daily Time:</th>
+                @for (int day = 1; day <= daysInMonth; day++)
+                {
+                    var date = new DateTime(Model.ActivityMonth.Year, Model.ActivityMonth.Month, day);
+                    var tdClass = "";
+                    if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        tdClass = "danger";
+                    }
+                    tdClass = date == DateTime.Today ? "success" : tdClass;
+
+                    var total =Math.Round(Model.IVeActivityLogDetails.Sum(x => x.GetPropertyValue<decimal?>("Col" + day) ?? 0));
+                    if (total > 100 && readOnly!="")
+                    {
+                        total = 100;
+                    }
+                    <th class="day-total @tdClass day-total-@day activity-log-@Model.ActivityLogID" data-day="@day" data-activity-log-id="@Model.ActivityLogID">@total</th>
+                }
+            </tr>
+        </tfoot>
+
+    }
+    else
+    {
+        <tr>
+            <td clospan="100%" class="text-center">No data</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,240 @@
+﻿@using System.Data
+@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.Task.EditRfdProfileQuestionViewModel
+@{
+    ViewBag.Title = "Edit AR Profile Question";
+
+   
+}
+
+@{
+    Html.RenderPartial("~/Views/Task/AR/_tabs.cshtml");
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.QuestionHeader</span>
+                <div class="widget-buttons">
+
+                    @Model.RfdHeader
+
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "question-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.Hidden("EncryptHearingReportFilingDueID", Model.HearingReportFilingDueID.ToEncrypt())
+
+
+                    <div class="form-group col-md-12">
+                        @Html.HiddenFor(o => o.NextQuestionUrl)
+
+
+                        @Html.HiddenFor(o => o.NoteID)
+                        <input type="hidden" name="QuestionID" id="QuestionID" value="@Model.QuestionID" />
+                        <input type="hidden" name="ProfileID" id="ProfileID" value="@Model.ProfileID" />
+                        <input type="hidden" name="RoleID" id="RoleID" value="@Model.RoleID" />
+                        <input type="hidden" name="ProfileTypeID" id="ProfileTypeID" value="@Model.ProfileTypeID" />
+                        <input type="hidden" name="HearingReportFilingDueID" id="HearingReportFilingDueID" value="@Model.HearingReportFilingDueID" />
+                   
+                        
+                        @Html.HiddenFor(o => o.IsFreeFormAnswer)
+                        @if (!Model.IsFreeFormAnswer)
+                        {
+                            @Html.LabelFor(m => m.ProfileAnswerID, Model.Question, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ProfileAnswerID, Model.ProfileAnswerList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+
+                        }
+                        else
+                        {
+
+                            @Html.LabelFor(m => m.FreeFormAnswer, Model.Question, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FreeFormAnswer, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%", maxlength=255 })
+
+                        }
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(m => m.NoteEntry, "Note", new { @class = "control-label" })
+
+
+                        @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm "+ ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 2, @style = "width:100%" })
+                    </div>
+                }
+
+            </div>
+        </div>
+        @if (Model.PersonRoleList != null && Model.PersonRoleList.Count > 0 && Model.ProfileID==0)
+        {
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Check Names Below To Copy This Profile Answer To: </span>
+                    <div class="widget-buttons">
+
+
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+
+                            <tbody>
+
+                                @foreach (var item in Model.PersonRoleList)
+                                {
+                                    if (Model.RoleID != item.RoleID)
+                                    {
+                                <tr>
+                                    <td width="50">
+                                        @Html.CheckBox("chkSelectPerson", new { tabindex = "3",@class="chkSelectPerson", data_roleId = item.RoleID })
+                                    </td>
+                                    <td>
+
+                                        @item.PersonNameDisplay (@item.Role)
+
+
+                                    </td>
+
+                                </tr>
+
+                                    }
+
+
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        }
+        @if (Model.ProfileAnswerHistoryList != null && Model.ProfileAnswerHistoryList.Where(o => o.ProfileID.HasValue).ToList().Count > 0)
+        {
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Profile History
+                    </span>
+                    <div class="widget-buttons">
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+
+
+
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" style="margin-bottom: 20px !important;">
+
+                            <tbody>
+                                <tr>
+                                    <th>Answer </th>
+                                    <th>Profile Date  </th>
+                                    <th width="80">Note </th>
+                                    <th width="80">  </th>
+
+
+
+
+
+                                </tr>
+                                @foreach (var item in Model.ProfileAnswerHistoryList)
+                                {
+                                    <tr @if(Model.ProfileID==item.ProfileID.Value){<text>class="highLightBlue"</text>}>
+
+                                    <td width="60%">
+                                    @item.ProfileFreeformAnswer @item.Answer
+                                    </td>
+                                        <td>@if (item.ProfileInsertedByUserID == UserEnvironment.UserManager.UserExtended.UserID && Model.ProfileID != item.ProfileID.Value)
+                                        {
+                                            <a data-secure-id="@((int)SecurityToken.EditRFDEditProfile)" href="@(string.Format("/Task/EditRFDProfileQuestion/{0}?questionId={1}&roleId={2}&profileTypeId={3}&profileId={4}",
+ Model.HearingReportFilingDueID.ToEncrypt(), Model.QuestionID.ToEncrypt(), Model.RoleID.ToEncrypt(),
+Model.ProfileTypeID.ToEncrypt(), item.ProfileID.ToEncrypt()))">@item.ProfileInsertedOnDateTime</a>
+                                        }
+                                        else
+                                        { @item.ProfileInsertedOnDateTime}
+                                        </td>
+                                        <td width="80">
+                                        @if (item.Note.HasValue && item.Note.Value == 1 && item.ProfileID.HasValue)
+                                            {
+                                                <a class="btn   btn-info btn-xs btnNote" data-profileid="@item.ProfileID.Value.ToEncrypt()">Note</a>
+                                            }
+
+                                        </td>
+
+                                        <td>
+                                        @if (item.ProfileInsertedByUserID == UserEnvironment.UserManager.UserExtended.UserID)
+                                        {
+                                            <a class="btn btn-danger deleteProfile btn-xs" data-id="@item.ProfileID" data-secure-id="@((int)SecurityToken.EditRFDDeleteProfile)">delete</a>
+                                        }
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--script-->
+@section fixedfooter{
+
+    <div class="boxfloat text-center">
+
+
+
+
+        @if (Model.ProfileID == 0)
+        {
+            <button id="btnContinue" type="submit" class="btn btn-primary v-bottom  default" tabindex="3" data-secure-id="@((int) SecurityToken.EditRFDAddProfile)">
+                Save/Continue
+            </button>
+
+    <button id="btnAddMore" type="submit" class="btn btn-default  " tabindex="5" data-secure-id="@((int) SecurityToken.EditRFDAddProfile)">
+        Save/Add More
+    </button>
+        }
+        else
+        {
+            <button id="btnUpdate" type="submit" class="btn btn-primary v-bottom  default  " tabindex="3" data-href="/Task/EditRFDProfileQuestion/@Model.HearingReportFilingDueID.ToEncrypt()?questionId=@Model.QuestionID.ToEncrypt()&roleId=@Model.RoleID.ToEncrypt()&profileTypeId=@Model.ProfileTypeID.ToEncrypt()" data-secure-id="@((int) SecurityToken.EditRFDEditProfile)">
+                Update
+            </button>
+        }
+     
+        <button id="btnCancel" type="submit" class="btn btn-default " tabindex="6" data-href="/Task/EditRfdProfile/@Model.HearingReportFilingDueID.ToEncrypt()?roleId=@Model.RoleID.ToEncrypt()&profileTypeId=@Model.ProfileTypeID.ToEncrypt()">
+            Cancel
+        </button>
+
+
+
+
+
+    </div>
+
+}
+@section scripts
+{
+<script>
+    ApplySummernote();
+</script>
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/AR/EditRFDProfileQuestion.js?v=" + Guid.NewGuid())"></script>
+
+}

@@ -1,0 +1,107 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.FindingsAndOrdersListViewModel
+@{
+    ViewBag.Title = "Findings And <br />Orders List";
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Hearing</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(m => m.HearingJudge, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.HearingJudge, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.NoteEntry, new { @class = "control-label" })
+                    @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Findings and Orders</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-default btn-sm" data-secure-id="@((int)SecurityToken.AddFindingsAndOrders)" onclick="window.location.href = '@Url.Action(MVC.Case.AddFindingsAndOrders(Model.HearingID.ToEncrypt()))?caseId=@Model.CaseID.ToEncrypt()'" title="Add Findings And Orders">Add Findings And Orders</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12 findings-result">
+                @foreach (var find in Model.FindingAndOrderList)
+                {
+                    <div class="row" id="row-@find.HearingFindingOrderID">
+                        <div class="col-sm-2">
+                            <a href="@Url.Action(MVC.Case.EditFindingsAndOrders(Model.HearingID.ToEncrypt(),find.HearingFindingOrderID))&caseId=@Model.CaseID.ToEncrypt()">@find.HearingFindingOrderCodeValue</a>
+                        </div>
+                        <div class="col-sm-8 col-md-9">
+                            <p><strong>Person:</strong> @find.Person</p>
+                            <p><strong>Notices:</strong> @find.Notices</p>
+                          
+                            @if (!find.HearingFindingOrderComment.IsNullOrEmpty() && find.HearingFindingOrderComment.Length > 0)
+                            {
+                                <p><strong>Comment:</strong> @find.HearingFindingOrderComment</p>
+                            }
+                        </div>
+                        <div class="col-sm-2 col-md-1 text-right">
+                            <button class="btn btn-danger btn-xs delete-findings" data-id="@find.HearingFindingOrderID" data-secure-id="@((int)SecurityToken.DeleteFindingsAndOrders)"><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                        <div class="col-md-12 no-padding"><hr class="wide margin-10" /></div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="1">Return to Calendar</button>
+    </div>
+}
+
+
+@section scripts{
+    <script type="text/javascript">
+        $('#btnBackToCalendar').click(function () {
+            window.location.href = '/Task/QuickCalMyCalendar?HearingDate=' + $('.hearingDate').data('date');
+        });
+        $("body").on("click", ".delete-findings", function () {
+            var id = $(this).data("id");
+            confirmBox("Are you sure you want to delete selected item?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Case/DeleteFindingsAndOrders/' + id,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                $("#row-" + id).remove();
+                                notifySuccess('Selected record deleted successfully.');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

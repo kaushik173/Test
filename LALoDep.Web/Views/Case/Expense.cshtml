@@ -1,0 +1,129 @@
+﻿@model LALoDep.Models.Case.ExpenseViewModel
+@using LALoDep.Custom.Security
+@{
+    ViewBag.Title = "Expense";
+    var Display = string.Empty;
+    if (Model.HourlyExpenseID.HasValue)
+    {
+        Display = "Edit Expense";
+    }
+    else
+    {
+        Display = "Add Expense";
+    }
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Display</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "expenseAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.HourlyExpenseID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.CaseID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HourlyExpenseDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HourlyExpenseDate, new { @class = "form-control input-sm date-picker required", autofocus = "autofocus", tabindex = 1, maxlength = "10", style = "width:100%" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            @Html.HiddenFor(m => m.HourlyExpenseDate, new { id = "hdn_HourlyExpenseDate" })
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HourlyExpenseTypeCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HourlyExpenseTypeCodeID,Model.ExpenseType,"",new { @class = "required form-control input-sm", tabindex = 2, style = "width:100%" })
+                        @Html.HiddenFor(m => m.HourlyExpenseTypeCodeID, new { id = "hdn_HourlyExpenseTypeCodeID" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PersonID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.PersonID, new SelectList(Model.Attorney, "PersonID", "PersonNameDisplay"), "", new { @class = "required form-control input-sm ", tabindex = 3, style = "width:100%;" })
+                        @Html.HiddenFor(m => m.PersonID, new { id = "hdn_PersonID" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HourlyExpenseAmount, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HourlyExpenseAmount, new { @class = "required form-control input-sm ", tabindex = 4, style = "width:100%;" })
+                        @Html.HiddenFor(m => m.HourlyExpenseAmount, new { id = "hdn_HourlyExpenseAmount" })
+                    </div>
+                      <div class="form-group">
+                        @Html.LabelFor(m => m.HourlyExpenseProviderCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HourlyExpenseProviderCodeID, Model.Provider, "", new { @class = " form-control input-sm", tabindex = 5, style = "width:100%" })
+                        @Html.HiddenFor(m => m.HourlyExpenseProviderCodeID, new { id = "hdn_HourlyExpenseProviderCodeID" })
+                    </div>
+                    <div class="form-group  col-md-12 col-sm-12  col-xs-12 ">
+                        @Html.LabelFor(m => m.HourlyExpenseDescription, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.HourlyExpenseDescription, new { @class = "form-control ", tabindex = 6, style = "width:100%" })
+                        @Html.HiddenFor(m => m.HourlyExpenseDescription, new { id = "hdn_HourlyExpenseDescription" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Expense In Case</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="expenseList">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Expense Type</th>
+                                <th>Attorney</th>
+                                <th>Amount</th>
+                                <th>Provider</th>
+                                <th>Description</th>
+                                <th style="width:30px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if ((!Model.HourlyExpenseID.HasValue && Model.CanAddAccess) || (Model.HourlyExpenseID.HasValue && Model.CanEditAccess))
+        {
+            <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" data-id="@(LALoDep.Core.Custom.Utility.Utility.Encrypt(Model.HourlyExpenseID.ToString()))" tabindex="7"> @(Model.HourlyExpenseID.HasValue ? "Save" : "Add")</button>
+        }
+        @if (Model.HourlyExpenseID.HasValue)
+        {
+            <button id="btnSaveAndAddNew" type="button" class="btn  v-bottom default" tabindex="8">Save/Add New</button>
+        }
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        var $IsDelete = '@Model.CanDeleteAccess';
+        var $IsEdit = '@Model.CanEditAccess';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/Expense.js?v=" + Guid.NewGuid())"></script>
+
+}

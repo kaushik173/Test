@@ -1,0 +1,135 @@
+﻿@using LALoDep.Custom
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic -->
+    <meta charset="UTF-8">
+    <title>Jcats Defender</title>
+    <meta name="keywords" content="Jcats Defender" />
+    <meta name="description" content="Jcats Defender">
+    <meta name="author" content="Canyon Solutions Inc.">
+
+    <!-- Mobile Metas -->
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+    @Styles.Render("~/assets/css/styles")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/assets/js/scripts")
+    @Scripts.Render("~/DeviceDetector/js")
+    @Scripts.Render("~/Scripts/js")
+    @{
+        var themeUrl =  UserEnvironment.UserManager.UserExtended.ThemeUrl;
+        if (!string.IsNullOrEmpty(themeUrl))
+        {
+            <link id="skin-link" rel="stylesheet" type="text/css" href="@themeUrl" />
+        }
+    }
+    @Styles.Render("~/Content/css/mobile")
+    @RenderSection("head", false)
+
+    
+</head>
+<body>
+    <!-- start: header -->
+    <nav class="navbar navbar-fixed-top">
+        <div class="container-fluid" style="background-color: #2dc3e8;">
+            <div class="navbar-inner">
+                <div class="navbar-container">
+                    @*<div id="sidebar-collapse" class="sidebar-collapse pull-right">
+                            <i class="collapse-icon fa fa-bars"></i>
+                        </div>*@
+                    <div class="pull-left mobile-page-title">
+                        <span>@ViewBag.Title</span>
+                    </div>
+                    <div class="navbar-header pull-right">
+                        @Html.Partial("_LoginPartial")
+                        <div id="sidebar-collapse" class="sidebar-collapse test">
+                            <i class="collapse-icon fa fa-bars"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        @RenderSection("pageheader", required: false)
+
+    </nav>
+    <div class="container-fluid">
+        <section class="main-container row">
+            <div class="page-container">
+                <div id="loading" style="display: none; position: fixed; ">
+                    <i class="fa fa-spinner fa-spin fa-3x"></i>
+                </div>
+                @if (ViewContext.RouteData.Values["action"].ToString() != "AccessDenied")
+                { 
+                    @Html.Action("Render", "Menu");
+                }
+                <div id="page-content" class="">
+                    @RenderBody()
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="fixedbar">
+        @RenderSection("fixedfooter", required: false)
+    </div>
+    <script type="text/javascript">
+
+        function initSideMenu() {
+
+            //Sidebar Toggler
+            $(".sidebar-toggler").on('click', function () {
+                $("#sidebar").toggleClass("hide");
+                $(".sidebar-toggler").toggleClass("active");
+                $(window).trigger("resize");
+                return false;
+            });
+            //End Sidebar Toggler
+
+            //Sidebar Collapse
+            $("#sidebar-collapse").on('click', function () {
+                $("#sidebar").toggleClass("hide");
+                $(".sidebar-collapse").toggleClass("active");
+
+            });
+
+            $("#page-content").on("click", function () {
+                $("#sidebar").removeClass("hide");
+                $(".sidebar-collapse").removeClass("active");
+            })
+        }
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        (function ($) {
+            jQuery.fn.putCursorAtEnd = function () {
+                return this.each(function () {
+                    //$(this).focus()
+                    if (this.setSelectionRange) {
+                        var len = $(this).val().length * 2;
+                        this.setSelectionRange(len, len);
+                    }
+                    else {
+                        $(this).val($(this).val());
+                    }
+                    this.scrollTop = 999999;
+                });
+            };
+        })(jQuery);
+
+        $(document).ready(function () {
+            initSideMenu();
+            $('input.date-picker').on("focus", function () {
+                $(this).putCursorAtEnd();
+            });
+        });
+    </script>
+    @RenderSection("scripts", false)
+</body>
+</html>

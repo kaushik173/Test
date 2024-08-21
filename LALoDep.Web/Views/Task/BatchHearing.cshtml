@@ -1,0 +1,153 @@
+﻿@model LALoDep.Models.Task.BatchHearingViewModel
+@{
+    ViewBag.Title = "Batch Hearing Entry";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "batchHearing-form", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Search Criteria</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case1, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case1, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case2, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case2, new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case3, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case3, new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case4, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case4, new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case5, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case5, new { @class = "form-control input-sm", tabindex = 5 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Case6, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Case6, new { @class = "form-control input-sm", tabindex = 6 })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Hearing information To Add</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTypeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", tabindex = 7, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 8, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTime, new { @class = "control-label" })
+                        @{
+    var hr = "";
+    var min = "";
+    var pm = "";
+    if (!string.IsNullOrEmpty(Model.HearingTime))
+    {
+        string[] endHr = Model.HearingTime.Split(':');
+        string[] endMin = endHr[1].ToString().Split(' ');
+        hr = endHr[0].TrimStart('0');
+        min = endMin[0];
+        pm = endMin[1].ToUpper();
+    }
+                        }
+                        <div class="input-group">
+                            @Html.DropDownList("Hours", LALoDep.Core.Custom.Utility.Utility.GetHoursList(hr), "", new { style = "width:54px;padding:3px;", tabindex = 9 }) : @Html.DropDownList("Minutes", LALoDep.Core.Custom.Utility.Utility.GetMinutesList(min), "", new { style = "width:54px;padding:3px;", tabindex = 10 })  @Html.DropDownList("TimeAmPm", LALoDep.Core.Custom.Utility.Utility.GetTimeAmPm(pm), "", new { style = "width:54px;padding:3px;", tabindex = 11 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingOfficerID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingOfficerID, Model.OfficcerList, "", new { @class = "form-control input-sm", tabindex = 12, style = "width:100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = 13, style = "width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchBatchHearing">
+                        <thead>
+                            <tr>
+                                <th>Agency</th>
+                                <th>JCATS #</th>
+                                <th >All&nbsp;&nbsp;<input type="checkbox" class="all" name="All" value=" " id="All" tabindex="14"/></th>
+                                <th>Case #</th>
+                                <th>Ptn Type</th>
+                                <th>Dept</th>
+                                <th>Client</th>
+                                <th>Child Name</th>
+                                <th>Next Hearing</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="15">Search</button>
+        <button id="btnAddHearing" type="button" class="btn  v-bottom default hidden" tabindex="16">Add Hearings</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/BatchHearing.js?v=" + Guid.NewGuid())"></script>
+}

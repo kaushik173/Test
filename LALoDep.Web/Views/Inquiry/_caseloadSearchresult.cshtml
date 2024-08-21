@@ -1,0 +1,45 @@
+﻿@model IEnumerable<LALoDep.Domain.pd_CaseLoad.pd_CaseloadGetByStaff1_spResults>
+@using LALoDep.Core.Custom.Extensions
+    @{
+        Layout = null;
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="caseloadData">
+
+            <tbody>
+                
+               
+                    <tr>
+                        <th style="width: 200px !important;">@(Model.Select(x => x.RoleType).FirstOrDefault())</th>
+                        <th class="text-align-right" style="width: 100px !important;">Cases</th>
+                        <th class="text-align-right" style="width: 100px !important;">Petition</th>
+                        <th class="text-align-right" style="width: 100px !important;">Child Client</th>
+                        <th class="text-align-right" style="width: 100px !important;">Parent Client </th>
+                    </tr>
+                    @foreach(var item in Model.ToList())
+                    {
+                        <tr>
+                            <td ><a href="/Inquiry/MyCaseLoad/@item.PersonID.ToEncrypt()">@item.PersonNameDisplay</a></td>
+                            <td class="text-align-right" >@item.CaseCount</td>
+                            <td class="text-align-right" >@item.PetitionCount</td>
+                            <td class="text-align-right" >@item.ChildClientCount</td>
+                            <td class="text-align-right" >@item.OtherClientCount</td>
+                        </tr>
+                    }
+               
+                
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="text-align-right" style="font-weight:bold">Total</th>
+                    <th class="text-align-right" style="font-weight:bold">@(Model.ToList().Sum(x => x.CaseCount))</th>
+                    <th class="text-align-right" style="font-weight:bold">@(Model.ToList().Sum(x => x.PetitionCount))</th>
+                    <th class="text-align-right" style="font-weight:bold">@(Model.ToList().Sum(x => x.ChildClientCount))</th>
+                    <th class="text-align-right" style="font-weight:bold">@(Model.ToList().Sum(x => x.OtherClientCount))</th>
+                </tr>
+            </tfoot>
+
+        </table>
+    </div>

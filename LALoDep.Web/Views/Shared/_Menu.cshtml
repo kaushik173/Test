@@ -1,0 +1,117 @@
+﻿@model IEnumerable<LALoDep.Models.MenuItem>
+@{
+    Layout = null;
+}
+<style>
+    #menuAction li {
+        float: left;
+    }
+
+    #menuAction .dropdown-menu li {
+        min-width: 115px;
+        width: 100%;
+    }
+    a.dropdown-toggle:hover, a.dropdown-toggle:visited {
+        color: white;
+    }
+</style>
+<div class="">
+    <nav class="navigation" role="navigation">
+        <ul id="menuAction" class="nav navbar-nav">
+            @foreach (var item in Model)
+            {
+                if (item.Items.Count > 0)
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@item.Title <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            @foreach (var subItem in item.Items)
+                            {
+                                var customQuery = "";
+                                string cacheMainKey = "", resultPageIdKey = "", rowSelectedKey = "";
+                                if (subItem.Controller == "Case" && subItem.Action == "Search")
+                                {
+                                    cacheMainKey = "case-search-form";
+                                    resultPageIdKey = "case-search-form-page#";
+                                    rowSelectedKey = "case-search-form-row#";
+                                }
+                                else if (subItem.Controller == "Case" && subItem.Action == "AdvCaseSearch")
+                                {
+                                    cacheMainKey = "case-search-form-advanced";
+                                    resultPageIdKey = "case-search-form-advanced-page#";
+                                    rowSelectedKey = "case-search-form-advanced-row#";
+                                }
+                                else if (subItem.Controller == "Inquiry" && subItem.Action == "ToDoList")
+                                {
+                                    cacheMainKey = "todolist-form";
+                                    resultPageIdKey = "todolist-form-page#";
+                                    rowSelectedKey = "todolist-form-row#";
+                                }
+                                else if (subItem.Controller == "InvoiceQueue" && subItem.Action == "Search")
+                                {
+                                    cacheMainKey = "InvoiceQueue-search-form";
+                                    resultPageIdKey = "InvoiceQueue-search-form-page#";
+                                    rowSelectedKey = "InvoiceQueue-search-form-row#";
+                                }
+                                else if (subItem.Controller == "MyInvoiceQueue" && subItem.Action == "Task")
+                                {
+                                    cacheMainKey = "MyInvoiceQueue-form";
+                                    resultPageIdKey = "MyInvoiceQueue-form";
+                                    rowSelectedKey = "MyInvoiceQueue-form";
+                                }
+                                else if (subItem.Controller == "Inquiry" && subItem.Action == "ReferralEventCalendar")
+                                {
+                                    cacheMainKey = "ref-search-form";
+                                    resultPageIdKey = "refsearch-form-page#";
+                                    rowSelectedKey = "refsearch-form-row#";
+                                }
+                                else if (subItem.Controller == "Inquiry" && (subItem.Action == "MyCaseLoad" ||   subItem.Action == "CaseloadManagement"))
+                                {
+                                    cacheMainKey = "myCaseLoadDataV2";
+
+                                }
+                                else if (subItem.Controller == "Task" && ( subItem.Action == "RecordTimeNonCase"))
+                                {
+                                    cacheMainKey = "recordTime-form";
+
+                                }
+                                else if (subItem.Controller == "Task" && subItem.Action == "QuickCalMyCalendar")
+                                {
+                                    customQuery = "?load=true";
+                                }
+                                if (subItem.Controller == "Case" && subItem.Action == "Search")
+                                {
+                            <li>
+                                <a class="menu-item" href="/g/@(LALoDep.Custom.UserEnvironment.UserManager.CurrentSessionGuid)/Case/Search"
+                                   data-main-key="@cacheMainKey" data-result-page-id-key="@resultPageIdKey" data-row-selected-key="@rowSelectedKey">
+
+                                    @Html.Raw(subItem.Title)
+                                </a>
+                            </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class="menu-item" href="@Url.Action(subItem.Action.Replace("?dataentry=true", "").Replace("&main=true", ""), subItem.Controller)@(subItem.Action.Contains("?dataentry=true")?"?dataentry=true":"")@(subItem.Action.Contains("&main=true") ? "&main=true" : "")@(customQuery)"
+                                           data-main-key="@cacheMainKey" data-result-page-id-key="@resultPageIdKey" data-row-selected-key="@rowSelectedKey">
+
+                                            @Html.Raw(subItem.Title)
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="@Url.Action(item.Action, item.Controller)"><span class="icon-grid-view"></span>@Html.Raw(item.Title)
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+
+</div>

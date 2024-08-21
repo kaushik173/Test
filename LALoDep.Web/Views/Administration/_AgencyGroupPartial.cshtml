@@ -1,0 +1,203 @@
+﻿@model LALoDep.Models.Administration.AgencyGroupViewModel
+@using LALoDep.Core.Custom.Extensions
+
+
+<div class="col-md-12 col-sm-12 center-block">
+    <div class="widget row">
+        <div class="widget-body">
+            <div class="row">
+                <div class="form-group col-md-3 col-sm-6">
+
+                    @if (Model.AgencyGroupCountyList.Where(o => !string.IsNullOrEmpty(o.County)).Count() > 0)
+                    {
+                        <div id="divSelectCounty" style="display:none">
+                            <style>
+                                .close {
+                                    display: none !important;
+                                }
+                            </style>
+                            <strong>
+                                Please select the county you want to work with
+                            </strong><br />
+
+                            <ul class="list-group">
+
+
+                                @foreach (var item in Model.AgencyGroupCountyList.Where(o => !string.IsNullOrEmpty(o.County)))
+                                {
+                                    <li class="list-group-item select-county" style="cursor:pointer" data-id="@item.AgencyCountyID">  <a>@item.County</a></li>
+
+                                }
+                            </ul>
+                        </div>
+                    }
+
+
+                    @Html.LabelFor(m => m.AgencyGroup, "Agency Group", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroup, new { @class = "form-control input-sm", autofocus = "autofocus", maxlength = 100, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupAbbreviation, "Agency Group Abbreviation", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupAbbreviation, new { @class = "form-control input-sm", maxlength = 20, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupSCCInvoiceIdentifier, "SCC Invoice Identifier", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupSCCInvoiceIdentifier, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupContractNumber, "Contract Number", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupContractNumber, new { @class = "form-control input-sm", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupAddressName, "Address Name", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupAddressName, new { @class = "form-control input-sm", maxlength = 100, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupAddressStreet, "Street", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupAddressStreet, new { @class = "form-control input-sm", maxlength = 100, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupAddressCSZ, "City, State, Zip", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupAddressCSZ, new { @class = "form-control input-sm", maxlength = 100, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.AgencyGroupAddressPhone, "Phone", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.AgencyGroupAddressPhone, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 col-sm-12 center-block">
+    <div class="widget row">
+        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+            <span class="widget-caption">Title IVe Item</span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="form-group col-md-2 col-sm-6">
+                    @Html.LabelFor(m => m.TitleIVeStartDate, "Title IVe Start Date", new { @class = "control-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.TitleIVeStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group col-md-1 col-sm-6">
+                    @Html.LabelFor(m => m.TitleIVeEndDate, "Title IVe End Date", new { @class = "control-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.TitleIVeEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.DirectlyContractWithCourt, "Contracts Directly w/Court", new { @class = "control-label", style = "margin-bottom:5px;" })
+                    <br />
+                    <input type="checkbox" name="DirectlyContractWithCourt" id="DirectlyContractWithCourt" value="1" @(Model.DirectlyContractWithCourt.ToBoolean() == true ? "checked=\"checked\"" : "") />
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.StandardAgreementNbr, "Standard Agreement #", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.StandardAgreementNbr, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.FederalIDNumber, "Federal Tax ID", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.FederalIDNumber, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>     <div class="clearfix"></div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.PersonWhoWillPrepareInvoice, "Person Preparing Invoice", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.PersonWhoWillPrepareInvoice, new { @class = "form-control input-sm", maxlength = 100, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.PrepareInvoicePersonTitle, "Title", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.PrepareInvoicePersonTitle, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.PrepareInvoicePersonPhone, "Phone", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.PrepareInvoicePersonPhone, new { @class = "form-control input-sm", maxlength = 50, style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.PrepareInvoicePersonEmail, "Email", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.PrepareInvoicePersonEmail, new { @class = "form-control input-sm", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.NumberOfSocialWorkers, "Number of Social Workers", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.NumberOfSocialWorkers, new { @class = "form-control input-sm number", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.NumberOfInvestigators, "Number of Investigators", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.NumberOfInvestigators, new { @class = "form-control input-sm number", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.NumberOfParalegals, "Number of Paralegals", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.NumberOfParalegals, new { @class = "form-control input-sm number", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-2 col-sm-6">
+                    @Html.LabelFor(m => m.NumberofAdminAssistants, "Number of Admins", new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.NumberofAdminAssistants, new { @class = "form-control input-sm number", style = "width:100%" })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.IsUseWorkHoursForActivityLog, "Use Work Hours For Activity Log", new { @class = "control-label", style = "margin-bottom:5px;" })
+                    <br />
+                    <input type="checkbox" name="IsUseWorkHoursForActivityLog" id="IsUseWorkHoursForActivityLog" value="true" @(Model.UseWorkHoursForActivityLog.HasValue && Model.UseWorkHoursForActivityLog.Value == 1 ? "checked=\"checked\"" : "") />
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+
+                    @Html.LabelFor(m => m.AgencyCountyID, "County", new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.AgencyCountyID, Model.CountyList, "", new { @class = "form-control input-sm", })
+                </div>
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.IsPanelAgency, " Is Panel Agency for Title IVe purpose?", new { @class = "control-label", style = "margin-bottom:5px;" })
+                    <br />
+                    <input type="checkbox" name="IsPanelAgency" id="IsPanelAgency" value="1" @(Model.IsPanelAgency.HasValue && Model.IsPanelAgency.Value == 1 ? "checked=\"checked\"" : "") />
+                </div>
+
+                <div class="clearfix"></div>
+
+
+                @if (Model.AgencyGroupID.HasValue)
+                {
+                    <div class="form-group col-md-3 col-sm-6">
+                        @Html.LabelFor(m => m.IsUseWorkHoursForActivityLog, "Agency Group Allocation", new { @class = "control-label", style = "margin-bottom:5px;" })
+                        <br />
+                        <a class="btn btn-default btn-sm btn-info" onclick="OpenPopup('/Administration/AgencyGroupAllocation/@(Model.AgencyGroupID.Value.ToEncrypt())', 'Agency Group Allocation')">Add/Edit</a>
+                    </div>
+                }
+                @Html.HiddenFor(m => m.TitleIVeAgencyGroupID)
+                <div class="form-group col-md-3 col-sm-6">
+                    @Html.LabelFor(m => m.IsStreamliner, "Is agency group a Streamliner?", new { @class = "control-label", style = "margin-bottom:5px;" })
+                    <br />
+
+
+                    <input type="radio" name="IsStreamliner" id="IsStreamlinerYes" value="1" @(Model.IsStreamliner.HasValue && Model.IsStreamliner.Value == 1 ? "checked=\"checked\"" : "") /> <span style="display: inline-block; position: relative; top: -5px">Yes </span>
+                    <input type="radio" name="IsStreamliner" id="IsStreamlinerNo" value="0" @(Model.IsStreamliner.ToInt() == 0 ? "checked=\"checked\"" : "") /> <span  style="display: inline-block; position: relative; top: -5px"> No</span>
+                </div>
+                <div class="form-group col-md-2 col-sm-6">
+                    @Html.LabelFor(m => m.FullReviewMonth1, "Full Review Month 1", new { @class = "control-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.FullReviewMonth1, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group col-md-2 col-sm-6">
+                    @Html.LabelFor(m => m.FullReviewMonth2, "Full Review Month 2", new { @class = "control-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.FullReviewMonth2, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

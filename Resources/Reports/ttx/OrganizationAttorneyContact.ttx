@@ -1,0 +1,6 @@
+Attorney	String	100	abc
+Phone	String	100	abc
+Mobile	String	100	abc
+Fax	String	100	abc
+Email	String	100	abc
+AgencyName	String	100	abc

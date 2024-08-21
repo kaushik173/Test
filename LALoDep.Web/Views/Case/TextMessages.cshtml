@@ -1,0 +1,258 @@
+﻿@model LALoDep.Models.Case.TextMessagesViewModel
+@{
+    ViewBag.Title = "Text Messages";
+
+    var messageLength=System.Web.Configuration.WebConfigurationManager.AppSettings["MaxTextMessageLength"];
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "text-message-form" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Send New Message</span>
+                    <div class="widget-buttons"></div>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive form-group">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+                            <thead>
+                                <tr>
+                                    <th style="width:75px;">
+                                        <label class="no-margin">
+                                            <input type="checkbox" name="SendAll" id="chkSendAll" value="" class="no-margin" @(Model.IsDisabled ? "disabled" : "") />
+                                            <b>All</b>
+                                        </label>
+                                    </th>
+                                    <th>Send To</th>
+                                    <th>Role</th>
+                                    <th>Mobile Phone #</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MessageSendToList != null && Model.MessageSendToList.Any())
+                                {
+                                    foreach (var item in Model.MessageSendToList)
+                                    {
+                                        <tr class="@(item.RoleClient.Value==1? "highLightBlue" : "" ) ">
+                                            <td><input type="checkbox" name="chkRoleId" value="true" class="no-margin chkRole" data-role-id="@item.RoleID" data-send-To="@item.SendTo" @(Model.IsDisabled ? "disabled" : "") /></td>
+                                            <td>@item.NameDisplay</td>
+                                            <td>@item.RoleDisplay</td>
+                                            <td>@item.SendTo</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td align="center" colspan="4">No data available</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.OtherMobilePhone, "Other Mobile Phone #", new { @class = "control-label" })
+                            @if (Model.IsDisabled)
+                            {
+                                @Html.TextBoxFor(m => m.OtherMobilePhone, new { @class = "form-control input-sm phone_format OtherMobilePhone", disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.OtherMobilePhone, new { @class = "form-control input-sm phone_format OtherMobilePhone" })
+                            }
+                        </div>
+                        <div class="form-group col-md-10">
+                            @Html.LabelFor(m => m.Message, "Message", new { @class = "control-label" })
+                            @if (Model.IsDisabled)
+                            {
+                                @Html.TextAreaFor(m => m.DisabledMessage, new { @class = "form-control input-sm", disabled = "disabled", maxlength = messageLength })
+                            }
+                            else
+                            {
+                                @Html.TextAreaFor(m => m.Message, new { @class = "form-control input-sm",maxlength= messageLength })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Message History</span>
+                    <div class="widget-buttons"></div>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive form-group">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Date/Time</th>
+                                    <th>Phone #</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Sent By</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MessageHistory != null && Model.MessageHistory.Any())
+                                {
+                                    var messageGroups = Model.MessageHistory.GroupBy(x => x.MessageGroupID);
+
+                                    foreach (var group in messageGroups)
+                                    {   
+                                        foreach (var item in group)
+                                        {
+                                            <tr class="@(item.MessageType.Equals("In",StringComparison.CurrentCultureIgnoreCase)? "success" : "" ) ">
+                                                <td class="@(item.MessageType.Equals("In",StringComparison.CurrentCultureIgnoreCase)? "text-right" : "" )">@item.MessageType</td>
+                                                <td nowrap>@item.MessageDateTime</td>
+                                                <td nowrap>@(item.PhoneDisplay)</td>
+                                                <td nowrap>@(item.RoleDisplay)</td>
+                                                <td nowrap>@item.MessageStatus</td>
+                                                <td nowrap>@item.SentBy</td>
+                                                <td>@item.MessageBody</td>
+                                            </tr>                                     
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td align="center" colspan="7">No data available</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSendText" type="submit" class="btn btn-primary v-bottom default" tabindex="" @(Model.IsDisabled ? "disabled" : "")>Send Text</button>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var messageLength=@Html.Raw(messageLength)
+        function isValidPhone(str) {
+            var plainNumber = str.replace(/[^0-9]/g, "");
+            return plainNumber.length == 10;
+
+        }
+
+        function validation() {
+            if ($(".chkRole:checked").length == 0 && $("#OtherMobilePhone").val() == "") {
+                $(".chkRole:first").focus();
+                notifyDanger("Atleast one phone number selected OR  Other Mobile Phone # is required.");
+                return false;
+            }
+
+            if ($("#OtherMobilePhone").val() != "" && !isValidPhone($("#OtherMobilePhone").val())) {
+                $("#OtherMobilePhone").focus();
+                notifyDanger("Invalid Other Mobile Phone #.");
+                return false;
+            }
+
+            if ($("#Message").val() == "") {
+                $("#Message").focus();
+                notifyDanger("Message is required");
+                return false;
+            }
+            if ($("#Message").val().length > messageLength) {
+                $("#Message").focus();
+                notifyDanger("Message length should not be greater than " + messageLength);
+                return false;
+            }
+            
+
+            return true;
+        }
+
+        function getData() {
+            var data = {
+                Message: $("#Message").val(),
+            }
+
+            data.MessageSendToList = [];
+
+            $(".chkRole:checked").each(function (i, e) {
+                var chkData = $(this).data();
+                data.MessageSendToList.push({
+                    RoleID: chkData.roleId,
+                    SendTo: (chkData.sendTo + "").replace(/[^0-9]/g, "")
+                });
+            });
+
+            if ($("#OtherMobilePhone").val() != "") {
+                var otherMobilePhone = $("#OtherMobilePhone").val().replace(/[^0-9]/g, "");
+
+                data.MessageSendToList.push({
+                    SendTo: otherMobilePhone
+                });
+            }
+
+
+
+            return data;
+        }
+
+        $("#chkSendAll").on("click", function () {
+            var checked = $(this).is(":checked");
+            $(".chkRole").each(function () {
+                $(this).prop("checked", checked);
+            });
+        });
+
+        $(".chkRole").on("click", function () {
+            $("#chkSendAll").prop("checked", $(".chkRole").length == $(".chkRole:checked").length);
+        });
+
+        $("#btnSendText").on("click", function () {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (validation()) {
+                var data = getData();
+                $.ajax({
+                    type: "POST", url: '@Url.Action("TextMessages","Case")', data: data,
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            window.location.reload();
+                        } else {
+                            $("#OtherMobilePhone").focus();
+                            notifyDanger(response.Message);
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            $(".chkRole:first").focus();
+
+
+            $('.OtherMobilePhone').change(function () {
+
+                //  console.log($("#OtherMobilePhone").val().replace(/[^0-9]/g, ""));
+                //
+                //  console.log($(".chkRole[data-send-To='" + $("#OtherMobilePhone").val().replace(/[^0-9]/g, "") + "']").length);
+                if ($(".chkRole[data-send-To='" + $("#OtherMobilePhone").val().replace(/[^0-9]/g, "") + "']").length > 0) {
+                    $(".chkRole[data-send-To='" + $("#OtherMobilePhone").val().replace(/[^0-9]/g, "") + "']").prop('checked', true);
+                    $("#OtherMobilePhone").val('')
+                }
+            })
+        });
+    </script>
+}

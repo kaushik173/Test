@@ -1,0 +1,7 @@
+GrpType	String	100	Agency
+GrpName	String	100	Alapaha
+NewCases	Number		200
+ClosedCases	Number		300
+OpenCases	Number		240
+AttyTotal		Number		99
+OpenPerAtty		Number		10

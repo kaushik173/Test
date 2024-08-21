@@ -1,0 +1,209 @@
+﻿
+@model LALoDep.Models.Task.ReferralQueueViewModel
+@using LALoDep.Core.Custom.Extensions;
+    @{
+        ViewBag.Title = "Referral Queue <br/> for " + Model.PersonName;
+    }
+<style>
+    .pointer{
+        cursor:pointer;
+    }
+</style>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Search Criteria</span>
+                </div>
+                <div class="widget-body">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-referral-queue", @class = "form-inline center-block" }))
+                    {
+                        @Html.HiddenFor(m => m.ReferralPersonID)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate, "End Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DateRangeTypeCodeID, "Date Range Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.DateRangeTypeCodeID, Model.DateRangeTypes, new { @class = "form-control input-sm",style="width:150px" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IncludeCompletedReferrals, "Include Completed Referrals", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IncludeCompletedReferrals,  new { @class = "form-control input-sm" })
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="widget" id="divSearchResult">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Search Result <span id="totalRecords"></span></span>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblResult">
+                            <thead>
+                                <tr>
+                                    <th>Current Attorney</th>
+                                    <th>Requested For</th>
+                                    <th>Type</th>
+                                    <th>Request Date</th>
+                                    <th>Eligibility</th>
+                                    <th>Due Date</th>
+                                    <th>Complete Date</th>
+                                    <th>Client</th>
+                                    <th>Submitted Case #</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section fixedfooter{
+        <div class="boxfloat text-center">
+            <button id="btnSearch" type="submit" class="btn btn-sm btn-primary default">Search</button>
+            <button id="btnPrint" type="submit" class="btn btn-sm btn-default ">Print</button>
+  </div>
+    }
+
+    @section scripts{
+        <script type="text/javascript">
+            var oTable = $('#tblResult').dataTable({
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                "bSort": false,
+                "bInfo": false,
+                "columns": [
+                    { "data": "CurrentAttorney" },
+                    { "data": "RequestedFor" },
+                    {
+                        "data": "ReferralType",
+                        "render": function (data, type, full, meta) {
+                            return '<a data-id="' + full.EncryptedReferralID + '" data-type="' + full.NG_NavigationURL + '" class="edit pointer" >' + data + '</a>';
+                        }
+                    },
+                    { "data": "RequestDate" },
+                    { "data": "Eligibity" },
+                    { "data": "DueDate" },
+                    { "data": "CompleteDate" },
+                    { "data": "Client" },
+                    { "data": "SubmittedCaseNbr" }
+                ],
+                "loadingRecords": "Loading...",
+                "processing": "Processing...",
+                "deferRender": true
+            });
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                calc_height = $(window).height();
+                var _offset = 25;
+                origin_wrapper_height = $('body>div.container-fluid').height();
+                origin_content_height = $('#divSearchResult .dataTables_scrollBody').height();
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            //console.log(calc_height + " - " + $(this).outerHeight(true));
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                //console.log("calc :" + calc_height + " offset: " + _offset);
+                calc_height = calc_height - _offset;
+                //console.log("total: " + calc_height);
+                calc_height = calc_height < 250 ? 250 : calc_height;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+                //new $.fn.dataTable.FixedHeader(oTable);
+                return calc_height;
+            }
+
+            function setData(data) {
+                oTable.fnClearTable();
+                if (data.data.length > 0) {
+                    $("#totalRecords").text(" (" + data.recordsTotal + ")");
+                    oTable.fnAddData(data.data);
+                    fitCalculatedHeightForSearchDataTable();
+                } else {
+                    $("#totalRecords").text("");
+                    notifyInfo('No results found.');
+                }
+            }
+
+            function loadData() {
+
+                if ($("#StartDate").val() != '' && $("#EndDate").val() != '' && moment($("#StartDate").val()) > moment($("#EndDate").val())) {
+                    $("#EndDate").focus();
+                    notifyDanger('End Date can not be prior to Start Date');
+                    return false;
+                }
+
+                var data = $("#frm-referral-queue").serialize();
+                $.ajax({
+                    type: "POST", url: '@Url.Action("ReferralQueueSearch")', data: data,
+                    success: function (result) {
+                        setData(result)
+                    },
+                });
+            }
+            $('#btnPrint').on('click', function (e) {
+                if ($("#StartDate").val() != '' && $("#EndDate").val() != '' && moment($("#StartDate").val()) > moment($("#EndDate").val())) {
+                    $("#EndDate").focus();
+                    notifyDanger('End Date can not be prior to Start Date');
+                    return false;
+                }
+
+                var data = $("#frm-referral-queue").serialize();
+                var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+               
+                $.download('@Url.Action("ReferralQueuePrint")', data, "POST", _target);
+            });
+            $("#btnSearch").on("click", function () {
+
+                IPadKeyboardFix();
+                loadData();
+
+            });
+            $('body').on('click', '.edit', function () {
+
+               
+              
+                
+
+                url = "/Case/" + $(this).attr('data-type') + "/" + $(this).attr('data-id') + '?backPageUrl=/Task/ReferralQueue@(Model.ReferralPersonID.HasValue?"/"+ Model.ReferralPersonID.Value.ToEncrypt(): "")'
+                document.location.href = url;
+
+
+            });
+            $(document).ready(function () {
+                loadData();
+            });
+        </script>
+    }
+

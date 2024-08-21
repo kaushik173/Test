@@ -1,0 +1,269 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.InvoicesViewModel
+@{
+    ViewBag.Title = "Case Invoices";
+}
+<style>
+    .widget-buttons .btn, .widget-caption .btn {
+        padding: 2px 15px !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CaseInvoices-form", @class = "form-inline center-block" }))
+                {
+
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FilterByEnum, "Case Invoices", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.FilterByEnum, Model.FilterByList, new { @class = "form-control input-sm", tabindex = 1, style = "width:100% !important;" })
+
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var groupByData = Model.InvoiceList.Select(o => o.GroupingBy).Distinct();
+
+}
+
+@foreach (var group in groupByData)
+{
+
+    var dataList = Model.InvoiceList.Where(o => o.GroupingBy == group).ToList();
+    var totalAmoout = Model.InvoiceList.Where(o => o.GroupingBy == group).Sum(o => o.Amount);
+    var headerData = dataList.FirstOrDefault();
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption" id="countSearchResult">@headerData.YearQuarter Contractor:  @headerData.ContractorDisplay</span>
+                    <div class="widget-buttons">
+                        @if (!headerData.PrintInvoiceLabel.IsNullOrEmpty() && headerData.PrintInvoiceLabel.Length > 0)
+                        {
+                            <a class="btn btn-labeled btn-default btn" target="_blank" href="/Case/InvoicePrint@(headerData.NgInvoiceID.ToInt()==0?"":"/"+headerData.NgInvoiceID.ToEncrypt())?yQId=@(headerData.YearQuarterID.ToEncrypt())&cPId=@(headerData.ContractorPersonID.ToEncrypt())">@headerData.PrintInvoiceLabel</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-labeled btn-default btn" href="/Case/InvoiceAddEdit@(headerData.NgInvoiceID.ToInt()==0?"":"/"+headerData.NgInvoiceID.ToEncrypt())?yQId=@(headerData.YearQuarterID.ToEncrypt())&cPId=@(headerData.ContractorPersonID.ToEncrypt())">@headerData.ButtonLabel</a>
+                        }
+
+
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <div id="divCompleted">
+                            <div class="row form-inline ">
+                                <div class="form-group col-md-2">
+
+                                    <strong>Invoice # </strong>  @headerData.InvoiceNumber
+
+
+                                </div>
+                                <div class="form-group col-md-2">
+
+                                    <strong>   Invoice Date: </strong>  @headerData.InvoiceDate
+
+
+                                </div> <div class="form-group col-md-2">
+                                    <strong>
+                                        Invoice Status:
+                                    </strong>   @headerData.InvoiceStatus
+
+
+                                </div><div class="form-group col-md-2">
+
+                                    <strong>Invoice Status Date: </strong>   @headerData.InvoiceStatusDate
+
+
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAttorneyList">
+
+                                <thead>
+                                    <tr>
+
+                                        <th style="width:120px">Date</th>
+                                        <th style="width:80px">Phase</th>
+                                        <th style="width:150px">Category</th>
+                                        <th style="width:250px">
+                                            Type
+                                        </th>
+                                        <th>
+                                            In Crt Time
+                                        </th>
+                                        <th style="width:80px">
+                                            Hours
+                                        </th>
+                                        <th style="width:100px">
+                                            Hourly Rate
+                                        </th>
+                                        <th style="width:100px">
+                                            Amount
+                                        </th>
+                                        <th>
+                                            IV-E
+                                        </th>
+                                        <th style="width:150px">
+                                            Previous Amount
+
+                                        </th>
+                                        <th style="width:150px">
+                                            Status
+                                        </th>
+                                        <th>
+                                            Status Date
+                                        </th>
+                                        
+
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in dataList)
+                                    {
+                                        <tr>
+                                            <td>@item.Date.ToDefaultFormat() </td>
+                                            <td>@item.Phase</td>
+                                            <td>@item.Category</td>
+                                            <td>
+                                                @if (item.TypeAlertFlag.ToInt() == 1)
+                                                {<span style="color:red;">@item.Type</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.Type</span>
+                                            }
+                                            </td>
+                                            <td>
+                                                @item.InCourtTime
+                                            </td>
+                                            <td class="text-right">@item.Hours</td>
+                                            <td class="text-right">@item.HourlyRate</td>
+                                            <td class="text-right">@item.Amount.ToCurrency()</td>
+                                            <td>@item.IVe</td>
+                                            <td class="text-right">@item.PreviousAmount.ToCurrency()</td>
+                                            <td>@item.Status</td>
+                                            <td>@item.StatusDate</td>
+                                         
+
+                                        </tr>
+                                        if (!item.AdminNote.IsNullOrEmpty())
+                                        {
+                                            <tr>
+                                                <td class="text-right" colspan="2"><strong>Admin Note:</strong> </td>
+
+                                                <td colspan="10">
+                                                    @Html.Raw(item.AdminNote)
+                                                </td>
+                                            </tr>
+                                        }
+                                        if (!item.Note.IsNullOrEmpty())
+                                        {
+                                            <tr>
+                                                <td class="text-right" colspan="2"><strong>Note:</strong> </td>
+
+                                                <td colspan="10">
+                                                    @Html.Raw(item.Note)
+                                                </td>
+                                            </tr>
+                                        }
+                                       
+                                    }
+                                    <tr>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+
+                                        <td> </td>
+                                        <td> </td>
+
+                                        <td> </td>
+                                        <td class="text-right"><strong>Total:</strong> </td>
+
+                                        <td class="text-right"> <strong>@totalAmoout.ToCurrency()</strong> </td>
+                                        <td> </td>
+
+                                        <td> </td>
+
+                                        <td> </td>
+
+                                        <td> </td>
+
+                                        
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+        $("#FilterByEnum").on("change", function () {
+            document.location.href = '/Case/Invoices?filterby=' + $("#FilterByEnum").val();
+
+        });
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+
+
+        $(function () {
+
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

@@ -1,0 +1,9 @@
+HearingID	Number		1
+LastName	String	50	Phung
+FirstName	String	50	Amy
+SSN	String	15	123-45-7878
+DOB	Date		02/25/1974
+Street	String	100	50 Woodlandglen Drive
+City	String	50	Guelph
+State	String	50	Ontario
+ZIP	String	15	12345-7000

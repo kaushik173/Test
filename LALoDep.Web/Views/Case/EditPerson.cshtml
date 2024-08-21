@@ -1,0 +1,518 @@
+﻿@model LALoDep.Models.Case.EditPersonViewModel
+@{
+    ViewBag.Title = "Edit Person";
+    int tabIndex = 0;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditPersion-form", @class = "form-inline  center-block", data_val = "false" }))
+        {
+            @Html.HiddenFor(m => m.PersonID)
+            @Html.HiddenFor(m => m.RecordStateID)
+            @Html.HiddenFor(m => m.AgencyID)
+
+            @Html.HiddenFor(m => m.PersonNameID)
+            @Html.HiddenFor(m => m.PersonNameTypeCodeID)
+            @Html.HiddenFor(m => m.PersonNameMiddle)
+            @Html.HiddenFor(m => m.PersonNameRecordStateID)
+            @Html.HiddenFor(m => m.DOBRequiredForChildren)
+
+            @Html.HiddenFor(m => m.DeceasedDate_PersonClassID)
+
+            <input type="hidden" id="RoleID" name="RoleID" value="@Model.RoleID" />
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Person Info
+                    </span>
+                </div>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsClient, new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IsClient, new { @class = "form-control input-sm", tabindex = ++tabIndex, autofocus = "autofocus" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PersonDOB, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.PersonDOB, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker DOBValidation", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            @Html.Hidden("hdnAge")
+                        </div>
+
+                        <div class="form-group @(Model.PersonRaceGetList.Any()?"hidden":"")">
+                            @Html.LabelFor(m => m.PersonRaceCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PersonRaceCodeID, Model.PersonRaceList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PersonSexCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PersonSexCodeID, Model.PersonSexList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RoleStartDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.RoleStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RoleEndDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.RoleEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDeceased, new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IsDeceased, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DeceasedDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.DeceasedDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RoleTypeCodeID, "Role", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.RoleTypeCodeID, Model.RoleTypeList, new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:150px" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PersonLanguageCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PersonLanguageCodeID, Model.PersonLanguageList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+                        </div>
+
+                        @{
+                            var cssCLass = " ";
+                            if (Model.RoleTypeCodeID.HasValue && Model.RoleTypeCodeID.Value != 3)
+                            {
+                                cssCLass = " hidden";
+
+                            }}
+                        <div class="form-group @cssCLass">
+                            @Html.HiddenFor(m => m.DesignatedDayCaseAttrID)
+                            @Html.LabelFor(m => m.DesignatedDayCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.DesignatedDayCodeID, Model.DesignatedDayList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+                        </div>
+                        <div class="form-group @cssCLass">
+                            @Html.HiddenFor(m => m.VOCCaseAttrID)
+                            @Html.LabelFor(m => m.VOC, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.VOC, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group @cssCLass">
+                            @Html.HiddenFor(m => m.VOCStatusCaseAttrID)
+                            @Html.LabelFor(m => m.VOCStatusCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.VOCStatusCodeID, Model.VOCStatusList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            if (Model.PersonRaceGetList.Any() && Model.PersonRaceGetList.Any())
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">Race (select all that apply)</span>
+                        <div class="widget-buttons ">
+
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="row">
+                            @foreach (var item in Model.PersonRaceGetList)
+                            {
+                                if(string.IsNullOrEmpty(item.CodeEnumName))
+                                {
+                                    item.CodeEnumName = item.PersonRaceDisplay;
+                                }
+                                <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5  divRaceBox" style="display:none" data-name="@item.CodeEnumName">
+                                    <div class="form-label bg-label">
+                                        <input type="checkbox" class="chkPersonRace" data-other="@item.IsOther" data-PersonRaceCodeID="@item.PersonRaceCodeID" data-PersonID="@item.PersonID" data-PersonRaceID="@item.PersonRaceID" id="chk@(item.PersonRaceCodeID)" tabindex="@(++tabIndex)" @if (item.PersonRaceID.HasValue && item.PersonRaceID.Value > 0) { <text> checked="checked" </text> } />
+                                        <label for="chk@(item.PersonRaceCodeID)" style="margin-top: -6px">
+                                            @item.PersonRaceDisplay
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            }
+                            <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5  divRaceBox"  data-name="" style="display:none">
+                                <div class="form-label">
+
+                                    @Html.LabelFor(m => m.PersonRaceVerbalValue, "Client verbally identifies as:", new { @class = "control-label pull-left", style = "margin-top:7px;margin-right:5px;" })
+                                    @Html.TextBoxFor(m => m.PersonRaceVerbalValue, new { @class = "form-control input-sm", maxlength = "25", tabindex = ++tabIndex, style = "width:200px" })
+
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+            if (Model.CaseStatusList.Any() && Model.PersonClassificationsClientStatus.Any())
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">Status Classification</span>
+                        <div class="widget-buttons ">
+                            @if (Model.PersonClassificationsClientStatus.Count > 2)
+                            {
+                                <button id="btnShowMore" type="button" style="cursor:pointer" class="btn btn-labeled btn-default btn">Show More</button>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClassification">
+                                <thead>
+                                    <tr>
+                                        <th>Classification</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>End Reason</th>
+                                        <th>Del</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*<tr class="tblClassificationTr" data-id=""
+                                        data-classificationcodeid=""
+                                        data-classificationstartdate=""
+                                        data-classificationenddate=""
+                                        data-classificationendreasoncodeid=""
+                                        data-recordstateid="">
+
+                                        <td>@Html.DropDownList("PersonClassificationCodeID", Model.CaseStatusList, "", new { @class = "form-control input-sm PersonClassificationCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBox("PersonClassificationStartDate", string.Empty, new { @class = "form-control input-sm date-picker PersonClassificationStartDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBox("PersonClassificationEndDate", string.Empty, new { @class = "form-control input-sm date-picker PersonClassificationEndDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>@Html.DropDownList("PersonClassificationEndReasonCodeID", Model.ClassificationEndReasonList, "", new { @class = "form-control input-sm PersonClassificationEndReasonCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                        <td></td>
+                                    </tr>*@
+                                    @for (int indx = 0; indx < Model.PersonClassificationsClientStatus.Count; indx++)
+                                    {
+                                        if (Model.PersonClassificationsClientStatus[indx].CanEditFlag == 1)
+                                        {
+                                            <tr class="tblClassificationTr @(indx>1?"tblClassificationTrHidden hideTr ":"")" data-id="@Model.PersonClassificationsClientStatus[indx].PersonClassificationID"
+                                                data-classificationcodeid="@Model.PersonClassificationsClientStatus[indx].PersonClassificationCodeID"
+                                                data-classificationstartdate="@Model.PersonClassificationsClientStatus[indx].PersonClassificationStartDate"
+                                                data-classificationenddate="@Model.PersonClassificationsClientStatus[indx].PersonClassificationEndDate"
+                                                data-classificationendreasoncodeid="@Model.PersonClassificationsClientStatus[indx].PersonClassificationEndReasonCodeID"
+                                                data-recordstateid="@Model.PersonClassificationsClientStatus[indx].RecordStateID">
+                                                <td>
+                                                    @Html.DropDownList("PersonClassificationCodeID", Model.CaseStatusList, "", new { @class = "form-control input-sm PersonClassificationCodeID", tabindex = ++tabIndex, style = "width:98%", data_default = Model.PersonClassificationsClientStatus[indx].PersonClassificationCodeID })
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.PersonClassificationsClientStatus[indx].PersonClassificationStartDate, new { @class = "form-control input-sm date-picker PersonClassificationStartDate", tabindex = ++tabIndex })
+                                                        <span class="input-group-addon datepicker-trigger">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.PersonClassificationsClientStatus[indx].PersonClassificationEndDate, new { @class = "form-control input-sm date-picker PersonClassificationEndDate", tabindex = ++tabIndex })
+                                                        <span class="input-group-addon datepicker-trigger">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("PersonClassificationEndReasonCodeID", new SelectList(Model.ClassificationEndReasonList, "Value", "Text", Model.PersonClassificationsClientStatus[indx].PersonClassificationEndReasonCodeID), "", new { @class = "form-control input-sm PersonClassificationEndReasonCodeID", tabindex = ++tabIndex, style = "width:98%" })
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBox("DelClassification", new { @class = "form-control input-sm DelClassification", tabIndex = ++tabIndex })
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="tblClassificationTrDisabled @(indx>1?"tblClassificationTrHidden hideTr ":"")" data-id="@Model.PersonClassificationsClientStatus[indx].PersonClassificationID"
+                                                data-classificationcodeid="@Model.PersonClassificationsClientStatus[indx].PersonClassificationCodeID"
+                                                data-classificationstartdate="@Model.PersonClassificationsClientStatus[indx].PersonClassificationStartDate"
+                                                data-classificationenddate="@Model.PersonClassificationsClientStatus[indx].PersonClassificationEndDate"
+                                                data-classificationendreasoncodeid="@Model.PersonClassificationsClientStatus[indx].PersonClassificationEndReasonCodeID"
+                                                data-recordstateid="@Model.PersonClassificationsClientStatus[indx].RecordStateID">
+                                                <td>
+                                                    @Html.DropDownList("PersonClassificationCodeID", Model.CaseStatusList, "", new { @class = "form-control input-sm PersonClassificationCodeID", tabindex = ++tabIndex, style = "width:98%", data_default = Model.PersonClassificationsClientStatus[indx].PersonClassificationCodeID, disabled = "disabled" })
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.PersonClassificationsClientStatus[indx].PersonClassificationStartDate, new { @class = "form-control input-sm date-picker PersonClassificationStartDate", tabindex = ++tabIndex, disabled = "disabled" })
+                                                        <span class="input-group-addon datepicker-trigger">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.PersonClassificationsClientStatus[indx].PersonClassificationEndDate, new { @class = "form-control input-sm date-picker PersonClassificationEndDate", tabindex = ++tabIndex, disabled = "disabled" })
+                                                        <span class="input-group-addon datepicker-trigger">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("PersonClassificationEndReasonCodeID", new SelectList(Model.ClassificationEndReasonList, "Value", "Text", Model.PersonClassificationsClientStatus[indx].PersonClassificationEndReasonCodeID), "", new { @class = "form-control input-sm PersonClassificationEndReasonCodeID", tabindex = ++tabIndex, style = "width:98%", disabled = "disabled" })
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBox("DelClassification", new { @class = "form-control input-sm DelClassification", tabIndex = ++tabIndex, disabled = "disabled" })
+                                                </td>
+                                            </tr>
+
+                                        }
+
+
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Non-Minor Dependent (NMD) and Special Needs</span>
+                </div>
+
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClassification">
+                            <thead>
+                                <tr>
+                                    <th>Classification</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>End Reason</th>
+                                    <th>Del</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="tblClassificationTr" data-id=""
+                                    data-classificationcodeid=""
+                                    data-classificationstartdate=""
+                                    data-classificationenddate=""
+                                    data-classificationendreasoncodeid=""
+                                    data-recordstateid="">
+
+                                    <td>@Html.DropDownList("PersonClassificationCodeID", Model.PersonClassificationList, "", new { @class = "form-control input-sm PersonClassificationCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBox("PersonClassificationStartDate", string.Empty, new { @class = "form-control input-sm date-picker PersonClassificationStartDate", tabindex = ++tabIndex })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBox("PersonClassificationEndDate", string.Empty, new { @class = "form-control input-sm date-picker PersonClassificationEndDate", tabindex = ++tabIndex })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>@Html.DropDownList("PersonClassificationEndReasonCodeID", Model.ClassificationEndReasonList, "", new { @class = "form-control input-sm PersonClassificationEndReasonCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                    <td></td>
+                                </tr>
+                                @for (int indx = 0; indx < Model.PersonClassifications.Count; indx++)
+                                {
+                                    <tr class="tblClassificationTr" data-id="@Model.PersonClassifications[indx].PersonClassificationID"
+                                        data-classificationcodeid="@Model.PersonClassifications[indx].PersonClassificationCodeID"
+                                        data-classificationstartdate="@Model.PersonClassifications[indx].PersonClassificationStartDate"
+                                        data-classificationenddate="@Model.PersonClassifications[indx].PersonClassificationEndDate"
+                                        data-classificationendreasoncodeid="@Model.PersonClassifications[indx].PersonClassificationEndReasonCodeID"
+                                        data-recordstateid="@Model.PersonClassifications[indx].RecordStateID">
+                                        <td>
+                                            @Html.DropDownList("PersonClassificationCodeID", new SelectList(Model.PersonClassificationList, "Value", "Text", Model.PersonClassifications[indx].PersonClassificationCodeID), "", new { @class = "form-control input-sm PersonClassificationCodeID", tabindex = ++tabIndex, style = "width:98%" })
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.PersonClassifications[indx].PersonClassificationStartDate, new { @class = "form-control input-sm date-picker PersonClassificationStartDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.PersonClassifications[indx].PersonClassificationEndDate, new { @class = "form-control input-sm date-picker PersonClassificationEndDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("PersonClassificationEndReasonCodeID", new SelectList(Model.ClassificationEndReasonList, "Value", "Text", Model.PersonClassifications[indx].PersonClassificationEndReasonCodeID), "", new { @class = "form-control input-sm PersonClassificationEndReasonCodeID", tabindex = ++tabIndex, style = "width:98%" })
+                                        </td>
+                                        <td>
+                                            @Html.CheckBox("DelClassification", new { @class = "form-control input-sm DelClassification", tabIndex = ++tabIndex })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">Medication History</span>
+                </div>
+
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblMedication">
+                            <thead>
+                                <tr>
+                                    <th>Medication</th>
+                                    <th>Dosage (mg)</th>
+                                    <th>Frequency</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Del</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-id=""
+                                    data-codeid=""
+                                    data-dosage=""
+                                    data-frequencycodeid=""
+                                    data-startdate=""
+                                    data-enddate=""
+                                    data-recordstateid="">
+
+                                    <td>@Html.DropDownList("MedicationCodeID", Model.MedicationList, "", new { @class = "form-control input-sm MedicationCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                    <td>@Html.TextBox("MedicationDosage", string.Empty, new { @type = "number", @class = "form-control input-sm MedicationDosage numeric-val", tabindex = ++tabIndex })</td>
+                                    <td>@Html.DropDownList("MedicationFrequencyCodeID", Model.MedicationFrequencyList, "", new { @class = "form-control input-sm MedicationFrequencyCodeID", tabindex = ++tabIndex, style = "width:98%" })</td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBox("MedicationStartDate", string.Empty, new { @class = "form-control input-sm date-picker MedicationStartDate", tabindex = ++tabIndex })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBox("MedicationEndDate", string.Empty, new { @class = "form-control input-sm date-picker MedicationEndDate", tabindex = ++tabIndex })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                @for (int indx = 0; indx < Model.PersionMedications.Count; indx++)
+                                {
+                                    <tr data-id="@Model.PersionMedications[indx].MedicationID"
+                                        data-codeid="@Model.PersionMedications[indx].MedicationCodeID"
+                                        data-dosage="@Model.PersionMedications[indx].MedicationDosage"
+                                        data-frequencycodeid="@Model.PersionMedications[indx].MedicationFrequencyCodeID"
+                                        data-startdate="@Model.PersionMedications[indx].MedicationStartDate"
+                                        data-enddate="@Model.PersionMedications[indx].MedicationEndDate"
+                                        data-recordstateid="@Model.PersionMedications[indx].RecordStateID">
+                                        <td>
+                                            @Html.DropDownList("MedicationCodeID", new SelectList(Model.MedicationList, "Value", "Text", Model.PersionMedications[indx].MedicationCodeID), "", new { @class = "form-control input-sm MedicationCodeID", tabindex = ++tabIndex, style = "width:98%" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.PersionMedications[indx].MedicationDosage, new { @type = "number", @class = "form-control input-sm MedicationDosage numeric-val", tabindex = ++tabIndex })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("MedicationFrequencyCodeID", new SelectList(Model.MedicationFrequencyList, "Value", "Text", Model.PersionMedications[indx].MedicationFrequencyCodeID), "", new { @class = "form-control input-sm MedicationFrequencyCodeID", tabindex = ++tabIndex, style = "width:98%" })
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.PersionMedications[indx].MedicationStartDate, new { @class = "form-control input-sm date-picker MedicationStartDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.PersionMedications[indx].MedicationEndDate, new { @class = "form-control input-sm date-picker MedicationEndDate", tabindex = ++tabIndex })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>@Html.CheckBox("DelMedication", new { @class = "form-control input-sm DelMedication", tabIndex = ++tabIndex })</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="@(++tabIndex)">Save</button>
+        @if (Request.QueryString["fromhid"] != null)
+        {
+
+    <button id="btnSaveAppearanceSheet" type="submit" class="btn btn-default default" tabindex="@(++tabIndex)" data-href="/Task/CalendarAppearanceSheet/@Request.QueryString["fromhid"]">Save/Appearance Sheet</button>
+        }
+        else
+        {
+
+            <button id="btnSaveMain" type="submit" class="btn btn-default default" tabindex="@(++tabIndex)">Save/Main</button>
+        }
+    </div>
+}
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/EditPerson.js?v=" + Guid.NewGuid())"></script>
+}
+<style>
+    .hideTr {
+        display: none;
+    }
+</style>

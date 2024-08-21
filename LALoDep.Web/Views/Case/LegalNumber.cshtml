@@ -1,0 +1,85 @@
+﻿@model IEnumerable<LALoDep.Domain.pd_Role.pd_RoleGetByCaseIDChildRespondent_spResult>
+    @{
+        ViewBag.Title = "Legal Numbers";
+    }
+    <style>
+        .form-inline .input-group {
+            display: table;
+        }
+    </style>
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Legal Numbers</span>
+                    <div class="widget-buttons">
+                        
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="legalNumbersList">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th style="width:50px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count() > 0)
+                                {
+                                    foreach (var item in Model.ToList())
+                                    {
+                                       <tr>
+                                        <td>@item.Role</td>
+                                        <td>@item.PersonNameLast</td>
+                                        <td>@item.PersonNameFirst</td>
+                                        <td ><a class="btn btn-info btn-xs PersonLegalNumView" data-person="@item.PersonNameLast, @item.PersonNameFirst" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonID.ToString())"><i class="fa fa-eye"></i>View LegalNumber</a></td>
+                                       </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Count() > 0)
+    {
+        <div class="row" id="divPersonLegalNumber">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption" id="legalNumberFor"></span>
+                        <div class="widget-buttons pull-right">
+                            <input type="button" class="btn btn-default" name="AddLegalNumber" value=""  id="btnAddLegaNumberFor" />
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="PeopleLegalNumbersList">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Number</th>
+                                        <th>Comment</th>
+                                        <th style="width:30px"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+@section scripts
+{
+        <script src="@Url.Content("~/Scripts/Application-Script/Case/LegalNumber.js?v=" + Guid.NewGuid())"></script>
+}

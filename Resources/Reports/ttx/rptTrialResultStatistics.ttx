@@ -1,0 +1,9 @@
+AttorneyLastName	String	50	Smith
+AttorneyFirstName	String	50	John
+OpenCases	Number		20
+TrialsSet	Number		100
+TrialsSettled	Number		80
+TrialsLitigated	Number		20
+StartDate	DateTime		01/01/1999
+EndDate	DateTime		12/31/1999
+AgencyName	String	200	Public Defender

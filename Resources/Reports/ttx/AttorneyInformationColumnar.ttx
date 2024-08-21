@@ -1,0 +1,30 @@
+Attorney Bar Number	String	100	abc
+Attorney Last Name	String	100	abc
+Attorney First Name	String	100	abc
+Attorney Middle Name	String	100	abc
+Attorney Print Name	String	100	abc
+Firm Name	String	100	abc
+Attorney Street Address 1	String	100	abc
+Attorney Street Address 2	String	100	abc
+Attorney City State Zip	String	100	abc
+Attorney Federal Tax ID	String	100	abc
+Attorney SSN	String	100	abc
+Attorney Telephone Number	String	100	abc
+Attorney Mobile Number		String	100	abc
+Attorney Fax Number	String	100	abc
+Attorney Primary E-mail	String	100	abc
+Send E-mails to Primary	String	100	abc
+Attorney Secondary E-mail	String	100	abc
+Send E-mails to Secondary	String	100	abc
+Other Contact Name	String	100	abc
+Other Contact Telephone Number	String	100	abc
+Other Contact Fax Number	String	100	abc
+Other Contact E-mail	String	100	abc
+Send E-mail To Contact	String	100	abc
+Date Attorney Admitted To Bar	DateTime		1/1/2007
+Eligibility Effective Date	DateTime		1/1/2007
+Eligibility Ending Date	DateTime		1/1/2007
+Date Data Updated	DateTime		1/1/2007
+Data Updated by Whom	String	100	abc
+Comment	String	2000	abc
+UserAgencyName	String	100	abc

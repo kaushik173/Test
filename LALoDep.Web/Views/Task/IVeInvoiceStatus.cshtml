@@ -1,0 +1,127 @@
+﻿@model  LALoDep.Models.Task.IVeInvoiceStatusViewModel
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "IVe Invoice Status";
+}
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVeInvoiceStatus-form", @class = "form-inline  center-block" }))
+{
+     
+
+
+
+
+    <div class="widget margin-left-10 margin-right-10">
+        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+            <span class="widget-caption">
+                IVe Invoice Status
+            </span>
+            <div class="widget-buttons">
+                &nbsp;
+            </div>
+        </div>
+        <div class="widget-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                    <thead>
+                        <tr>
+
+                            
+                            <th>Agency Group</th>
+                            <th>Agency County </th>
+                            <th>Invoice Year</th>
+                            <th>Invoice Month</th>
+                            <th>Contactor Signed</th>
+                            <th>Contactor Signing</th>
+                            <th>Amount Due</th>
+                            <th>Invoice Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TitleIVeInvoiceStatusList.Any())
+                        {
+                            foreach (var item in Model.TitleIVeInvoiceStatusList)
+                            {
+
+
+                                <tr>
+
+                                    <td>
+                                   
+                                    <a href="/Task/IVEInvoice?month=@(item.InvoiceMonth)&year=@(item.InvoiceYear)&AgencyCountyID=@(item.AgencyCountyID.ToEncrypt())&AgencyGroupID=@(item.AgencyGroup.ToEncrypt())&backtostatus=@(Request.Url.AbsoluteUri.ToEncrypt())">
+                                            @item.DisplayAgencyGroup
+                                        </a></td>
+                                   
+                                    
+                                    <td>@item.County </td>
+                                    <td>@item.DisplayInvoiceYear</td>
+                                    <td>@item.DisplayInvoiceMonth</td>
+                                  
+                                    <td>@item.ContactorSigned</td>
+                                    <td>@item.ContactorSigning</td>
+                                    <td>@item.AmountDue.ToString("N2")</td>
+                                    <td>@item.InvoiceStatus</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}
+@section fixedfooter{
+   
+
+}
+
+@section scripts{
+
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+    <script>
+        $(function () {
+            $('.CurrencyFormat').formatCurrency();
+            setInitialFormValues("IVeInvoiceStatus-form");
+
+
+            $('#monthPicker').datepicker().on('changeDate', function (ev) {
+                var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+
+                $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                $("#spnYear").html(ev.date.getFullYear());
+                $("#spnYear").data('year', ev.date.getFullYear());
+
+                $('#monthPicker').datepicker('hide');
+                setTimeout(function () {
+                    var oldDate = $("#monthPicker").data('date');
+                    $("#monthPicker").data('old-value-on-pageload', oldDate);
+                }, 500);
+
+                document.location.href = '/Task/IVeInvoiceStatus?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year') + '&AgencyCountyID=' + $('#AgencyCountyEncryptedID').val() + '&EnumStatusCode=' + $('#EnumStatusCode').val();
+
+            });
+
+            $('#AgencyCountyEncryptedID').change(function (e) {
+                e.preventDefault();
+                document.location.href = '/Task/IVeInvoiceStatus?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year') + '&AgencyCountyID=' + $('#AgencyCountyEncryptedID').val() + '&EnumStatusCode=' + $('#EnumStatusCode').val();
+
+            }); $('#EnumStatusCode').change(function (e) {
+                e.preventDefault();
+                document.location.href = '/Task/IVeInvoiceStatus?month=' + $("#spnMonth").data('month') + '&year=' + $("#spnYear").data('year') + '&AgencyCountyID=' + $('#AgencyCountyEncryptedID').val() + '&EnumStatusCode=' + $('#EnumStatusCode').val();
+            });
+        })
+
+
+    </script>
+}

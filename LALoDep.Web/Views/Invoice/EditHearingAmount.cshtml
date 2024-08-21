@@ -1,0 +1,71 @@
+﻿@model LALoDep.Models.EditHearingAmountViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    ViewBag.Title = "Edit Hearing Amount";
+}
+
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>
+
+<div class="row padding-bottom-40">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px;overflow-y:auto">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Detention Hearing on @Model.HearingDate</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditHEaringAmount-form", @class = "form-inline" }))
+                {
+                    @Html.HiddenFor(m=>m.HearingID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.BaseRate, "Base Rate", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.BaseRate, new { @class = "form-control input-sm numeric-val", disabled = "disabled", type = "number" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ModifiedRate, "Modified  Rate", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ModifiedRate, new { @class = "form-control input-sm numeric-val", type = "number", tabindex = 1, autofocus = "autofocus" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="button" class="btn btn-primary tabindex=2">Save</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">        
+
+        $(document).ready(function () {
+            setInitialFormValues("EditHEaringAmount-form");
+
+            $("#btnSave").on("click", function () {
+                if (!hasFormChanged("EditHEaringAmount-form")) {                    
+                    top.ClosePopup();
+                }
+                else {
+                    var data = $("#EditHEaringAmount-form").serialize();
+                    $.ajax({
+                        type: "POST", url: '/Invoice/EditHearingAmount', data: data,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                top.location.href = top.location.href;
+                                top.ClosePopup();
+                            }
+                            else {
+                                top.notifyDanger("Something going wrong while proccesing data.");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

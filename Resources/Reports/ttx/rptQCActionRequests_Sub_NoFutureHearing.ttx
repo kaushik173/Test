@@ -1,0 +1,11 @@
+ReportType	String	50	RFDNoHearing
+ReportTypeSort		Number	1
+RequestedByFirstName	String	50	Jay
+RequestedByLastName	String	50	Henry
+RFDType	String	100	Assessment Report
+RFDDueDate	DateTime		01/01/1999
+RequestedForFirstName	String	50	Jay
+RequestedForLastName	String	50	Henry
+AgencyName	String	100	San Diego
+CaseNumber	String	20	AAAA1111
+HearingReportFilingDueID		Number	23

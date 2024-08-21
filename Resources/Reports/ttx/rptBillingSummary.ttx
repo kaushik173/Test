@@ -1,0 +1,9 @@
+ClientFirstName	String	50	Andy
+ClientLastName	String	50	Barrett
+Recipients	String	250	John Barrett, Marty Barrett
+CaseNumber	String	20	2000J3P0096
+InvoiceDate	DateTime		01/01/2000
+InvoiceTotal	Number		230.00
+StartDateParameter	DateTime		01/01/2000
+EndDateParameter	DateTime		01/31/2000
+AgencyName	String	200	Public Defender

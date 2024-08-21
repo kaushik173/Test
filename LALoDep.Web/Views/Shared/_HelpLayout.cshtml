@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Basic -->
+    <meta charset="UTF-8">
+    <title>Jcats Louisiana Dependency Help</title>
+    <meta name="keywords" content="Jcats Defender Help" />
+    <meta name="description" content="Jcats Defender Help">
+    <meta name="author" content="Canyon Solutions Inc.">
+
+    <!-- Mobile Metas -->
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+    @Styles.Render("~/assets/css/styles")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/assets/js/scripts")
+    @Scripts.Render("~/scripts/js")
+    @*@{
+        var themeUrl = Jcats.SD.UI.Custom.UserEnvironment.UserManager.UserExtended.ThemeUrl;
+        if (!string.IsNullOrEmpty(themeUrl))
+        {
+            <link id="skin-link" rel="stylesheet" type="text/css" href="@themeUrl" />
+        }
+
+    }*@
+</head>
+<body>
+
+    <!-- start: header -->
+    <div class="container-fluid">
+        <section class="main-container row">
+            <div class="page-container" style=" margin-top: -73px;">
+                <div id="loading" style="display: none; position: fixed;">
+                    <i class="fa fa-spinner fa-spin fa-3x"></i>
+                </div>
+                @RenderBody()
+            </div>
+        </section>
+    </div>
+    <div class="fixedbar">
+        @RenderSection("fixedfooter", required: false)
+    </div>
+    @RenderSection("scripts", false)
+    @Html.Partial("_Tracking")
+</body>
+</html>
+@*<script>
+    var secureIds = @if(Jcats.SD.UI.Custom.UserEnvironment.UserManager.JsonTokens().Count()>0) { @Html.Raw(Jcats.SD.UI.Custom.UserEnvironment.UserManager.JsonTokens())} else {<text>[]</text>};
+    $(document).ajaxComplete(function (event, xhr, settings) {
+        hideAllUnAuthorizedInputElements(secureIds);
+    });
+    hideAllUnAuthorizedInputElements(secureIds);
+</script>*@

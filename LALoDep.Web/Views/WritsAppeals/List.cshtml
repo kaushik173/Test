@@ -1,0 +1,78 @@
+﻿@model LALoDep.Models.Case.MotionViewModel
+@using LALoDep.Custom.Security
+@{
+    ViewBag.Title = "Writs/Appeals";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+        padding-top: 2px;
+        padding-right: 15px;
+        padding-bottom: 2px;
+        padding-left: 15px;
+    }
+</style>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                
+                    <span class="widget-caption" >Appeals</span>
+                
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="AppealsView">
+                        <thead>
+                            <tr>
+                                <th class="">File Date</th>
+                                <th class="">Close Date</th>
+                                <th class="">Case #</th>
+                                <th class="">Type #</th>
+                                <th class="">Child #</th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="PartialTable">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="appealFor"></span>
+                <div class="widget-buttons ">
+                    <input type="button" class="btn btn-default" name="addAppear" value="" id="add" data-secure-id="@((int)SecurityToken.AddAppealsView)" />
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="AppealsListView">
+                        <thead>
+                            <tr>
+                                <th >File Date</th>
+                                <th>Type</th>
+                                <th>Oral Argument Date</th>
+                                <th>Decision</th>
+                                <th>Decision Date</th>
+                                <th style="width:30px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/Appeals.js?v=" + Guid.NewGuid())"></script>
+}

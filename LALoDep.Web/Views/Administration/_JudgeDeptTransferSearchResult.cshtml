@@ -1,0 +1,68 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@model LALoDep.Models.Administration.JudgeDeptTransferViewModel
+
+@{
+    Layout = null;
+    var count = 0;
+}
+<div class="widget row">
+    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+        <span class="widget-caption">Search Results</span>
+    </div>
+    <div class="widget-body col-xs-12">
+
+
+
+
+
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-hover table-padding  table-striped">
+                <tbody>
+                    <tr>
+                        <th style="width: 200px !important;">Assigned Attorney </th>
+                        <th class="text-align-right" style="width: 100px !important;">Cases</th>
+                        <th class="text-align-right" style="width: 100px !important;">Hearings</th>
+
+                    </tr>
+                    @foreach (var item in Model.JudgeDeptTransSearchResult)
+            {
+                if (count == 0)
+                {
+                            <tr>
+                                <td class="bold">@item.AssignedAttorney
+                                @Html.Hidden("TransferGUID", item.TransferGUID)
+                                <span class="hidden" id="warningMessage">
+                                    Are you sure you want to update these @item.HearingTotal hearings and @item.CaseTotal cases to Judge 
+                                </span>
+                                </td>
+                                <td class="bold text-align-right">@item.CaseTotal</td>
+                                <td class="bold text-align-right">@item.HearingTotal</td>
+
+                            </tr>
+
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.AssignedAttorney</td>
+                                <td class="text-align-right">@item.CaseTotal</td>
+                                <td class="text-align-right">@item.HearingTotal</td>
+
+                            </tr>
+                        }
+                        count++;
+                    }
+
+
+
+                </tbody>
+
+
+            </table>
+        </div>
+
+
+    </div>
+</div>

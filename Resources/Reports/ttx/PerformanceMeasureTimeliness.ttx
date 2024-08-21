@@ -1,0 +1,10 @@
+County	String	100	State
+Outcome	String	100	Reunification w/Parents
+Children	Number		134
+Average		Number		557.55
+RangeMin	Number		1
+RangeMax	Number		6601
+[25th]	Number		242.50
+[50th]	Number		415.00
+[75th]	Number		634.00
+[90th]	Number		935.89

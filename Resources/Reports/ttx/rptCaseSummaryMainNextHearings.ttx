@@ -1,0 +1,6 @@
+HearingDateTime	DateTime		01/01/2000
+HearingOfficer	String	100	Smith, John
+HearingType	String	50	Murder
+Department	String	50	M
+Client	String	200	John Smith, Kelly Holcomb, Bob Jones
+GroupID	Number	1

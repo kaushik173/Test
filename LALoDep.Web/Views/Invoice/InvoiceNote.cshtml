@@ -1,0 +1,67 @@
+﻿@model LALoDep.Models.SaveNoteViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    ViewBag.Title = "Add notes to the invoice";
+}
+
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>
+<div class="row padding-bottom-40">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px;overflow-y:auto">
+        <div class="widget row">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "InvoiceNote-form", @class = "form-inline" }))
+            {
+                @Html.HiddenFor(m => m.EntityPrimaryKeyID)
+                @Html.HiddenFor(m => m.NoteID)
+                @Html.HiddenFor(m => m.NoteSubject)
+                @Html.HiddenFor(m => m.NoteEntityCodeID)
+                @Html.HiddenFor(m => m.NoteEntityTypeCodeID)
+                @Html.HiddenFor(m => m.NoteTypeCodeID)
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption"><strong>@(Model.NoteID.HasValue ? "Edit" : "Add" ) notes to the invoice</strong></span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="button" class="btn btn-primary tabindex=2">Save</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setInitialFormValues("InvoiceNote-form");
+
+            $("#btnSave").on("click", function () {
+                if (!hasFormChanged("InvoiceNote-form")) {                    
+                    top.ClosePopup();
+                }
+                else {
+                    var data = $("#InvoiceNote-form").serialize();
+                    $.ajax({
+                        type: "POST", url: '/Invoice/InvoiceNote', data: data,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                top.location.href = top.location.href;
+                                top.ClosePopup();
+                            }
+                            else {
+                                top.notifyDanger("Something going wrong while proccesing data.");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,204 @@
+﻿@model  LALoDep.Models.Case.AdvisementViewModel
+@{
+    ViewBag.Title = "Advisement of Rights";
+    var tabindex = 0;
+
+}
+@if (ViewBag.HearingID != null)
+{
+    @Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+}
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "advisements-form", @class = "form-inline  center-block", data_val = "false" }))
+{
+
+
+    var clientGroup = Model.Advisements.Select(o => new { o.ClientRoleID, o.ClientDisplay }).Distinct().ToList();
+
+    var defaultAttorneyPersonID = "";
+
+    var defaultAttorney = Model.AttorneyList.FirstOrDefault(o => o.Selected);
+    if (defaultAttorney != null)
+    {
+        defaultAttorneyPersonID = defaultAttorney.Value;
+    }
+
+    foreach (var client in clientGroup)
+    {
+
+
+
+        var groups = Model.Advisements.Where(o => o.ClientRoleID == client.ClientRoleID).Select(o => new { o.GroupDisplay, o.GroupDisplayOrder, o.GroupDisplayHearingInfo }).Distinct().OrderBy(o => o.GroupDisplayOrder).ToList();
+
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        @client.ClientDisplay
+                    </span>
+
+                </div>
+                <div class="widget-body col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="CalendarData">
+
+                            <tbody>
+                                @foreach (var group in groups)
+                                {
+
+
+                                    var advisements = Model.Advisements.Where(o => o.GroupDisplayOrder == group.GroupDisplayOrder && o.ClientRoleID == client.ClientRoleID).OrderBy(o => o.AdvisementDisplayOrder).ToList();
+                                    <tr>
+                                        <th colspan="9">@group.GroupDisplay </th>
+
+                                    </tr>
+                                    <tr>
+
+                                        <th style="width:30px">  </th>
+                                        <th style="width:180px">  Date Advised</th>
+                                        <th style="width:150px">  Attorney</th>
+
+                                        @if (group.GroupDisplayHearingInfo.Value == 1)
+                                        {
+                                            <th>
+                                                Advisement
+                                            </th>
+                                            <th>Hearing</th>
+                                            <th style="width:180px">File Due Date</th>
+                                            <th>Status</th>
+                                            <th style="width:180px">Status Date</th>
+                                        }
+                                        else
+                                        {
+                                            <th colspan="5">
+                                                Advisement
+                                            </th>
+                                        }
+
+                                    </tr>
+
+                                    foreach (var item in advisements)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @if (item.AdvisementID > 0)
+                                                {
+                                                    <input type="checkbox" tabindex="@(++tabindex)" class="chkAdvisement" data-advisementcodeid="@item.AdvisementCodeID" data-clientroleid="@item.ClientRoleID" data-id="@item.AdvisementID" checked="checked" data-secure-disabled-id="@((int)LALoDep.Custom.Security.SecurityToken.DeleteAdvisements)" />
+
+                                                }
+                                                else
+                                                {<input type="checkbox" tabindex="@(++tabindex)" class="chkAdvisement" data-advisementcodeid="@item.AdvisementCodeID" data-clientroleid="@item.ClientRoleID" data-id="@item.AdvisementID" />
+
+                                                }
+
+
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+
+                                                    @Html.TextBoxFor(m => item.AdvisementDateTime, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker AdvisementDateTime", style = "width:100%;", tabindex = ++tabindex, maxlength = "10" })
+                                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+
+                                                @Html.DropDownListFor(m => item.AttorneyPersonID, Model.AttorneyList, "", new { @class = "form-control input-sm AttorneyPersonID", tabindex = ++tabindex, data_defaultid = defaultAttorneyPersonID, data_currentId = item.AttorneyPersonID, @style = "width:100%" })
+
+
+                                            </td>
+
+                                            @if (item.GroupDisplayHearingInfo.Value == 1)
+                                            {
+
+                                                <td>
+                                                    @item.AdvisementDisplay
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" value="@item.GroupDisplayHearingInfo" class="GroupDisplayHearingInfo" />
+                                                    @Html.HiddenFor(m => item.HearingID, new { @class = "HearingID" })
+
+
+                                                    @item.HearingDisplay
+                                                </td>
+                                                <td>
+                                                    @if (item.FileDueDate.HasValue)
+                                                    {
+                                                        <div class="input-group">
+
+                                                            @Html.TextBoxFor(m => item.FileDueDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm  FileDueDate", style = "width:100%;", tabindex = ++tabindex, maxlength = "10", @readonly = "readonly" })
+                                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;cursor:not-allowed!important">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </span>
+                                                            <div class="clearfix"></div>
+                                                        </div>}
+
+                                                </td>
+                                                <td>
+
+                                                    @Html.DropDownListFor(m => item.StatusCodeID, Model.StatusList, "", new { @class = "form-control input-sm StatusCodeID", tabindex = ++tabindex, data_defaultid = defaultAttorneyPersonID, data_currentId = item.StatusCodeID, @style = "width:100%" })
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+
+                                                        @Html.TextBoxFor(m => item.StatusDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker StatusDate", style = "width:100%;", tabindex = ++tabindex, maxlength = "10" })
+                                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td colspan="@(item.AddAnotherFlag == 1 ? 4 : 5)">
+                                                    @item.AdvisementDisplay
+                                                </td>
+                                                if (item.AddAnotherFlag == 1)
+                                                {
+                                                    <td class="addAnotherCell">
+                                                        <a class="addAnotherRow btn btn-sm btn-default">Show Additional Row</a>
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    }
+    @Html.Hidden("PersonID", Model.AttorneyPersonID)
+    @Html.Hidden("CaseID", Model.CaseID)
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="btnSave" type="submit" data-caseid="@Model.CaseID" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.EditAdvisements)" class="btn btn-primary v-bottom default">Save </button>
+
+        <button id="btnCancel" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Cancel</button>
+
+    </div>
+}
+
+
+@section scripts
+{
+
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/Advisements.js?v=" + Guid.NewGuid())"></script>
+
+}

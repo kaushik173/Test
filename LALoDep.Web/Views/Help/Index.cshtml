@@ -1,0 +1,166 @@
+﻿@model IEnumerable< Jcats.SD.Domain.com_Jcats.com_JcatsHelpGetAllActive_spResult>
+
+    @{
+        Layout = "~/Views/Shared/_HelpLayout.cshtml";
+        ViewBag.Title = "Help";
+    }
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget flat radius-bordered">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Help</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body treeViewContent">
+                    <div class="row">
+                        <div id="MyTree" class="tree col-sm-3">
+                            <div class="tree-folder" style="display: none;">
+                                <div class="tree-folder-header">
+                                    <i class="fa fa-folder palegreen"></i>
+                                    <div class="tree-folder-name"></div>
+                                </div>
+                                <div class="tree-folder-content">
+                                </div>
+                                <div class="tree-loader" style="display: none;"></div>
+                            </div>
+                            <div class="tree-item" style="display: none;">
+                                <div class="tree-item-name"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 tree-view-content" id="htmlPage">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        var dataSourceDetails = [];
+        var UITree = function () {
+            return {
+                init: function () {
+                    DataSourceTree = function (options) {
+                        this.url = options.url;
+                    }
+                    DataSourceTree.prototype.data = function (options, callback) {
+                        var self = this;
+                        var $data = null;
+
+                        var param = null;
+                        if (!("name" in options) && !("type" in options)) {
+                            param = 0;
+                        }
+                        else if ("type" in options && options.type == "folder") {
+                            if ("children" in options)
+                                $data = options.children;
+                            else $data = {}
+                            callback({ data: $data });
+
+                        }
+                        if (param == 0) {
+                            $.ajax({
+                                url: this.url,
+                                type: 'POST',
+                                dataType: 'json',
+                                success: function (response) {
+                                    var selectedId = response.length > 0 ? response[0].selectedId : 0;
+                                    //console.log(selectedId);
+                                    callback({ data: response.groupedData })
+                                    dataSourceDetails = response.groupedData;
+
+                                    if (response.SelectedTree != -1) {
+                                        selectTreeItem($("#MyTree"), dataSourceDetails[response.SelectedTree]);
+                                        $('#Help_' + response.JcatsHelpID).parent().parent().closest('div').removeClass('tree-item').addClass('tree-item tree-selected');
+                                        $('#htmlPage').load(response.selectedPageContent);
+                                    }
+                                },
+                                error: function (response) {
+                                    console.log(response);
+                                }
+                            })
+                        }
+                    };
+
+                    var selectTreeFolder = function ($treeEl, folder, $parentEl) {
+                        var $parentEl = $parentEl || $treeEl;
+                        if (folder.type == "folder") {
+                            var $folderEl = $parentEl.find("div.tree-folder-name").filter(function (_, treeFolder) {
+                                return $(treeFolder).text() == folder.name;
+                            }).parent();
+                            $treeEl.one("loaded", function () {
+                                $.each(folder.children, function (i, item) {
+                                    selectTreeFolder($treeEl, item, $folderEl.parent());
+                                });
+                            });
+                            $treeEl.tree("selectFolder", $folderEl);
+                        }
+                        else {
+                            selectTreeItem($treeEl, folder, $parentEl);
+                        }
+                    };
+
+                    var selectTreeItem = function ($treeEl, item, $parentEl) {
+                        var $parentEl = $parentEl || $treeEl;
+                        if (item.type == "item") {
+                            var $itemEl = $parentEl.find("div.tree-item-name").filter(function (_, treeItem) {
+                                return $(treeItem).text() == item.name && !$(treeItem).parent().is(".tree-selected");
+                            }).parent();
+                            $treeEl.tree("selectItem", $itemEl);
+                        }
+                        else if (item.type == "folder") {
+                            selectTreeFolder($treeEl, item, $parentEl);
+                        }
+                    };
+
+
+
+                    $('#MyTree').tree({
+                        dataSource: new DataSourceTree({ url: '/Help/HelpTree?ASPPageID=@ViewBag.ASPPageID' }),
+                        multiSelect: false,
+                        loadingHTML: '<div class="tree-loading"><i class="fa fa-rotate-right fa-spin"></i></div>'
+                    });
+
+                    $('#MyTree').on('loaded.fu.tree', function () {
+                        console.log('loaded.fu.tree');
+                        //$('#MyTree').tree('selectItem', $('.tree-item:first'));
+                    });
+
+
+
+
+                }
+            };
+        }();
+
+
+        jQuery(document).ready(function () {
+            UITree.init();
+
+            $('#htmlPage').height($(window).height() - 100)
+            $('#htmlPage').css('min-height', $(window).height() - 100 + 'px');
+            $('#MyTree').height($(window).height() - 50);
+        });
+
+        function displayPage(pagename) {
+            $('#htmlPage').load( pagename);
+        }
+    </script>
+
+    <style>
+        #htmlPage {
+            overflow: auto;
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        .tree .tree-selected {
+            background-color: #f3f7b4 !important;
+            color: #262626;
+        }
+    </style>

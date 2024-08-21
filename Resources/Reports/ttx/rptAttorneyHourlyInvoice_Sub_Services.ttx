@@ -1,0 +1,4 @@
+Type	String	50	Hourly
+Hours	String	50	5.5
+Hourly Rate	String	50	100.5
+Total	String	50	552.755

@@ -1,0 +1,215 @@
+﻿@model LALoDep.Areas.Mobile.Models.HearingAddEditViewModel
+@{
+    ViewBag.Title = "Hearing Add";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="row">
+    <div class="col-xs-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    <a href="@Url.Action("CaseInfo", "Case", new { id = ViewBag.CaseID })">@ViewBag.CaseNumber</a> - @ViewBag.ClinetName
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "HearingAdd", @class = "form-inline center-block" }))
+                {
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTypeCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingTypeCodeID, new SelectList(Model.HearingTypeList, "CodeID", "CodeValue", Model.HearingTypeCodeID), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1 })
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTime, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingTime, new { @class = "form-control input-sm time-picker", tabindex = 3 })
+                            <span class="input-group-addon">
+                                <span class="fa fa-clock-o"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, new SelectList(Model.DepartmentList, "CodeID", "CodeValue", Model.DepartmentID), "", new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingOfficerStaffID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingOfficerStaffID, new SelectList(Model.JudicialOfficerList, "CodeID", "CodeValue", Model.HearingOfficerStaffID), "", new { @class = "form-control input-sm", tabindex = 5 })
+                    </div>
+
+
+                }
+            </div>
+
+
+        </div>
+
+
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    Petitions
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="caseloadListDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="caseloadList">
+                        <thead>
+                            <tr>
+                                <th width="50"><input type="checkbox" id="chkAll" tabindex="6" onclick="$('.chkPetition').prop('checked',$(this).is(':checked'))" /></th>
+                                <th>Child/Petition </th>
+                                <th> </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Petitions.Any())
+                            {
+                                foreach (var item in Model.Petitions)
+                                {
+                                    <tr>
+                                        <td> <input type="checkbox" id="chkPetition" tabindex="7" class="chkPetition" data-id="@item.PetitionID" /></td>
+                                        <td>@item.LastName @item.FirstName</td>
+                                        <td>@item.PetitionDocketNumber</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-align-center">No data available in table</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnAddHearing" type="submit" class="btn btn-sm btn-primary default">Add Hearing</button>
+        <button id="btnCancel" type="submit" class="btn btn-sm btn-default ">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action("CaseInfo","Case")';
+        });
+        $(document).ready(function () {
+            setInitialFormValues('HearingAdd')
+        });
+        $("#btnAddHearing").on("click", function () {
+            Save();
+        });
+
+
+        function Validation() {
+            var isValid = true;
+            associations = [];
+
+            if (!hasFormChanged('HearingAdd')) {
+
+                notifyDanger('Nothing was changed.');
+                isValid = false;
+                return false;
+            }
+
+
+
+            if ($('#HearingTypeCodeID').val() == '') {
+                isValid = false;
+                $('#HearingTypeCodeID').focus();
+                notifyDanger('Hearing Type  is required.');
+                return false;
+            }
+            if ($('#HearingDate').val() == '') {
+                isValid = false;
+                $('#HearingDate').focus();
+                notifyDanger('Hearing Date is required.');
+                return false;
+            }
+            if ($('#DepartmentID').val() == '') {
+                isValid = false;
+                $('#DepartmentID').focus();
+                notifyDanger('Department is required.');
+                return false;
+            } if ($('#HearingOfficerStaffID').val() == '') {
+                isValid = false;
+                $('#HearingOfficerStaffID').focus();
+                notifyDanger('Judge is required.');
+                return false;
+            }
+
+            if ($('.chkPetition:checked').length == 0) {
+                isValid = false;
+                $('.chkPetition:first').focus();
+                notifyDanger('Atleast one petition is required.');
+            }
+            return isValid;
+        }
+        function Save() {
+
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            var ids = '';
+            $('.chkPetition:checked').each(function () {
+                if (ids != '')
+                    ids += ',';
+                ids += $(this).attr('data-id');
+            })
+
+            var isvalid = Validation();
+
+            if (isvalid) {
+                var params = $('#HearingAdd').serialize() + "&petitionIds=" + ids;
+                $.ajax({
+                    type: "POST", url: '/Mobile/Case/HearingAdd', data: params,
+                    success: function (result) {
+
+                        if (result.Status == "Done") {
+
+                            notifySuccess('Data Saved Successfully!.');
+
+                            RequestSubmitted();
+                            document.location.href = '/Mobile/Case/CaseInfo';
+
+
+                        } else {
+                            document.location.href = result.URL;
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+
+        }
+    </script>
+}

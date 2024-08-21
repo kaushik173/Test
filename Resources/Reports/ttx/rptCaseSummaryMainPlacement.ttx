@@ -1,0 +1,8 @@
+ClientName	String	100	Smith, John
+PlacementAgency	String	200	Agency 1
+AddressType	String	50	Home
+Address	String	100	2000 Test Way, Juniper, CA
+PersonAddressStartDate	DateTime		01/01/2000
+PersonAddressEndDate	DateTime		01/01/2000
+AddressEndedFlag	Number		1
+GroupID	Number	1

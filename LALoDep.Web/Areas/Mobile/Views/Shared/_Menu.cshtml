@@ -1,0 +1,27 @@
+﻿ 
+@using LALoDep.Custom
+@model IEnumerable<  LALoDep.Models.MenuItem>
+<div class="page-sidebar" id="sidebar">
+    <ul class="nav sidebar-menu">
+        @if (UserEnvironment.UserManager.UserExtended.SystemAdminFlag == 1)
+        {
+            <li>
+                <a href="@Url.Action("Index", "Administrator")">System Admin</a>
+            </li>
+        }
+        @foreach (var mitem in Model)
+        {
+            if (!mitem.Title.ToLower().Contains("logout"))
+            {
+                <li>
+                    <a href="/Mobile/@(mitem.Controller)/@(mitem.Action)">
+                        @mitem.Title
+                    </a>
+                </li>
+            }
+        }
+        <li>
+            <a href="@Url.Action("LogOff", "Account")">LogOut</a>
+        </li>
+    </ul>
+</div>

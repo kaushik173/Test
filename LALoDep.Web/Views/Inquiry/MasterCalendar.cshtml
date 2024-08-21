@@ -1,0 +1,327 @@
+﻿@model LALoDep.Models.Inquiry.MasterCalendarViewModel
+@{
+    ViewBag.Title = "Master Calendar";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "MasterCalendar", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-md-2 col-sm-6 ">
+                            <div class="remove-padding">
+                                <label for="StarEndtDate" class="control-label">Start Date - End Date</label>
+                                <input type="text" id="StarEndtDate" value="@Model.StartDate - @Model.EndDate" class="form-control daterange input-sm" style="width: 100% !important;" tabindex="1" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-6" style="width:200px ">
+                            <label for="TeamId" class="control-label">Agency</label>
+                            @Html.DropDownListFor(m => m.AgencyID, new SelectList(Model.AgencyList, "AgencyID", "AgencyName"), "", new { @class = "form-control input-sm ", data_val = "false", style = "width:98%", tabindex = 2 })
+                        </div>
+                        <div class="form-group col-md-3 col-sm-6" style="width:200px ">
+                            <label for="DepartmentId" class="control-label">Department </label>
+                            @Html.DropDownListFor(m => m.DepartmentID, new SelectList(Model.DepartmentList, "CodeID", "CodeValue", ""), "", new { @class = "form-control input-sm ", data_val = "false", style = "width:98%", tabindex = 3 })
+                        </div>
+                        <div class="form-group col-md-3 col-sm-6" style="width:200px ">
+                            <label for="HearingTypeId" class="control-label">Day of Week</label>
+                            @Html.DropDownListFor(m => m.DesignatedDayCodeID, new SelectList(Model.DayOfWeekList, "CodeID", "CodeValue", ""), "", new { @class = "form-control input-sm ", data_val = "false", style = "width:98%", tabindex = 4 })
+                        </div>
+                        <div class="form-group col-md-3 col-sm-6" style="width:200px ">
+                            <label for="HearingTypeId" class="control-label">Hearing Type</label>
+                            @Html.DropDownListFor(m => m.HearingTypeCodeID, new SelectList(Model.HearingTypeList, "CodeID", "CodeValue", ""), "", new { @class = "form-control input-sm ", data_val = "false", style = "width:98%", tabindex = 5 })
+                        </div>
+                        @Html.HiddenFor(c => c.StartDate)
+                        @Html.HiddenFor(c => c.EndDate)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divHearingList">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Master Calendar <span id="hearing-count">(0)</span>
+                </span>
+                <div class="widget-buttons">
+                    <a href="#" class="print ">Print</a>&nbsp;&nbsp;&nbsp;&nbsp;|
+                    <a href="#" class="printWithPhysicaFileName">Print With Physical File Name</a>
+                </div>
+            </div>
+            <div class="widget-body col-md-12">
+                <div class="widget-main no-padding">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="HearingData">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Hearing Time</th>
+                                    <th>Type</th>
+                                    <th>Dept</th>
+                                    <th>Case#</th>
+                                    <th>Clients</th>
+                                    <th>Results</th>
+                                    <th>Attorney</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom  default" tabindex="6"><u>P</u>rocess</button>
+    </div>
+}
+@section scripts{
+    <script>
+        var oHearingData = null;
+        $(document).ready(function () {
+            $(window).on("keydown", handleHotkey);
+
+            function handleHotkey(e) {
+
+                if (!e.ctrlKey) return;
+                switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                    case 'p':
+                        $('#btnSearch').trigger('click');
+                        e.preventDefault();
+                        break;
+                    case 'r':
+                        $('#btnPrint').trigger('click');
+                        e.preventDefault();
+                        break;
+                    case 'f':
+                        $('#btnPrintAgendaFormat').trigger('click');
+                        e.preventDefault();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        oHearingData = $('#HearingData').dataTable({
+            "ordering": false,
+            "searching": false,
+            "bInfo": false,
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+
+
+            "columns": [
+                { "data": "EventDate" },
+                { "data": "EventTime" },
+                {
+                    "data": "EventType",
+                    "mData": null,
+                    "mRender": function (data, type, full) {
+                        return '<a href="@Url.Action(MVC.Case.Main())/' + full.EncryptedCaseID + '">' + full.EventType + '</a>';
+                    }
+                },
+                { "data": "Department" },
+                { "data": "Petitions" },
+                { "data": "Clients" },
+                { "data": "Result" },
+                {
+                    "data": "Attorney",
+                    "render": function (data, type, full, meta) {
+                        return '<a href="@Url.Action(MVC.Inquiry.MyCalendar())?p=' + full.EncryptedAgencyAttorneyID + '">' + data + '</a>';
+                    }
+                }
+
+            ], "columnDefs": [
+                { "visible": false, "targets": 0 }
+            ],
+            "order": [[1, 'asc']],
+
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+
+                api.column(0, { page: 'current' }).data().each(function (group, i) {
+                    var lastRow = 0;
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><th colspan="8">' + group + '</th></tr>'
+                        );
+                        last = group;
+                        lastRow = 0;
+
+                    }
+
+
+                });
+            },
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+        $('#HearingData').on('draw.dt', function () {
+
+            $('#HearingData_info').parent().addClass('col-xs-4').removeClass('col-xs-6');
+            $('#HearingData_paginate').parent().addClass('col-xs-8').removeClass('col-xs-6');
+
+
+        });
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+
+            //$('#HearingData tbody tr').each(function (trIndex) {
+            //    $(this).find('td').each(function (index) {
+            //        if (index !== 0)
+            //            if ($(this).text() == $('#HearingData tbody tr:eq(' + (trIndex - 1) + ')').find('td:eq(' + index + ')').text()) {
+            //                $(this).addClass('duplicate');
+
+            //            }
+            //    });
+            //});
+            //$('.duplicate').each(function (trIndex) {
+            //    $(this).text('');
+
+            //});
+        }
+        /* Get Row Count */
+        var getRowCount = function (settings) {
+            return settings.fnRecordsDisplay();
+        };
+        var showRowCount = function (settings) {
+            var rows = getRowCount(settings);
+            $(".row-count[data-parent-table='" + settings.sTableId + "']").html("(" + rows + ")");
+            if (parseInt(rows) > 2) {
+                $("#btn_" + settings.sTableId).show();
+            }
+            else { $("#btn_" + settings.sTableId).hide(); }
+        }
+
+        function setData(data, tbl, index) {
+            tbl.fnClearTable();
+            if (data[index].data.length > 0) {                
+                tbl.fnAddData(data[index].data);
+                showRowCount(tbl.fnSettings());
+                fitCalculatedHeightForSearchDataTable();
+            }
+            $("#hearing-count").text("(" + data[index].recordsTotal + ")");
+        }
+
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oHearingData != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divHearingList .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                $('#divHearingList .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oHearingData.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+
+        function parseDates(str) {
+            var mdymdy = str.replace(" - ", "/").split("/");
+            return mdymdy;
+        }
+
+        function daydiff(mdymdy) {
+            var msPerDay = 86400000;
+            var start = new Date(mdymdy[2], mdymdy[0] - 1, mdymdy[1]);
+            var end = new Date(mdymdy[5], mdymdy[3] - 1, mdymdy[4]);
+            return ((end.getTime() - start.getTime()) / msPerDay);
+        }
+
+        function search() {
+
+            var $form = $('#MasterCalendar');
+
+            $.ajax({
+                type: "POST", url: '/Inquiry/SearchMasterCalendar', data: $('#MasterCalendar').serialize(), success: function (data) {
+                    setData(data, oHearingData, 0);
+                },
+                dataType: 'json'
+            });
+        }
+
+        function getDate(d) {
+            d = (d || new Date());
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            return (month < 10 ? '0' : '') + month + '/' +
+                   (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+        }
+
+        function getData() {
+            var data = {
+                'StartDate': $('#StartDate').val(),
+                'EndDate': $('#EndDate').val(),
+            };
+            return data;
+        }
+
+        $(window).bind('resize', function () {
+            fitCalculatedHeightForSearchDataTable();
+        });
+
+        $('.daterange').daterangepicker({ autoClose: true, "linkedCalendars": false, }, function (start, end) {
+            $('#StartDate').val(start.format('MM/DD/YYYY'));
+            $('#EndDate').val(end.format('MM/DD/YYYY'));
+        });
+
+        $('#btnSearch').on('click', function (e) {
+            IPadKeyboardFix();
+            search();// $('#MasterCalendar').submit();
+        });
+
+
+        $('.print').on('click', function (e) {
+
+           $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/PrintMasterCalendar', getData(), "POST", 'target="_blank"');
+        });
+
+        $('.printWithPhysicaFileName').on('click', function (e) {
+           $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/PrintWithPhysicalFile', getData(), "POST", 'target="_blank"');
+        });
+
+        $(function () {
+            //$('#StartDate').val(getDate());
+            //$('#EndDate').val(getDate());
+            $('#btnSearch').trigger('click');
+        });
+    </script>
+}
+
+
+<style>
+    #HearingData {
+        width: 100% !important;
+    }
+</style>

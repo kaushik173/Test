@@ -1,0 +1,343 @@
+﻿@model LALoDep.Models.Task.MyCSECQueueViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CSECSummary-form", @class = "form-inline center-block" }))
+                {
+                @Html.HiddenFor(o=>o.PersonID)
+                <div class="row">
+                    <div class="form-group" style="width:180px">
+                        @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker datefullwidth", maxlength = "10", tabindex = 1, autofocus = "autofocus" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width:180px">
+                        @Html.LabelFor(m => m.EndDate, "End Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker datefullwidth", maxlength = "10", tabindex = 2 })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width:180px">
+                        @Html.LabelFor(m => m.DateRangeType, "Date Range Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DateRangeType, Model.DateRangeTypeList,  new { @class = "form-control input-sm", tabindex = 3, style = "width:100% !important;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.IncludeCompleted, "Include Completed Questionnaires", new { @class = "control-label" })
+                        <br />   @Html.CheckBoxFor(m => m.IncludeCompleted, new { tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ShowCompletes, "Show Incompletes", new { @class = "control-label" })
+                        <br />   @Html.CheckBoxFor(m => m.ShowCompletes, new { tabindex = 5 })
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult">Search Result</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <div id="divCompleted">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClients">
+                            <thead>
+                                <tr>
+                                    <th>Child</th>
+                                    <th>Due Date</th>
+                                    <th>Completion Date</th>
+                                    <th>Score</th>
+                                    <th>Score Literal</th>
+                                    <th style="width:150px;"><input type="checkbox" id="chkAllCompleted" /><span style="position:relative;top:-5px;left:2px;">Mark as Incomplete</span></th>
+                                </tr>
+                                												
+ 		        
+
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="divIncompleted" style="display:none">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClientsIncomplete">
+                            <thead>
+                                <tr>
+                                    <th>Child</th>
+                                    <th>Due Date</th>		
+
+                                    <th>Incomplete Date</th>
+                                    <th>Marked Incomplete By</th>
+                                   
+                                    <th style="width:150px;"><input type="checkbox" id="chkAllRestored" /><span style="position:relative;top:-5px;left:2px;">Restore</span></th>
+                                </tr>
+
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Search/Process</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+    
+        $("#chkAllCompleted").on("change", function () {
+            $(".chkCompleted").prop('checked', $(this).is(':checked'));
+           
+        });
+        $("#chkAllRestored").on("change", function () {
+            $(".chkRestore").prop('checked', $(this).is(':checked'));
+
+        });
+        $("#ShowCompletes").on("change", function () {
+            if ($(this).is(':checked')) {
+                $("#StartDate").val('')
+                $("#EndDate").val('')
+                $("#IncludeCompleted").prop('checked', false);
+                $("#divIncompleted").show()
+                $("#divCompleted").hide()
+            } else {
+                $("#divIncompleted").hide()
+                $("#divCompleted").show()
+            }
+            Search();
+
+
+
+        });
+        $("#btnSearch").on("click", function () {
+            Search();
+
+
+
+        });
+        var oTable = $('#tblClients').dataTable({
+
+            "lengthMenu": [50],
+            "lengthChange": false,
+            "paging": true,
+            "searching": false,
+            "bSort": false,
+
+            "columns": [
+
+
+
+                { "data": "Child" }, {
+                    "render": function (data, type, full, meta) {
+                        return (full.CanEditFlag == "1" ? '<a href="/Case/CSECEdit/' + full.EncryptedCSECID + '?page=/Task/MyCSECQueue/@Model.EncryptedPersonID">' + full.DueDate + '</a>' : full.DueDate);
+
+                    }
+                },
+                 { "data": "CompletionDate" },
+                { "data": "ScoreNumeric" },
+                { "data": "ScoreLiteral" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return (full.CanMarkAsIncompleteFlag == "1" ? '<input type="checkbox" id="chkCompleted' + full.CSECID + '" data-id="' + full.CSECID + '" class="chkCompleted" tabindex="6"/>' : '');
+
+                    }
+                }
+
+
+            ],
+
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+        var oTableIncomplete = $('#tblClientsIncomplete').dataTable({
+
+            "lengthMenu": [50],
+            "lengthChange": false,
+            "paging": true,
+            "searching": false,
+            "bSort": false,
+
+            "columns": [
+
+
+
+                { "data": "Child" }, {
+                    "render": function (data, type, full, meta) {
+                        return (full.CanEditFlag == "1" ? '<a href="/Case/CSECEdit/' + full.EncryptedCSECID + '?page=/Task/MyCSECQueue/@Model.EncryptedPersonID">' + full.DueDate + '</a>' : full.DueDate);
+
+                    }
+                },
+                 { "data": "StatusDate" },
+                { "data": "StatusBy" },
+               
+                {
+                    "render": function (data, type, full, meta) {
+                        return (full.CanRestoreFlag == "1" ? '<input type="checkbox" id="chkRestore' + full.CSECID + '" data-id="' + full.CSECID + '" class="chkRestore"  tabindex="6"/>' : '');
+
+                    }
+                }
+
+
+            ],
+
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+        function setData(data) {
+            $("#chkAllCompleted").prop('checked', false);
+            $("#chkAllRestored").prop('checked', false);
+            oTable.fnClearTable();
+            oTableIncomplete.fnClearTable();
+            if (data.data.length > 0) {
+                if ($("#ShowCompletes").is(':checked')) {
+              
+                    oTableIncomplete.fnAddData(data.data);
+                } else {
+                    oTable.fnAddData(data.data);
+                }
+                //      $('#countSearchResult').text('Search Result For ' + $('#AgencyID').find('option:selected').text() + '(' + data.data.length + ')');
+                //   fitCalculatedHeightForSearchDataTable();
+            } else {
+                //     $('#CountSearchResult').text('0');
+                //   Notify('No results found.', 'bottom-right', '5000', 'blue', 'fa-frown-o', true);
+            }
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+        function getData() {
+            var fData = $('#CSECSummary-form').serialize();
+
+            
+            return fData;
+        }
+        function Search() {
+            var $form = $('#CSECSummary-form');
+            IPadKeyboardFix();
+
+
+
+            var params = getData();
+            var confirmationMsg = '';
+            if ($('.chkCompleted:checked').length>0) {
+                var incompleteList = '';
+                $('.chkCompleted:checked').each(function () {
+                    if (incompleteList != '')
+                        incompleteList += ',';
+                    incompleteList += $(this).attr('data-id');
+                })
+                params += '&IncompleteList=' + incompleteList;
+                confirmationMsg = 'Are you sure you want to mark these CSEC records as Incomplete?';
+            }
+            if ($('.chkRestore:checked').length > 0) {
+                var incompleteList = '';
+                $('.chkRestore:checked').each(function () {
+                    if (incompleteList != '')
+                        incompleteList += ',';
+                    incompleteList += $(this).attr('data-id');
+                })
+                params += '&RestoreList=' + incompleteList;
+                confirmationMsg = 'Are you sure you want to restore these CSEC records?';
+            }
+            if (confirmationMsg !== '') {
+                confirmBox(confirmationMsg, function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '/Task/MyCSECQueue', data: params,
+                            success: function (data) {
+
+                                if (data.Status == "Done") {
+                                    setData(data.SearchData);
+                                } else if (data.Status == "CaseRedirect") {
+                                    document.location.href = data.URL;
+
+                                }
+
+
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: "POST", url: '/Task/MyCSECQueue', data: params,
+                    success: function (data) {
+
+                        if (data.Status == "Done") {
+                            setData(data.SearchData);
+                        } else if (data.Status == "CaseRedirect") {
+                            document.location.href = data.URL;
+
+                        }
+
+
+                    }
+                });
+            }
+          
+
+
+
+
+        }
+        $(function () {
+            Search();
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

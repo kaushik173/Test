@@ -1,0 +1,10 @@
+Role	String	100	AAA111
+WorkStartDate	DateTime		01/01/2000
+WorkEndDate	DateTime		01/01/2000
+WorkerName	String	100	Role
+WorkHours	Number		1.5
+WorkHoursOverTime	Number		1.5
+WorkMileage	Number		1.5
+WorkDescription	String	100	test
+Note	Memo	test note
+GroupID	Number	1

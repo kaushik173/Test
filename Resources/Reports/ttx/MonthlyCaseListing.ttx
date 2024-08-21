@@ -1,0 +1,11 @@
+PetitionYear	Number		2010
+PetitionMonth	Number		5
+GroupTitle	String	100	New (10)
+CaseNumber	String	50	12312312
+Attorney	String	100	Terri Barrett
+ApptDate	DateTime		01/01/1999
+Party	String	100	Juris
+ChildCount	Number		20
+CloseDate	DateTime		03/03/1999
+CloseReason	String	100	Unknown
+InitialHearing	DateTime		02/02/1999

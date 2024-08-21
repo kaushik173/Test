@@ -1,0 +1,226 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Administration.UserDepartmentViewModel
+@{
+    ViewBag.Title = "Department";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Department Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "DepartmentAddEdit-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.PersonID)
+                    @Html.HiddenFor(m => m.DepartmentID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentCodeID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentStartDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.DepartmentStartDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 2 })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentEndDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.DepartmentEndDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 3 })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Department History @ViewBag.PersonName</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="deptView">
+                        <thead>
+                            <tr>
+                                <th class="">Department</th>
+                                <th class="">Start Date</th>
+                                <th class="">End Date</th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.DepartmentHistory != null && Model.DepartmentHistory.Count > 0)
+                            {
+                                foreach (var dept in Model.DepartmentHistory)
+                                {
+                                    <tr class="@(Model.DepartmentID == dept.DepartmentID? "selectedrow":"")">
+                                        <td>@dept.DepartmentCodeValue</td>
+                                        <td><a href="@Url.Action(MVC.Users.Department(Model.PersonID.ToEncrypt(), dept.DepartmentID.ToEncrypt()))@(!string.IsNullOrEmpty(Request.QueryString["pageid"])?"&pageid="+Request.QueryString["pageid"]:"" )">@dept.DepartmentStartDate</a></td>
+                                        <td>@dept.DepartmentEndDate</td>
+                                        <td><button class="btn btn-danger btn-xs delete" data-id="@dept.DepartmentID.ToEncrypt()" data-secure-id="@((int)SecurityToken.DeleteCourtDepartment)"><i class="fa fa-trash-o"></i> Delete</button></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" class="text-center">No data available in table</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="4" data-secure-id="@(Model.DepartmentID.HasValue? (int)SecurityToken.EditCourtDepartment :(int)SecurityToken.AddCourtDepartment)">Save</button>
+        <button id="btnSaveAndReturn" type="button" class="btn btn-default v-bottom" tabindex="5" data-secure-id="@(Model.DepartmentID.HasValue? (int)SecurityToken.EditCourtDepartment :(int)SecurityToken.AddCourtDepartment)">Save/Return</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="6">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function getData() {
+            var data = $("#DepartmentAddEdit-form").serialize();
+            return data;
+        }
+
+        function saveData(buttonId) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($("#DepartmentCodeID").val().length == 0) {
+                $("#DepartmentCodeID").focus();
+                notifyDanger("Department is required.")
+                return false;
+            }
+
+            if ($("#DepartmentStartDate").val().length == 0) {
+                $("#DepartmentStartDate").focus();
+                notifyDanger("Start Date is required.")
+                return false;
+            }
+
+            if ($("#DepartmentEndDate").val().length > 0) {
+                var startDate = new Date($("#DepartmentStartDate").val());
+                var endDate = new Date($("#DepartmentEndDate").val());
+
+                if (startDate > endDate) {
+                    $("#DepartmentEndDate").focus();
+                    notifyDanger("End date can not be before start date.")
+                    return false;
+                }
+            }
+
+            var data = getData();
+            $.ajax({
+                type: "POST", url: "@Url.Action(MVC.Users.SaveDepartment())", data: data,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        getRedirectURL(buttonId);
+                        //window.location.href = result.URL;
+                    }
+                }
+            });
+        }
+
+
+        function getRedirectURL(buttonId) {
+            var pageId = getParameterByName('pageid');
+            if (buttonId == 2) {
+                var url = "/Users/Department/@Model.PersonID.ToEncrypt()";
+                if (pageId != null && pageId != undefined)
+                    url += "?pageid=" + pageId;
+
+                window.location.href = url;
+            }
+            else {                
+                if (pageId == '1')
+                    window.location.href = "@Url.Action(MVC.JudicialOfficer.Search())";
+                else
+                    window.location.href = "@Url.Action(MVC.Users.Search())";
+            }
+        }
+
+
+        $("#btnSave").on("click", function (e) {
+            e.preventDefault();
+
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("DepartmentAddEdit-form")) {            
+                saveData(1);
+            }
+            else {
+                getRedirectURL(1);                
+            }
+        });
+
+        $("#btnSaveAndReturn").on("click", function (e) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("DepartmentAddEdit-form")) {
+                saveData(2);
+            }
+            else {
+                notifyDanger("Nothing has been changed");
+            }
+        });
+
+        $("#btnCancel").on("click", function () {
+            getRedirectURL(3);
+        });
+
+        $("#deptView").on("click", ".delete", function () {
+            var $this = $(this);
+            confirmBox("Are you sure want to delete?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: "@Url.Action(MVC.Users.DeleteDepartment())/" + $this.data("id"),
+                        success: function (result) {
+                            RequestSubmitted();
+                            if (result.isSuccess) {
+                                window.location.href = window.location.href;
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("DepartmentAddEdit-form");
+        });
+    </script>
+}

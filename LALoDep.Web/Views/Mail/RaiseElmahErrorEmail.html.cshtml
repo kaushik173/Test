@@ -1,0 +1,15 @@
+﻿@model   LALoDep.Models.EmailRecipient
+@{
+    ViewBag.Title = "Error";
+    Layout = null;
+}
+
+<div>
+    @Html.Raw(Model.CustomData["ErrorMessage"])
+    <br />
+    <p>
+        Please <a href="@Model.CustomData["ElmahLink"]" target="_blank">click here </a> to view detail.
+    </p> <br/>
+    @Html.Raw(Model.CustomData["ErrorDetail"])
+ 
+</div>

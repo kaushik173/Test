@@ -1,0 +1,250 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.ExpenseNGViewModel
+@{
+
+ 
+    ViewBag.Title = "Expenses";
+    var tabindex = 1;
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "expenseng-form", @class = "form-inline  center-block" }))
+{
+    @Html.Action("ExpenseNGHeader", "Case", new { id = Model.ExpenseID })
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Expense Add/Edit   </span>
+                    <div class="widget-buttons">
+
+
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+
+
+                    <div class="form-group  pull-left ">
+                        @Html.LabelFor(m => m.ExpenseDate, "Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.ExpenseDate, new { @class = "form-control input-sm date-picker ", autofocus = "autofocus", tabindex = 1, maxlength = "10", style = "width:100%" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(m => m.ExpenseTypeCodeID, "Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ExpenseTypeCodeID, Model.TypeList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%" })
+
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(m => m.VendorName, "Vendor Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.VendorName, new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%" })
+
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(m => m.StaffPersonID, "Contractor", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.StaffPersonID, Model.StaffMemberList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%" })
+
+                    </div>
+                    <div class="form-group  col-md-1">
+                        @Html.LabelFor(m => m.EligibleCodeID, "IV-E Eligible", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.EligibleCodeID, Model.EligibleList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:98%" })
+
+                    </div>
+                    <div class="form-group  col-md-1">
+                        @Html.LabelFor(m => m.Amount, "Amount", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control  input-sm number CurrencyFormat", tabindex = tabindex++, style = "width:100%" })
+
+                    </div>
+                    @if (Model.ExpenseID.ToInt() > 0)
+                    {
+                        <div class="form-group  col-md-2">
+                            @Html.LabelFor(m => m.PreviousAmount, "Previous Amount", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.PreviousAmount, new { @class = "form-control  input-sm number CurrencyFormat", tabindex = tabindex++, style = "width:100%", disabled = "disabled" })
+
+                        </div>
+
+                        <div class="form-group  col-md-2">
+
+
+                            <label class="control-label" for="CurrentStatusCodeID">Status <a class="showHistory" data-id="@Model.ExpenseID" style="cursor:pointer">@Model.StatusHistory </a> </label>
+                            @if (Model.IsAdmin)
+                            {
+                                @Html.DropDownListFor(m => m.CurrentStatusCodeID, Model.StatusList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%" })
+
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(m => m.CurrentStatusCodeID, Model.StatusList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%", disabled = "disabled" })
+                            }
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.CurrentStatusDate, "Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.CurrentStatusDate, new { @class = "form-control input-sm date-picker ", tabindex = tabindex++, maxlength = "10", style = "width:100%", disabled = "disabled" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                    }
+
+                    <div class="form-group  col-md-12">
+                        @Html.LabelFor(m => m.Note, "Request Note", new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Note, new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%" })
+
+                    </div>
+                    @if (Model.ExpenseID.ToInt() > 0)
+                    {
+                        <div class="form-group  col-md-12">
+                            @Html.LabelFor(m => m.AdminNote, "Administrator Note", new { @class = "control-label" })
+                            @if (Model.IsAdmin)
+                            {
+                                @Html.TextAreaFor(m => m.AdminNote, new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%" })
+                            }
+                            else
+                            {@Html.TextAreaFor(m => m.AdminNote, new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100%", disabled = "disabled" })
+
+                        }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (Model.ExpenseList.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Expense List (@Model.ExpenseList.Count()) </span>
+                        <div class="widget-buttons">
+                            <a class="btn btn-labeled btn-default btn" id="btnAddNew" tabindex="@(tabindex++)" data-secure-id="@((int)SecurityToken.AddExpenseNG)">Add New Expense </a>
+
+
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                                <thead>
+                                    <tr>
+
+                                        <th>Date </th>
+                                        <th>Type </th>
+                                        <th>Contractor </th>
+                                        <th style="width:100px">Amount </th>
+                                        <th style="width:120px">
+                                            Previous  Amount
+                                        </th>
+                                        <th>Status </th>
+                                        <th>Attachments </th>
+                                        <th width="80"> </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ExpenseList)
+                                    {
+                                        <tr class="@(Model.ExpenseID==item.ExpenseID?"selectedrow":"")">
+                                            <td>
+                                                <a href="/Case/ExpenseNG/@item.ExpenseID.ToEncrypt()">@item.ExpenseDate</a>
+                                            </td>
+                                            <td>@item.ExpenseType</td>
+                                            <td>@item.StaffMember</td>
+                                            <td class="text-right">@(item.Amount.HasValue ? item.Amount.Value.ToString("C", System.Globalization.CultureInfo.CurrentCulture) : "")</td>
+                                            <td class="text-right">@(item.PreviousAmount.HasValue ? item.PreviousAmount.Value.ToString("C", System.Globalization.CultureInfo.CurrentCulture) : "")</td>
+
+                                            <td>@item.CurrentStatus</td>
+                                            <td>@item.AttachmentDisplay</td>
+                                            <td>
+                                                @if (item.CanDeleteFlag.ToInt() == 1)
+                                                {<a class="btn btn-danger btn-xs    deleteExpense" data-id="@item.ExpenseID"><i class="fa fa-trash-o"></i> Delete</a>
+
+
+                                                }
+
+
+                                            </td>
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @Html.HiddenFor(o => o.ExpenseID)
+    @Html.HiddenFor(o => o.CaseID)
+    @Html.HiddenFor(o => o.AgencyID)
+}
+@Html.Hidden("EncryptedExpenseID", (Model.ExpenseID.ToInt() > 0 ? Model.ExpenseID.ToInt().ToEncrypt() : ""))
+
+@section scripts
+{
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/ExpenseNG.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        @if (Model.ExpenseID.ToInt() > 0)
+        {
+            if (Model.CanEditFlag.ToInt() == 1)
+            {
+                <button id="saveAndAdd" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)" data-secure-id="@((int)SecurityToken.EditExpenseNG)">Save</button>
+                <button id="saveAndAttachFiles" type="submit" class="btn btn-default v-bottom " tabindex="@(tabindex++)" data-secure-id="@((int)SecurityToken.EditExpenseNG)">Save/Attach Files</button>
+
+
+            }
+            else
+            {
+                <button id="btnBack" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Back</button>
+
+            }
+
+        }
+        else
+        {
+            <button id="saveAndAdd" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)" data-secure-id="@((int)SecurityToken.AddExpenseNG)">Save</button>
+            <button id="saveAndAttachFiles" type="submit" class="btn btn-default v-bottom " tabindex="@(tabindex++)" data-secure-id="@((int)SecurityToken.AddExpenseNG)">Save/Attach Files</button>
+
+
+        }
+    </div>
+
+}@if (Model.CanEditFlag == 0)
+{
+    <script>
+        $('input,select,textarea').prop('disabled', true);
+    </script>
+}

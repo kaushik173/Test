@@ -1,0 +1,130 @@
+﻿@model LALoDep.Models.CaseSearchViewModel
+@{
+    ViewBag.Title = "Search For Case";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        @if (!string.IsNullOrEmpty(Model.CaseAccessLevelMessage))
+        {
+            <div class="alert alert-danger">
+                @Model.CaseAccessLevelMessage
+            </div>
+        }
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @if (Session["CaseTextBoxFocus"] != null && Request.QueryString["newSession"] == null)
+                        {
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = 1, style = "width:130px" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, style = "width:130px" })
+                        }
+                        @Html.ValidationMessageFor(m => m.LastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2, style = "width:130px" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocketNumber, "Case #", new { @class = "control-label" })
+
+                        @if (Session["CaseTextBoxFocus"] != null && Request.QueryString["newSession"] == null)
+                        {
+                            Session["CaseTextBoxFocus"] = null;
+                            @Html.TextBoxFor(m => m.DocketNumber, new { @class = "form-control input-sm ", tabindex = 3, autofocus = "autofocus", style = "width:130px" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.DocketNumber, new { @class = "form-control input-sm ", tabindex = 3, style = "width:130px" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.JcatsNumber, "JCATS #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.JcatsNumber, new { @class = "form-control input-sm ", tabindex = 4, style = "width:130px" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HHSA, "HHSA #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HHSA, new { @class = "form-control input-sm", tabindex = 6 , style = "width:130px" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, new SelectList(Model.AgancyList, "AgencyID", "AgencyName"), "", new { @class = "form-control input-sm", tabindex = 6, style = "width:280px" })
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results (<span id="CountSearchResult">0</span>)</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCase">
+                        <thead>
+                            <tr>
+                                <th style="max-width:150px" class=" text-nowrap">Last Name</th>
+                                <th style="max-width:150px" class=" text-nowrap">First Name</th>
+                                <th style="max-width:70px">DOB</th>
+                                <th style="max-width:50px">Gender</th>
+                                <th style="max-width:100px">Case Role</th>
+                                <th style="max-width:100px">HHSA #</th>
+                                <th style="max-width:100px">JCATS #</th>
+                                <th style="max-width:80px">Case Closed</th>
+                                <th style="max-width:40px">Ptn Type</th>
+                                <th style="max-width:80px">Ptn Closed</th>
+                                <th style="max-width:70px">Case #</th>
+                                <th style="max-width:420px">Attorney</th>
+                            </tr>
+                        </thead>
+                        <tbody><tr class="odd"><td valign="top" colspan="12" class="text-center dataTables_empty">No results</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="7">Search</button>
+        <button id="reset" type="submit" class="btn btn-default v-bottom" tabindex="8"><u>R</u>eset</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $isFromMain = '@(Request.QueryString["loadData"])'
+
+
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Inquiry/CaseSearch.js?v=" + Guid.NewGuid())"></script>    
+}

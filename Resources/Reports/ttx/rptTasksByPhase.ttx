@@ -1,0 +1,9 @@
+Task	String	100	Document Review
+GroupValue	String	100	All
+Phase	String	100	Beginning through initial hearing
+PhaseTotalCases	Number		244
+PhaseTotalHours	Number		244
+TotalCases	Number		100
+TotalHours	Number		1000
+AverageHours	Number	10
+PercentTime	Number		0.12343

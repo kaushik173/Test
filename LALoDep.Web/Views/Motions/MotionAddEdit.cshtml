@@ -1,0 +1,109 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.MotionAddEditViewModel
+@{
+    ViewBag.Title = ViewBag.DisplayTitle;
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.MotionHeaderDisplay</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "motionAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                @Html.HiddenFor(x => x.MotionID)
+                @Html.HiddenFor(x => x.IntPetitionID)
+                @Html.HiddenFor(x => x.RecordStateID)
+                @Html.HiddenFor(x => x.MotionTypeCodeValue)
+                @Html.HiddenFor(x => x.MotionDecisionCodeValue)
+                @Html.HiddenFor(x => x.NoteID)
+                @Html.HiddenFor(x => x.NoteEntityCodeID)
+                @Html.HiddenFor(x => x.NoteEntityTypeCodeID)
+                @Html.HiddenFor(x => x.EntityPrimaryKeyID)
+                @Html.HiddenFor(x => x.NoteTypeCodeID)
+                @Html.HiddenFor(x => x.NoteSubject)
+                @Html.HiddenFor(x => x.CaseID)
+                @Html.HiddenFor(x => x.HearingID)
+                @Html.HiddenFor(x => x.NoteRecordStateID)
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionFileDate, new { @class = "control-label" })
+                    <div class="input-group">
+
+                        @Html.TextBoxFor(m => m.MotionFileDate, new { @class = "form-control input-sm date-picker", tabindex = 1, maxlength = "10", autofocus = "autofocus" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionFilingDueDate, new { @class = "control-label" })
+                    <div class="input-group">
+
+                        @Html.TextBoxFor(m => m.MotionFilingDueDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionTypeCodeID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.MotionTypeCodeID, new SelectList(Model.MotionType, "Value", "Text", Model.MotionTypeCodeID), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 3, @style = "width:100%" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionRequestByCodeID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.MotionRequestByCodeID, new SelectList(Model.RequestedBy, "Value", "Text", Model.MotionRequestByCodeID), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 4, @style = "width:100%" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionDecisionCodeID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.MotionDecisionCodeID, new SelectList(Model.Decision, "Value", "Text", Model.MotionDecisionCodeID), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 5, @style = "width:100%" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MotionDecisionDate, new { @class = "control-label" })
+                    <div class="input-group">
+
+                        @Html.TextBoxFor(m => m.MotionDecisionDate, new { @class = "form-control input-sm date-picker", tabindex = 6, maxlength = "10" })
+                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.NoteEntry, new { @class = "control-label" })
+                    @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm "+ ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 7, @style = "width:100%" })
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Save</button>
+        <button id="btnCancel" type="submit" class="btn  v-bottom " tabindex="9">Cancel</button>
+    </div>
+}
+
+
+@section scripts
+{ 
+<script>
+    ApplySummernote();
+</script>
+<script src="@Url.Content("~/Scripts/Application-Script/Case/MotionAddEdit.js?v=" + Guid.NewGuid())"></script>
+
+
+
+
+}

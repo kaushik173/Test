@@ -1,0 +1,261 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@model LALoDep.Models.Inquiry.LeaveViewModel
+@{
+    ViewBag.Title = "Leave For<br/>" + Model.PersonName;
+    int tabIndex = 0;
+}
+
+<div class="row">
+    <div class="col-md-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Leave</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "leaveAddEdit-form", @class = "form-inline center-block" }))
+                {
+                    string startHours = "", startMinutes = "", startAm = "",
+                        endHours = "", endMinutes = "", endAm = "";
+
+                    if (!string.IsNullOrEmpty(Model.StartTime))
+                    {
+                        var startTime = DateTime.Parse(Model.StartTime);
+                        startHours = int.Parse(startTime.ToString("hh")).ToString();
+                        startMinutes = startTime.ToString("mm");
+                        startAm = startTime.ToString("tt").Replace(".", "");
+                    }
+
+                    if (!string.IsNullOrEmpty(Model.EndTime))
+                    {
+                        var endTime = DateTime.Parse(Model.EndTime);
+                        endHours = int.Parse(endTime.ToString("hh")).ToString();
+                        endMinutes = endTime.ToString("mm");
+                        endAm = endTime.ToString("tt").Replace(".", "");
+                    }
+
+
+                    @Html.HiddenFor(m => m.LeaveID)
+                    @Html.HiddenFor(m => m.PersonID)
+                    @Html.HiddenFor(m=>m.StartTime)
+                    @Html.HiddenFor(m => m.EndTime)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex, autofocus = "autofocus" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 185px">
+                        @Html.LabelFor(m => m.StartTime, "Start Time", new { @class = "control-label" })
+                        <br />
+                        <div>
+                            @Html.DropDownList("StartTimeHours", Utility.GetHoursList(startHours), "", new { style = "width:54px;padding:3px;", data_oldvalue = startHours, tabindex = ++tabIndex })  :   
+                            @Html.DropDownList("StartTimeMinutes", Utility.GetMinutesList(startMinutes), "", new { style = "width:54px;padding:3px;", data_oldvalue = startMinutes, tabindex = ++tabIndex })   
+                            @Html.DropDownList("StartTimeAmPm", Utility.GetTimeAmPm(startAm), "", new { style = "width:54px;padding:3px;", data_oldvalue = startAm, tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate, "End Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex})
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 185px">
+                        @Html.LabelFor(m => m.EndTime, "End Time", new { @class = "control-label" })
+                        <br />
+                        <div>
+                            @Html.DropDownList("EndTimeHours", Utility.GetHoursList(endHours), "", new { style = "width:54px;padding:3px;", data_oldvalue = endHours, tabindex = ++tabIndex })  :
+                            @Html.DropDownList("EndTimeMinutes", Utility.GetMinutesList(endMinutes), "", new { style = "width:54px;padding:3px;", data_oldvalue = endMinutes, tabindex = ++tabIndex })
+                            @Html.DropDownList("EndTimeAmPm", Utility.GetTimeAmPm(endAm), "", new { style = "width:54px;padding:3px;", data_oldvalue = endAm, tabindex = ++tabIndex })
+                        </div>                      
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LeaveTypeCodeID, "Leave Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.LeaveTypeCodeID, Model.LeaveTypes, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RecordType, "Record Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RecordType, Model.RecordTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Leaves</span>
+                <div class="widget-buttons">&nbsp;</div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="leaves">
+                        <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Type</th>
+                                <th style="width:10px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.LeaveList != null && Model.LeaveList.Count > 0)
+                            {
+                                foreach (var leave in Model.LeaveList)
+                                {
+                                    <tr class="@(Model.LeaveID == leave.LeaveID? "highLightBlue" : "")">
+                                        <td><a href="@Url.Action(MVC.Inquiry.Leave(leave.LeaveID.ToEncrypt(), Model.PersonID.ToEncrypt()))">@leave.LeaveDateTimeDisplay</a></td>
+                                        <td>@leave.LeaveType</td>
+                                        <td><button type="button" class="btn btn-xs btn-danger delete-leave" data-id="@leave.LeaveID.ToEncrypt()"><i class="fa fa-trash-o"></i> Delete</button></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-center">No data available in table</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+        $("#leaves").on("click", ".delete-leave", function () {
+            var id=$(this).data("id");
+            confirmBox("Are you sure want to deleted selected leave?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Inquiry/DeleteLeave/' + id,
+                        success: function (result) {                            
+                            if (result.isSuccess) {
+                                window.location.href = "@Url.Action(MVC.Inquiry.Leave(string.Empty, Model.PersonID.ToEncrypt()))"
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $("#btnSave").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("leaveAddEdit-form")) {
+                if ($("#StartDate").val() == "") {
+                    $("#StartDate").focus();
+                    notifyDanger("Start Date is required.");
+                    return false;
+                }
+
+                if ($("#StartTimeHours").val() == "") {
+                    $("#StartTimeHours").focus();
+                    notifyDanger("Start time Hours is required.");
+                    return false;
+                }
+
+                if ($("#StartTimeMinutes").val() == "") {
+                    $("#StartTimeMinutes").focus();
+                    notifyDanger("Start time Minutes is required.");
+                    return false;
+                }
+                if ($("#StartTimeAmPm").val() == "") {
+                    $("#StartTimeAmPm").focus();
+                    notifyDanger("Start time AM/PM is required.");
+                    return false;
+                }
+
+                if ($("#EndDate").val() == "") {
+                    $("#EndDate").focus();
+                    notifyDanger("End date is required.");
+                    return false;
+                }
+
+                if ($("#EndTimeHours").val() == "") {
+                    $("#EndTimeHours").focus();
+                    notifyDanger("End time Hours is required.");
+                    return false;
+                }
+
+                if ($("#EndMinutes").val() == "") {
+                    $("#EndMinutes").focus();
+                    notifyDanger("End time Minutes is required.");
+                    return false;
+                }
+
+                if ($("#EndTimeAmPm").val() == "") {
+                    $("#EndTimeAmPm").focus();
+                    notifyDanger("End time AM/PM is required.");
+                    return false;
+                }
+
+                var startTime = $('#StartTimeHours').val() + ':' + $('#StartTimeMinutes').val() + ' ' + $('#StartTimeAmPm').val();
+                var endTime = $('#EndTimeHours').val() + ':' + $('#EndTimeMinutes').val() + ' ' + $('#EndTimeAmPm').val();
+
+                if (new Date($("#StartDate").val() + ' ' + startTime) > new Date($("#EndDate").val() + ' ' + endTime)) {
+                    $("#EndDate").focus();
+                    notifyDanger("End date time can not be before start date time");
+                    return false;
+                }
+
+                if ($("#LeaveTypeCodeID").val() == "") {
+                    $("#LeaveTypeCodeID").focus();
+                    notifyDanger("Leave type is required.");
+                    return false;
+                }
+                $("#StartTime").val(startTime);
+                $("#EndTime").val(endTime);
+                var data = $("#leaveAddEdit-form").serialize();
+                $.ajax({
+                    type: "POST", url: '/Inquiry/Leave', data: data,
+                    success: function (result) {
+                        RequestSubmitted();
+                        if (result.isSuccess) {
+                            window.location.href = "@Url.Action(MVC.Inquiry.Leave(string.Empty, Model.PersonID.ToEncrypt()))"
+                        }
+                    }
+                });
+            }
+            else {
+                notifyDanger("Noting has been changed");
+            }
+
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action(MVC.Inquiry.MyCalendar(Model.PersonID.ToEncrypt()))'
+        });
+
+        $(document).ready(function () {
+            if ($("#LeaveID").val() == "") {
+                $("#StartTime").val("");
+                $("#EndTime").val("");
+            }
+
+            setInitialFormValues("leaveAddEdit-form");
+        });
+
+    </script>
+}

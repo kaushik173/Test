@@ -1,0 +1,573 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.CaseOpening.HearingModel
+@{
+    bool isDataEntry = Request.QueryString["dataentry"] != null;
+    ViewBag.Title = "Edit Hearing";
+    var defaultTime = DateTime.Parse(Model.DefaultHearingTime);
+    var contestedDefaultTime = DateTime.Parse(Model.DefaultHearingTimeContested);
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+
+    .modal-header .close {
+        margin-top: -2px;
+        margin-right: 13px;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-hearing-form" }))
+{
+
+    <div class="row">
+        <div>
+            <div class="col-md-12" style="padding: 0 20px 0 20px">
+                <div class="widget">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Edit Hearing</span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12 form-inline ">
+                        @Html.HiddenFor(o => o.WorkHoursRequiredFlag)
+                        @Html.HiddenFor(o => o.DataValidation_RequireHearingHoursFlag)
+                        @Html.HiddenFor(o => o.HearingID)
+
+                        <div class="form-group col-sm-4 col-md-2">
+                            @Html.LabelFor(m => m.HearingTypeID, "Hearing Type ", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm newroleinput", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+
+                        </div>
+
+                        <div class="form-group   col-sm-4 col-md-2" style="width: 150px">
+                            @Html.LabelFor(m => m.HearingDate, "Hearing Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control   input-sm  input-sm date-picker-control WeekendValidation", tabindex = 2, style = "width:100% !important;", maxlength = "10", data_label = "Hearing Date" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="form-group   col-sm-2 col-md-2" style="width: 200px;">
+                            @Html.LabelFor(m => m.HearingTime, "Hearing Time", new { @class = "control-label" })
+                            @{
+                                var time = DateTime.Parse(Model.HearingTime);
+
+                                var hours = int.Parse(time.ToString("hh")).ToString();
+                                var minutes = time.ToString("mm");
+                                var am = time.ToString("tt").Replace(".", "");
+
+
+                            }
+
+                            <br />
+                            <div>
+                                @Html.DropDownList("TimeHours", Utility.GetHoursList(hours), new { style = "width:54px;padding:3px;", data_oldvalue = hours, tabindex = 2 })  :   @Html.DropDownList("Minutes", Utility.GetMinutesList(minutes), new { style = "width:54px;padding:3px;", data_oldvalue = minutes, tabindex = 2 })   @Html.DropDownList("TimeAmPm", Utility.GetTimeAmPm(am), new { style = "width:54px;padding:3px;", data_oldvalue = am, tabindex = 2 })
+
+                            </div>
+
+
+                        </div>
+                        <div class="form-group   col-sm-4 col-md-2">
+                            @Html.LabelFor(m => m.HearingOfficerID, "Hearing Officer", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingOfficerID, Model.HearingOfficerList, "", new { @class = "form-control newroleinput input-sm", tabindex = 3, style = "width:98%" })
+
+                        </div>
+
+                        <div class="form-group  col-sm-4 col-md-2">
+                            @Html.LabelFor(m => m.DepartmentID, "Department", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control newroleinput input-sm", tabindex = 4, style = "width:98%" })
+                            @Html.Hidden("hidDepartmentID", Model.CaseDepartmentID)
+                        </div>
+                        <div class="form-group  col-sm-4 col-md-2">
+                            @Html.LabelFor(m => m.AppearingAttorneyID, "Appearing Attorney", new { @class = "control-label" })
+                            @Html.DropDownList("AppearingAttorneyID", Model.AppearingAttorneyList, "", new { @class = "form-control newroleinput input-sm", tabindex = 5, style = "width:98%" })
+
+                        </div>
+                        <div class="form-group  col-sm-4 col-md-3" @(Model.HideWorkHoursOnHearingPages == 1 ? "style=display:none" : "")>
+                            @*@Html.LabelFor(m => m.Hours, "Hours (use tenths for partial hours)", new { @class = "control-label", style = "color:#ff0000" })*@
+                            @Html.LabelFor(m => m.Hours, Model.HoursLabel, new { @class = "control-label", style = "color:#ff0000" })
+                            @Html.TextBoxFor(m => m.Hours, new { @class = "form-control input-sm newroleinput", tabindex = 6, style = "width:100%" })
+                        </div>
+                        <div class="form-group col-sm-4 col-md-3" @(Model.HideWorkHoursOnHearingPages == 1 ? "style=display:none" : "")>
+                            @Html.LabelFor(m => m.HourTypeID, "Hours Type ", new { @class = "control-label", style = "color:#ff0000" })
+                            @Html.DropDownListFor(m => m.HourTypeID, Model.HourTypeList, "", new { @class = "form-control newroleinput input-sm", tabindex = 7, style = "width:98%", data_selected = Model.HourTypeID })
+                        </div>
+                        <div class="form-group  col-sm-4 col-md-3" @(Model.HideWorkHoursOnHearingPages == 1 ? "style=display:none" : "")>
+                            @Html.LabelFor(m => m.PhaseID, "Phase ", new { @class = "control-label", style = "color:#ff0000" })
+                            @Html.DropDownListFor(m => m.PhaseID, Model.PhaseList, "", new { @class = "form-control newroleinput input-sm", tabindex = 8, style = "width:98%", data_selected = Model.PhaseID })
+                        </div>
+                        <div class="form-group  col-sm-4 col-md-1">
+                            @Html.LabelFor(m => m.MediaPresent, "Media Present ", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.MediaPresent, new { @class = "form-control input-sm newroleinput", tabindex = 9 })
+                        </div>
+
+
+                        @if (Model.WorkList.Any())
+                        {<div class="clearfix"></div>
+                            <div class="form-group col-sm-6 col-md-6">
+                                @Html.LabelFor(m => m.Note, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(m => m.Note, new { @class = "form-control input-sm phone_format newroleinput " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 10, style = "width:100%;height:150px;" })
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                @Html.Label("Latest 5 Work Records on Case", new { @class = "control-label" })
+                                <br />
+                                <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                                    <thead>
+
+                                        <tr>
+                                            <th>Work Desc. </th>
+                                            <th>Hours </th>
+
+                                            <th>Date </th>
+                                            <th>Phase</th>
+                                            <th>Staff</th>
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.WorkList)
+                                        {
+
+                                            <tr>
+                                                <td>@item.WorkDescriptionCodeValue </td>
+                                                <td>@item.WorkHours </td>
+
+                                                <td>@item.WorkStartDate </td>
+                                                <td>@item.Phase</td>
+                                                <td>@item.WorkerLastName</td>
+
+
+
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="form-group col-sm-12 col-md-12">
+                                @Html.LabelFor(m => m.Note, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(m => m.Note, new { @class = "form-control input-sm phone_format newroleinput " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 10, style = "width:100%" })
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    if (Model.HearingAttendance != null && Model.HearingAttendance.Count > 0)
+    {
+        <div class="row" id="divSearchResult">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="attendanceList">
+                                <thead>
+                                    <tr>
+                                        <th style="width:200px">Attended</th>
+                                        <th>
+                                            <input type="radio" onclick="$('.rbtnYes').prop('checked', true);" class="rbtnYesAll" name="rbtnRoleAll" /> <span style="position:relative;top:-5px;">
+                                                Yes
+                                            </span>
+                                            <input type="radio" onclick="$('.rbtnNo').prop('checked', true);" class="rbtnNoAll" name="rbtnRoleAll" /><span style="position:relative;top:-5px;">
+                                                No
+                                            </span>
+                                        </th>
+                                        @if (Model.IsCaseStatusExists)
+                                        {
+
+
+                                            <th> Current Status Date</th>
+                                            <th> Current Status </th>
+                                            <th>
+                                                @if (Model.HearingAttendance.Count > 1)
+                                                {<input type="checkbox" class="chkNoChangeToStatusAll" tabindex="6" />
+                                                }
+                                                No Change to Status
+                                            </th>
+
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.HearingAttendance)
+                                    {
+                                        <tr data-requiredflag="@item.RequiredFlag" data-attendanceid="@item.AttendanceID"
+                                            data-roleid="@item.RoleID"
+                                            class="@(item.RoleClient ==1? "highLightBlue":"")">
+
+                                            <td>@item.PersonNameDisplay</td>
+
+                                            <td>
+                                                <input type="radio" class="rbtnYes" name="rbtnRole@(item.RoleID)" @(item.AttendedFlag == 1 ? "checked=checked" : "") /> <span style="position:relative;top:-5px;">
+                                                    Yes
+                                                </span>
+                                                <input type="radio" class="rbtnNo" name="rbtnRole@(item.RoleID)" @(item.AttendedFlag == 0 ? "checked=checked" : "") /><span style="position:relative;top:-5px;">
+                                                    No
+                                                </span>
+
+
+
+                                            </td>
+
+                                            @if (Model.IsCaseStatusExists)
+                                            {
+
+                                                <td class="CS_StartDate" data-value="@(item.CS_StartDate.IsNullOrEmpty()?"":item.CS_StartDate)">
+                                                    <a onclick="OpenCustomPopup('/Task/ClientStatusHistory?PersonID=@item.CS_PersonID&HearingID=@Model.HearingID', 600, 400, 'Client Status History')">@item.CS_StartDate</a>
+
+                                                </td>
+                                                if (!item.CS_StartDate.IsNullOrEmpty() && item.CS_StartDate.ToDateTime() > Model.HearingDate.ToDateTime())
+                                                {
+                                                    <td class="">
+                                                        @Html.DropDownListFor(m => item.CS_CodeID, Model.CaseStatusList, "", new { @class = "form-control input-sm CS_CodeID", tabindex = 6, style = "width:100%", data_selected = (item.CS_CodeID.HasValue ? item.CS_CodeID.Value : 0), disabled = "disabled" })
+
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="">
+                                                        @Html.DropDownListFor(m => item.CS_CodeID, Model.CaseStatusList, "", new { @class = "form-control input-sm CS_CodeID", tabindex = 6, style = "width:100%", data_selected = (item.CS_CodeID.HasValue ? item.CS_CodeID.Value : 0) })
+
+                                                    </td>
+                                                }
+                                                <td class=""><input type="checkbox" name="chkNoChangeToStatus@(item.AttendanceID)" class="chkNoChangeToStatus" tabindex="6" data-CS-ID="@item.CS_ID" data-CS-PersonID="@item.CS_PersonID" /></td>
+
+                                            }
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Petitions in Case</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped table-chknormal" id="tblPetitionInCase">
+                            <thead>
+                                <tr>
+                                    <th width="30"> <input type="checkbox" id="chkPetitionAll" /> </th>
+                                    <th>  </th>
+
+                                    <th> </th>
+                                    <th class="text-align-right"> Global Result: </th>
+                                    <th width="200">
+                                        @Html.DropDownListFor(m => m.GlobalResultID, Model.GlobalResultList, "", new { @class = "form-control newroleinput input-sm", tabindex = 11, style = "width:98%" })
+                                    </th>
+
+                                    <th class="text-align-right">@*Continuance Requested By:*@</th>
+
+                                    <th width="200">
+                                        @*@Html.DropDownListFor(m => m.ContinuanceRequestedByID, Model.ContinuanceRequestedByList, "", new { @class = "form-control newroleinput input-sm", tabindex = 12, style = "width:98%" })*@
+                                    </th>
+
+
+                                </tr>
+                                <tr>
+                                    <th width="30">On </th>
+                                    <th>Type </th>
+
+                                    <th>File Date </th>
+                                    <th>Case #</th>
+                                    <th>Result</th>
+
+                                    <th>Child</th>
+                                    <th>Ordered To Appear</th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PetitionByHearingList)
+                                {
+                                    <tr @if (item.RoleClient.HasValue && item.RoleClient.Value == 1) { <text> class="highLightBlue " </text> }>
+                                        <td>
+                                            @if (item.PetitionCloseDate.HasValue)
+                                            {<input type="checkbox" id="PetitionID" disabled="disabled" data-selected="@item.Selected" data-hearingpetitionkey="@item.HearingPetitionKey" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-petitionclosedate="@item.PetitionCloseDate" value="@item.PetitionID" class="chkPetition form-control input-sm " tabindex="13" @(item.Selected.Value == 1 ? "checked='checked'" : "") />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="PetitionID" data-selected="@item.Selected" data-hearingpetitionkey="@item.HearingPetitionKey" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-petitionclosedate="@item.PetitionCloseDate" value="@item.PetitionID" class="chkPetition form-control input-sm " tabindex="13" @(item.Selected.Value == 1 ? "checked='checked'" : "") />
+
+                                            }
+
+                                        </td>
+
+                                        <td>@item.Type </td>
+                                        <td>
+                                            @(item.PetitionFileDate.HasValue ? item.PetitionFileDate.Value.ToString("d") : "")
+                                        </td>
+                                        <td>
+                                            @item.PetitionDocketNumber
+                                        </td>
+                                        <td>
+                                            @{
+                                                var dataResultList = Model.GlobalResultList;
+                                                if (ViewBag.AllHearingResults != null)
+                                                {
+                                                    var allResults = (IEnumerable<LALoDep.Domain.pd_Code.pd_CodeGetByTypeIDAndUserID_spResults_ForHearingResult>)ViewBag.AllHearingResults;
+                                                    dataResultList = allResults.Where(x => x.ActiveFlag == 1 || x.CodeID == item.PetitionResultID)
+                                                                        .Select(x => new SelectListItem() { Text = x.CodeDisplay, Value = x.CodeID.ToString() });
+                                                }
+
+                                                if (item.PetitionCloseDate.HasValue)
+                                                {
+                                                    dataResultList = dataResultList.Where(o => o.Value == (item.PetitionResultID.HasValue ? item.PetitionResultID.Value.ToString() : "")).ToList();
+                                                }
+                                            }
+                                            @Html.DropDownListFor(o => item.PetitionResultID, dataResultList, "", new { @class = "form-control newroleinput PetitionResultID input-sm", tabindex = 13, style = "width:98%", data_selected = (item.PetitionResultID.HasValue ? item.PetitionResultID.Value : 0) })
+                                        </td>
+                                        <td>
+                                            @item.Child
+                                        </td>
+                                        <td data-HA-ID="@item.HA_ID" data-HA-RoleID="@item.HA_RoleID"
+                                            data-HA-AttendedFlag="@item.HA_AttendedFlag" data-HA-CounselPersonID="@item.HA_CounselPersonID"
+                                            data-HA-FillinCounselPersonID="@item.HA_FillinCounselPersonID" data-HA-Placement="@item.HA_Placement">
+                                            @if (!item.PetitionCloseDate.HasValue)
+                                            {
+                                                <input type="checkbox" id="OrderedToAppear-@item.PetitionID" data-petitiontypecodeid="@item.PetitionTypeCodeID" value="@item.PetitionID" class="chkOrderedToAppear" tabindex="13" @(item.HA_AppearanceRequiredFlag.HasValue && item.HA_AppearanceRequiredFlag.Value == 1 ? "checked='checked'" : "") />
+                                            }
+                                        </td>
+
+
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    @Html.Partial("_HearingContinuanceRequestedAndReason", Model)
+
+
+
+    if (Model.HearingList != null && Model.HearingList.Any())
+    {
+
+
+        <div class="row">
+            <div class="col-md-12 " style="padding: 0 20px 0 20px">
+                <div class="widget">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Hearings in Case</span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time  </th>
+                                        <th> Hearing Type  </th>
+
+                                        <th>Hearing Officer  </th>
+                                        <th>  Appearing Attorney</th>
+                                        <th>
+                                            Created By
+                                        </th>
+
+                                        <th> Last Modified By </th>
+
+                                        <th>
+                                            Hours Worked
+                                        </th>
+
+                                        <th width="80"></th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.HearingList)
+                                    {
+                                        <tr class="@(item.HearingID == Model.HearingID?"selectedrow":"")">
+                                            <td>
+                                                @if (item.HearingID != Model.HearingID)
+                                                {
+                                                    <a href="/CaseOpening/Hearing/@item.HearingID.ToEncrypt()@(Request.QueryString["dataentry"] != null ? "?dataentry=true" : "")">@item.HearingDateTime.ToDefaultFormat("g")</a>
+
+                                                }
+                                                else
+                                                {
+                                                    <span> @item.HearingDateTime.ToDefaultFormat("g")</span>
+                                                }
+
+
+                                            </td>
+
+                                            <td>@item.HearingTypeCodeValue </td>
+                                            <td>
+                                                @item.HearingOfficerFirstName @item.HearingOfficerLastName
+                                            </td>
+                                            <td>
+                                                @item.AppearingAttorneyFirstName @item.AppearingAttorneyLastName
+                                            </td>
+                                            <td>
+
+                                                @item.CreatedBy
+                                            </td>
+                                            <td>
+                                                @item.LastModifiedBy
+                                            </td>
+                                            <td>
+                                                @item.AppearingAttorneyHours
+                                            </td>
+                                            <td>
+                                                @if (item.NoDeleteFlag == 0)
+                                                {
+                                                    <a class="btn btn-danger btn-xs    deleteHearing" data-secure-id="@((int)SecurityToken.DeleteHearing)" data-id="@item.HearingID"><i class="fa fa-trash-o"></i> Delete</a>
+                                                }
+                                            </td>
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    }
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="SaveAddAR" data-secure-id="@((int)SecurityToken.EditHearing)" type="submit" class="btn btn-primary v-bottom default" tabindex="20">Save</button>
+        <button id="saveAndAdd" type="submit" data-secure-id="@((int)SecurityToken.EditHearing)" class="btn btn-default v-bottom " tabindex="20">Save/Add Hearing </button>
+
+        <button id="SaveAndRecordTime" type="submit" data-secure-id="@((int)SecurityToken.EditHearing)" class="btn btn-default v-bottom " tabindex="20">Save/Record Time </button>
+        <button id="saveAndMain" type="submit" data-secure-id="@((int)SecurityToken.EditHearing)" class="btn btn-default v-bottom " tabindex="20">Save/Main</button>
+
+    </div>
+
+}
+@if (!isDataEntry)
+{
+    @Html.Partial("_steps")
+}
+@section scripts
+{
+    <script>
+        var noteId = '@Model.NoteID';
+        var hearingAttendanceID = '@Model.HearingAttendanceID';
+        var workId = '@Model.WorkID';
+        var hoursNotRequiredBeforeHearingDate = '@Model.HoursNotRequiredBeforeHearingDate';
+        var dataEntryQueryString = '@(Request.QueryString["dataentry"] != null ? "?dataentry=true" : "")';
+        var DataValidation_RequireJudgeFlag = '@Model.DataValidation_RequireJudgeFlag';
+
+        var HearingTypeContestedIds = [@Html.Raw(string.Join(",", Model.HearingTypeContestedList.Select(o => "\""+o.Value+"\"").ToList()))];
+
+
+        var defaultHours = '@(int.Parse(defaultTime.ToString("hh")).ToString())';
+        var defaultMinutes = '@defaultTime.ToString("mm")';
+        var defaultAm = '@(defaultTime.ToString("tt").Replace(".", ""))';
+
+        var contestedDefaultHours = '@(int.Parse(contestedDefaultTime.ToString("hh")).ToString())';
+        var contestedDefaultMinutes = '@(contestedDefaultTime.ToString("mm"))';
+        var contestedDefaultAm = '@contestedDefaultTime.ToString("tt").Replace(".", "")';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/HearingEdit.js?v=" + Guid.NewGuid())"></script>
+
+    <script>
+        ApplySummernote();
+    </script>
+}
+
+<div class="hidden" style="display:none">
+
+    <select id="selectParentPhase">
+        @foreach (var item in Model.PhaseParentList)
+        {
+            <option value="@item.ParentCodeID" data-hearingtypeid="@item.ChildCodeID">@item.Parent</option>
+        }
+    </select>
+
+    <select id="selectParentHourType">
+        @foreach (var item in Model.HourTypeParentList)
+        {
+            <option value="@item.ParentCodeID" data-hearingtypeid="@item.ChildCodeID">@item.Parent</option>
+        }
+    </select>
+
+    <select id="selectPhase">
+        <option value=""></option>
+        @foreach (var item in Model.PhaseList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+
+    <select id="selectHourType">
+        <option value=""></option>   @foreach (var item in Model.HourTypeList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+</div>
+
+<input value="@String.Join(",", Model.HearingResult602PetitionList.Select(o => o.Value).ToList())" id="HearingResult602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.HearingResult602PetitionList.Select(o => o.Text).ToList())" id="HearingResult602PetitionListText" type="hidden" />
+<input value="@String.Join(",", Model.HearingType602PetitionList.Select(o => o.Value).ToList())" id="HearingType602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.HearingType602PetitionList.Select(o => o.Text).ToList())" id="HearingType602PetitionListText" type="hidden" />
+<input value="@String.Join(",", Model.PetitionType602List.Select(o => o.Value).ToList())" id="PetitionType602List" type="hidden" />
+<input value="@String.Join(",", Model.CourtDepartment602PetitionList.Select(o => o.Value).ToList())" id="CourtDepartment602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.CourtDepartment602PetitionList.Select(o => o.Text).ToList())" id="CourtDepartment602PetitionListText" type="hidden" />
+
+
+
+<input value="@String.Join(",", Model.HearingResultContinuanceList.Select(o => o.Value).ToList())" id="HearingResultContinuanceList" type="hidden" />
+<input value="@String.Join(",", Model.HearingTypeNonHearingEventList.Select(o => o.Value).ToList())" id="HearingTypeNonHearingEventList" type="hidden" />
+
+<input value="@String.Join(",", Model.HearingResultListForHoursNotRequiredValidation.Select(o => o.Value).ToList())" id="HearingResultListForHoursNotRequiredValidation" type="hidden" />
+<input value="@String.Join(",", Model.HearingResultFutureHearingsList.Select(o => o.Value).ToList())" id="HearingResultFutureHearingsList" type="hidden" />
+<input value="@String.Join(",", Model.HearingTypeHoursNotRequired.Select(o => o.Value).ToList())" id="HearingTypeHoursNotRequired" type="hidden" />
+@Html.Hidden("RedirectToPage", Request.QueryString["page"])
+

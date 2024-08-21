@@ -1,0 +1,53 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_Calendar.pd_CalendarGetSummaryByStaffStartDateEndDate_spResult>
+@{
+    Layout = null;
+}
+
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="CalendarData">
+
+            <tbody>
+                @{
+                    var rolesTypes = Model.ToList().Select(o => new {o.RoleTypeCodeID, o.RoleType}).Distinct();
+
+                }
+                @foreach (var rolesType in rolesTypes)
+                {
+                    <tr>
+                        <th style="width: 200px !important;">@rolesType.RoleType</th>
+                        <th class="">Pending Hearing Total</th>
+                        <th>  Hearings</th>
+
+                        <th>Contested Hearings</th>
+                        <th>Trials </th>
+
+                    </tr>
+                    foreach (var item in Model.Where(o => o.RoleTypeCodeID.Value == rolesType.RoleTypeCodeID).ToList())
+                    {
+                        <tr>
+                            <td style="width: 200px !important;"><a href="/Inquiry/MyCalendar?p=@item.PersonID.ToEncrypt()">@item.PersonNameLast, @item.PersonNameFirst </a></td>
+                            <td class="">@item.PendingHearingCount</td>
+                            <td>@item.HearingCount</td>
+
+                            <td>@item.ContestedHearingCount</td>
+                            <td>@item.TrialCount</td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+}
+else
+{
+    @:No Records
+}
+
+

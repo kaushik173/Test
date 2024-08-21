@@ -1,0 +1,229 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.CaseOpening.HearingModel
+@if (Model.HearingContinuanceRequestedByGetForHearingList.Any())
+{
+    <div class="row">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Continuance Requested By
+
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+                    <div class="row">
+
+                        @foreach (var item in Model.HearingContinuanceRequestedByGetForHearingList)
+                        {
+                            <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5">
+
+
+                                <div class="form-label bg-label">
+
+                                    <input type="checkbox" class="chkHearingContinuanceRequested" data-codeid="@item.CodeID" id="chkHearingContinuanceRequested@(item.CodeID)" tabindex="14" data-id="@item.HearingContinuanceRequestedByID.ToInt()" @(item.Selected == 1 ? "checked" : "") data-hearingid="@Model.HearingID" />
+
+                                    <label for="chkHearingContinuanceRequested@(item.CodeID)" style="margin-top: -6px">
+                                        @item.CodeDisplay
+                                    </label>
+                                </div>
+
+
+                            </div>
+
+                        }
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <br />
+}
+
+@if (Model.HearingContinuanceReasonGetForHearingList.Any())
+{
+    <div class="row">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Continuance Reason
+
+
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+                    <div class="row">
+
+                        @foreach (var item in Model.HearingContinuanceReasonGetForHearingList)
+                        {
+                            <div class="form-group @(item.CommentRequired == 1?"col-md-12 col-sm-12  col-xs-12 ":"col-md-3 col-sm-4  col-xs-6 ") margin-bottom-5">
+
+                                @if (item.CommentRequired == 1)
+                                {
+                                    <div class="form-label bg-label">
+                                        <div class="col-xs-3" style=" padding: 0px;">
+                                            <input type="checkbox" disabled="disabled" class="chkHearingContinuanceReason" data-codeid="@item.CodeID" id="chkHearingContinuanceReason@(item.CodeID)" tabindex="14" data-id="@item.HearingContinuanceReasonID.ToInt()" data-commentrequired="@item.CommentRequired" data-hearingid="@Model.HearingID" @(item.Selected == 1 ? "checked" : "") />
+
+                                            <label for="chkHearingContinuanceReason@(item.CodeID)" style="margin-top: -6px">
+                                                @item.CodeDisplay
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-9" style=" padding: 0px;">
+                                            <input class="form-control input-sm txtHearingContinuanceReason" id="txtHearingContinuanceReason@(item.CodeID)" name="txtHearingContinuanceReason@(item.CodeID)" style="width:100%" tabindex="14" type="text" value="@item.Comment" />
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-label bg-label">
+
+                                        <input type="checkbox" class="chkHearingContinuanceReason" data-codeid="@item.CodeID" id="chkHearingContinuanceReason@(item.CodeID)" tabindex="14" data-id="@item.HearingContinuanceReasonID.ToInt()" data-commentrequired="@item.CommentRequired" data-hearingid="@Model.HearingID" @(item.Selected == 1 ? "checked" : "") />
+
+                                        <label for="chkHearingContinuanceReason@(item.CodeID)" style="margin-top: -6px">
+                                            @item.CodeDisplay
+                                        </label>
+
+
+                                    </div>
+                                }
+
+                            </div>
+
+                        }
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <br />
+}
+
+
+<script>
+    $(function () {
+        $(".txtHearingContinuanceReason").change(function () {
+            if ($(this).val().length > 0) {
+
+                $(this).closest('.form-label').find('.chkHearingContinuanceReason').prop('checked', true);
+            } else {
+                $(this).closest('.form-label').find('.chkHearingContinuanceReason').prop('checked', false);
+            }
+
+
+        });
+
+        $(".txtHearingContinuanceReason").keyup(function () {
+            if ($(this).val().length > 0) {
+
+                $(this).closest('.form-label').find('.chkHearingContinuanceReason').prop('checked', true);
+            } else {
+                $(this).closest('.form-label').find('.chkHearingContinuanceReason').prop('checked', false);
+            }
+
+
+        });
+
+    });
+    function HearingContinuanceReasonAndRequestValidation(IsResultContinuance) {
+        var flag = true;
+        if (IsResultContinuance) {
+            if ($('.chkHearingContinuanceRequested:checked').length == 0 && $('.chkHearingContinuanceRequested').length > 0) {
+                flag = false;
+                $('.chkHearingContinuanceRequested:first').focus();
+                notifyDanger('Atleast one Continuace Requested By is required.');
+                return false;
+            }
+            else if ($('.chkHearingContinuanceReason:checked').length == 0 && $('.chkHearingContinuanceReason').length > 0) {
+                flag = false;
+                $('.chkHearingContinuanceReason:first').focus();
+                notifyDanger('Atleast one Continuace Reason is required.');
+                return false;
+            }
+        }
+    
+        return flag;
+    }
+    function HearingContinuanceReasonAndRequestModelData(model) {
+        model.HearingContinuanceRequestedByIUDList = [];
+        model.HearingContinuanceReasonIUDList = [];
+
+        $('.chkHearingContinuanceRequested').each(function () {
+
+            $this = $(this);
+            var IUD = '';
+            if ($this.is(':checked') && $this.data('id') == 0) {
+                IUD = 'INSERT';
+            }
+            else if (!$this.is(':checked') && $this.data('id') > 0) {
+                IUD = 'DELETE';
+            }
+            if (IUD !== '') {
+                model.HearingContinuanceRequestedByIUDList.push({
+                    'IUD': IUD,
+                    'HearingContinuanceRequestedByID': $this.data('id'),
+                    'HearingID': $this.data('hearingid'),
+                    'CodeID': $this.data('codeid')
+                });
+            }
+
+        });
+
+        $('.chkHearingContinuanceReason').each(function () {
+
+            $this = $(this);
+            $txtHearingContinuanceReason = $this.closest('.form-label').find('.txtHearingContinuanceReason');
+            var IUD = '';
+            if ($this.is(':checked') && $this.data('id') == 0) {
+                IUD = 'INSERT';
+            }
+            else if (!$this.is(':checked') && $this.data('id') > 0) {
+                IUD = 'DELETE';
+            }
+            else if ($this.is(':checked') && $this.data('id') > 0 && $txtHearingContinuanceReason.length > 0) {
+                if ($txtHearingContinuanceReason.IsValueChanged()) {
+                    IUD = 'UPDATE';
+                }
+
+            }
+            if (IUD !== '') {
+                model.HearingContinuanceReasonIUDList.push({
+                    'IUD': IUD,
+                    'HearingContinuanceReasonID': $this.data('id'),
+                    'HearingID': $this.data('hearingid'),
+                    'CodeID': $this.data('codeid'),
+                    'Comment': $txtHearingContinuanceReason.length > 0 ? $txtHearingContinuanceReason.val() : ''
+                });
+            }
+
+        });
+
+
+
+
+        return model;
+    }
+</script>

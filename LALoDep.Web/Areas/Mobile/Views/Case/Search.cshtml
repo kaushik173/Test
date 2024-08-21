@@ -1,0 +1,162 @@
+﻿@model  LALoDep.Models.CaseSearchViewModel
+@{
+    ViewBag.Title = "Search For Case";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">@ViewBag.Title</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "SearchCase-form", @class = "form-inline center-block" }))
+                {
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName,"Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocketNumber, "Case #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.DocketNumber, new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OnlyOpenCases, "Open Cases Only", new { @class = "control-label" })
+                   <br/>     <input type="checkbox" onclick="$('#OnlyOpenCases').val($(this).is(':checked')?1:0)"/>
+                        @Html.HiddenFor(m => m.OnlyOpenCases, new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="searchTableDiv">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results (<span id="totalResult">0</span>)</span>
+                <div class="widget-buttons">
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="searchListDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchList">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                             
+                                <th>Case #</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-sm btn-primary default" tabindex=5>Search</button>
+    </div>
+}
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var oTable = null;
+        function getDate(d) {
+            d = (d || new Date());
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            return (month < 10 ? '0' : '') + month + '/' +
+            (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+        }
+
+        function setData(data) {
+            oTable.fnClearTable();
+            if (data.data != undefined && data.data.length > 0) {
+                oTable.fnAddData(data.data);
+                $("#totalResult").text(data.data.length);
+            }
+            else {
+                $("#totalResult").text('0');
+                if (data.ErrorMessage != undefined && data.ErrorMessage != "") {
+                    Notify(data.ErrorMessage, 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                }
+                else {
+                    Notify('No results found.', 'top-right', '5000', 'blue', 'fa-frown-o', true);
+                }
+            }
+
+        }
+        function gatData() {
+            var fData = $('#SearchCase-form').serialize();
+            return fData;
+        }
+        function loadData() {
+            var data = gatData();
+            $.ajax({
+                type: "POST", url: '@Url.Action("Search","Case")', data: data,
+                success: function (data) {
+                    if (data.URL != undefined) {
+                        window.location.href = '/' + data.URL;
+                    } else { setData(data); }
+                }, dataType: 'json'
+            });
+        }
+
+        $(".dob-datepicker-trigger").bind("click", function () {
+            if ($("#DOB").val() == '') {
+                $("#DOB").datepicker("setDate", getDate()).datepicker("update");
+            }
+            $("#DOB").datepicker("show");
+        });
+
+        $("#search").on("click", function () {
+            loadData();
+        });
+
+        $(document).ready(function () {
+            oTable = $('#searchList').dataTable({
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                "bSort": false,
+                "bInfo": false,
+                "columns": [
+                        { "data": "Name" },
+                  
+                        {
+                            "data": "PetitionDocketNumber",
+                            "render": function (data, type, full, meta) {
+                                if (data == null) {
+                                    return "";
+                                }
+                                else {
+                                    return '<a href="@Url.Action("CaseInfo","Case")/' + full.EncryptedCaseID + '">' + data + '</a>'
+                                }
+                            }
+                        }
+
+                ],
+                "loadingRecords": "Loading...",
+                "processing": "Processing...",
+                "deferRender": true
+            });
+
+            // Load the Search List
+        });
+    </script>
+}

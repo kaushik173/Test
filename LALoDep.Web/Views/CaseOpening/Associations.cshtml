@@ -1,0 +1,280 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.CaseOpening.AssociationsModel
+@{
+    bool isDataEntry = Request.QueryString["dataentry"] != null;
+    bool isMain = Request.QueryString["main"] != null;
+
+    ViewBag.Title = "Associations";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form", @class = "form-inline  center-block" }))
+{
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add Associations   </span>
+                    <div class="widget-buttons">
+
+
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+                    <div class="col-md-6">
+                        <div class="form-group col-xs-12">
+                            @Html.LabelFor(m => m.PersonID, "Person", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PersonID, Model.PersonList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+
+                        </div>
+
+                        <div class="form-group  col-xs-12">
+                            @Html.LabelFor(m => m.AssociationTypeID, "Association", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AssociationTypeID, Model.AssociationTypeList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRoles">
+                                <thead>
+                                    <tr>
+                                        <th width="30">  </th>
+                                        <th>Type </th>
+                                        <th>Name</th>
+                                        <th width="180">Start Date </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.RelatedPersonList)
+                                    {
+                                        item.RoleStartDate = DateTime.Now;
+
+                                        <tr @if (item.RoleClient == 1) { <text> class="highLightBlue " </text>                      }>
+                                            <td>
+
+                                                <input type="checkbox" id="chkPersonID" class="chkPersonID" data-id="@item.PersonID" tabindex="3" />
+
+                                            </td>
+                                            <td>@item.Role</td>
+                                            <td>@item.PersonNameFirst @item.PersonNameLast</td>
+                                            <td>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => item.RoleStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = 3, style = "width:100% !important;", maxlength = "10" })
+                                                    <span class="input-group-addon datepicker-control-trigger">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (Model.AssociationsInCase.ToList().Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Associations In Case </span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                                <thead>
+                                    <tr>
+                                        <th>Person </th>
+                                        <th>Association </th>
+                                        <th>Related Person </th>
+                                        <th width="150">Start Date </th>
+                                        <th width="150">End Date </th>
+                                        <th width="80"> </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AssociationsInCase)
+                                    {
+                                        <tr @if (item.PersonClient == 1) { <text> class="highLightBlue " </text>                      }>
+                                            <td>
+
+                                                <input type="hidden" id="AssociationID" value="@item.AssociationID" />
+                                                @item.PersonFirstName @item.PersonLastName
+                                            </td>
+                                            <td>@item.Association</td>
+                                            <td>@item.RelatedPersonFirstName @item.RelatedPersonLastName</td>
+                                            <td>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => item.AssociationStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = 4, style = "width:100% !important;", maxlength = "10", data_val = item.AssociationStartDate.ToDefaultFormat() })
+                                                    <span class="input-group-addon datepicker-control-trigger">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => item.AssociationEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = 4, style = "width:100% !important;", maxlength = "10", data_val = item.AssociationEndDate.ToDefaultFormat() })
+                                                    <span class="input-group-addon datepicker-control-trigger">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-danger btn-xs    deleteAssociate" data-secure-id="@((int)SecurityToken.DeleteAssociation)" data-id="@item.AssociationID"><i class="fa fa-trash-o"></i> Delete</a>
+
+
+                                            </td>
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (Model.AssociationSuggestions.ToList().Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Suggested Associations For Case </span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblSuggestedPerson">
+                                <thead>
+                                    <tr>
+                                        <th width="30">On  </th>
+                                        <th>Person   </th>
+                                        <th>Association </th>
+                                        <th>Related Person </th>
+                                        <th width="150">Start Date </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AssociationSuggestions)
+                                    {
+                                        <tr @if (item.Client1 == 1) { <text> class="highLightBlue " </text>                         }>
+                                            <td>
+                                                <input type="checkbox" id="chkSelected" class="chkSelected"   />
+                                            </td>
+                                            <td>
+
+                                                <input type="hidden" id="PersonID1" value="@item.PersonID1" />
+                                                <input type="hidden" id="PersonID2" value="@item.PersonID2" />
+                                                 
+
+                                                @item.FirstName1 @item.LastName1 (@item.Role1Type)
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.SuggestedAssociationID, Model.AssociationTypeList, "", new { @class = "form-control input-sm setSelectedValue", tabindex = 2, style = "width:98%", data_default_value = item.SuggestedAssociationID })
+                                            </td>
+                                            <td>@item.FirstName2 @item.LastName2 (@item.Role2Type)</td>
+                                            <td>
+                                                <div class="input-group">
+                                                    @Html.TextBox("StartDate", DateTime.Now.ToString("d"), new { @class = "form-control input-sm  input-sm date-picker-control", tabindex = 4, style = "width:100% !important;", maxlength = "10", data_val = DateTime.Now.ToString("d") })
+                                                    <span class="input-group-addon datepicker-control-trigger">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (!isDataEntry)
+{
+    @Html.Partial("_steps")
+}
+
+
+@section scripts
+{
+    <script>
+        var dataEntryQueryString = '@(isDataEntry?"?dataentry=true":"")';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/Associations.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        @if (!isDataEntry)
+        {
+            <button id="saveAndContinue" type="submit" class="btn btn-primary v-bottom default" tabindex="5" data-secure-id="@((int) SecurityToken.AddAssociation)"> Save/Continue</button>
+            <button id="saveAndAdd" type="submit" class="btn btn-default v-bottom " tabindex="6" data-secure-id="@((int) SecurityToken.AddAssociation)">Save/Add More   </button>
+
+        }
+        else
+        {
+            <button id="saveAndAdd" type="submit" class="btn btn-primary v-bottom " tabindex="6" data-secure-id="@((int)SecurityToken.AddAssociation)">Save</button>
+            <button id="saveAndMain" type="submit" class="btn btn-default v-bottom " tabindex="6" data-secure-id="@((int)SecurityToken.AddAssociation)">Save/Main</button>
+
+            if (isMain)
+            {
+                <button id="saveAndBack" onclick="document.location.href = '/Case/Main';" type="submit" class="btn btn-default v-bottom" tabindex="6"> Back to Main</button>
+
+            }
+            else
+            {
+                <button id="saveAndBack" onclick="document.location.href = '/CaseOpening/AddCaseRespondents?dataentry=true'" type="submit" class="btn btn-default v-bottom default" tabindex="6"> Back</button>
+
+            }
+        }
+
+
+
+    </div>
+
+}

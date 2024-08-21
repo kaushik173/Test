@@ -1,0 +1,290 @@
+﻿@model LALoDep.Models.Administration.InvoiceSummaryViewModel
+@using LALoDep.Core.Custom.Extensions
+
+
+@{
+    ViewBag.Title = "Invoice Summary";
+}
+<style>
+    .dataTables_info {
+        display: none !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "InvoiceSummary-form", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.YearQuarterID, "Yr/Qtr", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.YearQuarterID, Model.YearQuarterList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:100% !important;" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ContractorPersonID, "Contractor", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ContractorPersonID, Model.ContractorList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:100% !important;" })
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StatusCodeID, "Status", new { @class = "control-label" })
+                            <select class="form-control input-sm valid" data-val="true" data-val-number="The field StatusCodeID must be a number." data-val-required="The StatusCodeID field is required." id="StatusCodeID" name="StatusCodeID" style="width:100% !important;" tabindex="2" aria-required="true" aria-invalid="false" aria-describedby="StatusCodeID-error">
+                                <option value=""  data-enum=""></option>
+                                @foreach (var item in Model.StatusList)
+                                {
+                                    <option value="@item.CodeID" data-enum="@item.CodeEnumName" data-id="@item.CodeID.ToEncrypt()">@item.CodeDisplay</option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PendingInvoicesFlag, "Pending Invoices Only", new { @class = "control-label" })
+                            <br />
+                            <input name="chkPendingInvoicesFlag" id="chkPendingInvoicesFlag" type="checkbox" />
+                            <input name="PendingInvoicesFlag" id="PendingInvoicesFlag" value="0" type="hidden" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult">Search Result</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <div id="divCompleted">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblSearch">
+                            <thead>
+                                <tr>
+
+                                    <th>Yr/Qtr</th>
+                                    <th>Contractor</th>
+                                    <th>
+                                        Total
+                                        Invoices
+                                    </th>
+                                    <th>
+                                        Processed
+                                        Invoices
+                                    </th>
+                                    <th>
+                                        Pending
+                                        Invoices
+                                    </th>
+                                    <th>
+                                        Expense
+                                        $ Total
+                                    </th>
+                                    <th>
+                                        Total #
+                                        of Hours
+
+                                    </th>
+                                    <th>
+                                        Hours
+                                        $ Total
+                                    </th>
+                                    <th>
+                                        Amount Due
+                                    </th>
+                                    <th>
+                                        Avg. Hours
+                                        per Case
+                                    </th>
+                                    <th>
+                                        Avg $
+                                        per Case
+                                    </th>
+                                    <th>
+                                        Cases Not Invoiced
+                                    </th>
+
+                                </tr>
+
+
+
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Search</button>
+        <button id="btnPost" type="button" class="btn btn-default v-bottom  " tabindex="8" style="display:none">Post Invoice & Generate File</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+
+        $("#btnSearch").on("click", function () {
+            Search();
+
+        });
+        $("#btnPost").on("click", function () {
+            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+            var data = {
+                id: $(".lnkinvoice[data-postinvoicelabel!='']:eq(0)").data('encryptedpostinvoiceyearquarterid')
+            };
+            $.download('/Administration/InvoiceGenerateFile/' + $(".lnkinvoice[data-postinvoicelabel!='']:eq(0)").data('encryptedpostinvoiceyearquarterid'), data, "POST", _target);
+            $('#StatusCodeID').val($(".lnkinvoice[data-postinvoicelabel!='']:eq(0)").data('postinvoicestatuscodeid'));
+            $('#YearQuarterID').val($(".lnkinvoice[data-postinvoicelabel!='']:eq(0)").data('postinvoiceyearquarterid'));
+            Search();
+        });
+        var oTable = $('#tblSearch').dataTable({
+
+            "lengthMenu": [500],
+            "lengthChange": false,
+            "paging": false,
+            "searching": false,
+            "bSort": false,
+
+            "columns": [
+                { "data": "YearQuarter" },
+                {
+                    "render": function (data, type, full, meta) {
+
+                        return '<a class="lnkinvoice"  data-PostInvoiceStatusCodeID="' + full.PostInvoiceStatusCodeID + '" data-PostInvoiceYearQuarterID="' + full.PostInvoiceYearQuarterID + '"  data-EncryptedPostInvoiceYearQuarterID="' + full.EncryptedPostInvoiceYearQuarterID + '" data-PostInvoiceLabel="' + full.PostInvoiceLabel + '" href="/Task/MyInvoiceQueue/' + full.EncryptedContractorPersonID + '?yQId=' + full.EncryptedYearQuarterID + '&status=' + ($('#StatusCodeID').find('option:selected').attr('data-id') == undefined ? '' : $('#StatusCodeID').find('option:selected').attr('data-id')) + '">' + full.Contractor + '</a>';
+
+                    }
+                },
+                { "data": "TotalInvoices" },
+                { "data": "ProcessedInvoices" },
+                { "data": "PendingInvoices" },
+                { "data": "ExpenseTotal", className: "text-right" },
+                { "data": "TotalNumberOfHours", className: "text-right" },
+                { "data": "TotalHoursAmount", className: "text-right" },
+                { "data": "GrandTotal", className: "text-right" },
+                { "data": "AvgHoursPerCase", className: "text-right" },
+                { "data": "AvgAmountPerCase", className: "text-right"},
+                { "data": "CasesNotInvoiced", className: "text-right"},
+
+            ],
+
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+        function setData(data) {
+
+            oTable.fnClearTable();
+          
+            if (data.SearchResult.data.length > 0) {
+                oTable.fnAddData(data.SearchResult.data);
+                //         $('#countSearchResult').text(data.SearchResult.data[0].SectionHeader)
+                $('#divSearchResult').show();
+                if ($(".lnkinvoice[data-postinvoicelabel!='']").length > 0) {
+                    $('#btnPost').text($(".lnkinvoice[data-postinvoicelabel!='']:eq(0)").data('postinvoicelabel'))
+                    $('#btnPost').show();
+                }
+                else {
+                    $('#btnPost').hide();
+                }
+            }
+
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+        function getData() {
+            var fData = $('#InvoiceSummary-form').serialize();
+
+
+            return fData;
+        }
+        function Search() {
+            simpleStorage.deleteKey('MyInvoiceQueue-form');
+            $('#PendingInvoicesFlag').val($('#chkPendingInvoicesFlag').is(':checked') ? 1 : 0);
+            var $form = $('#InvoiceSummary-form');
+            IPadKeyboardFix();
+
+
+            if ($('#StatusCodeID option:selected').attr('data-enum') == '1700_AdminApproved')
+            {
+                $('#ContractorPersonID').val('');
+                $('#chkPendingInvoicesFlag').prop('checked', false);
+                if ($('#YearQuarterID').val() == '') {
+
+                    $('#YearQuarterID').focus();
+                    Notify('Yr/Qtr is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            }
+            if ($('#YearQuarterID').val() == '' && $('#ContractorPersonID').val() == '') {
+
+                $('#YearQuarterID').focus();
+                Notify('Either Yr/Qtr or Contractor is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                return false;
+            }
+
+            var params = getData();
+
+
+
+
+            $.ajax({
+                type: "POST", url: '/Administration/InvoiceSummary', data: params,
+                success: function (data) {
+
+                    if (data.Status == "Done") {
+                        setData(data.SearchData);
+                    } else if (data.Status == "CaseRedirect") {
+                        document.location.href = data.URL;
+
+                    }
+
+
+                }
+            });
+
+        }
+        $(function () {
+            Search();
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

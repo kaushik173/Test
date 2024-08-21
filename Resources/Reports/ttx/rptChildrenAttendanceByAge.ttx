@@ -1,0 +1,5 @@
+ChildAge	Number		11
+ChildCount	Number		200
+Attended	Number		100
+StartDate	DateTime		01/01/1998
+EndDate	DateTime		01/01/2001

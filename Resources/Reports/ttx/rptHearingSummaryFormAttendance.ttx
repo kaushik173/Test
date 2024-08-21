@@ -1,0 +1,5 @@
+HearingID	Number		1
+Attended	String	10	X
+LastName	String	50	Abbott
+FirstName	String	50	Malvina
+Role	String	50	PD Attorney

@@ -1,0 +1,538 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.Case.CaseMainViewModel
+
+@{
+    ViewBag.Title = "Main";
+    var oCase = Model.CaseGet;
+    if (oCase == null)
+    {
+        return;
+    }
+}
+<style>
+        .widget-buttons .btn, .widget-caption .btn {
+            padding: 2px 15px !important;
+        }
+
+        #case-main-header .widget-buttons .btn, #case-main-header .widget-caption .btn {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .wrapword {
+        white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        white-space: pre-wrap;       /* css-3 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        white-space: -webkit-pre-wrap; /* Newer versions of Chrome/Safari*/
+        word-break: break-all;
+        white-space: normal;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <input type="hidden" id="hdn_encryptedCaseID" value="@LALoDep.Core.Custom.Utility.Utility.Encrypt(oCase.CaseID.ToString())" />
+            <div id="case-main-header" class="widget-header bordered-bottom bordered-themeprimary col-xs-12" style="height:auto !important;">
+                <div class="row">
+                    <div class="col-sm-8 col-md-4 colsm text-left no-padding-left margin-top-10">
+                        <span class="widget-caption">
+                            Case Created By:
+                            @if (UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.EditCase))
+                            {
+                            <a href="@Url.Action("CaseEdit","Case")">@oCase.CreatedByUserName @oCase.InsertedOnDateTime</a>
+                            }
+                            else
+                            {
+                            <text>@oCase.CreatedByUserName @oCase.InsertedOnDateTime</text>
+                            }
+                        </span>
+                    </div>
+                    <div class="col-sm-4 col-md-4 text-center">
+                        <div class="widget-buttons">
+                            @if (Model.RelatedCasesGetList.Any())
+                            {
+                            <a class="btn btn-labeled btn-default btn" style="color:red !important;cursor:default;">@Model.RelatedCasesGetList[0].HasRelatedCasesInfo</a>
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 no-padding-right">
+                        <div class="widget-buttons">
+
+                            @if (Model.CaseFiles != null && Model.CaseFiles.Any())
+                            {
+                            <button id="btnCaseFiles" type="button" class="btn btn-labeled btn-default btn" onclick="window.location.href = '/Case/AttachFile'">Attached Files (@Model.CaseFiles.Count())</button>
+                            }
+                            @*<a class="btn btn-labeled btn-default btn  btnShowAllPeople" data-secure-id="@((int)SecurityToken.EditCase)" href="/CaseOpening/AddCaseRespondents">   Case Flow Update    </a>*@
+                            <input type="button" class="btn btn-labeled btn-default btn " data-secure-id="@((int)SecurityToken.EditCase)" onclick="window.location.href = '/CaseOpening/AddCaseRespondents'" value="Case Flow Update" title="Case Flow Update" />
+
+                        </div>
+                    </div>
+                </div>
+                @*<span class="widget-caption" style="width:80%">
+                        Case Created By:
+                        @if (UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.EditCase))
+                        {
+                            <a href="@Url.Action("CaseEdit","Case")">@oCase.CreatedByUserName @oCase.InsertedOnDateTime</a>
+                        }
+                        else
+                        {
+                            <text>@oCase.CreatedByUserName @oCase.InsertedOnDateTime</text>
+                        }
+
+                        @if (Model.RelatedCasesGetList.Any())
+                        {
+                            <button id="btnCaseFiles" type="button" class="btn btn-labeled btn-default btn" style="margin-left:10%;color:red !important;">@Model.RelatedCasesGetList[0].HasRelatedCasesInfo</button>
+
+                        }
+                    </span>
+                    <div class="widget-buttons">
+
+                        @if (Model.CaseFiles != null && Model.CaseFiles.Any())
+                        {
+                            <button id="btnCaseFiles" type="button" class="btn btn-labeled btn-default btn" onclick="window.location.href = '/Case/AttachFile'">Attached Files (@Model.CaseFiles.Count())</button>
+                        }
+                        @*<a class="btn btn-labeled btn-default btn  btnShowAllPeople" data-secure-id="@((int)SecurityToken.EditCase)" href="/CaseOpening/AddCaseRespondents">   Case Flow Update    </a>
+                        <input type="button" class="btn btn-labeled btn-default btn " data-secure-id="@((int)SecurityToken.EditCase)" onclick="window.location.href = '/CaseOpening/AddCaseRespondents'" value="Case Flow Update" title="Case Flow Update" />
+
+                    </div>*@
+            </div>
+
+        </div>
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="peopleCaption">     Current People In Case   </span>
+                <div class="widget-buttons">
+                    @*<a class="btn btn-labeled btn-default btn  btnShowAllPeople">Show All People</a>*@
+                    <input type="button" class="btn btn-labeled btn-default btn  btnShowAllPeople" value="Show All People">
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="roles">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap" title="AR = Action Request, H = Hearing, RT = Record Time">Role (Last Contact)</th>
+                                <th class="text-nowrap">
+                                    @if (oCase.MainPage_HidePersonClassificationListFlag == 1)
+                                    {<text>Name
+                                    </text>
+
+                                    }
+                                    else
+                                    {
+                                        <text>Name (Classification)
+                                        </text>
+                                    }
+                                </th>
+                                <th>DOB (Age)</th>
+                                <th>Attorney</th>
+                                <th>Conflict</th>
+                                <th>Lang/Race</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th style="width:30px;"></th>
+                                <th style="width:30px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CaseRole)
+                            {
+                                <tr class="@if(!string.IsNullOrEmpty(item.RoleEndDate)){<text>roleend hidden</text>} @((item.RoleClient==1)?"highLightBlue":"")">
+                                    <td class="text-nowrap">@item.Role</td>
+                                    <td style="width:300px;">
+
+                                        @if (item.Editable == 1)
+                                        {
+                                            <a href="@Url.Action(MVC.Case.EditPerson(item.PersonID.ToEncrypt(),item.RoleID.ToEncrypt()))" data-secure-link-id="@((int)SecurityToken.EditPerson)">
+                                                @item.PersonNameDisplay
+
+                                                @if (oCase.MainPage_HidePersonClassificationListFlag == 0)
+                                                {
+                                                    @Html.Raw(string.IsNullOrEmpty(item.ClassificationList) ? string.Empty : "(<span class=\"danger\">" + item.ClassificationList + "</span>)")
+                                                }
+                                              
+                                                
+                                                @if (!item.Visitation.IsNullOrEmpty() && item.Visitation.Length>0)
+                                                {
+                                                    <br/>
+                                                    <span>@item.Visitation</span>
+                                                }
+                                                
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            @item.PersonNameDisplay
+                                            if (!item.Visitation.IsNullOrEmpty() && item.Visitation.Length > 0)
+                                            {
+                                                <br />
+                                                    <span>@item.Visitation</span>
+                                            }
+                                        } 
+                                        </td>
+                                    <td>@item.DOBAge</td>
+                                    <td>@item.Attorney</td>
+                                    @if (item.LatestConflictID == "0")
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td><a href="/Case/Conflict/@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.LatestConflictID.ToString())" class="danger">Conflict</a></td>
+                                    }
+                                <td>
+                                    @item.Language
+                                    @if (!item.RaceNeededAlert.IsNullOrEmpty())
+                                    {
+                                    <a style="color:red !important;text-decoration:underline !important;" href="@Url.Action(MVC.Case.EditPerson(item.PersonID.ToEncrypt(),item.RoleID.ToEncrypt()))" data-secure-link-id="@((int)SecurityToken.EditPerson)">
+                                        @item.RaceNeededAlert
+
+                                    </a>
+                                            }
+                                          
+                                    </td>
+                                    <td>@item.RoleStartDate</td>
+                                    <td>
+                                        @Html.Raw(item.IsDeceasedFlag == 1 ? "<span class=\"danger\">Deceased</span>" : item.RoleEndDate)
+                                    </td>
+                                    <td><a class="btn btn-danger btn-xs deleterole" data-candeleteflag="@item.CanDeleteFlag" data-recordtimeflag="@item.RecordTimeFlag" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.RoleID.ToString())" data-secure-id="@((int)SecurityToken.DeleteRole)"><i class="fa fa-trash-o"></i>Delete</a></td>
+                                    <td>
+                                        <a class="btn btn-info btn-xs edit" href="@Url.Action("MoreInfoOnPerson", "Case", new { id = LALoDep.Core.Custom.Utility.Utility.Encrypt(item.RoleID.ToString()), pid=LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonID.ToString()) })" data-secure-id="@((int)SecurityToken.ViewPerson)"><i class="fa fa-edit"></i> Info</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @if (Model.RelatedCasesGetList.Any())
+        {
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">   Related Cases   </span>
+                    <div class="widget-buttons">
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="relatedcases">
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap">This Case Role</th>
+                                    <th class="text-nowrap">
+                                        Related JCATS #
+                                    </th>
+                                    <th>   Related Case #</th>
+                                    <th>   Related Case Role</th>
+                                    <th>   Attorney</th>
+                                    <th>  Status</th>
+                                    <th style="width:30%">Comment</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RelatedCasesGetList)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">@item.ThisCaseRole</td>
+                                        <td class="text-nowrap">
+                                            <a target="_blank" href="/Case/Main/@item.RelatedJcatsNumber.ToEncrypt()">@item.RelatedJcatsNumber</a>
+
+                                        <td>@item.RelatedCaseNumber</td>
+                                        <td>@item.RelatedCaseRole</td>
+                                        <td>@item.Attorney</td>
+                                        <td>@item.Status</td>
+                                        <td>@item.Comment</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Petition In Case</span>
+                <div class="widget-buttons">
+
+                    @*<a class="btn btn-labeled btn-default" data-secure-id="@((int)SecurityToken.AddPetition)">    Add Petition </a>
+                         <a class="btn btn-labeled btn-default">Petition List</a>
+                        <a class="btn btn-labeled btn-default"> Block Print </a>*@
+
+                    <input type="button" class="btn btn-labeled btn-default btn " data-secure-id="@((int)SecurityToken.AddPetition)" onclick="document.location.href = '/CaseOpening/PetitionAdd?dataentry=true'" value="Add Petition" title="Add Petition" />
+                    <input type="button" class="btn btn-labeled btn-default btn " onclick="document.location.href='/CaseOpening/PetitionList?dataentry=true'" value="Petition List" title="Petition List" />
+                    <input type="button" class="btn btn-labeled btn-default btn hidden" value="Block Print" title="Block Print" />
+                    <input type="button" class="btn btn-labeled btn-default btn " data-secure-id="@((int)SecurityToken.ViewPetition)" onclick="document.location.href = '/CaseOpening/EditAllegationFinding'" value="Edit Allegation Finding" title="Edit Allegation Finding" />
+
+                </div>
+
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="roles">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap">File Date</th>
+                                <th class="text-nowrap">Close Date</th>
+                                <th>Close Reason</th>
+                                <th>Case #</th>
+                                <th>Type</th>
+                                <th>Child</th>
+                                <th>Attorney</th>
+                                <th style="width:30px;"></th>
+                                <th style="width:30px;"></th>
+                                <th style="width:30px;" class="hidden"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var PetitionAndAllegation = Model.PetitionAndAllegation.GroupBy(o => o.PetitionID).Select(grp => grp.First()).ToList();
+                            }
+                            @foreach (var item in PetitionAndAllegation)
+                            {
+                                var allegations = Model.PetitionAndAllegation.Where(o => o.PetitionID == item.PetitionID).ToList();
+                                <tr class="@((item.RoleClient==1)?"highLightBlue":"")">
+                                    <td class="text-nowrap">
+                                        <a href="/CaseOpening/PetitionEdit/@(item.PetitionID.ToEncrypt())?dataentry=true">@item.PetitionFileDate.ToDefaultFormat()</a>
+
+                                    </td>
+                                    <td class="text-nowrap">@item.CloseDate</td>
+                                    <td>@item.CloseReason</td>
+                                    <td>@item.PetitionDocketNumber</td>
+                                    <td>@item.Type</td>
+                                    <td> @item.PersonNameLast, @item.PersonNameFirst  </td>
+                                    <td>@item.Attorney</td>
+                                    <td><a class="btn btn-danger btn-xs deletePetition" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PetitionID.ToString())" data-secure-id="@((int)SecurityToken.DeletePetition)"><i class="fa fa-trash-o"></i>Delete</a></td>
+                                    <td><a class="btn btn-info btn-xs edit" href="@Url.Action("MoreInfoOnPetition", "Case", new { id = @item.PetitionID.ToEncrypt() })" data-secure-id="@((int)SecurityToken.ViewPetition)"><i class="fa fa-edit"></i> Info</a></td>
+                                    <td class="hidden"><a class="btn btn-info btn-xs printPetition " data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PetitionID.ToString())"><i class="fa fa-print"></i> Print</a></td>
+                                </tr>
+                                if (allegations.Count > 0)
+                                {
+                                    var text = "";
+
+                                    foreach (var allegation in allegations)
+                                    {
+                                        if (text != "") { text += ", "; }
+                                        text += allegation.Allegation;
+                                    }
+                                    if (text.Length > 0)
+                                    {
+                                        <tr data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PetitionID.ToString())">
+                                            <td class="text-nowrap" colspan="10">Allegations: @text</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="hearingCaption">Incomplete Hearings In Case</span>
+                <div class="widget-buttons">
+
+                    @*<a class="btn btn-labeled btn-default" data-secure-id="@((int)SecurityToken.AddHearing)">    Add Hearing </a>*@
+                    @*<a class="btn btn-labeled btn-default btn-xs btnShowAllHearing pull-right" style="margin-top: 5px !important;">Show All Hearings</a>*@
+
+                    <input type="button" class="btn btn-labeled btn-default btn " onclick="document.location.href = '/CaseOpening/Hearing?dataentry=true'" value="Add Hearing" data-secure-id="@((int)SecurityToken.AddHearing)" title="Add Hearing" />
+                    <input type="button" class="btn btn-labeled btn-default btn btnShowAllHearing" value="Show All Hearings" />
+                </div>
+            </div>
+            <div class="widget-body col-xs-12" id="hearingData">
+                @Html.Partial("_partialHearingListForMainCase", Model)
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnPrintableVersion" type="submit" class="btn btn-primary v-bottom default " tabindex="7">Printable Version</button>
+        @*@if (Request.QueryString["fromSearch"] != null)
+            {
+                <button id="btnBacktoSearch" type="submit" class="btn btn-default v-bottom" data-pageid="@Request.QueryString["fromSearch"]" tabindex="4">
+                    Back to Search Results
+                </button>
+            }*@
+    </div>
+}
+@section scripts
+{
+
+    <script>
+        $(function () {
+            $('body').on('click', '.btnPrintHearing', function (e) {
+                var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                var hearingid = $(this).data('hearingid')
+
+                var data = {
+                    hearingId: hearingid,
+                    reportId: $(this).data('reportid')
+                };
+                console.log(data)
+                $.download($('#hdnCurrentSessionGuidPath').val() + '/Task/PrintCalendarAppearanceNotes/', data, "POST", _target);
+            });
+            if ($('.roleend').length <= 0) {
+                $('.btnShowAllPeople').hide();
+            }
+            else {
+                $('.btnShowAllPeople').show();
+            }
+
+            $('.btnShowAllPeople').click(function () {
+
+                if ($(this).val() == 'Show All People') {
+                    $('.roleend').removeClass('hidden');
+                    $(this).val('Show Current People');
+                    $('#peopleCaption').text('All People In Case');
+                } else {
+
+                    $('.roleend').addClass('hidden');
+                    $(this).val('Show All People');
+                    $('#peopleCaption').text('Current People In Case');
+                }
+
+            });
+
+            $('.btnShowAllHearing').click(function () {
+                var unresultedFlag = 1;
+                $this = $(this);
+                if ($(this).val() == 'Show All Hearings') {
+                    unresultedFlag = 0;
+                    $.post('/Case/LoadHearingList?caseId=@(oCase.CaseID)&unresultedFlag=' + unresultedFlag, function (data) {
+                        $('#hearingData').html(data);
+                        $this.val('Show Incomplete Hearings');
+
+                        $('#hearingCaption').text('All Hearings In Case');
+
+                    });
+                } else {
+                    unresultedFlag = 1;
+
+
+                    $.post('/Case/LoadHearingList?caseId=@(oCase.CaseID)&unresultedFlag=' + unresultedFlag, function (data) {
+                        $('#hearingData').html(data);
+                        $this.val('Show All Hearings');
+                        $('#hearingCaption').text('Incomplete Hearings In Case ');
+                    });
+                }
+
+            });
+
+            $('#btnPrintableVersion').on('click', function (e) {
+                var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                var data = { id: $('#hdn_encryptedCaseID').val() };
+                $.download($('#hdnCurrentSessionGuidPath').val() + '/Case/PrintMain/', data, "POST", _target);
+            });
+            $('.printPetition').on('click', function (e) {
+                var data = { id: $(this).data('id') };
+
+
+                $.download($('#hdnCurrentSessionGuidPath').val() + '/Case/PrintPetition/' + $(this).data('id'), data, "POST", 'target="_blank"');
+            });
+
+            $('body').on('click', '.deleterole', function () {
+                var id = $(this).attr('data-id');
+                var tr = $(this).parent().parent();
+                var candeleteflag = $(this).attr('data-candeleteflag');
+                var recordtimeflag = $(this).attr('data-recordtimeflag');
+
+                if (candeleteflag == 1 && recordtimeflag == 0) {
+                    confirmBox("Are you sure you want to remove selected records?", function (result) {
+                        if (result) {
+                            $.ajax({
+                                type: "POST", url: '/Case/RoleDelete/' + id,
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.isSuccess) {
+                                        tr.remove();
+                                        notifySuccess('Selected record delete successfully.');
+                                        document.location.href = document.location.href;
+                                    }
+
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                }
+                            });
+                        }
+                        else {
+                        }
+                    });
+
+                } else if (candeleteflag == 0) {
+                    notifyWarning('This role is on a petition. In order to delete this role you must first either remove the role from the petition or delete the petition. Deleting the petition is not advised.');
+                } else if (recordtimeflag == 1) {
+                    notifyWarning('You must first delete the Record Time for this person before you can delete the person.');
+                }
+            });
+
+            $('body').on('click', '.deletePetition', function () {
+                var id = $(this).attr('data-id');
+                var tr = $(this).parent().parent();
+
+                confirmBox("Are you sure you want to remove selected records?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '/Case/PetitionDelete/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+                                    tr.remove();
+                                    $('tr[data-id="' + id + '"]').remove();
+                                    notifySuccess('Selected record delete successfully.');
+                                    document.location.href = document.location.href;
+                                }
+
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+            });
+
+            $("body").on('click', '.deleteHearing', function () {
+                var id = $(this).data("id");
+                var eid = $(this).data("eid");
+                var trs = $('#hearingData table tr[class="' + eid + '"]');
+                confirmBox("Are you sure you want to remove selected records?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '/CaseOpening/HearingDelete/' + id,
+                            success: function (data) {
+                                if (data.Status == "Done") {
+                                    trs.remove();
+                                    notifySuccess('Selected record delete successfully.');
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+            });
+        });
+
+        $('#btnBacktoSearch').on('click', function () {
+            var pageId = $(this).data("pageid");
+            if (pageId == 2)
+                window.location.href = "/Case/AdvCaseSearch?loadData=1";
+            else
+                window.location.href = "/Case/Search?loadData=1";
+        });
+    </script>
+}

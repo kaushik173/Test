@@ -1,0 +1,51 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_MyJcats.MyDailyTime_spResult>
+@{
+    Layout = null;
+}
+
+ 
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MyReports">
+            <thead>
+                <tr>
+                    <th style="width:200px">Description</th>
+                    <th style="width:50px" class=" text-align-right">Hrs</th>
+                    <th>Clients</th>
+
+                </tr>
+            </thead>
+            <tbody>
+               
+                @foreach (var item in Model)
+                {
+                    
+                    <tr>
+                        <td>
+                            @Html.Raw(item.WorkDescription)
+                        </td>
+                        <td class="text-align-right">
+                            @Html.Raw(item.WorkHoursDisplay)
+                        </td>
+                        <td>
+                            @Html.Raw(item.Clients)  
+                        </td>
+                    </tr>
+                }
+                @*<tr> <td class="bold">
+                       Total
+                    </td>
+                    <td class="bold text-align-right">
+                        @Model.Sum(o=>o.WorkHours)
+                    </td><td></td>
+                </tr>*@
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span>No Records</span>
+}

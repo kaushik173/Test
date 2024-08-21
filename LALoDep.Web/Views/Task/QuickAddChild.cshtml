@@ -1,0 +1,338 @@
+﻿@model  LALoDep.Models.Task.QuickAddChildViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    ViewBag.Title = "Quick Add Child";
+}
+
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "quick-add-child-form" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add New Child</span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body form-inline">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.BirthDate, "DOB", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control   input-sm  input-sm date-picker-control", maxlength = "10", style = "width:100% !important;" })
+                            <span class="input-group-addon datepicker-control-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RaceCodeID, "Race", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RaceCodeID, Model.RaceList, "", new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SexCodeID, "Gender", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.SexCodeID, Model.SexList, "", new { @class = "form-control input-sm" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Petition for Child</span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body">                    
+                    <div class="form-inline">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PetitionTypeCodeID, "Petition Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PetitionTypeCodeID, Model.PetitionTypeList, "", new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PetitionFileDate, "File Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.PetitionFileDate, new { @class = "form-control   input-sm  input-sm date-picker-control", maxlength = "10", style = "width:100% !important;" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CaseNumber, "Case #", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CaseNumber, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="table-responsive margin-top-10">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRoles">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="SelectAll" id="chkAllRole" /> <label for="chkAllRole">On</label></th>
+                                    <th>Role</th>
+                                    <th>Person Name</th>
+                                    <th>Role Start Date</th>
+                                    <th>Association to Child</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RoleList != null && Model.RoleList.Any())
+                                {
+                                    int counter = 0;
+                                    foreach (var item in Model.RoleList)
+                                    {
+                                        <tr class="trRole">
+                                            <td>
+                                                <input type="checkbox" name="RoleList[@counter].RoleID" value="@item.RoleID" class="chkRole" @(item.Selected == 1 ? "checked=\"checked\"" : "") />
+                                                <input type="hidden" name="RoleList[@counter].PersonID" value="@item.PersonID" />
+                                            </td>
+                                            <td>@item.RoleDisplay</td>
+                                            <td>@item.NameDisplay</td>
+                                            <td>@item.RoleStartDate</td>
+                                            <td>
+                                                @Html.DropDownList("RoleList[" + counter + "].DefaultAssociationTypeCodeID", new SelectList(Model.AssociationList, "CodeID", "CodeDisplay", item.DefaultAssociationTypeCodeID), "", new { @class = "form-control input-sm ddlAssociation" })
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                    <tr></tr>
+                                }
+                                else
+                                {
+                                    <tr><td class="text-center" colspan="100%">No data found</td> </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-inline margin-top-10">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Allegation1, "Allegation 1", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation1, Model.AllegationList, "", new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Allegation2, "Allegation 2", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation2, Model.AllegationList, "", new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Allegation3, "Allegation 3", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation3, Model.AllegationList, "", new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Allegation4, "Allegation 4", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation4, Model.AllegationList, "", new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Allegation5, "Allegation 5", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation5, Model.AllegationList, "", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add this Petition to these hearings <span class="text-danger">(Includes today and future hearings)</span></span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblHearing">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="SelectAll" id="chkAllHearing" /> <label for="chkAllHearing">On</label></th>
+                                    <th>Hearing Date</th>
+                                    <th>Type</th>
+                                    <th>Dept</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.HearingList != null && Model.HearingList.Any())
+                                {
+                                    int counter = 0;
+                                    foreach (var item in Model.HearingList)
+                                    {
+                                        <tr class="trPetition">
+                                            <td>
+                                                <input type="checkbox" name="HearingList[@counter].HearingID" value="@item.HearingID" class="chkHearing" @(item.Selected == 1 ? "checked=\"checked\"" : "") />                                                
+                                            </td>
+                                            <td>@item.HearingDate</td>
+                                            <td>@item.HearingType</td>
+                                            <td>@item.HearingDate</td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                    <tr></tr>
+                                }
+                                else
+                                {
+                                    <tr><td class="text-center" colspan="100%">No data found</td> </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnCancel" type="submit" class="btn btn-default v-bottom">Cancel</button>
+    </div>
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function validation() {
+            if (!hasFormChanged('quick-add-child-form')) {
+                notifyDanger('Nothing was changed.');
+                $("#LastName").focus();
+                return false;
+            }
+
+            if ($("#LastName").val() == "") {
+                notifyDanger('Last name is required.');
+                $("#LastName").focus();
+                return false;
+            }
+
+            if ($("#FirstName").val() == "") {
+                notifyDanger('First name is required.');
+                $("#FirstName").focus();
+                return false;
+            }
+
+            if ($("#SexCodeID").val() == "") {
+                notifyDanger('Gender is required.');
+                $("#SexCodeID").focus();
+                return false;
+            }
+
+            if ($("#PetitionTypeCodeID").val() == "") {
+                notifyDanger('Petition Type is required.');
+                $("#PetitionTypeCodeID").focus();
+                return false;
+            }
+
+            if ($("#PetitionFileDate").val() == "") {
+                notifyDanger('File Date is required.');
+                $("#PetitionFileDate").focus();
+                return false;
+            }
+            
+            if ($("#CaseNumber").val() == "") {
+                notifyDanger('Case Number is required.');
+                $("#CaseNumber").focus();
+                return false;
+            }
+
+            if ($("#tblRoles .chkRole:checked").length == 0) {
+                notifyDanger('At least one petition role must be checked.');
+                $("#tblRoles .chkRole:first").focus();
+                return false;
+            }
+
+            if ($("#tblRoles .chkRole:checked").length == 0) {
+                notifyDanger('At least one petition role must be checked.');
+                $("#tblRoles .chkRole:first").focus();
+                return false;
+            }
+
+            var isValid = true;
+            var totalRoels = $("#tblRoles .trRole").length;
+            for (var indx = 0; indx < totalRoels; indx++) {
+                var $tr = $("#tblRoles .trRole").eq(indx);
+
+                if ($(".ddlAssociation", $tr).val() == '') {
+                    var isValid = false;
+                    notifyDanger('Association is required.');
+                    break;
+                }
+            }
+            
+            return isValid;
+        }
+
+        $("#chkAllRole").on("click", function () {
+            var isChecked = $(this).is(":checked");
+            $("#tblRoles .chkRole").each(function (i, e) {
+                $(this).prop("checked", isChecked);
+            });
+        });
+
+        $("#tblRoles .chkRole").on("click", function () {
+            var allSelected = $("#tblRoles .chkRole:checked").length == $("#tblRoles .chkRole").length
+            $("#chkAllRole").prop("checked", allSelected);
+        });
+
+        $("#chkAllHearing").on("click", function () {
+            var isChecked = $(this).is(":checked");
+            $("#tblHearing .chkHearing").each(function (i, e) {
+                $(this).prop("checked", isChecked);
+            });
+        });
+
+        $("#tblHearing .chkHearing").on("click", function () {
+            var allSelected = $("#tblHearing .chkHearing:checked").length == $("#tblHearing .chkHearing").length
+            $("#chkAllHearing").prop("checked", allSelected);
+        });
+
+        $("#btnCancel").on("click", function () {            
+            parent.ClosePopup()
+        });
+
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            var data = $("#quick-add-child-form").serialize();
+            if (validation()) {
+                $.ajax({
+                    type: "POST", url: '/Task/QuickAddChild', data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {
+                            parent.notifySuccess('Data Saved Successfully!.');
+                            RequestSubmitted();
+                            setTimeout(function () {                                
+                                self.parent.document.location.href = self.parent.document.location.href;
+                                parent.ClosePopup()
+                            }, 1000);
+                        } else {
+                            document.location.href = result.URL;
+
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues('quick-add-child-form');
+            setTimeout(function () {
+
+                $('#LastName').focus()
+            },500)
+        });
+    </script>
+}

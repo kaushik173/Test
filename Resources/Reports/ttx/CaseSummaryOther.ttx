@@ -1,0 +1,5 @@
+ClientRoleID	Number		1
+RoleType	String	100	Father
+FullName	String	100	Last, First
+Contact	String	50	(111) 222-3333
+ContactType	String	50	Testcontacttype

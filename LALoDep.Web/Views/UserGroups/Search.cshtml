@@ -1,0 +1,47 @@
+﻿@model LALoDep.Models.Administration.UserGroupsViewModel
+@{
+    ViewBag.Title = "User Groups";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+        padding-top: 2px;
+        padding-right: 15px;
+        padding-bottom: 2px;
+        padding-left: 15px;
+    }
+</style>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons ">
+                    <button id="add" type="submit" class="btn btn-default v-bottom"  tabindex="13">Add User Group</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchUserGroups">
+                        <thead>
+                            <tr>
+                                <th class=""></th>
+                                <th class="">Group</th>
+                                <th class=""></th>
+                                <th class="" style="width:30px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/UserGroups.js?v=" + Guid.NewGuid())"></script>
+}

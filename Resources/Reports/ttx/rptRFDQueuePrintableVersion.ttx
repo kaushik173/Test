@@ -1,0 +1,15 @@
+RequestedByName	String	100	Smith
+ReportFilingDueType	String	200	Public Defender
+RequestDate	DateTime		08/30/02
+DueDate	DateTime		08/30/02
+CompleteDate	String	50	08/30/02
+PetitionNumber	String	50	11111
+ReportFilingDueID	Number		80
+CaseID	Number		80
+Client	String	2000	Public Defender
+HearingType	String	200	Public Defender
+HearingDate	DateTime		08/30/02
+ParameterText	String	200	Date Range from '10/01/2005' to '10/31/2005' (includes completed RFD's)
+RequestedForName	String	100	Bob Jones
+ShowFlag	Number		1
+TotalRFD	Number		1

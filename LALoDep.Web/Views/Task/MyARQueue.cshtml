@@ -1,0 +1,101 @@
+﻿@using LALoDep.Core.Custom.Extensions;
+@model LALoDep.Models.Task.MyARQueueViewModel
+@{
+    ViewBag.Title = "AR Queue for<br/> " + Model.PersonName;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "arQueue-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.Hidden("EncryptedPersonID", Model.PersonID.ToEncrypt())
+                    @Html.HiddenFor(m => m.PersonID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", tabindex = 1, maxlength = "10", autofocus = "autofocus" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DateRangeType, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DateRangeType, new SelectList(Model.DateRanges, "Key", "Value"), new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.IncludeCompletedFlag, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.IncludeCompletedFlag, new SelectList(Model.IncludeCompleted, "Key", "Value"), new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results<span id=totalArs></span></span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchMyARQueue">
+                        <thead>
+                            <tr>
+                                <th style="max-width:150px">Requested By</th>
+                                <th style="max-width:150px">Requested for</th>
+                                <th style="max-width:80px">Type</th>
+                                <th style="max-width:80px">Request Date</th>
+                                <th style="max-width:80px">Due Date</th>
+                                <th style="max-width:120px">Complete Dt</th>
+                                <th style="max-width:120px">Hearing Type</th>
+                                <th style="max-width:80px">Hearing Dt</th>
+                                <th style="max-width:90px">Case #</th>
+                                <th style="max-width:300px">Client</th>
+                                <th style="width:60px">Quick AR</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="5">Search/Process</button>
+        <button id="btnTransfer" type="button" class="btn v-bottom " tabindex="6">Transfer</button>
+        <button id="btnPrint" type="button" class="btn v-bottom " tabindex="7">Print</button>
+    </div>
+}
+
+@section scripts
+    {
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/MyARQueue.js?v=" + Guid.NewGuid())"></script>
+}

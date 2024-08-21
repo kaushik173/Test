@@ -1,0 +1,10 @@
+Hearing Date	Date		06/09/03
+Attorney	String	50	Espana
+Client	String	50	Jones, Marc
+Petition #	String	15	000001A
+Last Seen	Date		12/01/02
+6M	Number		1
+Seen By	String	50	Lauerman
+Seen Place	String	50	School
+Comment	String	250	Central Junior High
+AgencyName	String	250	Public Defender

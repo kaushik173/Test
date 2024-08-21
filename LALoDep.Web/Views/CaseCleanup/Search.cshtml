@@ -1,0 +1,121 @@
+﻿@model LALoDep.Models.Administration.CaseCleanupViewModel
+@{
+    ViewBag.Title = "Case Cleanup";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Case Cleanup Search</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-cleanup-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.Agencies, new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PersonID, new { @class = "control-label" })
+                        @if (Model.AttorneyList.Count() == 1)
+                        {           @Html.DropDownListFor(m => m.PersonID, Model.AttorneyList, new { @class = "form-control input-sm", tabindex = 2 })
+
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.PersonID, Model.AttorneyList, "", new { @class = "form-control input-sm", tabindex = 2 })
+
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            @*<div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Case Cleanup Search</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>*@
+            <div id="case-cleanup-search-result" class="widget-body col-xs-12">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="3" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.CaseCleanup_View)">Search</button>
+        <button id="btnPrint" type="button" class="btn btn-default v-bottom" tabindex="4">Printable Version</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function getData() {
+            var data = $('#case-cleanup-search-form').serialize();
+            return data;
+        }
+
+        function loadData() {
+            var data = getData();
+            $.ajax({
+                type: "POST", url: '@Url.Action(MVC.CaseCleanup.Search())', data: data, success: function (result) {
+                    $('#case-cleanup-search-result').html(result);
+                }
+            });
+        }
+
+
+        $("#btnSearch").on("click", function () {
+            loadData();
+        });
+
+        $("#btnPrint").on("click", function () {
+            var data = getData();
+            $.download("@Url.Action(MVC.CaseCleanup.PrintCaseCleanup())", data, "POST", 'target="_blank"');
+        });
+
+        $("#case-cleanup-search-result").on("click", ".goto-action", function (e) {
+            e.preventDefault();
+
+            var action = $(this).attr("href");
+            var caseId = $(this).data("caseid");
+            if (action == "")
+                return;
+
+            if (action.toLowerCase().indexOf("/case/main") >= 0) {
+                window.location.href = action + "/" + caseId;
+            }
+            else {
+                $.ajax({
+                    type: "POST", url: '@Url.Action(MVC.CaseCleanup.SetCaseInSession())', data: { id: caseId }, success: function (result) {
+                        if (result.isSuccess) {
+                            window.location.href = action;
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            loadData();
+        });
+
+
+    </script>
+}

@@ -1,0 +1,172 @@
+﻿@model LALoDep.Models.ToDoAddEditViewModel
+@{
+    ViewBag.Title = "To Do Add/Edit";
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">To Do Add/Edit</span>
+                <div class="widget-buttons">
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "todoaddedit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.PDActionID)
+                    @Html.HiddenFor(m => m.ActionStatusDate)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.BranchID)
+                    @Html.HiddenFor(m => m.ActionStatusCodeID)
+                    @Html.HiddenFor(m => m.ActionAssociatedToEntityID)
+                    @Html.HiddenFor(m => m.ActionAssociatedToEntityTypeCodeID)
+                    @Html.HiddenFor(m => m.PersonID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+                    <div class="row">
+                        <div class="form-group col-sm-3">
+                            @Html.LabelFor(m => m.ActionTypeCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ActionTypeCodeID, new SelectList(Model.ActionTypeList, "CodeID", "CodeValue", Model.ActionTypeCodeID), "", new { @class = "form-control input-sm TypeID", tabindex = 1, autofocus = "autofocus", style = "width:100%;" })
+                            @Html.HiddenFor(m => m.ActionTypeCodeID, new { id = "hdn_ActionTypeCodeID" })
+                        </div>
+                        <div class="form-group col-sm-9">
+                            @Html.LabelFor(m => m.ActionNote, "Action", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.ActionNote, new { @class = "form-control input-sm TypeID", tabindex = 2, style = "width:100%;" })
+                            @Html.HiddenFor(m => m.ActionNote, new { id = "hdn_ActionNote" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ActionDueDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.ActionDueDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 3, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        @Html.HiddenFor(m => m.ActionDueDate, new { id = "hdn_ActionDueDate" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ActionReminderDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.ActionReminderDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", maxlength = "10", tabindex = 4 })
+                            <span class="input-group-addon  datepicker-trigger " style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        @Html.HiddenFor(m => m.ActionReminderDate, new { id = "hdn_ActionReminderDate" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.CaseID, new SelectList(Model.CaseList, "CodeID", "CodeValue", Model.CaseID), "", new { @class = "form-control input-sm", tabindex = 5, style = "width:100%;" })
+                        @Html.HiddenFor(m => m.CaseID, new { id = "hdn_CaseID" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AssignedToPersonID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AssignedToPersonID, new SelectList(Model.AssignedToPersonList, "PersonID", "PersonNameDisplay", Model.AssignedToPersonID), "", new { @class = "form-control input-sm", tabindex = 6, style = "width:100%;" })
+                        @Html.HiddenFor(m => m.AssignedToPersonID, new { id = "hdn_AssignedToPersonID" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="save" type="submit" class="btn btn-primary v-bottom default" tabindex="7">Save</button>
+        <button id="cancel" type="button" class="btn btn-default v-bottom" tabindex="8"><u>C</u>ancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        function getData() {
+            var data = $("#todoaddedit-form").serialize();
+            return data;
+        }
+
+        function saveData() {
+            if ($("#ActionTypeCodeID").val() != $("#hdn_ActionTypeCodeID").val() ||
+                $("#ActionNote").val() != $("#hdn_ActionNote").val() ||
+                $("#ActionDueDate").val() != $("#hdn_ActionDueDate").val() ||
+                $("#ActionReminderDate").val() != $("#hdn_ActionReminderDate").val() ||
+                ($("#CaseID").length && $("#CaseID").val() != $("#hdn_CaseID").val()) ||
+                $("#AssignedToPersonID").val() != $("#hdn_AssignedToPersonID").val()) {
+
+                var data = getData();
+                $.ajax({
+                    type: "POST", dataType: 'json', url: '/Inquiry/ToDoAddEdit', data: data,
+                    success: function (data) {
+                        if (data.isSuccess) {
+                            window.location.href = data.URL;
+                        } else {
+
+                        }
+                    }
+                });
+
+            }
+            else {
+                window.location.href = '/Inquiry/ToDoList/';
+                return false;
+            }
+        }
+
+        function handleHotkey(e) {
+            if (!e.ctrlKey) return;
+            switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                case 'c':
+                    $('#cancel').trigger('click');
+                    e.preventDefault();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $(window).on("keydown", handleHotkey);
+
+
+        $("#ClientDisabled").on("focus", function () {
+            $(this).blur();
+        });
+
+        $("#cancel").on("click", function () {
+           
+                window.location.href = "/Inquiry/ToDoList";
+            
+            
+        });
+
+        $("#save").on("click", function () {
+            if ($("#ActionTypeCodeID").val().length <= 0) {
+                $('#ActionTypeCodeID').focus();
+                Notify('Action Type is required.', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                return false;
+            }
+            else if ($("#ActionDueDate").val().length <= 0) {
+                $('#ActionDueDate').focus();
+                Notify('Due Date is required.', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                return false;
+            }
+            if ($("#ActionDueDate").val() != "") {
+                var dueDate = new Date($("#ActionDueDate").val());
+                var remDate = new Date($("#ActionReminderDate").val());
+                if (dueDate < remDate) {
+                    $("#dueDate").focus();
+                    Notify('Due Date cannot be earlier than Reminder Date.', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            }
+            saveData();
+        });
+
+    </script>
+}

@@ -1,0 +1,7 @@
+RequestDate	DateTime		01/01/2000
+Requestor	String	100	Dip, Say Nam
+PhoneNumber	String	50	(111) 222-3333
+FaxNumber	String	50	(444) 555-6666
+Agency	String	100	Public Defender
+SystemRole	String	100	Attorney
+RequestReason	String	250	just because

@@ -1,0 +1,221 @@
+﻿@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model List<LALoDep.Models.Inquiry.InvoiceListViewModel>
+@{
+    ViewBag.Title = "Invoice List";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Invoice List</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @if (Model != null && Model.Count > 0)
+                {
+                    int invoiceID = 0;
+                    decimal totalAmount = 0;
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblInvoiceList">
+                            <thead>
+                                <tr>
+                                    <th>Invoice Date</th>
+                                    <th>Status</th>
+                                    <th>Client</th>
+                                    <th>Parent/Child</th>
+                                    <th>Item Type</th>
+                                    <th>Item Description</th>
+                                    <th>Amount</th>
+                                    <th style="width:10px;"></th>
+                                    <th style="width:10px;"></th>
+                                </tr>
+                            </thead>
+                            @for (int indx = 0; indx < Model.Count; indx++)
+                            {
+                                var item = Model[indx]; invoiceID = item.InvoiceID;
+                                int nextEleIndex = indx + 1, nextInvoiceID = 0;
+                                if (nextEleIndex < Model.Count)
+                                {
+                                    nextInvoiceID = Model[nextEleIndex].InvoiceID;
+                                }
+
+                                if (invoiceID != nextInvoiceID)
+                                {
+                                    totalAmount = item.InvoiceHearingAmount;
+                                    <tr>
+                                        <td>@item.InvoiceDate</td>
+                                        <td><a href="javascript:void(0);" class="invoce-status" data-id="@item.InvoiceID.ToEncrypt()" data-status-code-id="@item.InvoiceStatusCodeID">@item.Status</a></td>
+                                        <td>@item.ClientDisplayName</td>
+                                        <td>@item.OtherParties</td>
+                                        <td>@item.ItemType</td>
+                                        <td>@item.ItemDescription</td>
+                                        <td><a href="javascript:void(0);" data-secure-link-id="@((int)SecurityToken.EditHearing)" class="edit-amount" data-hearingid="@item.HearingID.ToEncrypt()">$@item.InvoiceHearingAmount.ToString("#.00")</a></td>
+                                        <td>
+                                            @if (item.Void == 1)
+                                            {
+                                                <button type="button" class="btn btn-info btn-xs btnRegen" data-id="@item.InvoiceID" data-secure-id="@((int)SecurityToken.RegenerateInvoice)">Regen</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-info btn-xs btnVoid" data-id="@item.InvoiceID" @if (item.Status == "Sent") { <text> disabled="disabled" </text>    } data-secure-id="@((int)SecurityToken.RegenerateInvoice)">Void</button>
+                                            }
+
+                                        </td>
+                                        <td><button type="button" class="btn btn-danger btn-xs btnDelete" data-id="@item.InvoiceID" @if (item.Status == "Sent") { <text> disabled="disabled" </text>   } data-secure-id="@((int)SecurityToken.DeleteInvoice)"><i class="fa fa-trash-o"></i> Delete</button></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    totalAmount += item.InvoiceHearingAmount;
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@item.ItemType</td>
+                                        <td>@item.ItemDescription</td>
+                                        <td><a href="javascript:void(0);" data-secure-link-id="@((int)SecurityToken.EditHearing)" class="edit-amount" data-hearingid="@item.HearingID.ToEncrypt()">$@item.InvoiceHearingAmount.ToString("#.00")</a></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+
+                                if (invoiceID != nextInvoiceID)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="javascript:void(0)" class="manage-note" data-invoiceid="@item.InvoiceID.ToEncrypt()" data-noteid="@item.NoteID.ToEncrypt()">@(item.NoteID.HasValue ? "Edit" : "Add") Note</a>
+                                        </td>
+                                        <td colspan="3"></td>
+                                        <td colspan="2" class="text-right"><strong>Total</strong></td>
+                                        <td><strong>$@totalAmount.ToString("#.00")</strong></td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $("#tblInvoiceList").on("click", ".manage-note", function () {
+            OpenPopup('/Invoice/InvoiceNote/' + $(this).attr('data-noteid') + '?pkid=' + $(this).attr('data-invoiceid'), 'Invoice Note');
+        });
+
+        $("#tblInvoiceList").on("click", ".edit-amount", function () {
+            if ($(this).is(":disabled")) {
+                return false;
+            }
+            else {
+                OpenPopup('/Invoice/EditHearingAmount/' + $(this).attr('data-hearingid'), 'Edit Hearing Amount');
+            }
+        });
+        $("#tblInvoiceList").on("click", ".invoce-status", function () {
+            var statuscodeId = $(this).data("status-code-id");
+            if (statuscodeId == 1) {
+                OpenPopup('/InvoiceQueue/InvoiceVerifyPopup/' + $(this).data('id'), 'Invoice');
+            }
+            else {
+                OpenPopup('/Invoice/InvoiceSentPopup/' + $(this).data('id'), 'Invoice');
+            }
+            $('#PagePopup .modal-dialog').css("margin-top", 70);
+        });
+
+        $("#tblInvoiceList").on("click", ".btnDelete", function () {
+            if ($(this).is(":disabled")) {
+                return false;
+            }
+            else {
+                var id = $(this).attr('data-id');
+                confirmBox("Are you sure you want to DELETE this invoice?", function (result) {
+                    if (result) {
+
+                        var tr = $(this).parent().parent();
+                        $.ajax({
+                            type: "POST", url: '/Invoice/InvoiceDelete/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+
+                                    Notify('Delete invoice successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 1000)
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        $("#tblInvoiceList").on("click", ".btnVoid", function () {
+            if ($(this).is(":disabled")) {
+                return false;
+            }
+            else {
+                var id = $(this).attr('data-id');
+                confirmBox("Are you sure you want to VOID this invoice?", function (result) {
+                    if (result) {
+
+                        var tr = $(this).parent().parent();
+                        $.ajax({
+                            type: "POST", url: '/Invoice/InvoiceVoid/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+
+                                    Notify('Void invoice successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    },1000)
+                                 
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        $("#tblInvoiceList").on("click", ".btnRegen", function () {
+            if ($(this).is(":disabled")) {
+                return false;
+            }
+            else {
+                var id = $(this).attr('data-id');
+                confirmBox("Are you sure you want to REGENERATE this invoice?", function (result) {
+                    if (result) {
+
+                        var tr = $(this).parent().parent();
+                        $.ajax({
+                            type: "POST", url: '/Invoice/RegenerateInvoice/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+
+                                    Notify('Regenerate invoice successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 1000)
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        
+    </script>
+}

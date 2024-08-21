@@ -1,0 +1,14 @@
+Agency	String	100	AgencyName
+Attorney	String	100	Last, First
+Pre-Dispo Total	Number		100
+Post-Dispo Total	Number		200
+Under 4 Total		Number		150
+4+ Total	Number		150
+Total Cases	Number		300
+Under 4 Pre-Dispo	Number		125
+Under 4 Post-Dispo	Number		175
+4+ Pre-Dispo	Number		160
+4+ Post-Dispo	Number		140
+RPP	Number		123
+AgencyAbbreviation	String	50	AgencyAbbr
+

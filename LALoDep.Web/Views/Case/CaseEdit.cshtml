@@ -1,0 +1,232 @@
+﻿@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.CaseEditViewModel
+@{
+    ViewBag.Title = "Edit Case";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Edit Case</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-edit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.CaseID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+                    @Html.HiddenFor(m => m.FileLocationAttrID)
+                    @Html.HiddenFor(m => m.FileBoxAttrID)
+                    @Html.HiddenFor(m => m.ReferralSourceAttrID)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CaseNumber, new { @class = "form-control input-sm", tabindex = 1, disabled = "disabled" })
+                        @Html.HiddenFor(m => m.CaseNumber)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseAppointmentDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.CaseAppointmentDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 2, maxlength = "10", autofocus = "autofocus", })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseClosedDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.CaseClosedDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 3, maxlength = "10", disabled = "disabled" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CasePanelCase, new { @class = "control-label" })
+                        @Html.CheckBoxFor(m => m.CasePanelCase, new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, Model.Department, "", new { @class = "form-control input-sm", tabindex = 5 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseNameRoleID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.CaseNameRoleID, new SelectList(Model.CaseName, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = 6, style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FileLocationID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.FileLocationID, Model.FileLocation, "", new { @class = "form-control input-sm", tabindex = 7, style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FileBox, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FileBox, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 8 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralSourceCodeID, new { @class = "control-label" })
+                        @if (Model.IsSSCInvoiceExist)
+                        {
+                            @Html.DropDownListFor(m => m.ReferralSourceCodeID, Model.ReferatlSource, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:100%;", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.ReferralSourceCodeID)
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.ReferralSourceCodeID, Model.ReferatlSource, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:100%;" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseSecured, "Secure Case", new { @class = "control-label" })
+                        @Html.CheckBoxFor(m => m.CaseSecured, new { @class = "form-control input-sm", tabindex = 9, data_secure_disabled_id = (int)SecurityToken.CaseSecured })
+                        @Html.HiddenFor(o => o.CaseSecuredID)
+                    </div>
+                    if (Model.HasOpenPetitions)
+                    {
+                        <div class="row margin-top-20">
+                            <div class="form-group">
+                                <div class="alert alert-danger">
+                                    <i class="fa-fw fa fa-warning"></i>
+                                    <strong>There are open petitions on this case.</strong>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveReturn" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.EditCase)" tabindex="10">Save/Return</button>
+        <button id="btnSaveMain" type="button" class="btn btn-default v-bottom" tabindex="11" data-secure-id="@((int)SecurityToken.EditCase)">Save/Main</button>
+        <button id="btnDeleteCase" type="button" class="btn btn-default v-bottom" data-secure-id="@((int)SecurityToken.CaseDelete)" tabindex="12">Delete Case</button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function getData() {
+            var data = $("#case-edit-form").serialize();
+
+            var updateCase = ($("#CaseAppointmentDate").IsValueChanged() ||
+                $("#CaseClosedDate").IsValueChanged() ||
+                $("#CasePanelCase").is(":checked") != $("#CasePanelCase").data("old-value-on-pageload") ||
+                $("#DepartmentID").IsValueChanged())
+
+            data += "&IsUpdateCase=" + updateCase
+                + "&IsUpdateName=" + $("#CaseNameRoleID").IsValueChanged()
+                + "&IsUpdateFileLocation=" + $("#FileLocationID").IsValueChanged()
+                + "&IsUpdateFileBox=" + $("#FileBox").IsValueChanged()
+                + "&IsUpdateReferral=" + $("#ReferralSourceCodeID").IsValueChanged();
+
+            return data;
+        }
+
+        function isValid() {
+            if ($("#CaseAppointmentDate").val().length == 0) {
+                $("#CaseAppointmentDate").focus();
+                notifyDanger('Appointment date is required.');
+                return false;
+            }
+
+            if ($("#CaseClosedDate").val().length > 0 && (new Date($("#CaseClosedDate").val()) < new Date($("#CaseAppointmentDate").val()))) {
+                $("#CaseClosedDate").focus();
+                notifyDanger('Close date can not be before appointment date.');
+                return false;
+            }
+
+            if ($("#DepartmentID").val().length == 0) {
+                $("#DepartmentID").focus();
+                notifyDanger('Department is required.');
+                return false;
+            }
+
+            if ($("#CaseNameRoleID").val().length == 0) {
+                $("#CaseNameRoleID").focus();
+                notifyDanger('Case name is required.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function saveData(buttonId) {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged('case-edit-form')) {
+                if (isValid()) {
+                    var data = getData();
+                    $.ajax({
+                        type: "POST", url: '/Case/CaseEdit/', data: data,
+                        success: function (data) {
+                            RequestSubmitted();
+                            if (data.isSuccess) {
+                                if (buttonId == 1) {
+                                    window.location.href = window.location.href;
+                                }
+                                else {
+                                    window.location.href = '/Case/Main'
+                                }
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) { }
+                    });
+                }
+            }
+            else {
+                if (buttonId == 1) {
+                    notifyDanger("Nothing has been changed");
+                }
+                else {
+                    window.location.href = '/Case/Main'
+                }
+            }
+        }
+
+        $('body').on('click', '#btnSaveReturn', function () {
+            saveData(1);
+        });
+
+        $('body').on('click', '#btnSaveMain', function () {
+            saveData(2);
+        });
+
+        $('body').on('click', '#btnDeleteCase', function () {
+            confirmBox("Are you sure you want to remove selected records?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Case/CaseDelete/',
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.isSuccess) {
+                                window.location.href = "/Case/Search";
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+                else {
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("case-edit-form");
+        });
+    </script>
+
+}

@@ -1,0 +1,16 @@
+InvestigatorPersonID	Number		123456
+Investigator	String	100	LastName, FirstName
+Requested	Number		1212
+Completed	Number		1313
+Includes Report	Number		1001
+PastDue	Number		1414
+Outstanding	Number		1515
+Agency	String	200	Public Defender
+StartDate	String	50	01/01/2001
+EndDate	String	50	01/31/2001
+ReportType	String	100	RequestedFor
+Completed Late	Number		499
+Includes Report Late	Number		388
+Due	Number		9999
+CompletedIsSubsetOfDue	String	50	Yes
+RequestedForRoleType	String	100	Investigator

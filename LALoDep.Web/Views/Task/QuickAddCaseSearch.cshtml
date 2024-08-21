@@ -1,0 +1,563 @@
+﻿@model LALoDep.Models.Task.QuickAddCaseSearchViewModel
+@using LALoDep.Core.Custom.Extensions;
+    @{
+        ViewBag.Title = "Quick Add Case Search";
+
+        var tabindex = 1;
+
+    }
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Quick Add Case Search</span>
+                </div>
+                <div class="widget-body">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickAddCaseSearch-form", @class = "form-inline center-block" }))
+                    {
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                                <select id="AgencyID" name="AgencyID" class="form-control input-sm" tabindex="@(tabindex)" autofocus="autofocus">
+                                    <option></option>
+                                    @foreach (var agency in Model.AgencyList)
+                                    {
+
+                                        <option value="@agency.Value.Split('|')[0]" data-unique="@agency.Value.Split('|')[1]" @((Model.AgencyID.HasValue && agency.Value.Split('|')[0] == Model.AgencyID.Value.ToString()) ? "selected" : "")>
+                                            @agency.Text
+                                        </option>
+                                    }
+                                </select>
+
+                            </div><div class="form-group">
+                                @Html.LabelFor(m => m.AttorneyID, new { @class = "control-label" })
+                                <select id="AttorneyID" name="AttorneyID" class="form-control input-sm" tabindex="@(tabindex)"  >
+                                    <option></option>
+                                    @foreach (var agency in Model.AttorneyList)
+                                    {
+
+                                        <option value="@agency.PersonID.ToEncrypt()" data-unique="@agency.AgencyID" @(agency.DefaultFlag==1?"selected":"")>
+                                            @agency.NameDisplay
+                                        </option>
+                                    }
+                                </select>
+
+                            </div>
+
+                            <br /><br />
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" style="width:700px">
+                                <tr>
+                                    <td></td>
+                                    <th>
+                                        Last Name (Exact)
+                                    </th>
+                                    <th>
+                                        First Name
+                                    </th>
+                                    <th style="width:150px ">
+                                        DOB
+
+                                    </th>
+                                    <th>
+                                        OR Case #
+
+                                    </th>
+
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.ChildLastName1, "Child 1", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.ChildLastName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.ChildFirstName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Child1DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td>@Html.TextBoxFor(m => m.CaseNumber1, new { @class = "form-control input-sm uppercase", tabindex = tabindex++ })</td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.ChildLastName1, "Child 2", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.ChildLastName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.ChildFirstName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Child2DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td>@Html.TextBoxFor(m => m.CaseNumber2, new { @class = "form-control input-sm uppercase", tabindex = tabindex++ })</td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.ChildLastName3, "Child 3", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.ChildLastName3, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.ChildFirstName3, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Child3DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td>@Html.TextBoxFor(m => m.CaseNumber3, new { @class = "form-control input-sm uppercase", tabindex = tabindex++ })</td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.MotherLastName, "Mother", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.MotherLastName, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.MotherFirstName, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.MotherDOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.FatherLastName1, "Father 1", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.FatherLastName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.FatherFirstName1, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Father1DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(m => m.FatherLastName2, "Father 2", new { @class = "control-label" })
+                                    </td>
+                                    <td>
+
+                                        @Html.TextBoxFor(m => m.FatherLastName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(m => m.FatherFirstName2, new { @class = "form-control input-sm", tabindex = tabindex++ })
+
+
+
+
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Father2DOB, new { @class = "form-control input-sm date-picker DOBValidation", maxlength = "10", tabindex = tabindex++ })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption" id="countSearchResult">Search Result</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblClients">
+                            <thead>
+                                <tr>
+                                    <th>JCATS #</th>
+
+                                    <th>Agency</th>
+                                    <th>Case Role</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>DOB</th>
+                                    <th>Gender</th>
+                                    <th>Case #</th>
+                                    <th>Close Date</th>
+                                    <th>Attorney</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section fixedfooter{
+        <div class="boxfloat text-center">
+            <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Search</button>
+            <button id="btnBypassAndAdd" type="submit" class="btn btn-default v-bottom hide" tabindex="@(tabindex++)" data-url="">Bypass Search Results/Add New Case</button>
+        </div>
+    }
+    @section scripts{
+        <script type="text/javascript">
+            $(function () {
+
+              //  if (Contains(document.location.href, '?newSessionQuick=True')) {
+                 //   RefreshWindowID();
+
+                  //  document.location.href = '/Task/QuickAddCaseSearch';
+               // }
+            })
+            var oTable = $('#tblClients').dataTable({
+
+                "lengthMenu": [50],
+                "lengthChange": false,
+                "paging": true,
+                "searching": false,
+                "bSort": false,
+
+                "columns": [
+
+                    {
+                        "render": function (data, type, full, meta) {
+                            if (full.CaseNumber !== null)
+                                return ('<a href="/Case/Main/' + full.EncryptedCaseID + '" target="_blank">' + full.CaseNumber + '</a>');
+                            else
+                                return '';
+
+                        }
+                    }, { "data": "Agency" },
+                    { "data": "Role" },
+
+                     { "data": "PersonNameLast" },
+                    { "data": "PersonNameFirst" },
+                    { "data": "DOB" },
+                    { "data": "Sex", "title": "Gender" },
+                     { "data": "PetitionDocketNumber" },
+                     { "data": "ClosedDate" },
+                    { "data": "LeadAttorney" }
+
+
+                ],
+
+                "loadingRecords": "Loading...",
+                "processing": "Processing...",
+                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+                    if (aData.RoleClient == 1) {
+                        $(nRow).addClass('highLightBlue');
+                    }
+                },
+                "deferRender": true
+            });
+
+
+            $("#btnSearch").on("click", function () {
+                Search();
+            });
+          
+            $('#btnBypassAndAdd').on("click", function () {
+
+                var $form = $('#QuickAddCaseSearch-form');
+                IPadKeyboardFix();
+                if (validateForm()) {
+
+                    $("#btnBypassAndAdd").data('url', '');
+                    $("#btnBypassAndAdd").addClass("hide");
+                    var params = getData();
+                    $.ajax({
+                        type: "POST", url: '/Task/QuickAddCaseSearch?Bypass=true', data: params,
+                        success: function (data) {
+
+                            if (data.Status == "CaseRedirect") {
+                                document.location.href = data.URL;
+
+                            }
+
+                        },
+                        dataType: 'json'
+                    });
+                }
+
+            });
+            $('#AttorneyID').change(function () {
+                $('#AgencyID').val($(this).find('option:selected').attr('data-unique'));
+               
+            });
+            $('#AttorneyID').change();
+            $('#AgencyID').change(function () {
+                $('#AttorneyID').val('')
+                if ($(this).find('option:selected').attr('data-unique') == '0') {
+                    $('#divCaseNumber2').hide();
+                    $('#divCaseNumber2 input').val('');
+                    $('#divCaseNumber3').hide();
+                    $('#divCaseNumber3 input').val('');
+                } else {
+                    $('#divCaseNumber2').show();
+                    $('#divCaseNumber3').show();
+                }
+            });
+
+            function setData(data) {
+                oTable.fnClearTable();
+                if (data.data.length > 0) {
+                    oTable.fnAddData(data.data);
+                    $('#countSearchResult').text('Search Result For ' + $('#AgencyID').find('option:selected').text() + '(' + data.data.length + ')');
+                    fitCalculatedHeightForSearchDataTable();
+                } else {
+                    $('#CountSearchResult').text('0');
+                    //   Notify('No results found.', 'bottom-right', '5000', 'blue', 'fa-frown-o', true);
+                }
+            }
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                if (oTable != null) {
+                    calc_height = $(window).height();
+                    var _offset = 25;
+
+                    $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                        $(this).siblings().each(function () {
+                            if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                                if ($(this).attr("id") == 'loading')
+                                    return;
+                                calc_height = calc_height - $(this).outerHeight(true);
+                            }
+                        });
+                        _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                    });
+
+                    calc_height = calc_height - _offset;
+                    $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                    oTable.fnAdjustColumnSizing();
+                }
+                return calc_height;
+            }
+            function validateForm() {
+                if ($("#AgencyID").val() == '') {
+                    $("#AgencyID").focus();
+                    notifyDanger("Agency is required.");
+                    return false;
+                }
+
+                if ($("#CaseNumber1").val() == '' && $("#MotherLastName").val() == '' && $("#MotherFirstName").val() == '' && $("#MotherDOB").val() == '') {
+                    $("#CaseNumber1").focus();
+                    notifyDanger("Case number or mother information is required.");
+                    return false;
+                }
+
+                if ($("#CaseNumber1").val() != '' && $("#CaseNumber1").val().length < 5) {
+                    $("#CaseNumber1").focus(0);
+                    notifyDanger("Case # (Child 1) must be atleast 5 characters");
+                    return false;
+                }
+
+                if ($("#MotherLastName").val() != '' && $("#MotherFirstName").val() == '') {
+                    $("#MotherFirstName").focus();
+                    notifyDanger("Mother First Name is required.");
+                    return false;
+                }
+
+                if ($("#MotherDOB").val() != '' && $("#MotherLastName").val() == '') {
+                    $("#MotherLastName").focus();
+                    notifyDanger("Mother Last Name is required.");
+                    return false;
+                }
+
+                if ($("#ChildLastName1").val() != '' && $("#ChildFirstName1").val() == '') {
+                    $("#ChildFirstName1").focus();
+                    notifyDanger("Child 1 First Name is required.");
+                    return false;
+                }
+
+                if ($("#Child1DOB").val() != '' && $("#ChildLastName1").val() == '') {
+                    $("#ChildLastName1").focus();
+                    notifyDanger("Child 1 Last Name is required.");
+                    return false;
+                }
+
+                if ($("#ChildLastName2").val() != '' && $("#ChildFirstName2").val() == '') {
+                    $("#ChildFirstName2").focus();
+                    notifyDanger("Child 2 First Name is required.");
+                    return false;
+                }
+
+                if ($("#Child2DOB").val() != '' && $("#ChildLastName2").val() == '') {
+                    $("#ChildLastName2").focus();
+                    notifyDanger("Child 2 Last Name is required.");
+                    return false;
+                }
+                if ($("#ChildLastName3").val() != '' && $("#ChildFirstName3").val() == '') {
+                    $("#ChildFirstName3").focus();
+                    notifyDanger("Child 3 First Name is required.");
+                    return false;
+                }
+
+                if ($("#Child3DOB").val() != '' && $("#ChildLastName3").val() == '') {
+                    $("#ChildLastName3").focus();
+                    notifyDanger("Child 3 Last Name is required.");
+                    return false;
+                }
+                if ($("#FatherLastName1").val() != '' && $("#FatherFirstName1").val() == '') {
+                    $("#FatherFirstName1").focus();
+                    notifyDanger("Father 1 First Name is required.");
+                    return false;
+                }
+
+                if ($("#Father1DOB").val() != '' && $("#FatherLastName1").val() == '') {
+                    $("#FatherLastName1").focus();
+                    notifyDanger("Father 1 Last Name is required.");
+                    return false;
+                }
+
+                if ($("#FatherLastName2").val() != '' && $("#FatherFirstName2").val() == '') {
+                    $("#FatherFirstName2").focus();
+                    notifyDanger("Father 2 First Name is required.");
+                    return false;
+                }
+
+                if ($("#Father2DOB").val() != '' && $("#FatherLastName2").val() == '') {
+                    $("#FatherLastName2").focus();
+                    notifyDanger("Father 2 Last Name is required.");
+                    return false;
+                }
+
+
+                return true;
+            }
+
+            function getData() {
+                var fData = $('#QuickAddCaseSearch-form').serialize();
+                return fData;
+            }
+            function Search() {
+                var $form = $('#QuickAddCaseSearch-form');
+                IPadKeyboardFix();
+                if (!IsInvalidCharactersNotExistsInSearchFields($('#QuickAddCaseSearch-form')))
+                    return false;
+                if (validateForm()) {
+
+                    $("#btnBypassAndAdd").data('url', '');
+                    $("#btnBypassAndAdd").addClass("hide");
+                    var params = getData();
+                    $.ajax({
+                        type: "POST", url: '/Task/QuickAddCaseSearch', data: params,
+                        success: function (data) {
+                            var  addUrl='';
+                            if ($('#AttorneyID').val() !== '') {
+                                addUrl = '?attorneyId=' + $('#AttorneyID').val();
+
+                            }
+                            if (data.Status == "Done") {
+                                setData(data.SearchData);
+                                $("#btnBypassAndAdd").data('url', data.URL + addUrl);
+                                $("#btnBypassAndAdd").removeClass("hide");
+                            } else if (data.Status == "CaseRedirect") {
+                                document.location.href = data.URL + addUrl;
+
+                            }
+
+                        },
+                        dataType: 'json'
+                    });
+                }
+
+
+
+            }
+
+        </script>
+    }
+    <style>
+        .form-inline .input-group {
+            display: table;
+        }
+    </style>

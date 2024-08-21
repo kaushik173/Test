@@ -1,0 +1,5 @@
+Case Number	String	100	ABC123456
+Assigned Attorney	String	100	Smith, Michael
+ParmAttorneyName	String	100	Smith, Michael
+ParmStartDate	DateTime		01/01/2005
+ParmEndDate	DateTime		01/31/2005

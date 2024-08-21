@@ -1,0 +1,874 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@model LALoDep.Models.Inquiry.ReportParametersViewModel
+@{
+    ViewBag.Title = ViewBag.PageName;
+}
+<script>
+    $Sequence = '###';
+    $Compare = '##';
+    $requiredIfEnterd = '###';
+    $requiredIfNotEnterd = '###';
+</script>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.ReportDisplayName</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @{int counter = 1;}
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-parameter-form", @class = "form-horizontal center-block", onsubmit = "return false" }))
+                {
+                    @Html.HiddenFor(model => model.ReportID)
+                    @Html.HiddenFor(model => model.CaseNumber)
+                    @Html.HiddenFor(model => model.ReportSourceDocumentName)
+                    @Html.HiddenFor(model => model.ReportSourceStoredProcedureName)
+                    @Html.HiddenFor(model => model.ReportDisplayName)
+                    foreach (var parameter in Model.ParameterDefinitionList)
+                    {
+                        if (parameter.Caption != null)
+                        {
+                            <div class="form-group">
+                                <input type="hidden" value="@parameter.Sequence" id="hdn_@counter" />
+                                <input type="hidden" value="@parameter.Type.ToUpper()" id="hdnType_@parameter.Sequence" />
+                                <label class="col-md-5 control-label no-padding-right lbl_@parameter.ControlName" id="lbl_@parameter.Sequence">@parameter.Caption</label>
+                                <input type="hidden" value="@parameter.Sequence" id="hdnSequence_@parameter.Sequence" />
+                                <div class="col-md-3">
+                                    @if (parameter.Type.ToUpper().CompareTo("TEXT") == 0)
+                                    {
+                                        string defaultValue = string.Empty;
+                                        if ((parameter.DefaultValue != null) && (parameter.DefaultValue.ToUpper().CompareTo("CASENUMBER") == 0))
+                                        {
+                                            defaultValue = Model.CaseNumber;
+                                        }
+                                        else if ((parameter.DefaultValue != null) && (parameter.DefaultValue.ToUpper().CompareTo("JCATSNUMBER") == 0))
+                                        {
+                                            defaultValue = Model.JcatsNumber;
+                                        }
+                                        else
+                                        { defaultValue = parameter.DefaultValue; }
+                                        <input id="txt_@parameter.Sequence" name="txt_@parameter.Sequence" value="@defaultValue" class="form-control input-sm @parameter.ControlName" tabindex="@counter" style="width:100%" />
+                                        <script>
+                                            $Sequence = $Sequence + "txt_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                            $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                            $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                        </script>
+                                    }
+                                    else if (parameter.Type.ToUpper().CompareTo("NUMBER") == 0)
+                                    {
+                                        string defaultValue = string.Empty;
+                                        if ((parameter.DefaultValue != null) && (parameter.DefaultValue.ToUpper().CompareTo("CURRENTYEAR") == 0))
+                                        {
+                                            defaultValue = DateTime.Now.Year.ToString();
+                                        }
+                                        else
+                                        { defaultValue = parameter.DefaultValue; }
+                                        <input id="txt_@parameter.Sequence" type="number" name="txt_@parameter.Sequence" value="@defaultValue" class="form-control input-sm @parameter.ControlName" tabindex="@counter" style="width:100%" />
+                                        <script>
+                                            $Sequence = $Sequence + "txt_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                            $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                            $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                        </script>
+                                    }
+
+                                    else if (parameter.Type.ToUpper().CompareTo("DATE") == 0)
+                                    {
+                                        string defaultValue = string.Empty;
+                                        if (parameter.DefaultValue != null && (parameter.DefaultValue.ToUpper().CompareTo("SYSTEMDATE") == 0))
+                                        {
+                                            defaultValue = DateTime.Now.ToShortDateString();
+                                        }
+                                        else if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().CompareTo("PREVIOUSFISCALYEARSTART") == 0)
+                                        {
+                                            defaultValue = "01/01/" + (DateTime.Now.Year - 1);
+
+                                        }
+                                        else if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().CompareTo("PREVIOUSFISCALYEAREND") == 0)
+                                        {
+                                            defaultValue = "12/31/" + (DateTime.Now.Year - 1);
+                                        }
+                                        else if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().Contains("SYSTEMDATE"))
+                                        {
+                                            if (parameter.DefaultValue.Contains("-"))
+                                            {
+                                                defaultValue = (DateTime.Now.AddDays(-1).ToShortDateString());
+                                            }
+                                            else
+                                            {
+                                                defaultValue = (DateTime.Now.AddDays(1).ToShortDateString());
+                                            }
+                                        }
+                                        else if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().Contains("FIRSTDATEOFMONTH"))
+                                        {
+                                            defaultValue = DateTime.Now.Month + "/1/" + DateTime.Now.Year;
+                                        }
+                                        else if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().Contains("LASTDATEOFMONTH"))
+                                        {
+                                            defaultValue = DateTime.Now.Month + "/" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + "/" + DateTime.Now.Year;
+                                        }
+                                        else
+                                        { defaultValue = parameter.DefaultValue; }
+                                        <div class="input-group @if(parameter.StartRange!=null){<text>input-daterange</text>} " style="width: 120px;">
+                                            <input id="txt_@parameter.Sequence" name="txt_@parameter.Sequence" maxlength="10" value="@defaultValue" class="form-control input-sm date-picker @parameter.ControlName" tabindex="@counter" />
+                                            <span class="input-group-addon" id="datepicker-trigger-@parameter.Sequence">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <script>
+                                            $("#datepicker-trigger-@parameter.Sequence").bind("click", function () {
+                                                if ($("#txt_@parameter.Sequence").val() == '') {
+                                                    $("#txt_@parameter.Sequence").val(getDate());
+                                                }
+                                                if ('@parameter.StartRange' != null && '@parameter.StartRange' != "") {
+                                                    ($("#txt_@parameter.Sequence").datepicker("show")).datepicker("setStartDate", '@parameter.StartRange');
+                                                }
+                                                else { $("#txt_@parameter.Sequence").datepicker("show"); }
+                                            });
+
+                                            $Compare = $Compare + "@parameter.ControlName" + "___" + '@parameter.ComparisonControlName' + "##";
+                                            $Sequence = $Sequence + "txt_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                            $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                            $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                        </script>
+                                    }
+                                    else if (parameter.Type.ToUpper().CompareTo("TIME") == 0)
+                                    {
+                                        <div class="input-group" style="width: 200px;">
+                                            @{
+                                                //default to 8:30 AM if the report doesn't say otherwise
+                                                var hours = "8";
+                                                var minutes = "30";
+                                                var am = "AM";
+
+                                                if (!String.IsNullOrEmpty(parameter.DefaultValue))
+                                                {
+                                                    var time = DateTime.Parse(parameter.DefaultValue);
+                                                    hours = int.Parse(time.ToString("hh")).ToString();
+                                                    minutes = time.ToString("mm");
+                                                    am = time.ToString("tt").Replace(".", "");
+                                                }
+                                            }
+
+                                            @Html.DropDownList("Hours", LALoDep.Core.Custom.Utility.Utility.GetHoursList(hours), "", new { id = "time_part1_" + parameter.Sequence, style = "width:54px;padding:3px;", data_oldvalue = hours, tabindex = counter })
+                                            :
+                                            @Html.DropDownList("Minutes", LALoDep.Core.Custom.Utility.Utility.GetMinutesList(minutes), new { id = "time_part2_" + parameter.Sequence, style = "width:54px;padding:3px;", data_oldvalue = minutes, tabindex = counter })
+                                            &nbsp
+                                            @Html.DropDownList("TimeAmPm", LALoDep.Core.Custom.Utility.Utility.GetTimeAmPm(am), new { id = "time_part3_" + parameter.Sequence, style = "width:60px;padding:3px;", data_oldvalue = am, tabindex = counter })
+                                        </div>
+                                        <script>
+                                            $Sequence = $Sequence + "txt_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                            $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                        </script>
+                                                }
+                                                else if (parameter.Type.ToUpper().CompareTo("SELECT") == 0 || parameter.Type.ToUpper().CompareTo("MULTI SELECT") == 0)
+                                                {
+                                                    <div class="checkbox-multiselect" data-required="@parameter.Required">
+                                                        <input type="hidden" value="@parameter.MultiSelectList.Count()" id="multis_length_@parameter.Sequence" />
+                                                        <div class="checkbox-multiselect-header">
+                                                            <input class="selectall" type="checkbox" name="SelectedSources"><span>Select All</span>
+                                                        </div>
+                                                        <ul class="input-group checkbox-multiselect-body">
+                                                            @{int multis_count = 1;}
+                                                            @foreach (var item in parameter.MultiSelectList)
+                                                            {
+                                                            @Html.HiddenFor(m => item.CodeID, new { @id = ("multis_checkbox_idvalue_" + parameter.Sequence + "_" + multis_count) })
+                                                            <li>@Html.CheckBoxFor(m => item.IsSelected, new { @id = ("multis_checkbox_" + parameter.Sequence + "_" + multis_count) })<span>@item.CodeValue</span></li>
+                                                                multis_count++;
+                                                            }
+
+                                                        </ul>
+                                                    </div>
+                                                    <script>
+                                                        $Sequence = $Sequence + "txt_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                                        $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                                    </script>
+                                                                }
+                                                                else if (parameter.Type.ToUpper().CompareTo("COMBO") == 0)
+                                                                {
+                                                                    <select id="ddl_@parameter.Sequence" name="ddl_@parameter.Sequence" class="form-control input-sm @parameter.ControlName" tabindex="@counter">
+                                                                        @if (string.IsNullOrEmpty(parameter.DefaultValue))
+                            {
+                                if (parameter.Caption == "Agency" && Model.AgencyList != null && Model.AgencyList.Count > 1)
+                                {
+                                                                        <option></option>
+                                                                            }
+                                                                            else if (parameter.Caption != "Agency")
+                                                                            {
+                                                                        <option></option>
+                                                                            }
+                                                                        }
+
+                                                                        @if (parameter.Caption == "Attorney")
+                            {
+                                foreach (var item in Model.AttorneyList)
+                                {
+                                                                        <option value="@item.PersonID" @if (item.PersonID == UserEnvironment.UserManager.UserExtended.PersonID) { <text> selected="selected" </text>           }>@item.PersonNameDisplay</option>
+                                                                            }
+                                                                        }
+
+                                                                        @if (parameter.Caption == "Agency")
+                                                                        {
+                                                                            foreach (var item in Model.AgencyList)
+                                                                            {
+                                                                        <option value="@item.AgencyID">@item.AgencyName</option>
+                                                                            }
+                                                                        }
+
+                                                                        @if (parameter.Caption == "Agency Group")
+                                                                        {
+                                                                            foreach (var item in Model.AgencyGroupList)
+                                                                            {
+                                                                        <option value="@item.AgencyGroupID">@item.AgencyGroup</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.Caption == "County")
+                                                                        {
+                                                                            foreach (var item in Model.CountyList)
+                                                                            {
+                                                                        <option value="@item.AgencyCountyID">@item.AgencyCounty</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.Caption == "Region")
+                                                                        {
+                                                                            foreach (var item in Model.RegionList)
+                                                                            {
+                                                                        <option value="@item.AgencyRegionID">@item.AgencyRegion</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.ControlName == "Investigator")
+                                                                        {
+                                                                            foreach (var item in Model.InvestigatorList)
+                                                                            {
+                                                                        <option value="@item.PersonID">@item.PersonNameDisplay</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.Caption == "Code Type")
+                                                                        {
+                                                                            foreach (var item in Model.CodeTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeTypeID">@item.CodeTypeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == null && parameter.Caption == "Report Count Type")
+                                                                        {
+                                                                            foreach (var item in Model.ReportCountTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.Caption == "Designated Day")
+                                                                        {
+                                                                            foreach (var item in Model.DesignatedDayList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1)
+                                                                        {
+                                                                            foreach (var item in Model.GenderList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 30)
+                                                                        {
+                                                                            foreach (var item in Model.DepartmentList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 10)
+                                                                        {
+                                                                            foreach (var item in Model.HearingTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 78)
+                                                                        {
+                                                                            foreach (var item in Model.ServicePlanningAreaList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 81)
+                                                                        {
+                                                                            foreach (var item in Model.ReferralSourceList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1000)
+                                                                        {
+                                                                            foreach (var item in Model.ReportTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1010)
+                                                                        {
+                                                                            foreach (var item in Model.RoleTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1020)
+                                                                        {
+                                                                            foreach (var item in Model.ClientTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1030)
+                                                                        {
+                                                                            foreach (var item in Model.QuarterList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1040)
+                                                                        {
+                                                                            foreach (var item in Model.ReportTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 1050)
+                                                                        {
+                                                                            foreach (var item in Model.GroupingList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 22)
+                                                                        {
+                                                                            foreach (var item in Model.AllegationList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 68)
+                                                                        {
+                                                                            foreach (var item in Model.AllegationFindingList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 145)
+                                                                        {
+                                                                            foreach (var item in Model.ReportCountTypeList)
+                                                                            {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 21)
+                            {
+                                foreach (var item in Model.ARTypeList)
+                                {
+                                                                        <option value="@item.CodeID">@item.CodeValue</option>
+                                                                            }
+                                                                        }
+                                                                        @if (parameter.CodeType == 700)
+                            {
+                                foreach (var item in Model.SortBy)
+                                {
+                                                                        <option value="@item.CodeID" @if (item.CodeValue == "Petition File Date") { <text> selected="selected" </text>          }>@item.CodeValue</option>
+                                                                            }
+                                                                        }
+
+                                                                        @if (parameter.Type.Equals("NEW COMBO"))//&& (Model.ReportID == 133 || Model.ReportID == 140 || Model.ReportID== 136 || Model.ReportID == 139)
+                                                                        {
+
+                                                                            if (parameter.Caption == "Agency" && Model.ComboItemList != null && Model.ComboItemList.Count() > 1)
+                                                                            {
+                                                                                <option></option>
+                                                                            }
+
+                                                                            foreach (var option in parameter.ComboItemList)
+                                                                            {
+
+
+                                                                                if (!parameter.ComboSelectedValue.IsNullOrEmpty())
+                                                                                {
+                                                                        <option value="@option.Value" @((parameter.ComboSelectedValue != null && parameter.ComboSelectedValue.Equals(option.Value)) ? "selected" : "")>@option.Text</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                        <option value="@option.Value" @((parameter.DefaultValue != null && parameter.DefaultValue.Equals(option.Value)) ? "selected" : "")>@option.Text</option>
+                                                                                }
+                                                                            }
+
+
+                                                                        }
+                                                                    </select>
+                                                                    <script>
+                                                                        $Sequence = $Sequence + "ddl_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                                                        $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                                                        $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                                                    </script>
+                                                                }
+                                                                else if (parameter.Type.ToUpper().CompareTo("NEW COMBO") == 0)
+                                                                {
+                                                                   
+                                                                    <select id="ddl_@parameter.Sequence" name="ddl_@parameter.Sequence" class="form-control input-sm @parameter.ControlName" tabindex="@counter" data-selected="@(parameter.ComboSelectedValue ?? parameter.DefaultValue)">
+                                                                        
+                                                                          @if (string.IsNullOrEmpty(parameter.DefaultValue))
+                                                                        {
+                                                                       
+                                                                            if (parameter.Caption == "Agency" && parameter.ComboItemList != null && parameter.ComboItemList.Count() > 1)
+                                                                            {
+                                                                                <option></option>
+                                                                            }
+                                                                            else if (parameter.Caption != "Agency" && parameter.ComboItemList != null && parameter.ComboItemList.Count() > 1) 
+                                                                            {
+                                                                                <option></option>
+                                                                              }
+                                                                          }
+                                                                          else if (parameter.Caption != "Agency" && parameter.ComboItemList != null && parameter.ComboItemList.Count() > 1)
+                                                                          {
+                                                                            <option></option>
+                                                                          }
+
+                                                                        @if (parameter.Type.Equals("NEW COMBO"))//&& (Model.ReportID == 133 || Model.ReportID == 140 || Model.ReportID== 136 || Model.ReportID == 139)
+                                                                        {
+
+                                                                            if (parameter.ComboItemList.Count() == 1)
+                                                                            {
+                                                                                parameter.ComboSelectedValue = parameter.ComboItemList.FirstOrDefault().Value;
+                                                                            }
+
+                                                                            foreach (var option in parameter.ComboItemList)
+                                                                            {
+
+
+                                                                                if (!parameter.ComboSelectedValue.IsNullOrEmpty())
+                                                                                {
+                                                                                    <option value="@option.Value" @((parameter.ComboSelectedValue != null && parameter.ComboSelectedValue.Equals(option.Value)) ? "selected" : "")>@option.Text</option>
+                                                                                }
+                                                                                
+                                                                                else
+                                                                                {
+                                                                                    <option value="@option.Value" @((parameter.DefaultValue != null && parameter.DefaultValue.Equals(option.Value)) ? "selected" : "")>@option.Text</option>
+                                                                                                                            }
+                                                                            }
+
+
+                                                                        }
+                                                                    </select>
+                                                                    <script>
+                                                                        $Sequence = $Sequence + "ddl_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                                                        $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                                                        $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                                                    </script>
+                                                                }
+                                                                else if (parameter.Type.ToUpper().CompareTo("CHECKBOX") == 0)
+                                                                {
+
+                                                                    <input id="chk_@parameter.Sequence" name="chk_@parameter.Sequence" type="checkbox" class="form-control input-sm @parameter.ControlName" tabindex="@counter" @if (parameter.DefaultValue != null && parameter.DefaultValue.ToUpper().CompareTo("CHECKED") == 0) { <text> checked="checked" </text>                } />
+
+                                                                    <script>
+                                                                        $Sequence = $Sequence + "chk_@parameter.Sequence" + "___" + '@parameter.Required' + "###";
+                                                                        $requiredIfEnterd = $requiredIfEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfEntered' + "###";
+                                                                        $requiredIfNotEnterd = $requiredIfNotEnterd + "@parameter.ControlName" + "___" + '@parameter.RequiredIfNotEntered' + "###";
+                                                                    </script>
+                                                                }
+                                    @{counter = counter + 1;
+                                    }
+                                </div>
+                            </div>
+                                                }
+                                            }
+                                        }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center @Model.ParameterDefinitionList.Count">
+        <button id="generate" type="submit" class="btn btn-primary v-bottom default" tabindex="@counter">Generate</button>
+        <button id="back" type="submit" class="btn btn-default v-bottom" tabindex="@counter"><u>B</u>ack</button>
+    </div>
+
+}
+@{
+
+    var count = Model.ParameterDefinitionList.Count;
+}
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $AttorneyID = null;
+        $AssignStartDate = null;
+        $(window).on("keydown", handleHotkey);
+
+        function handleHotkey(e) {
+            if (!e.ctrlKey) return;
+            switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                case 'b':
+                    $('#back').trigger('click');
+                    e.preventDefault();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $('#back').click(function () {
+
+            if ('@ViewBag.PageID' == 1236) {
+                window.location.href = "/Inquiry/Reports?selectedReport=@Model.ReportID.ToEncrypt()";
+            }
+            else {
+                window.location.href = "@((Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.Contains("Inquiry/Reports")) ? "/Inquiry/Reports?selectedReport=" + Model.ReportID.ToEncrypt() : Request.UrlReferrer != null?Request.UrlReferrer.AbsoluteUri: "/Inquiry/Reports"  )";
+            }
+        });
+        $('#generate').click(function (e) {
+            e.preventDefault();
+            var flag=true;
+            $('.checkbox-multiselect[data-required="1"]').each(function(){
+
+                $this=$(this);
+                if($this.find('.checkbox-multiselect-body input[type="checkbox"]:checked').length==0){
+                    Notify($this.closest('.form-group').find('.control-label').html() + ' is required', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    flag=false;
+                    return false;
+                }
+            })
+            if(!flag)
+                return false;
+            var validate = checkRequiredFieldValidation();
+            if (validate == 'true') {
+                var requiredIfEntered = checkRequiredIfEnteredValidation();
+                if (requiredIfEntered) {
+                    var requiredIfNotEntered = checkRequiredIfNotEnteredValidation();
+                    if (requiredIfNotEntered) {
+                        var compareDate = checkDateValidation();
+                        if (compareDate) {
+                            var reportParameterViewModel = getData();
+                            $.ajax({
+                                type: "POST",
+                                url: '/Inquiry/ReportParameter',
+                                data: { 'reportParametersViewModel': reportParameterViewModel },
+                                dataType: 'json',
+                                success: function (returnValue) {
+                                    if (!(returnValue.errorMessage)) {
+
+                                        var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                                        $.download($('#hdnCurrentSessionGuidPath').val() + '/Inquiry/Download', 'file=' + returnValue.FileName, 'GET', _target);
+
+                                        //   window.location = '/Inquiry/Download?file=' + returnValue.FileName;
+                                    }
+                                    else {
+
+                                        Notify(returnValue.errorMessage, 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                                    }
+                                },
+                                error: function (returnValue) {
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else {
+                Notify($('#lbl_' + (validate)).html() + ' is required', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                return false;
+            }
+        });
+        function getData() {
+            var reportParameterViewModel = {
+                'ParameterDefinitionList': [],
+                "StartDate": $AssignStartDate,
+                'ReportID': '@Model.ReportID',
+                'ReportSourceDocumentName': '@Model.ReportSourceDocumentName',
+                'ReportSourceStoredProcedureName': '@Model.ReportSourceStoredProcedureName',
+                'ReportDisplayName': '@Model.ReportDisplayName',
+                'ExportOption': $('#ExportOption').val()
+            }
+            for ($count1 = 1; $count1 <= @Html.Raw(Model.ParameterDefinitionList.Count); $count1++) {
+                $parameterValue = '';
+                $count=$('#hdn_' +$count1).val();
+                if ($('#hdnType_' + $count).length) {
+                    if ($('#hdnType_' + $count).val() == "COMBO" || $('#hdnType_' + $count).val() == "NEW COMBO") {
+                        $parameterValue = $('#ddl_' + $count).val();
+                        $parameterHeaderValue = $('#ddl_' + $count).find('option:selected').text();
+                    }
+                    else if ($('#hdnType_' + $count).val() == "CHECKBOX") {
+                        if ($('#chk_' + $count).prop('checked')) {
+                            $parameterValue = "1";
+                            $parameterHeaderValue = "Yes";
+                        }
+                        else {
+                            $parameterValue = "0";
+                            $parameterHeaderValue = "No";
+                        }
+                    }
+                    else if ($('#hdnType_' + $count).val() == "TIME") {
+                        if ($('#time_part1_' + $count).val() && $('#time_part2_' + $count).val() && $('#time_part3_' + $count).val()) {
+                            var fulltime = $('#time_part1_' + $count).val() + ":" + $('#time_part2_' + $count).val() + " " + $('#time_part3_' + $count).val();
+                            $parameterValue = fulltime;
+                            $parameterHeaderValue = fulltime;
+                        }
+                        else {
+                            $parameterHeaderValue = "NullTime";
+                        }
+                    }
+                    else if ($('#hdnType_' + $count).val() == "SELECT" || $('#hdnType_' + $count).val() == "MULTI SELECT") {
+                        var multiSelectList = [];
+                        $SequenceParameter = 0;
+                        if ($('#hdnSequence_' + $count).val() != undefined) {
+                            $SequenceParameter = $('#hdnSequence_' + $count).val();
+                        }
+                        for ($item = 1; $item <= $("#multis_length_" + $SequenceParameter).val() ; $item++) {
+                            multiSelectList.push({
+                                'CodeID': $("#multis_checkbox_idvalue_" + $SequenceParameter + "_" + $item).val(),
+                                'IsSelected': $("#multis_checkbox_" + $SequenceParameter + "_" + $item).prop('checked')
+                            });
+                        }
+
+                        reportParameterViewModel.ParameterDefinitionList.push({
+                            'Caption': $('#lbl_' + $count).html(),
+                            'Sequence': $SequenceParameter,
+                            'MultiSelectList': multiSelectList
+                        });
+                    }
+                    else {
+                        $parameterValue = $('#txt_' + $count).val();
+                        $parameterHeaderValue = $parameterValue;
+                    }
+                    $SequenceParameter = 0;
+                    if ($('#hdnSequence_' + $count).val() != undefined) {
+                        $SequenceParameter = $('#hdnSequence_' + $count).val();
+                    }
+                    if ($('#hdnType_' + $count).val() != "SELECT") {
+                        reportParameterViewModel.ParameterDefinitionList.push({
+                            'Caption': $('#lbl_' + $count).html(),
+                            'Sequence': $SequenceParameter,
+                            'Value': $parameterValue,
+                            'HeaderValue': $parameterHeaderValue
+                        });
+                    }
+                }
+            }
+
+            return reportParameterViewModel;
+
+        }
+        $(document).ready(function () {
+            $(window).on("keydown", handleHotkey);
+
+            $(".checkbox-multiselect-header .selectall").change(function () {
+                if (this.checked) {
+                    $(this).parent().siblings('ul').find('input').prop('checked', true);
+                }
+                else {
+                    $(this).parent().siblings('ul').find('input').prop('checked', false);
+                }
+            });
+
+        });
+
+        $errorCount = parseInt(0);
+        function checkRequiredFieldValidation() {
+            $SequenceReq = $Sequence.split("###");
+            for (var i = 0; i < $SequenceReq.length; i++) {
+                if ($SequenceReq[i] != "") {
+                    $controlReqID = $SequenceReq[i].split("___");
+                    if ($controlReqID.length >= 2) {
+                        $require = $controlReqID[1];
+
+                        if ($require == 1) {
+                            console.log($controlReqID[0])
+                            if ($('#' + $controlReqID[0]).val() == "") {
+                                var labelNumber = $SequenceReq[i].split("_");
+                                return labelNumber[1];
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
+            return 'true';
+        }
+        function checkDateValidation() {
+            $CompareReq = $Compare.split("##")
+            for (var i = 0; i < $Compare.length; i++) {
+                if ($CompareReq[i] != "" && $CompareReq[i] != undefined) {
+                    $datecompareParameters = $CompareReq[i].split("___");
+                    if ($datecompareParameters.length >= 2) {
+                        if ($datecompareParameters[1] != "") {
+                            if ($("." + $datecompareParameters[0]).val == "") {
+                                return true;
+                            }
+                            else {
+                                var dateComparisonResult = compareDates($("." + $datecompareParameters[1]).val(), $("." + $datecompareParameters[0]).val());
+                                if (!dateComparisonResult) {
+                                    Notify($('.lbl_' + $datecompareParameters[0]).html() + ' must be  greater than ' + $('.lbl_' + $datecompareParameters[1]).html(), 'bottom-right', '4000', 'danger', 'fa-warning', true);
+
+                                    return false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+
+        function checkRequiredIfEnteredValidation() {
+            $requiredIfEnterdReq = $requiredIfEnterd.split("###")
+            {
+                for (var i = 0; i < $requiredIfEnterd.length; i++)
+                    if ($requiredIfEnterdReq[i] != "" && $requiredIfEnterdReq[i] != undefined) {
+                        $requiredIfEnterdReqParameters = $requiredIfEnterdReq[i].split("___");
+                        if ($requiredIfEnterdReqParameters.length >= 2) {
+                            if ($requiredIfEnterdReqParameters[1] != "") {
+                                if (($('.' + $requiredIfEnterdReqParameters[0]).val() == "") && ($('.' + $requiredIfEnterdReqParameters[1]).val() != "")) {
+                                    Notify($(".lbl_" + $requiredIfEnterdReqParameters[0]).html() + " is required if " + $('.lbl_' + $requiredIfEnterdReqParameters[1]).html() + " is entered", 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                                    return false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+            }
+            return true;
+        }
+
+        function checkRequiredIfNotEnteredValidation() {
+            if ($('#ReportID').val() == '108') {
+                /*AgencyCountyID.value)) = 0 AND len(trim(frmProcess.AgencyID
+    AgencyCountyID.value)) = 0 AND len(trim(frmProcess.AgencyGroupID
+    AgencyGroupID.value)) = 0 AND len(trim(frmProcess.AgencyID*/
+
+                if ($('.AgencyCountyID').val() == '' && $('.AgencyID').val() == '' && $('.AgencyGroupID').val() == '') {
+                    Notify("Agency Group is required", 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    $('.AgencyGroupID').focus()
+                    return false;
+                }
+                if ($('.AgencyCountyID').val() == '' && $('.AgencyGroupID').val() == '' && $('.AgencyID').val() == '') {
+                    Notify("Agency is required", 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    $('.AgencyID').focus()
+                    return false;
+                }
+                if ($('.AgencyGroupID').val() == '' && $('.AgencyID').val() == '' && $('.AgencyCountyID').val() == '') {
+                    Notify("Agency County is required", 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    $('.AgencyCountyID').focus()
+                    return false;
+                }
+
+                return true;
+            }
+            $requiredIfNotEnterdReq = $requiredIfNotEnterd.split("###")
+            {
+                for (var i = 0; i < $requiredIfNotEnterdReq.length; i++)
+                    if ($requiredIfNotEnterdReq[i] != "" && $requiredIfNotEnterdReq[i] != undefined) {
+                        $requiredIfNotEnterdReqParameters = $requiredIfNotEnterdReq[i].split("___");
+
+                        $multipleParameters = $requiredIfNotEnterdReqParameters[1].split(" AND ")
+                        var notificationMessage = "";
+                        var notequalNotification = ""
+                        if ($multipleParameters.length >= 2) {
+                            for (var k = 0; k < $multipleParameters.length; k++) {
+                                $notEqualValidation = $multipleParameters[k].split("!=")
+                                {
+                                    if ($notEqualValidation >= 2) {
+                                        if (($('.' + $notEqualValidation[0]).val() != $notEqualValidation[1])) {
+                                            $parameter = $('.' + $notEqualValidation[0]).val();
+                                            notequalNotification = notificationMessage + ($(".lbl_" + $multipleParameters[k]).html()) + "not equals to " + $parameter;
+                                        }
+
+                                    }
+
+                                }
+
+                                if (($('.' + $requiredIfNotEnterdReqParameters[0]).val().trim() == "") && ($('.' + $multipleParameters[k]).val().trim() == "")) {
+
+                                    if (k == $multipleParameters.length - 1) {
+                                        notificationMessage = notificationMessage + ($(".lbl_" + $multipleParameters[k]).html());
+                                    }
+                                    else if (k == $multipleParameters.length - 2) {
+                                        notificationMessage = notificationMessage + ($(".lbl_" + $multipleParameters[k]).html()) + " and ";
+                                    }
+                                    else {
+                                        notificationMessage = notificationMessage + ($(".lbl_" + $multipleParameters[k]).html()) + ", ";
+                                    }
+
+                                }
+                                else {
+
+
+                                    return true;
+                                    break;
+                                    break;
+                                }
+                            }
+
+                            if (notificationMessage != "" && notequalNotification != "") {
+                                notificationMessage = $(".lbl_" + $requiredIfNotEnterdReqParameters[0]).html() + " is required if " + notificationMessage + " is not entered and " + notequalNotification;
+                            }
+                            else if (notificationMessage != null) {
+                                notificationMessage = $(".lbl_" + $requiredIfNotEnterdReqParameters[0]).html() + " is required if " + notificationMessage + " is not entered";
+                            }
+                            else {
+                                notificationMessage = notequalNotification;
+                            }
+                            notificationMessage =
+                            Notify(notificationMessage, 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                            return false;
+                            break;
+                        }
+                        else {
+                            if ($requiredIfNotEnterdReqParameters.length >= 2) {
+                                if ($requiredIfNotEnterdReqParameters[1] != "") {
+                                    if (($('.' + $requiredIfNotEnterdReqParameters[0]).val() == "") && ($('.' + $requiredIfNotEnterdReqParameters[1]).val() == "")) {
+                                        Notify($(".lbl_" + $requiredIfNotEnterdReqParameters[0]).html() + " is required if " + $('.lbl_' + $requiredIfNotEnterdReqParameters[1]).html() + " is not entered", 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                                        return false;
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+            }
+            return true;
+        }
+
+        function compareDates(start, end) {
+            var startDate = new Date(start);
+            var endDate = new Date(end);
+            if (endDate < startDate) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function getDate(d) {
+            d = (d || new Date());
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            return (month < 10 ? '0' : '') + month + '/' +
+                   (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+        }
+    </script>
+}
+
+
+
+
+

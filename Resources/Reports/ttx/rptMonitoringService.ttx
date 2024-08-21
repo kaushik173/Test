@@ -1,0 +1,6 @@
+RFDID	Number		175
+FirstName	String	50	Mom
+LastName	String	50	Gold
+ServiceType	String	100	Anger Management
+ServiceStatus	String	100	Services Begun
+StatusDate	DateTime		12/01/2000

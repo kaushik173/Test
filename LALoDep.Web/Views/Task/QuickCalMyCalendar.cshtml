@@ -1,0 +1,574 @@
+﻿@model LALoDep.Models.Task.QuickCalMyCalendarViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Quick Calendar";
+    var fileRootPath = System.Web.Configuration.WebConfigurationManager.AppSettings["FileUploadRootPath"];
+
+    var isEditAdvisementsPermission = LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessToSecurity(LALoDep.Custom.Security.SecurityToken.ViewAdvisements);
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickAddCaseSearch-form", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.HearingDate, "Hearing Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                <span class="input-group-addon dateminus" style="width:auto !important;">
+                                    <i class="fa fa-minus"></i>
+                                </span>
+                                @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 7 })
+                                <span class="input-group-addon dateplus" style="width:auto !important;">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PendingHearingsOnly, "Pending Hearings Only", new { @class = "control-label" })<br />
+                            @if (Model.PendingHearingsOnly == 1)
+                            {
+                                <input type="checkbox" id="PendingHearingsOnly" checked="checked" tabindex="7" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="PendingHearingsOnly" tabindex="7" />
+                            }
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AttorneyPersonID, "Calendar For", new { @class = "control-label" })<br />
+                            @Html.DropDownListFor(m => m.AttorneyPersonID, Model.AttorneyList, new { @class = "form-control input-sm ", tabindex = 7 })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    @if (Model.AdvisementList.Count > 0)
+    {
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div  class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Writ/Appeal Notices Due (@Model.AdvisementList.Count)</span>
+
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+                    <div class="">
+
+
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblWrit"  data-height="@(Model.AdvisementList[0].MaxRowsToDisplay*26)">
+
+                            <thead>
+                                <tr>
+
+                                    <th>Due Date</th>
+                                    <th>JCATS #</th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>Client</th>
+                                    <th>Case Name</th>
+
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+                                @foreach (var item in Model.AdvisementList)
+                                {
+                                    <tr class="trRecords">
+
+                                        <td>
+                                            @if (item.AlertFlag == 1)
+                                        {
+                                            <span style="color:red">@item.DueDate</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.DueDate</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/Case/Advisements/?caseId=@item.CaseID.ToEncrypt()" target="_blank">@item.CaseNumber</a>
+
+
+                                    </td>
+                                    <td>
+                                        @item.TypeDisplay
+                                    </td>
+                                    <td>
+                                        @item.Client
+                                    </td>
+                                    <td>
+                                        @item.CaseName
+                                    </td>
+                                </tr>
+
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult">Search Result</span>
+                <div class="widget-buttons">
+                    <button type="button" id="btnShowAllHearing" class="btn btn-labeled btn-default btn hidden " data-type="@Model.ShowAll">@(Model.ShowAll == "0" ? "Show All Hearings" : "Hide Resulted Hearings")</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @if (Model.HearingList.Count > 0)
+                {
+                    var hearingGroup = Model.HearingList.Select(o => o.HearingID).Distinct();
+                    <div class="">
+                        @foreach (var hearingId in hearingGroup)
+                        {
+                            var clientName = "";
+                            var firstRow = true;
+                            var hearingFirstRow = Model.HearingList.FirstOrDefault(o => o.HearingID == hearingId);
+                            var list = Model.HearingList.Where(o => o.HearingID == hearingId).ToList();
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                                @if (hearingFirstRow != null)
+                                {
+                                    <thead>
+                                        <tr>
+                                            @if (ViewBag.ShowClientPresentReadyFlag != null && ViewBag.ShowClientPresentReadyFlag == "1")
+                                            {
+                                                <th title="Client Present"><span title="Client Present" style="cursor:pointer">Present</span></th>
+                                                <th>Ready</th>
+
+                                            }
+                                            <th>CAL #</th>
+                                            <th width="25%">Case Name: @hearingFirstRow.CaseName </th>
+                                            <th width="15%">
+                                                Jcats #
+                                                <a href="/Case/Main/@hearingFirstRow.CaseID.ToEncrypt()" title="Routes to Main page">@hearingFirstRow.CaseNumber</a>
+                                            </th>
+                                            <th width="15%"><a href="/Task/CalendarAppearanceSheet/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()" title="Routes to Appearance Sheet">@hearingFirstRow.HearingType</a></th>
+                                            <th width="15%">@hearingFirstRow.TimeDisplay</th>
+                                            <th width="180px">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">Action <i class="fa fa-angle-down"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="/Task/CalendarAppearanceSheet/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Appearance Sheet</a></li>
+                                                        <li><a href="/Task/CalendarAppearanceNotes/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Appearance Notes</a></li>
+                                                        <li><a href="/Task/CalendarActivitySheet/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Activity Sheet</a></li>
+                                                        <li><a href="/Task/CalendarMostRecentAR/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Most Recent AR</a></li>
+                                                        <li><a href="/Task/CalendarAttachedFiles/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Attached Files</a></li>
+                                                        @if (isEditAdvisementsPermission)
+                                                        {
+                                                            <li>
+                                                                <a href="/Case/Advisements/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">Advisements</a>
+                                                            </li>
+                                                        }
+                                                        <li><a href="/Task/CalendarToDo/@hearingFirstRow.HearingID.ToEncrypt()?caseId=@hearingFirstRow.CaseID.ToEncrypt()">To Do</a></li>
+                                                    </ul>
+
+                                                </div>
+
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                }
+                                <tbody>
+                                    @foreach (var hearing in list)
+                                    {
+                                        <tr class="trRecords">
+                                            @if (ViewBag.ShowClientPresentReadyFlag != null && ViewBag.ShowClientPresentReadyFlag == "1")
+                                            {
+
+
+                                                <td>
+                                                    @if (firstRow)
+                                                    {
+                                                        <input type="checkbox" tabindex="5" class="form-control input-sm chkCP" data-id="@hearing.HearingID" value="@hearing.CalendarNumber" data-old-value-on-pageload="@(hearing.ClientPresentFlag.Value==1?"true":"false")" @(hearing.ClientPresentFlag.Value == 1 ? "checked='checked'" : "") />
+
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (firstRow)
+                                                    {
+                                                        <input type="checkbox" tabindex="5" class="form-control input-sm chkReady" data-id="@hearing.HearingID" value="@hearing.CalendarNumber" data-old-value-on-pageload="@(hearing.HearingReadyFlag.Value==1?"true":"false")" @(hearing.HearingReadyFlag.Value == 1 ? "checked='checked'" : "") />
+
+                                                    }
+                                                </td>
+
+                                            }
+                                            <td>
+                                                @if (firstRow)
+                                                {
+                                                    <input type="text" maxlength="50" tabindex="5" style="width:50px" class="form-control input-sm txtCalNumber" data-id="@hearing.HearingID" value="@hearing.CalendarNumber" data-old-value-on-pageload="@hearing.CalendarNumber" />
+
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (hearing.Client != clientName)
+                                                {
+                                                    clientName = hearing.Client;
+                                                    <span>@hearing.Client</span>
+                                                }
+                                            </td>
+                                            <td>@hearing.PetitionDocketNumber</td>
+                                            <td>
+                                                @if (firstRow)
+                                                {
+                                                    <span>
+                                                        @Html.Raw(string.IsNullOrEmpty(hearing.HearingResult) ? "<span style=\"color:red\">Result Needed</span>" : hearing.HearingResult)
+                                                    </span>
+                                                }
+
+
+                                            </td>
+                                            <td>
+                                                @if (firstRow)
+                                                {
+                                                    <span>
+                                                        @hearing.AssignedAttorney
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td style="width:95px !important;">
+                                                @if (firstRow)
+                                                {
+                                                    <a href="javascript:;" data-hearingid="@hearing.HearingID.ToEncrypt()" class="attached-docs">@hearing.AttachedFileCountDisplay</a>
+                                                    if (hearing.AttachedFileCount == 1)
+                                                    {
+                                                        var filePath = @hearing.AttachedFilePath;
+                                                        <a href="/Inquiry/DownloadToDoFile?path=@filePath&quickcalendar=true&HearingDate=@(Request.QueryString["HearingDate"])" class="auto-download pull-right">@hearing.AttachedFileDisplay</a>
+                                                    }
+                                                    @*else if (hearing.AttachedFileCount > 1)
+                                                        {
+                                                            <a href="javascript:;" data-hearingid="@hearing.HearingID.ToEncrypt()" class="attached-docs">@hearing.AttachedFileCount Docs</a>
+                                                        }*@
+
+
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        firstRow = false;
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center">No records found.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnAddCase" type="submit" class="btn btn-primary v-bottom " tabindex="9">Add New Case</button>
+        <button id="btnAddNewHearing" type="submit" class="btn btn-default v-bottom " tabindex="10">Add New Hearing</button>
+        <button id="btnCaseQuickSearch" type="submit" class="btn btn-default v-bottom " tabindex="11">Case # Quick Search </button>
+        <button id="btnPrintAppearanceSheet" type="submit" class="btn btn-default v-bottom hidden" tabindex="12">Print Appearance Sheet </button>
+        <button id="btnSaveAndReturn" type="submit" class="btn btn-default v-bottom " tabindex="13">Save/Return </button>
+
+
+    </div>
+}
+<style>
+    .dataTables_info {
+        display: none !important;
+    }
+
+    #tblWrit_wrapper .col-sm-12 {
+        padding: 0px;
+    }
+</style>
+@section scripts{
+    <script type="text/javascript">
+        
+        $('#tblWrit').DataTable({
+            "scrollY": $('#tblWrit').data('height') + "px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false, "ordering": false
+        });
+        var errorMessage = "@TempData["ErrorMessage"]";
+        if (errorMessage != "") {
+            notifyDanger(errorMessage);
+        }
+        $("#btnSaveAndReturn").on("click", function () {
+
+            SaveCalNumber();
+        });
+        function SaveCalNumber() {
+            var _ids = '';
+            var _cpIds = '';
+            var _readyIds = '';
+            $('.txtCalNumber').each(function () {
+                if ($(this).IsValueChanged()) {
+                    if (_ids != '') {
+                        _ids += ','
+                    }
+                    _ids += $(this).data('id') + "|" + $(this).val()
+                }
+
+
+            });
+            $('.chkCP').each(function () {
+                if ($(this).IsCheckboxChanged()) {
+                    if (_cpIds != '') {
+                        _cpIds += ','
+                    }
+                    _cpIds += $(this).data('id') + "|" + ($(this).is(':checked') ? '1' : '0')
+                }
+
+
+            });
+            $('.chkReady').each(function () {
+                if ($(this).IsCheckboxChanged()) {
+                    if (_readyIds != '') {
+                        _readyIds += ','
+                    }
+                    _readyIds += $(this).data('id') + "|" + ($(this).is(':checked') ? '1' : '0')
+                }
+
+
+            });
+            if (_ids != '' || _cpIds != '' || _readyIds != '') {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/QuickCalMyCalendar',
+                    data: { ids: _ids, cpIds: _cpIds, readyIds: _readyIds },
+                    success: function (result) {
+
+                        if (result.Status === "Done") {
+                            document.location.href = document.location.href;
+
+                        } else {
+                            document.location.href = result.URL;
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+
+
+
+
+
+        }
+
+
+
+
+
+        var saveHearingCaseFiles = function () {
+            var data = []
+
+            for (var indx = 0; indx < $(".on-hearing", "#pageModal").length; indx++) {
+                var $this = $(".on-hearing", "#pageModal").eq(indx);
+                if ($this.IsCheckboxChanged()) {
+                    data.push({
+                        CaseFileID: $this.data("casefileid"),
+                        HearingID: $this.data("hearingid"),
+                        HearingCaseFileID: $this.data('hearing-case-file-id'),
+                        Selected: ($this.is(":checked") ? 1 : 0)
+                    });
+                }
+            }
+
+            if (data.length > 0) {
+                $.ajax({
+                    method: "POST", data: JSON.stringify(data), contentType: 'application/json; charset=utf-8',
+                    url: '@Url.Action(MVC.Task.SaveAttachedFiles())',
+                    success: function (result) {
+                        if (result.IsSuccess) {
+                            notifySuccess("File Saved successfully");
+                            CloseModal();
+                            Search();
+                        }
+                    }
+                });
+            }
+
+        }
+
+        $(".dateminus").on("click", function () {
+
+            $('#HearingDate').val(moment($('#HearingDate').val()).add(-1, 'days').format('MM/DD/YYYY'))
+            $('#HearingDate').trigger('blur');
+        });
+        $(".dateplus").on("click", function () {
+
+            $('#HearingDate').val(moment($('#HearingDate').val()).add(1, 'days').format('MM/DD/YYYY'))
+            $('#HearingDate').trigger('blur');
+        });
+        $("body").on("click", '#btnShowAllHearing', function () {
+            if ($(this).data('type') == '0') {
+                $(this).data('type', '1');
+                $(this).text('Hide Resulted Hearings');
+            }
+            else {
+                $(this).data('type', '0');
+                $(this).text('Show All Hearings');
+            }
+            Search();
+        });
+        $("#btnAddCase").on("click", function () {
+            document.location.href = '/Task/QuickAddCaseSearch'
+
+
+        });
+        $("#btnCaseQuickSearch").on("click", function () {
+            document.location.href = '/Case/Search', 'newSession=True&caseTextbox=True'
+
+
+        });
+        $("#btnPrintAppearanceSheet").on("click", function () {
+            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+            var data = {};
+            $.download($('#hdnCurrentSessionGuidPath').val() + '/Task/PrintAppearanceSheet', data, "POST", _target);
+
+        });
+        $('#PendingHearingsOnly').change(function () {
+            Search();
+        });
+
+        $('#AttorneyPersonID').change(function () {
+            Search();
+        });
+
+        $('#HearingDate').blur(function () {
+
+            Search();
+        });
+        $('#HearingDate').keypress(function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                Search();
+                return false;
+            }
+        });
+
+
+        $(document).on("click", ".attached-docs", function () {
+            var hearingId = $(this).data("hearingid");
+            $.ajax({
+                method: "POST", data: { id: hearingId },
+                url: '@Url.Action(MVC.Task.GetAttachedFiles())',
+                success: function (result) {
+                    OpenModal(result, "Attached Files");
+
+                    setTimeout(function () {
+                        var calHeight = $("#pageModal .modal-body").height() - 170;
+                        $("#fileResult").css({ maxHeight: calHeight + "px" });
+                    }, 700);
+
+                    $('#pageModal').on("click", "#btnShowAll", function () {
+                        $(this).hide();
+                        $("#btnShowTop5", "#pageModal").show();
+                        $(".hideme", "#pageModal").removeClass("hide");
+
+                    });
+
+                    $('#pageModal').on("click", "#btnShowTop5", function () {
+                        $(this).hide();
+                        $("#btnShowAll", "#pageModal").show();
+                        $(".hideme", "#pageModal").addClass("hide");
+                    });
+                }
+            });
+
+        });
+        $('body').on('click', '.sfile-download', function (e) {
+            e.preventDefault();
+            var data = {
+                filePath: $(this).data('url'),
+                fileName: $(this).text(),
+            }
+
+            $.download('/Case/DownloadSharePointFile?fileName=' + $(this).text() + '&filePath=' + $(this).data('url') + '&caseId=' + $(this).data('caseid'), data, "POST");
+        });
+        function Search() {
+            $('#loading').show();
+            var $form = $('#QuickAddCaseSearch-form');
+
+            IPadKeyboardFix();
+
+            $.get('/Task/QuickCalMyCalendar?HearingDate=' + $('#HearingDate').val() + '&PendingHearingsOnly=' + ($('#PendingHearingsOnly').is(':checked') ? 1 : 0) + '&AttorneyPersonID=' + $('#AttorneyPersonID').val() + '&ShowClientPresentReadyFlag=' + $('#AttorneyPersonID').find('option:selected').attr('data-flag'), function (result) {
+                var html = $(result).find('#divSearchResult').html();
+                $('#divSearchResult').html(html);
+                $('#loading').hide();
+                $('#tblWrit').DataTable({
+                    "scrollY": $('#tblWrit').data('height') + "px",
+                    "scrollCollapse": true,
+                    "paging": false,
+                    "searching": false, "ordering": false
+                });
+                ShowPrintButton();
+            });
+        }
+        function ShowPrintButton() {
+
+            if (moment($('#HearingDate').val()) >= moment() && $('.trRecords').length > 0) {
+                $('#btnPrintAppearanceSheet').removeClass('hidden');
+            } else {
+                $('#btnPrintAppearanceSheet').addClass('hidden');
+            }
+
+        }
+
+        $("#btnAddNewHearing").on("click", function () {
+            OpenPopup('/Task/QuickCalAddNewHearing/' + $("#AttorneyPersonID").val(), 'Add New Hearing');
+        });
+
+        $('#AttorneyPersonID option').each(function () {
+            $(this).attr('data-flag', $(this).text().split('|')[0]);
+
+            $(this).text($(this).text().split('|')[1]);
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>

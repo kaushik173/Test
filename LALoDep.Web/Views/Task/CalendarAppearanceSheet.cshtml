@@ -1,0 +1,770 @@
+﻿@model  LALoDep.Models.Task.AppearanceSheetViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Appearance Sheet";
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+
+
+<div class="row" data-name="Child">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AppearanceSheet", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Hearing
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="row">
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-4">
+                            @Html.HiddenFor(o => o.WorkHoursRequiredFlag)
+                            @Html.HiddenFor(o => o.DataValidation_RequireHearingHoursFlag)
+                            @Html.LabelFor(m => m.OfficerPersonID, "Hearing Officer", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.OfficerPersonID, Model.HearingOfficerList, "", new { @class = "form-control input-sm ", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+
+
+                        </div>
+
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-4">
+                            @if (Model.CourtReporter == "0")
+                            {
+                                Model.CourtReporter = "";
+                            }
+                            @Html.LabelFor(m => m.CourtReporter, "Court Reporter", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CourtReporter, new { @class = "form-control input-sm ", tabindex = 2, style = "width: 100% !important;", maxlength = "200" })
+
+
+                        </div>
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.CourtOfficer, "Court Officer", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CourtOfficer, new { @class = "form-control input-sm ", tabindex = 2, style = "width: 100% !important;", maxlength = "200" })
+
+
+                        </div>
+
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.NoticeProperFlag, "Notice Proper", new { @class = "control-label" })
+                            <br />
+
+                            @Html.CheckBoxFor(m => m.NoticeProperFlag, new { @class = "", tabindex = 3 })
+
+
+
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.ReasonableEffortFlag, "Reasonable Effort ", new { @class = "control-label" })
+                            <br />
+
+                            @Html.CheckBoxFor(m => m.ReasonableEffortFlag, new { @class = "", tabindex = 4 })
+
+
+
+                        </div><div class="form-group">
+                            @Html.LabelFor(m => m.MediaPresentFlag, "Media Present", new { @class = "control-label" })
+                            <br />
+
+                            @Html.CheckBoxFor(m => m.MediaPresentFlag, new { @class = "", tabindex = 5 })
+
+
+
+                        </div><div class="form-group">
+                            @Html.LabelFor(m => m.AppearingAttorneyID, "Appearing Attorney", new { @class = "control-label" })
+                            <br />
+
+                            @Html.DropDownListFor(m => m.AppearingAttorneyID, Model.AppearingAttorneyList, "", new { @class = "form-control input-sm ", tabindex = 6 })
+
+
+
+                        </div>
+                        <div class="@(Model.DataValidation_RequireHearingHoursFlag==1?"":"hidden")">
+
+                            <div class="clearfix"></div>
+                            <div class="form-group  col-sm-4 col-md-3">
+                                @*@Html.LabelFor(m => m.Hours, "Hours (use tenths for partial hours)", new { @class = "control-label", style = "color:#ff0000" })*@
+                                @Html.LabelFor(m => m.Hours, Model.HoursLabel, new { @class = "control-label", style = "color:#ff0000" })
+                                @Html.TextBoxFor(m => m.Hours, new { @class = "form-control input-sm newroleinput", tabindex = 7, style = "width:100%" })
+                            </div>
+                            <div class="form-group col-sm-4 col-md-3">
+                                @Html.LabelFor(m => m.HourTypeID, "Hours Type ", new { @class = "control-label", style = "color:#ff0000" })
+                                @Html.DropDownListFor(m => m.HourTypeID, Model.HourTypeList, "", new { @class = "form-control newroleinput input-sm", tabindex = 8, style = "width:98%", data_selected = Model.HourTypeID })
+                            </div>
+                            <div class="form-group  col-sm-4 col-md-3">
+                                @Html.LabelFor(m => m.PhaseID, "Phase ", new { @class = "control-label", style = "color:#ff0000" })
+                                @Html.DropDownListFor(m => m.PhaseID, Model.PhaseList, "", new { @class = "form-control newroleinput input-sm", tabindex = 9, style = "width:98%", data_selected = Model.PhaseID })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            if (Model.CurrentDCCList.Count() > 0)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            DCC and CSW
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+                                <thead>
+                                    <tr>
+                                        <th style="width:25%">Current DCC</th>
+                                        <th style="width:25%">
+                                            <span class="pull-left">
+                                                Roll Call DCC
+                                            </span>
+
+                                            <a data-id="@Model.HearingID.ToEncrypt()" id="lnkAddRoleCallDCC" class="pull-right" style="cursor:pointer;"> Add New DCC</a>
+                                        </th>
+                                        <th style="width:25%">Roll Call Fill-in DCC</th>
+                                        <th style="width:25%">Present Y/N</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CurrentDCCList)
+                                    {
+                                        if (item.CounselPersonID.HasValue == false)
+                                        {
+                                            item.CounselPersonID = item.CurrentDCCPersonID;
+                                        }
+                                        <tr class="trDCC">
+
+                                            <td class="">@item.CurrentDCC</td>
+
+                                            <td class="">
+                                                @Html.DropDownListFor(m => item.CounselPersonID, Model.CounselListDCC, "", new { @class = "form-control input-sm CounselPersonID", tabindex = 10, style = "width:100%", data_selected = (item.CounselPersonID.HasValue ? item.CounselPersonID.Value : 0) })
+
+
+
+
+                                            </td>
+                                            <td class="">
+                                                @Html.DropDownListFor(m => item.FillinCounselPersonID, Model.CounselListDCC, "", new { @class = "form-control input-sm FillinCounselPersonID", tabindex = 10, style = "width:100%", data_selected = (item.FillinCounselPersonID.HasValue ? item.FillinCounselPersonID.Value : 0) })
+                                            </td>
+
+
+                                            <td class="AttendedFlagCell" data-id="@item.HearingAttendanceID" data-personid="@item.CurrentDCCPersonID" data-roleid="@item.CurrentDCCRoleID">
+                                                @*(item.HearingAttendanceID.HasValue && item.HearingAttendanceID.Value == 0 ? "checked='checked'" : "")*@
+                                                <input type="radio" class="input-sm" id="AttendedFlagYes@(item.CurrentDCCRoleID)" name="AttendedFlag@(item.CurrentDCCRoleID)" value="1" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 1 ? "checked='checked'" : "") tabindex="10" />
+                                                <label style="margin-top: -6px;margin-right: 7px;" for="AttendedFlagYes@(item.CurrentDCCRoleID)">Yes</label>
+
+                                                <input type="radio" name="AttendedFlag@(item.CurrentDCCRoleID)" id="AttendedFlag@(item.CurrentDCCRoleID)" value="0" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 0 ? "checked='checked'" : "") tabindex="10" />
+                                                <label style="margin-top: -6px;margin-right: 7px;" for="AttendedFlag@(item.CurrentDCCRoleID)">No</label>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr class="trCSW">
+
+                                        <td class="text-align-right" style="vertical-align:middle !important">CSW:</td>
+
+                                        <td colspan="2">
+
+
+
+
+                                            @Html.TextBoxFor(m => m.CSW, new { @class = "form-control input-sm ", tabindex = 10, style = "width: 100% !important;", maxlength = "200" })
+                                        </td>
+
+
+                                        <td class="CSWFlagCell">
+                                            <input type="radio" class="input-sm" id="CSWFlagYes@(Model.HearingID)" name="CSWFlag@(Model.HearingID)" value="1" @(Model.CSWPresentFlag.HasValue && Model.CSWPresentFlag.Value == 1 ? "checked='checked'" : "") tabindex="10" />
+                                            <label style="margin-top: -6px;margin-right: 7px;" for="CSWFlagYes@(Model.HearingID)">Yes</label>
+
+                                            <input type="radio" name="CSWFlag@(Model.HearingID)" id="CSWFlag@(Model.HearingID)" value="0" @(Model.CSWPresentFlag.HasValue && Model.CSWPresentFlag.Value == 0 ? "checked='checked'" : "") tabindex="10" />
+                                            <label style="margin-top: -6px;margin-right: 7px;" for="CSWFlag@(Model.HearingID)">No</label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            var hearingAttendanceClients = Model.HearingAttendance.Where(o => o.ClientFlag == 1).ToList();
+            var hearingAttendanceNonClients = Model.HearingAttendance.Where(o => o.ClientFlag == 0).ToList();
+
+            if (hearingAttendanceClients.Count > 0)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Clients
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+                                <thead>
+                                    <tr>
+                                        <th style="width:25%">Clients</th>
+                                        <th style="width:15%">Present Y/N</th>
+
+                                        @if (Model.IsCaseStatusExists)
+                                        {
+
+                                            <th style="width:5%">ICWA</th>
+                                            <th style="width:10%"> Current Status Date</th>
+                                            <th style="width:10%"> Current Status </th>
+                                            <th style="width:12%">
+
+                                                @if (hearingAttendanceClients.Count > 1)
+                                                {
+                                                    <input type="checkbox" class="chkNoChangeToStatusAll" tabindex="11" />
+                                                }
+                                                No Change to Status
+                                            </th>
+                                            <th style="width:10%">Placement</th>
+                                        }
+                                        else
+                                        {
+                                            <th style="width:15%">ICWA</th>
+                                            <th style="width:15%">Placement</th>
+                                        }
+
+                                        <th style="width:20%">Current ERH <a class="lnkEditCurrentErh">Edit</a></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in hearingAttendanceClients)
+                                    {
+                                        <tr class="trHearingAttendanceClients">
+
+                                            <td class="">
+                                                @item.NameDisplay
+                                                @if (!item.NameDisplaySuffix.IsNullOrEmpty())
+                                                {
+                                                    <span style="color:#ff0000 !important;font-weight:bold !important;">@item.NameDisplaySuffix </span>
+
+                                                }
+                                                @if (!item.RaceNeededLabel.IsNullOrEmpty())
+                                                {
+                                                    <a class="btnRaceNeeded" style="cursor:pointer;color:red !important;" data-href="/Case/EditPerson/@(item.PersonID.ToEncrypt())?roleId=@item.RoleID.ToEncrypt()&fromhId=@Model.HearingID.ToEncrypt()">@item.RaceNeededLabel </a>
+
+
+                                                }
+
+
+
+                                            </td>
+                                            <td class="AttendedFlagCell" data-AppearanceRequiredFlag="@item.AppearanceRequiredFlag" data-id="@item.HearingAttendanceID" data-personid="@item.PersonID" data-roleid="@item.RoleID">
+                                                <input type="radio" class="input-sm" id="AttendedFlagYes@(item.RoleID)" name="AttendedFlag@(item.RoleID)" value="1" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 1 ? "checked='checked'" : "") tabindex="11" />
+                                                <label style="margin-top: -6px;margin-right: 7px;" for="AttendedFlagYes@(item.RoleID)">Yes</label>
+
+                                                <input type="radio" name="AttendedFlag@(item.RoleID)" id="AttendedFlag@(item.RoleID)" value="0" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 0 ? "checked='checked'" : "") tabindex="11" />
+                                                <label style="margin-top: -6px;margin-right: 7px;" for="AttendedFlag@(item.RoleID)">No</label>
+                                            </td>
+                                            <td class=""><input type="checkbox" name="chkICWA@(item.HearingAttendanceID)" class="chkICWA" @(item.ICWAFlag.HasValue && item.ICWAFlag.Value == 1 ? "checked='checked'" : "") tabindex="11" /></td>
+
+                                            @if (Model.IsCaseStatusExists)
+                                            {
+
+                                                <td class="CS_StartDate" data-value="@(item.CS_StartDate.IsNullOrEmpty()?"":item.CS_StartDate)">
+                                                    <a onclick="OpenCustomPopup('/Task/ClientStatusHistory?PersonID=@item.CS_PersonID&HearingID=@Model.HearingID', 600, 400, 'Client Status History')">@item.CS_StartDate</a>
+
+                                                </td>
+                                                if (!item.CS_StartDate.IsNullOrEmpty() && item.CS_StartDate.ToDateTime() > Model.HearingDate.ToDateTime())
+                                                {
+                                                    <td class="">
+                                                        @Html.DropDownListFor(m => item.CS_CodeID, Model.CaseStatusList, "", new { @class = "form-control input-sm CS_CodeID", tabindex = 11, style = "width:100%", data_selected = (item.CS_CodeID.HasValue ? item.CS_CodeID.Value : 0), disabled = "disabled" })
+
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="">
+                                                        @Html.DropDownListFor(m => item.CS_CodeID, Model.CaseStatusList, "", new { @class = "form-control input-sm CS_CodeID", tabindex = 11, style = "width:100%", data_selected = (item.CS_CodeID.HasValue ? item.CS_CodeID.Value : 0) })
+
+                                                    </td>
+                                                }
+                                                <td class=""><input type="checkbox" name="chkNoChangeToStatus@(item.HearingAttendanceID)" class="chkNoChangeToStatus" tabindex="11" data-CS-ID="@item.CS_ID" data-CS-PersonID="@item.CS_PersonID" /></td>
+
+                                            }
+                                            <td class=""><input type="text" class="form-control txtPlacement" maxlength="200" style="width:100%;" tabindex="11" value="@item.Placement" /></td>
+                                            <td class=""> @Html.Raw(item.CurrentERH)  </td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            if (hearingAttendanceNonClients.Count > 0)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Others and Counsel
+                        </span>
+                        <div class="widget-buttons">
+
+                            <input type="button" class="btn btn-default  " id="btnAdditionalAttendees" value="Additional Attendees" />
+                        </div>
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+                                <thead>
+                                    <tr>
+                                        <th class="" style="width:25%">Others and Counsel</th>
+                                        <th style="width:25%">Present Y/N</th>
+                                        <th style="width:25%">
+
+
+
+                                            <span class="pull-left">
+                                                Counsel
+                                            </span>
+
+                                            <a data-id="@Model.HearingID.ToEncrypt()" id="lnkAddNewCounsel" class="pull-right" style="cursor:pointer;"> Add New Counsel</a>
+                                        </th>
+                                        <th style="width:25%">Fill-in Counsel     </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in hearingAttendanceNonClients)
+                                    {
+                                        <tr class="trHearingAttendanceNonClients">
+                                            <td class="">
+                                                @item.NameDisplay
+                                                @if (!item.NameDisplaySuffix.IsNullOrEmpty())
+                                                {
+                                                    <span style="color:#ff0000 !important;font-weight:bold !important;">@item.NameDisplaySuffix </span>
+
+                                                }
+                                            </td>
+                                            <td class="AttendedFlagCell" data-AppearanceRequiredFlag="@item.AppearanceRequiredFlag" data-id="@item.HearingAttendanceID" data-personid="@item.PersonID" data-roleid="@item.RoleID">
+                                                <input type="radio" class="input-sm" id="AttendedFlagYes@(item.RoleID)" name="AttendedFlag@(item.RoleID)" value="1" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 1 ? "checked='checked'" : "") tabindex="13" />
+                                                <label style="margin-top: -6px;margin-right: 7px; " for="AttendedFlagYes@(item.RoleID)">Yes</label>
+                                                <input type="radio" id="AttendedFlag@(item.RoleID)" name="AttendedFlag@(item.RoleID)" value="0" @(item.AttendedFlag.HasValue && item.AttendedFlag.Value == 0 ? "checked='checked'" : "") tabindex="13" />
+                                                <label for="AttendedFlag@(item.RoleID)" style="margin-top: -6px;margin-right: 7px;">No</label>
+
+                                            </td>
+                                            @if (item.HideCounselDropdownFlag.ToInt() == 1)
+                                            {
+                                                <td class="">
+
+                                                    @Html.DropDownListFor(m => item.CounselPersonID, Model.CounselList, "", new { @class = "form-control input-sm CounselPersonID", tabindex = 13, style = "width:100%;display:none !important;", data_selected = (item.CounselPersonID.HasValue ? item.CounselPersonID.Value : 0) })
+
+                                                </td>
+                                                <td class="">
+                                                    @Html.DropDownListFor(m => item.FillinCounselPersonID, Model.CounselList, "", new { @class = "form-control input-sm FillinCounselPersonID", tabindex = 13, style = "width:100%;display:none !important;", data_selected = (item.FillinCounselPersonID.HasValue ? item.FillinCounselPersonID.Value : 0) })
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+
+                                                <td class="">
+
+                                                    @Html.DropDownListFor(m => item.CounselPersonID, Model.CounselList, "", new { @class = "form-control input-sm CounselPersonID", tabindex = 13, style = "width:100%", data_selected = (item.CounselPersonID.HasValue ? item.CounselPersonID.Value : 0) })
+
+                                                </td>
+                                                <td class="">
+                                                    @Html.DropDownListFor(m => item.FillinCounselPersonID, Model.CounselList, "", new { @class = "form-control input-sm FillinCounselPersonID", tabindex = 13, style = "width:100%", data_selected = (item.FillinCounselPersonID.HasValue ? item.FillinCounselPersonID.Value : 0) })
+                                                </td>
+                                            }
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            if (!Model.GeneralHearingNote.IsNullOrEmpty())
+            {<div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            General Note
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <div class="row">
+
+
+                            <div class="form-group  col-md-12 col-sm-12  col-xs-1">
+
+                                @Html.TextAreaFor(m => m.GeneralHearingNote, new { @class = "form-control input-sm " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 14, disabled = "disabled", style = "width: 100% !important;", maxlength = "200" })
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+            <div class="widget row">
+
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Hearing Preparation Note
+                        @if (!Model.HearingPrepNoteTotalPrepHoursLink.IsNullOrEmpty())
+                        {
+                            <span>(<a style="cursor:pointer" id="btnHearingPrepNoteTotalPrepHoursLink">@Model.HearingPrepNoteTotalPrepHoursLink</a>)</span>
+                        }
+
+
+                    </span>
+                    <div id="referral-title" class="widget-buttons form-inline">
+                        <span>Add Prep Note Hours:</span>
+                        @Html.TextBoxFor(m => m.HearingPrepNoteHours, new { @class = "form-control input-sm numeric-val" })
+
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    @if ((Model.ControlType == "RTF") && !Model.HearingPrepNoteEntry.IsNullOrEmpty())
+                    {
+                        Model.HearingPrepNoteEntry = Model.HearingPrepNoteEntry.Replace("\n", "<br/>");
+                    }
+                    @Html.TextAreaFor(m => m.HearingPrepNoteEntry, new { @class = "form-control input-sm " + ((Model.ControlType == "RTF") ? " summernote" : ""), style = "width:100%", tabindex = "16" })
+                    @Html.HiddenFor(m => m.HearingPrepNoteID)
+                </div>
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Notes
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                            <tbody>
+                                <tr>
+                                    @*<th width="80">
+                                            <button id="btnAddNote" type="button" class="btn   btn-default btn-xs " tabindex="8">Add New Note</button>
+                                        </th>*@
+                                    @if (Model.NoteTypeList.Any())
+                                    {
+                                        <th>
+                                            @Html.DropDownListFor(m => m.NoteTypeCodeID, Model.NoteTypeList, "", new { @class = "form-control input-xs exclude-in-form-change FillinCounselPersonID", tabindex = 15, style = "width:300px", data_id = (Model.HearingID.ToEncrypt()) })
+                                        </th>
+                                    }
+
+
+                                </tr>
+                                @foreach (var item in Model.NoteList)
+                                {
+                                    <tr>
+
+                                        <td colspan="2">
+                                            <a onclick="SaveData(3, '/Task/CalendarAppearanceSheetNotes/@(item.NoteID.ToEncrypt())?hearingId=@(Model.HearingID.ToEncrypt())','Edit Note')" style="cursor:pointer;text-decoration:underline;font-weight:bold;">@item.NoteLink</a> @Html.Raw(item.NoteInfo)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+                            <tbody>
+                                <tr>
+
+                                    <th style="width:50%">
+                                        General Note
+                                    </th>
+                                    <th>
+                                        Previous Hearing Notes:
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        @if ((Model.ControlType == "RTF") && Model.HearingNoteGetMain != null && !Model.HearingNoteGetMain.NoteEntry.IsNullOrEmpty())
+                                        {
+                                            Model.HearingNoteGetMain.NoteEntry = Model.HearingNoteGetMain.NoteEntry.Replace("\n", "<br/>");
+                                        }
+                                        @Html.TextAreaFor(m => m.HearingNoteGetMain.NoteEntry, new { @class = "form-control input-sm " + ((Model.ControlType == "RTF") ? " summernote" : ""), style = "width:100%", tabindex = "16" })
+                                        @Html.HiddenFor(m => m.HearingNoteGetMain.NoteID)
+                                        @Html.HiddenFor(m => m.HearingNoteGetMain.NoteTypeCodeID)
+
+
+                                    </td>
+                                    <td>
+                                        @{ var count = 0;}
+                                        @foreach (var item in Model.HearingNoteGetPreviousNotes)
+                                        {
+                                            if (count > 0)
+                                            {<hr style="margin:0 2px;padding:0px" />
+
+                                            }
+                                            <strong>@item.NoteHeader</strong><br />
+                                            <textarea style="width:100%;border:0;resize: none;background-color:transparent;padding:0;display:none;" readonly>@item.NoteEntry</textarea>
+                                            @Html.Raw(item.NoteEntry.Replace("\n", "<br/>"))
+
+
+
+                                            count++;
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
+
+                        </table>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Petitions in Case</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                            <thead>
+                                <tr>
+                                    <th width="30"></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="text-align-right" width="150"> Global Result: </th>
+                                    <th>@Html.DropDownListFor(m => m.GlobalResultID, Model.GlobalResultList, "", new { @class = "form-control newroleinput input-sm", tabindex = 17, style = "width:98%" })</th>
+
+                                    <th class="text-align-right">
+                                         
+                                    
+                                    </th>
+                                    <th width="200">
+                                        @*@Html.DropDownListFor(m => m.ContinuanceRequestedByID, Model.ContinuanceRequestedByList, "", new { @class = "form-control newroleinput input-sm", tabindex = 18, style = "width:98%" })*@
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th width="30">On </th>
+                                    <th>Type </th>
+
+                                    <th>File Date </th>
+                                    <th>Case #</th>
+                                    <th>Client</th>
+                                    <th>Result</th>
+                                    <th colspan="2"><input type="checkbox" id="chkAllOrderBack" tabindex="19" /> Order Back?</th>
+                                    @*<th><input type="checkbox" id="chkAllAsfa" tabindex="20" />  ASFA?</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PetitionByHearingList)
+                                {
+                                    <tr data-petitionid="@item.PetitionID" data-hearingpetitionkey="@item.HearingPetitionKey" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-petitionclosedate="@item.PetitionCloseDate" data-asfaflag="@(item.ASFAFlag??0)" @if (item.RoleClient.HasValue && item.RoleClient.Value == 1) { <text> class="highLightBlue " </text> }>
+                                        <td>
+                                            @if (item.PetitionCloseDate.HasValue)
+                                            {
+                                                <input type="checkbox" id="PetitionID" disabled="disabled" data-selected="@item.Selected" data-hearingpetitionkey="@item.HearingPetitionKey" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-petitionclosedate="@item.PetitionCloseDate" data-asfaflag="@(item.ASFAFlag??0)" value="@item.PetitionID" class="chkPetition" tabindex="20" @(item.Selected.Value == 1 ? "checked='checked'" : "") />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="PetitionID" data-selected="@item.Selected" data-hearingpetitionkey="@item.HearingPetitionKey" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-petitionclosedate="@item.PetitionCloseDate" data-asfaflag="@(item.ASFAFlag??0)" value="@item.PetitionID" class="chkPetition" tabindex="20" @(item.Selected.Value == 1 ? "checked='checked'" : "") />
+
+                                            }
+
+                                        </td>
+                                        <td>@item.Type </td>
+                                        <td>
+                                            @(item.PetitionFileDate.HasValue ? item.PetitionFileDate.Value.ToString("d") : "")
+                                        </td>
+                                        <td>@item.PetitionDocketNumber</td>
+                                        <td>@item.Child</td>
+                                        <td>
+                                            @{
+                                                var dataResultList = Model.GlobalResultList;
+                                                if (ViewBag.AllHearingResults != null)
+                                                {
+                                                    var allResults = (IEnumerable<LALoDep.Domain.pd_Code.pd_CodeGetByTypeIDAndUserID_spResults_ForHearingResult>)ViewBag.AllHearingResults;
+                                                    dataResultList = allResults.Where(x => x.ActiveFlag == 1 || x.CodeID == item.PetitionResultID)
+                                                                        .Select(x => new SelectListItem() { Text = x.CodeDisplay, Value = x.CodeID.ToString() });
+                                                }
+
+                                                if (item.PetitionCloseDate.HasValue)
+                                                {
+                                                    dataResultList = dataResultList.Where(o => o.Value == (item.PetitionResultID.HasValue ? item.PetitionResultID.Value.ToString() : "")).ToList();
+                                                }
+                                            }
+                                            @Html.DropDownListFor(o => item.PetitionResultID, dataResultList, "", new { @class = "form-control newroleinput PetitionResultID input-sm", tabindex = 20, style = "width:98%", data_selected = (item.PetitionResultID.HasValue ? item.PetitionResultID.Value : 0) })
+                                        </td>
+                                        <td colspan="2"><input type="checkbox" class="chkOrderBack" tabindex="20" @(item.OrderBackFlag.HasValue && item.OrderBackFlag.Value == 1 ? "checked='checked'" : "") /></td>
+                                        @*<td><input type="checkbox" class="chkAsfa" tabindex="20" @(item.ASFAFlag.HasValue && item.ASFAFlag.Value == 1 ? "checked='checked'" : "") /> </td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="divHearingContinuanceRequestedAndReason">
+                @Html.Partial("_HearingContinuanceRequestedAndReason", new LALoDep.Models.CaseOpening.HearingModel()
+                {
+               HearingID = Model.HearingID,
+               HearingContinuanceReasonGetForHearingList = Model.HearingContinuanceReasonGetForHearingList,
+               HearingContinuanceRequestedByGetForHearingList = Model.HearingContinuanceRequestedByGetForHearingList,
+           })
+            </div>
+
+
+
+            <br />
+
+        }
+    </div>
+</div>
+
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveAndNextHearing" data-hearingid="@(Model.HearingID.ToEncrypt())" type="submit" class="btn default btn-primary v-bottom " tabindex="21">Save/Next Hearing</button>
+        <button id="btnSaveBackToCalendar" type="submit" class="btn   btn-default v-bottom " tabindex="22">Save & Return to Calendar</button>
+        <button id="btnSaveAndReturn" type="submit" class="btn   btn-default v-bottom " tabindex="23">Save & Return</button>
+    </div>
+}
+<input value="@String.Join(",", Model.HearingResultFutureHearingsList.Select(o => o.Value).ToList())" id="HearingResultFutureHearingsList" type="hidden" />
+<input value="@String.Join(",", Model.HearingResult602PetitionList.Select(o => o.Value).ToList())" id="HearingResult602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.HearingResult602PetitionList.Select(o => o.Text).ToList())" id="HearingResult602PetitionListText" type="hidden" />
+<input value="@Model.HearingDate" id="HearingDate" type="hidden" />
+<input value="@Model.DepartmentID" id="DepartmentID" type="hidden" />
+<input value="@Model.HearingTypeID" id="HearingTypeID" type="hidden" />
+<input value="@Model.HearingID" id="HearingID" type="hidden" />
+
+<input value="@String.Join(",", Model.CourtDepartment602PetitionList.Select(o => o.Value).ToList())" id="CourtDepartment602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.CourtDepartment602PetitionList.Select(o => o.Text).ToList())" id="CourtDepartment602PetitionListText" type="hidden" />
+
+<input value="@String.Join(",", Model.HearingType602PetitionList.Select(o => o.Value).ToList())" id="HearingType602PetitionList" type="hidden" />
+<input value="@String.Join(",", Model.HearingType602PetitionList.Select(o => o.Text).ToList())" id="HearingType602PetitionListText" type="hidden" />
+<input value="@String.Join(",", Model.PetitionType602List.Select(o => o.Value).ToList())" id="PetitionType602List" type="hidden" />
+
+
+<input value="@String.Join(",", Model.HearingResultContinuanceList.Select(o => o.Value).ToList())" id="HearingResultContinuanceList" type="hidden" />
+<input value="@String.Join(",", Model.HearingTypeNonHearingEventList.Select(o => o.Value).ToList())" id="HearingTypeNonHearingEventList" type="hidden" />
+
+<input value="@String.Join(",", Model.HearingResultListForHoursNotRequiredValidation.Select(o => o.Value).ToList())" id="HearingResultListForHoursNotRequiredValidation" type="hidden" />
+
+<input value="@String.Join(",", Model.HearingTypeHoursNotRequired.Select(o => o.Value).ToList())" id="HearingTypeHoursNotRequired" type="hidden" />
+
+@section scripts{
+    <script>
+        var hoursNotRequiredBeforeHearingDate = '@Model.HoursNotRequiredBeforeHearingDate';
+        var hearingAttendanceID = '@Model.HearingAttendanceID';
+    </script>
+
+    <script>
+        ApplySummernote();
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/CalendarAppearanceSheet.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+<div class="hidden" style="display:none">
+
+    <select id="selectParentPhase">
+        @foreach (var item in Model.PhaseParentList)
+        {
+            <option value="@item.ParentCodeID" data-hearingtypeid="@item.ChildCodeID">@item.Parent</option>
+        }
+    </select>
+
+    <select id="selectParentHourType">
+        @foreach (var item in Model.HourTypeParentList)
+        {
+            <option value="@item.ParentCodeID" data-hearingtypeid="@item.ChildCodeID">@item.Parent</option>
+        }
+    </select>
+
+    <select id="selectPhase">
+        <option value=""></option>
+        @foreach (var item in Model.PhaseList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+
+    <select id="selectHourType">
+        <option value=""></option>   @foreach (var item in Model.HourTypeList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+</div>
+<style>
+    .widget-buttons .form-control {
+        display: inline-block;
+    }
+
+    body.Compact .widget-buttons .form-control {
+        padding: 1px;
+        position: relative;
+        top: -5px;
+        height: 22px !important;
+    }
+
+    .modal-header button {
+        display: none !important;
+    }
+    .divHearingContinuanceRequestedAndReason .col-md-12 {
+        padding: 0px !important;
+        margin-top: 15px !important;
+    }
+</style>
+@Html.Hidden("RedirectToPage", Request.QueryString["page"])

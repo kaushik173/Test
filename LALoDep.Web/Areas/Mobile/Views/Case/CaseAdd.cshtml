@@ -1,0 +1,176 @@
+﻿@model LALoDep.Areas.Mobile.Models.CaseAddViewModel
+@{
+    ViewBag.Title = "Add New Case";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+    int tabIndex = 0;
+}
+
+<div class="row">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">@ViewBag.Title</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CaseAdd-form", @class = "form-inline center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientLastName, "Client Last", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ClientLastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientFirstName, "Client First", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ClientFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientRoleTypeCodeID, "Client Role", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ClientRoleTypeCodeID, Model.ClientRoleList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AssociationCodeID, "Association", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AssociationCodeID, Model.AssociationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseLastName, "Case Last", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CaseLastName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseFirstName, "Case First", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CaseFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseAppointmentDate, "Appt Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.CaseAppointmentDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PetitionNumber, "Case #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PetitionNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentCodeID, "Department", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentCodeID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AllegationTypeCodeID1, "Allegation 1", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AllegationTypeCodeID1, Model.AllegationList,"", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AllegationTypeCodeID2, "Allegation 2", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AllegationTypeCodeID2, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AllegationTypeCodeID3, "Allegation 3", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AllegationTypeCodeID3, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AllegationTypeCodeID4, "Allegation 4", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AllegationTypeCodeID4, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-sm btn-primary default">Add Case</button>        
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (!hasFormChanged('CaseAdd-form')) {
+                notifyDanger('Nothing has been changed.');
+                return false;
+            }
+
+            if ($("#ClientLastName").val() == "") {
+                notifyDanger('Client Last Name is required.');
+                $("#ClientLastName").focus();
+                return false;
+            }
+
+            if ($("#ClientFirstName").val() == "") {
+                notifyDanger('Client First Name is required.');
+                $("#ClientFirstName").focus();
+                return false;
+            }
+            if ($("#ClientRoleTypeCodeID").val() == "") {
+                notifyDanger('Client Role is required.');
+                $("#ClientRoleTypeCodeID").focus();
+                return false;
+            }
+            if ($("#CaseLastName").val() == "") {
+                notifyDanger('Case Last Name is required.');
+                $("#CaseLastName").focus();
+                return false;
+            }
+            if ($("#CaseFirstName").val() == "") {
+                notifyDanger('Case First Name is required.');
+                $("#CaseFirstName").focus();
+                return false;
+            }
+
+            if ($("#CaseAppointmentDate").val() == "") {
+                notifyDanger('Appt Date is required.');
+                $("#CaseAppointmentDate").focus();
+                return false;
+            }
+
+            if ($("#PetitionNumber").val() == "") {
+                notifyDanger('Case # is required.');
+                $("#PetitionNumber").focus();
+                return false;
+            }
+
+            if ($("#DepartmentCodeID").val() == "") {
+                notifyDanger('Department is required.');
+                $("#DepartmentCodeID").focus();
+                return false;
+            }
+
+            var data = $("form#CaseAdd-form").serialize();
+            $.ajax({
+                type: "POST", url: '@Url.Action("CaseAdd", "Case")', data: data,
+                success: function (result) {                    
+                    if (result.isSuccess) {
+                        RequestSubmitted();
+                        if (result.URL != undefined && result.URL != '') {
+                            window.location.href = result.URL;
+                        }
+                        else {
+                            notifySuccess('Case saved successfully.');
+                        }
+                    }
+                    else if (result.isCaseNumberExist) {
+                        notifyDanger(result.message);
+                    }
+                    else {
+                        notifyDanger('There is something wrong while processing request.');
+                    }
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            setInitialFormValues('CaseAdd-form');
+        });
+    </script>
+}

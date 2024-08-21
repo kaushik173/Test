@@ -1,0 +1,86 @@
+﻿@using LALoDep.Domain.pd_Hearing
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.RecordTimeViewModel
+@{
+    ViewBag.Title = "Record Time";
+
+
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    @if (ViewBag.HearingReportFilingDue != null)
+                    {
+                        var arequest = ViewBag.HearingReportFilingDue as pd_HearingReportFilingDueGet_spResult;
+                        @arequest.RFDHeader
+                    }
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "recordTime-form", @class = "form-inline  center-block" }))
+                {
+                    if (ViewBag.HearingReportFilingDue != null)
+                    {
+                @Html.Hidden("ARID", Request.QueryString["arId"])
+                    }
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.WorkerPersonID, "Worker", new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.WorkerPersonID, new SelectList(Model.Workers, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.ClientPersonID, "Client", new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.ClientPersonID, new SelectList(Model.Clients, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = 2, @style = "width:100%" })
+                </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+            </div>
+            <div class="widget-body col-xs-12" id="recordTimeData">
+                <div class="table-responsive">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="4">Search</button>
+        <button id="btnPrint" type="button" class="btn v-bottom default" tabindex="5">Print</button>
+        <button id="addNew" class="btn btn-default btn-sm" tabindex="6" data-secure-id="@((int)SecurityToken.RecordTimeAdd)" title="Add Time">Add Time</button>
+        @if (ViewBag.HearingReportFilingDue != null)
+        {    <button id="btnARExit" type="submit" class="btn btn-default  " onclick="document.location.href = $exitUrl" tabindex="7">Exit AR</button>
+
+        }
+    </div>
+}
+
+
+@section scripts
+{
+    
+<script src="@Url.Content("~/Scripts/Application-Script/Case/RecordTime.js?v=" + Guid.NewGuid())"></script>
+
+}
+@if (ViewBag.HearingReportFilingDue != null)
+{
+    Html.RenderPartial("~/Views/Task/AR/_tabs.cshtml");
+}

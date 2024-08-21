@@ -1,0 +1,425 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.ContactInformationViewModel
+@{
+    ViewBag.Title = "User Contacts";
+    var tabIndex = 1;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contactInfo-form", @class = "form-inline  center-block" }))
+{
+    @Html.HiddenFor(x => x.PersonID)
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Edit Contact Information @ViewBag.PersonName</span>
+                    <div class="widget-buttons">
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="contactInfoList">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Number/Address</th>
+                                    <th width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ContactInfoList != null && Model.ContactInfoList.Count() > 0)
+                                {
+                                    foreach (var item in Model.ContactInfoList)
+                                    {
+                                        <tr data-personcontacttypecodeid="@item.PersonContactTypeCodeID"
+                                            data-personcontactinfo="@item.PersonContactInfo"
+                                            data-personcontactid="@item.PersonContactID"
+                                            data-agencyid="@item.AgencyID"
+                                            data-personid="@item.PersonID"
+                                            data-recordstateid="@item.RecordStateID">
+                                            @if (Model.CanEditAccess)
+                                            {
+                                                <td>@Html.DropDownListFor(m => item.PersonContactTypeCodeID, new SelectList(Model.ContactTypeList, "Value", "Text", item.PersonContactTypeCodeID), "", new { @class = "form-control input-sm ContactTypeListEdit ddlType", tabindex = ++tabIndex, style = "width:100%" })</td>
+                                                <td>@Html.TextBoxFor(m => item.PersonContactInfo, new { @class = "form-control input-sm PersonAddressEdit phone_global", style = "width:100%", tabindex = ++tabIndex })</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@Html.DropDownListFor(m => item.PersonContactTypeCodeID, new SelectList(Model.ContactTypeList, "Value", "Text", item.PersonContactTypeCodeID), new { @class = "form-control input-sm ContactTypeListEdit  ddlType", tabindex = ++tabIndex, style = "width:100%", disabled = "disabled" })</td>
+                                                <td>@Html.TextBoxFor(m => item.PersonContactInfo, new { @class = "form-control input-sm PersonAddressEdit phone_global ", style = "width:100%", tabindex = ++tabIndex, disabled = "disabled" })</td>
+                                            }
+                                            <td><a class="btn btn-danger btn-xs delete" href="#" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonContactID.ToString())" data-secure-id="@((int)SecurityToken.DeleteContactInformation)"><i class="fa fa-trash-o"></i> Delete</a></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (Model.CanAddAccess)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary ">
+                        <span class="widget-caption">Add Contact Information @ViewBag.PersonName</span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div id="all-names">
+                            @for (int indx = 0; indx < Model.ContactInfoAddList.Count; indx++)
+                            {
+                                <div id="name-@indx" class="row name margin-bottom-10">
+                                    <div class="form-group col-md-4">
+                                        @if (indx == 0)
+                                        {@Html.Label("Type", new { @class = "control-label" })}
+                                        @Html.DropDownListFor(m => m.ContactInfoAddList[indx].PersonContactTypeCodeID, Model.ContactTypeList, "", new { @class = "form-control input-sm PersonContactTypeCodeID  ddlType", style = "width:100%", tabindex = ++tabIndex })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @if (indx == 0)
+                                        {@Html.Label("Number/Address", new { @class = "control-label" })}
+                                        @Html.TextBoxFor(m => m.ContactInfoAddList[indx].PersonContactInfo, new { @class = "form-control input-sm PersonContactInfo phone_global", style = "width:100%", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12 text-align-right padding-top-10">
+                                <button id="btnAddNewContactInfo" type="button" class="btn btn-default btn-sm" title="Add more"><i class="fa fa-plus"></i></button>
+                                <button id="btnRemoveContactInfo" type="button" class="btn btn-danger btn-sm" title="Remove last" disabled="disabled"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.ViewContactInformation)" tabindex="@(++tabIndex)">Save</button>
+        <button id="btnSaveAndReturn" type="button" class="btn v-bottom default" tabindex="@(++tabIndex)">Save/Return</button>
+        <button id="btnCancel" type="button" class="btn v-bottom default"  tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        var $BaseURL = '/';
+        var $emptyName = null;
+        var origin_wrapper_height = 0, origin_content_height = 0;
+
+        function getRedirectURL(buttonId) {
+            if (buttonId == 2) {
+                window.location.href = window.location.href;                
+            }
+            else {
+                var pageId = getParameterByName('pageid');
+                if (pageId == '1')
+                    window.location.href = "@Url.Action(MVC.JudicialOfficer.Search())";
+                else  if (pageId == '2')
+                    window.location.href = "@Url.Action(MVC.CountyCounselList.Search())";
+                else
+                    window.location.href = "@Url.Action(MVC.Users.Search())";
+                   }
+        }
+
+        function GetData() {
+            var data = {
+                ContactInfoAddList: [],
+                ContactInfoList: []
+            };
+
+            var $contactInfoTr = $("#contactInfoList tbody tr");
+            for (var indx = 0; indx < $contactInfoTr.length; indx++) {
+                $tr = $contactInfoTr.eq(indx);
+                $PersonContactType = $tr.find(".ContactTypeListEdit");
+                $PersonAddress = $tr.find(".PersonAddressEdit");
+                if ($tr.data("personcontacttypecodeid") != parseInt($PersonContactType.val()) || $tr.data("personcontactinfo") != $PersonAddress.val()) {
+                    var contactInfoEditList = {
+                        PersonContactID: $tr.data("personcontactid"),
+                        AgencyID: $tr.data("agencyid"),
+                        PersonID: $tr.data("personid"),
+                        PersonContactTypeCodeID: $PersonContactType.val(),
+                        PersonContactInfo: $PersonAddress.val(),
+                        RecordStateID: $tr.data("recordstateid"),
+                    };
+                    data.ContactInfoList.push(contactInfoEditList);
+                }
+            }
+
+            for (var indx = 0; indx < $('#all-names .name').length ; indx++) {
+                var $nameRow = $('#all-names .name').eq(indx);
+                if (parseInt($nameRow.find(".PersonContactTypeCodeID").val()) != '' && $nameRow.find(".PersonContactInfo").val() != '') {
+                    var contactInfoAddList = {
+                        PersonID: $('#PersonID').val(),
+                        PersonContactTypeCodeID: $nameRow.find(".PersonContactTypeCodeID").val(),
+                        PersonContactInfo: $nameRow.find(".PersonContactInfo").val(),
+                    }
+                    data.ContactInfoAddList.push(contactInfoAddList);
+                }
+
+            }
+
+            return data;
+        }
+
+        function Validate() {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            var validate = true;
+
+            var $contactInfoTr = $("#contactInfoList tbody tr");
+            for (var indx = 0; indx < $contactInfoTr.length; indx++) {
+                $tr = $contactInfoTr.eq(indx);
+                $PersonContactType = $tr.find(".ContactTypeListEdit");
+                $PersonAddress = $tr.find(".PersonAddressEdit");
+                if ($PersonContactType.val() != '' && $PersonAddress.val() == '') {
+                    $PersonAddress.focus();
+                    notifyDanger('Address/Number is required.');
+                    validate = false;
+                    break;
+                }
+
+                if ($PersonAddress.val() != '' && $PersonContactType.val() == '') {
+                    $PersonContactType.focus();
+                    notifyDanger('Type is required.');
+                    validate = false;
+                    break;
+                }
+
+                if ($PersonContactType.val() != '' && $PersonAddress.val() != '') {
+                    if ($PersonContactType.val() == "22794" || $PersonContactType.val() == "2007" || $PersonContactType.val() == "2801")
+                        if (!validateEmail($PersonAddress.val())) {
+                            $PersonAddress.focus();
+                            notifyDanger('Invalid Email.');
+                            validate = false;
+                            break;
+                        }
+                }
+
+            }
+
+            for (var indx = 0; indx < $('#all-names .name').length ; indx++) {
+                var $nameRow = $('#all-names .name').eq(indx);
+
+                 if ($nameRow.find(".PersonContactTypeCodeID").val() != '' && $nameRow.find(".PersonContactInfo").val() == '') {
+                    $nameRow.find(".PersonContactInfo").focus();
+                    notifyDanger('Address/Number is required.');
+                    validate = false;
+                    break;
+                }
+
+                else if ($nameRow.find(".PersonContactInfo").val() != '' && $nameRow.find(".PersonContactTypeCodeID").val() == '') {
+                    $nameRow.find(".PersonContactTypeCodeID").focus();
+                    notifyDanger('Type is required.');
+                    validate = false;
+                    break;
+                }
+                else if ($nameRow.find(".PersonContactInfo").val() != '' && $nameRow.find(".PersonContactTypeCodeID").val() != '') {
+                    if ($nameRow.find(".PersonContactTypeCodeID").val() == "22794" || $nameRow.find(".PersonContactTypeCodeID").val() == "2007" || $nameRow.find(".PersonContactTypeCodeID").val() == "2801")
+                        if (!validateEmail($nameRow.find(".PersonContactInfo").val())) {
+                            $nameRow.find(".PersonContactInfo").focus();
+                            notifyDanger('Invalid Email.');
+                            validate = false;
+                            break;
+                        }
+                }
+            }
+            return validate;
+        }
+
+        function SaveData(buttonID) {
+            if (hasFormChanged("contactInfo-form")) {
+                var data = JSON.stringify(GetData());
+                $.ajax({
+                    type: "POST", dataType: 'json', url: $BaseURL + 'Case/ContactInfoSave', data: data, contentType: "application/json",
+                    success: function (result) {
+                        RequestSubmitted();
+                        if (result.isSuccess) {
+                            //Notify('Contact Information has been saved successfully.', 'bottom-right', '4000', 'success', 'fa-check', true);
+                            //if (buttonID == 1)
+                            //    window.location.href = window.location.href;
+                            //else
+                            //    window.location.href = "/Users/Search";
+                            getRedirectURL(buttonID);
+                        }
+                    }
+                });
+            }
+            else {
+                if (buttonID == 2)
+                    notifyDanger('Nothing has been changed.');
+                else
+                    //window.location.href = "/Users/Search";
+                    getRedirectURL(buttonID);
+            }
+        }
+
+        //special dynamic formatting for this page
+        $("input").on('input', function () {
+            if ($(this).hasClass("phone_us")) {
+                var str = $(this).val();
+                if (str.match(/[^0-9()\s-]|.{14}\s/)) {
+                    $(this).unmask().val(str);
+                }
+                else {
+                    $(this).mask('(000) 000-0000');
+                }
+            }
+        });
+
+        $("select").on("change", function () {
+            checkphone(this);
+        });
+
+        function checkphone(field) {
+            //var type = $("option:selected", field).html();
+            //var input = $(field).closest('tr, .row').find("input");
+            //if (["Home Phone", "Mobile Phone", "Work Phone", "Fax"].indexOf(type) > -1) {
+            //    input.addClass("phone_us");
+            //    $(".phone_us").mask('(000) 000-0000');
+            //} else if (input.hasClass("phone_us")) {
+            //    input.unmask('(000) 000-0000');
+            //    input.removeClass("phone_us");
+            //}
+        }
+
+        $("#btnAddNewContactInfo").on("click", function () {
+            $("#all-names").append('<div class="row name newAdded margin-bottom-10" id="name-' + $("#all-names .name").length + '">' + $emptyName + '</div>');
+
+            $(".newAdded .form-group .control-label").remove();
+
+            $("#all-names .name:last input").each(function (i) {
+                $(this).val('');
+            });
+
+            $("#all-names .name:last  .dldPerson").focus();
+            if ($("#all-names .newAdded").length > 0) {
+                $("#btnRemoveContactInfo").prop("disabled", false);
+            }
+        });
+
+        $("#btnRemoveContactInfo").on("click", function () {
+            var latestname = $("#all-names .name").length - 1;
+            $("#name-" + latestname).remove();
+            $("#all-names .name:last .dldPerson").focus();
+            if ($("#all-names .newAdded").length <= 0) {
+                $(this).prop("disabled", true);
+            }
+        });
+
+        $('#btnSave').on("click", function (e) {
+            if (Validate())
+                SaveData(1);
+            else
+                return false;
+        });
+
+        $('#btnSaveAndReturn').on("click", function (e) {
+            if (Validate())
+                SaveData(2);
+            else
+                return false;
+        });
+
+        $('#btnCancel').on("click", function (e) {
+            //window.location.href = "/Users/Search";
+            getRedirectURL(3);
+        });
+
+        $('body').on('click', '.delete', function () {
+            var id = $(this).attr('data-id');
+            var tr = $(this).parent().parent();
+            confirmBox("Are you sure you want to remove selected records?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Case/ContactInfoDelete/' + id,
+                        dataType: "json",
+                        success: function (data) {
+                            tr.remove();
+                            notifySuccess('Selected record delete successfully.');
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+            });
+        });
+
+        $('body').on('change', '.ddlType', function () {
+
+
+            if ($(this).val() == '1973' || $(this).val() == '1975' || $(this).val() == '1974') {
+                $(this).parent().parent().find('.phone_global').addClass('phone_format');
+            } else {
+                $(this).parent().parent().find('.phone_global').removeClass('phone_format');
+            }
+        });
+        $('.ddlType').change();
+        $(document).ready(function () {
+            setInitialFormValues("contactInfo-form");
+
+            $emptyName = $("#name-0").html();
+
+            var oTableL = $('#contactInfoList').dataTable({
+                "searching": false,
+                "bSort": false,
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+            });
+
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                fitCalculatedHeightForSearchDataTable();
+            });
+
+            $(".ContactTypeListEdit").each(function () {
+                checkphone(this);
+            });
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                calc_height = $(window).height();
+                var _offset = 25;
+                origin_wrapper_height = $('body>div.container-fluid').height();
+                origin_content_height = $('#divSearchResult .dataTables_scrollBody').height();
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            //console.log(calc_height + " - " + $(this).outerHeight(true));
+                            //console.log($(this).siblings());
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                //console.log("calc :" + calc_height + " offset: " + _offset);
+                calc_height = calc_height - _offset;
+                calc_height = calc_height < 250 ? 250 : calc_height;
+                //console.log("total: " + calc_height);
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTableL.fnAdjustColumnSizing();
+                return calc_height;
+            }
+        });
+    </script>
+}
+
+

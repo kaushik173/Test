@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "CSE-IT List";
+}
+
+
+<div class="row" id="divResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Total Completed: <span id="totalCompleted"></span></span>
+                <div class="widget-buttons">
+                    <b>Add Questionnaire For:</b>
+                    @Html.DropDownList("AddQuestionFor", (IEnumerable<SelectListItem>)ViewBag.AddQuestionFor, "", new { @class = "form-control input-sm", @style = "display:inline;width:auto;" })
+                    <button type="button" id="btnAdd" class="btn btn-primary btn-sm default"><i class="fa fa-plus"></i> Add</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblCSECList">
+                        <thead>
+                            <tr>
+                                <th>Child</th>
+                                <th>Due Date</th>
+                                <th>Completion Date</th>
+                                <th>Assigned To</th>
+                                <th>Score - Numeric</th>
+                                <th>Score - Literal</th>
+                                <th style="width:10px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var oTable = $('#tblCSECList').dataTable({
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bSort": false,
+            "columns": [
+                    {
+                        "data": "Child",
+                        "render": function (data, type, full, meta) {
+                            if (full.CanEditFlag == 1) {
+                                return '<a href="@Url.Action(MVC.Case.CSECEdit())/' + full.EncrypredCSECID + '" data-secure-link-id="@((int)LALoDep.Custom.Security.SecurityToken.CSECQuestionnaireEdit)">' + data + '</a>';
+                            } else {
+                                return data;
+                            }
+                        }
+                    },
+                    { "data": "DueDate" },
+                    { "data": "CompletionDate" },
+                    { "data": "AssignedTo" },
+                    { "data": "ScoreNumeric" },
+                    { "data": "ScoreLiteral" },
+                    {
+                        "render": function (data, type, full, meta) {
+                            if (full.CanDeleteFlag == 1) {
+                                return '<a class="btn btn-danger btn-xs delete"  href="javascript:void(0);" data-id="' + full.CSECID + '" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.CSECQuestionnaireDelete)"><i class="fa fa-trash-o"></i> Delete</a>';
+                            }
+                            else {
+                                return '';
+                            }
+
+                        }
+                    }
+            ],
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+
+        function setData(data) {
+            oTable.fnClearTable();
+            if (data.data != undefined && data.data.length > 0) {
+                oTable.fnAddData(data.data);
+                $("#totalCompleted").text(data.totalCompleted);
+                fitCalculatedHeightForSearchDataTable();
+            }
+        }
+
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 40;
+                $("#divResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+                calc_height = calc_height - _offset;
+                $('#divResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+
+        function loadData() {
+            $.ajax({
+                type: "POST", url: '@Url.Action(MVC.Case.CSECList())',
+                success: function (result) {
+                    setData(result);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            loadData();
+
+            $(window).bind('resize', function () {
+                fitCalculatedHeightForSearchDataTable
+            });
+
+            $("#btnAdd").on("click", function () {
+                var childRoleID = $("#AddQuestionFor").val();
+                if (childRoleID == '') {
+                    $("#AddQuestionFor").focus();
+                    notifyDanger("'Add Questionnaire For' is required");
+                    return false;
+                }
+
+                $.ajax({
+                    type: "POST", url: '@Url.Action(MVC.Case.CSECAdd())', data: { childRoleID: childRoleID },
+                    success: function (result) {
+                        if (result.isSuccess) {
+                            window.location.href = result.Url;
+                        }
+                    }
+                });
+
+            });
+
+            $("#tblCSECList").on("click", '.delete', function () {
+
+                var CSECId = $(this).data('id');
+                confirmBox("Are you sure you want to delete ?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '@Url.Action(MVC.Case.CSECDelete())', data: { CSECId: CSECId },
+                            success: function (result) {
+                                notifySuccess("Delete successfully.");
+                                setData(result);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+}

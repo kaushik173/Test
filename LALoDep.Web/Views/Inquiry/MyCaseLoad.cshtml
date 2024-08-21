@@ -1,0 +1,111 @@
+﻿@model  LALoDep.Models.Inquiry.MyCaseLoadIndexViewModel
+
+@{
+    var personName = string.Empty;
+    if (!string.IsNullOrEmpty(Model.PersonName))
+    {
+        personName = " For </br>" + Model.PersonName;
+    }
+    ViewBag.Title = "My Caseload" +personName;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myCaseLoad-form", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                      @Html.HiddenFor(m => m.PersonID)
+                      @Html.HiddenFor(m => m.AgencyID)
+                    <div class="row">
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.CaseStatus, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CaseStatus, new SelectList(Model.Status, "Key", "Value", Model.CaseStatus), new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = 10 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.EndDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", tabindex = 3, maxlength = 10})
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm ", tabindex = 4})
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm ", tabindex = 5 })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.CaseNumber, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CaseNumber, new { @class = "form-control input-sm ", tabindex = 6 })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.ClientType, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ClientType, new SelectList(Model.ClientTypeList, "Key", "Value", Model.ClientType), new { @class = "form-control input-sm", tabindex = 7, style = "width:100%" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.CountyID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CountyID, new SelectList(Model.AgencyCountyList, "AgencyCountyID", "AgencyCounty", Model.CountyID), "", new { @class = "form-control input-sm", tabindex = 8, style = "width:100%" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.PrintSort, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PrintSort, new SelectList(Model.PrintSortList, "Key", "Value", Model.PrintSort), new { @class = "form-control input-sm", tabindex = 9, style = "width:100%" })
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divMyCaseLoadReult">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Results
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12" id="myCaseLoadData">                
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom  default" tabindex="9">Search</button>
+        <button id="btnPrint" type="button" class="btn v-bottom  " tabindex="10">Print</button>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        @*var $onViewLoad = '@ViewBag.viewOnLoad';*@
+        var $onViewLoad = 'True';
+
+    </script>
+<script src="@Url.Content("~/Scripts/Application-Script/Inquiry/MyCaseLoad.js?v=" + Guid.NewGuid())"></script>
+}
+

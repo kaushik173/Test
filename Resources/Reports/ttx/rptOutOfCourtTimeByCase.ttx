@@ -1,0 +1,5 @@
+Case #	String	50	123456
+Case Name	String	100	Smith, Joe
+Party Rep	String	100	Type A
+# of Clients	Number		30
+Total Hours	Number		30.5

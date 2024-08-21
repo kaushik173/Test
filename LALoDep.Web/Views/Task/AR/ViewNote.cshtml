@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<style>
+    body {
+        margin:0px !important;
+       background-color:#fff !important; 
+    }
+   body:before {
+   
+    background-color: #fff;
+}
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <textarea id="txtNote" class="form-control hidden" rows="10" readonly="readonly">@ViewBag.NoteEntry</textarea>
+
+        @Html.Raw(ViewBag.NoteEntry)
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var calcHeight = $(window).height() - 25
+            $("#txtNote").trigger("autosize.destroy");
+            $("#txtNote").css({ height: calcHeight + "px", overflow: "auto" });
+        });
+    </script>
+}

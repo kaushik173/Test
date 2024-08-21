@@ -1,0 +1,14 @@
+LegalAssistantLastName	String	50	Barrett
+LegalAssistantFirstName	String	30	Charlie
+Department	String	100	1
+Branch	String	100	KM
+CaseTotal	Number		1
+NppCases	Number		1
+NewThisMonth	Number		1
+NewThisWeek	Number		1
+NewLastWeek	Number		1
+ClosedThisMonth	Number		1
+NewToday	Number		1
+AgencyName	String	1000	PD
+SpanishCases	Number		1
+AsOfDate	DateTime		1/1/2001

@@ -1,0 +1,6 @@
+ProfileType	String	100	ProfileType
+Category	String	100	Category
+Question	String	100	Question
+Response	Memo	Response
+Note		Memo	Note
+AgencyName	String	500	Agency Name

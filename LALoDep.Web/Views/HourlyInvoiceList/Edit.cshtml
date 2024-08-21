@@ -1,0 +1,202 @@
+﻿@model LALoDep.Models.HourlyInvoiceEditViewModel
+@{
+    ViewBag.Title = "Edit Hourly Invoice";
+}
+<style>
+    .form-inline .form-control {
+        width: 100%;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Edit Hourly Invoice</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditHourlyInvoice-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.HourlyInvoiceID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.PersonID)
+                    @Html.HiddenFor(m => m.HourlyInvoiceStatusCodeID)
+                    @Html.HiddenFor(m=>m.RecordStateID)
+                    <div class="row">
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.HourlyInvoiceID, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoiceID)</div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HourlyInvoicePersonName, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoicePersonName)</div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.HourlyInvoiceStatus, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoiceStatus)</div>                            
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.HourlyInvoiceStatusDate, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoiceStatusDate)</div>
+                            @Html.HiddenFor(m => m.HourlyInvoiceStatusDate)
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HourlyInvoiceStatusPersonName, new { @class = "control-label" })
+                            <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoiceStatusPersonName)</div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.TotalInvoiceAmount, new { @class = "control-label" })
+                            <div class="form-label">$@Html.DisplayFor(m => m.TotalInvoiceAmount)</div>
+                            @Html.HiddenFor(m => m.TotalInvoiceAmount)
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HourlyInvoiceCourtApprovalAmount, new { @class = "control-label" })
+                            @if (Model.HourlyInvoiceStatusCodeID == 21483)
+                            {
+                                <div class="form-label">$@Html.DisplayFor(m => m.HourlyInvoiceCourtApprovalAmount)</div>
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.HourlyInvoiceCourtApprovalAmount, new { @class = "form-control numeric-val input-sm", type = "number", tabindex = 1, autofocus = "true" })
+                            }
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HourlyInvoiceCourtApprovalDate, new { @class = "control-label" })
+                            @if (Model.HourlyInvoiceStatusCodeID == 21483)
+                            {
+                                <div class="form-label">@Html.DisplayFor(m => m.HourlyInvoiceCourtApprovalDate)</div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.HourlyInvoiceCourtApprovalDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 2 })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Model.HourlyInvoiceStatusCodeID != 21483)
+        {
+            <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="3" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.HourlyInvoiceEdit)">Save</button>
+        }
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="4">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $("#btnCancel").on("click", function () {
+            window.location.href = "@Url.Action(MVC.HourlyInvoiceList.Search())";
+        });
+
+        function validateData() {
+            if ($("#HourlyInvoiceCourtApprovalAmount").val() == '') {
+                notifyDanger("Authorized Amount is required.");
+                $("#HourlyInvoiceCourtApprovalAmount").focus();
+                return false;
+            }
+
+            if ($("#HourlyInvoiceCourtApprovalDate").val() == '') {
+                notifyDanger("Authorized Date is required.");
+                $("#HourlyInvoiceCourtApprovalDate").focus();
+                return false;
+            }
+            if (moment($("#HourlyInvoiceCourtApprovalDate").val()) >moment()) {
+                notifyDanger("Authorized Date cannot be in the future.");
+                $("#HourlyInvoiceCourtApprovalDate").focus();
+                return false;
+            }
+            var invoiceAmt = parseFloat($("#TotalInvoiceAmount").val());
+            var authAmt = parseFloat($("#HourlyInvoiceCourtApprovalAmount").val());
+
+            if (authAmt > invoiceAmt) {
+                notifyDanger("Authorized Amount cannot be greater than Invoice Amount.");
+                $("#HourlyInvoiceCourtApprovalAmount").focus();
+                return false;
+            }
+
+            var authDate = new Date($("#HourlyInvoiceCourtApprovalDate").val());
+            var invoiceDate = new Date($("#HourlyInvoiceStatusDate").val());
+
+            if (authDate < invoiceDate) {
+                notifyDanger("Authorized Date cannot be before Invoice Date");
+                $("#HourlyInvoiceCourtApprovalDate").focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function getData() {
+            var fData = $('#EditHourlyInvoice-form').serialize();
+            return fData;
+        }
+
+        function saveHourlyInvoice() {
+            var data = getData();
+            $.ajax({
+                type: "POST", url: '@Url.Action(MVC.HourlyInvoiceList.Edit())', data: data,
+                success: function (result) {
+                    RequestSubmitted();
+                    if (result.isSuccess) {
+                        if (result.URL != undefined && result.URL != '') {
+                            window.location.href = result.URL;
+                        }
+                        else {
+                            notifySuccess("Hourly Invoice saved successfully.");
+                        }
+                    }
+                    else {
+                        notifyDanger("Error occured while save.");
+                    }
+                },
+                dataType: 'json'
+            });
+        }
+        function saveData() {
+            if (!hasFormChanged('EditHourlyInvoice-form')) {
+                window.location.href = "@Url.Action(MVC.HourlyInvoiceList.Search())";
+                return false;
+            }
+
+            if (validateData()) {
+                var invoiceAmt = parseFloat($("#TotalInvoiceAmount").val());
+                var authAmt = parseFloat($("#HourlyInvoiceCourtApprovalAmount").val());
+                if (authAmt < invoiceAmt) {
+                    confirmBox("Authorized Amount is less than Invoice Amount. Do you want to continue?",
+                        function (result) {
+                            if (result) {
+                                saveHourlyInvoice();
+                            }
+                        });
+                }
+                else {
+                    saveHourlyInvoice();
+                }
+            }
+        }
+
+        $("#btnSave").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+            else {
+                saveData();
+            }
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues('EditHourlyInvoice-form');
+        });
+    </script>
+}

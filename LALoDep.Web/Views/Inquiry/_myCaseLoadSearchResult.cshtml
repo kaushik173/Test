@@ -1,0 +1,83 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.pd_CaseLoad.pd_CaseloadGetByPersonIDCaseStatusAppointmentDate3_spResult>
+@{
+    Layout = null;
+}
+@if (Model.Any())
+{
+    var jcatsRow = Model.ToList().Select(o => new { o.CaseNumber }).Distinct();
+    var previosCase = string.Empty;
+
+    <table class="table table-bordered table-condensed table-hover table-padding  table-striped">
+        <thead>
+            <tr>
+                <th colspan="7" style="text-align:center">Total Cases: @(Model.Select(x => x.TotalCases).FirstOrDefault())</th>
+            </tr>
+            <tr>
+                <th colspan="7" style="text-align:center">Total Open Clients: @(Model.Select(x => x.TotalOpenClients).FirstOrDefault())</th>
+            </tr>
+            <tr>
+                <th colspan="7" style="text-align:center">Total Open Petitions: @(Model.Select(x => x.TotalOpenPetitions).FirstOrDefault())</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="CalendarData">
+            <tbody>
+                @foreach (var item in Model.ToList())
+                {
+                    if (previosCase != item.CaseNumber)
+                    {
+                        <tr>
+                            <th colspan="3">Jcats# <a href="/Case/Main/@item.CaseID.ToEncrypt()">@item.CaseNumber</a></th>
+                            <th colspan="4">
+                                <a href="@Url.Action(MVC.Inquiry.TransferCase(item.CaseID.ToEncrypt(),(string)ViewBag.PersonID, item.MyRoleTypeCodeID.ToEncrypt()))">Transfer</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="@Url.Action(MVC.Case.Conflict(string.Empty, item.CaseID.ToEncrypt()))">Conflict</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>DOB</th>
+                            <th>Next Hearing</th>
+                            <th>Date</th>
+                            <th>Case #</th>
+                            <th>Type</th>
+                            <th>File Date</th>
+                        </tr>
+                    }
+                    <tr>
+                        <td>@item.PersonNameDisplay</td>
+                        <td class="">@item.PersonDOB</td>
+                        <td>@item.HearingTypeCodeShortValue</td>
+                        <td>
+                            
+                            @if (item.HearingDateTime.HasValue)
+                            {
+                               <span>
+                                   @item.HearingDateTime.Value.ToString("d")
+                               </span>
+                            }
+
+                            
+                        
+                        
+                        </td>
+                        <td>@item.PetitionDocketNumber</td>
+                        <td>@item.PetitionTypeCodeValue</td>
+                        <td>@item.PetitionFileDate </td>
+                    </tr>
+                    previosCase = item.CaseNumber;
+                }
+            </tbody>
+
+        </table>
+    </div>
+}
+else
+{
+    @:No Records
+}
+
+
+

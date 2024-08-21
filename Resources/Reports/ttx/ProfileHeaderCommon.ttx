@@ -1,0 +1,11 @@
+RoleName	String	100	Andy Barrett
+CaseName	String	100	Case Name
+DOB	DateTime		01/01/2000
+FileNumber	String	50	92928-01
+Street	String	100	Street
+CityStateZip	String	100	CityStateZip
+AddressPhone	String	100	AddressPhone
+MobilePhone	String	100	MobilePhone
+WorkPhone	String	100	WorkPhone
+Email	String	100	Email
+PrintContactInformationFlag	Number		1

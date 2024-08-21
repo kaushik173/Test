@@ -1,0 +1,224 @@
+﻿@model  LALoDep.Models.Inquiry.MyCaseLoadIndexViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    var personName = string.Empty;
+    if (!string.IsNullOrEmpty(Model.PersonName))
+    {
+        personName = " For </br>" + Model.PersonName;
+    }
+    ViewBag.Title = "My Caseload " + personName;
+}
+<style>
+    .form-group{
+        margin-bottom:10px !important;
+    }
+</style>@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myCaseLoad-form", @class = "form-inline  center-block", data_val = "false" }))
+{
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 search-criteria">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12 col-sm-12"  id="searchCaseAdvancedSearchParameters" style="padding-top:10px !important;">
+              
+                    @Html.HiddenFor(m => m.PersonID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    <div class="row">
+                        <div class="form-group col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.LastName, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm ", style = "width:100%", tabindex = 1, autofocus = "autofocus" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.ClientType, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.ClientType, new SelectList(Model.ClientTypeList, "Key", "Value", Model.ClientType), new { @class = "form-control input-sm", tabindex = 2, style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.AgeRangeStart, new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.AgeRangeStart, new { @class = "form-control input-sm number pull-left", tabindex = 3,  style = "width:60px !important;",maxlength="3" })
+                                @Html.TextBoxFor(m => m.AgeRangeEnd, new { @class = "form-control input-sm  number pull-left", tabindex = 4,style= "margin-left:5px;width:60px !important;", maxlength = "3" })
+                            </div>
+                        </div><div class="clearfix"></div>
+                        <div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.FirstName, new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm ", style = "width:100%", tabindex = 5 })
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.ClientStatusID, "Client Status", new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.ClientStatusID, Model.ClientStatusList, "", new { @class = "form-control input-sm", tabindex = 6,style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.OutOfState, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.CheckBoxFor(m => m.OutOfState, new { @class = "form-control input-sm ", tabindex = 7 })
+                            </div><br /><br />
+                        </div><div class="clearfix"></div>
+                        <div class="form-group   col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.CaseNumber, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.CaseNumber, new { @class = "form-control input-sm ", style = "width:100%", tabindex = 8 })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.HearingDateRangeStartDate, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <table>
+                                    <tr><td><div class="input-group ">
+    @Html.TextBoxFor(m => m.HearingDateRangeStartDate, new { @class = "form-control input-sm date-picker", tabindex = 8, maxlength = 10, style = "max-width: 78px !important;" })
+    <span class="input-group-addon datepicker-trigger">
+        <i class="fa fa-calendar"></i>
+    </span>
+</div>
+                                        </td>
+                                    <td><div class="input-group " style="margin-left:5px">
+    @Html.TextBoxFor(m => m.HearingDateRangeEndDate, new { @class = "form-control input-sm date-picker", tabindex = 8, maxlength = 10, style = "max-width: 78px !important;" })
+    <span class="input-group-addon datepicker-trigger">
+        <i class="fa fa-calendar"></i>
+    </span>
+</div>
+
+                                    </td>
+                                    </tr>
+                                </table>
+                             
+                              
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.AddressTypeID, "Address Type", new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.AddressTypeID, Model.AddressTypeList, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:100%" })
+                            </div>
+                        </div><div class="clearfix"></div>
+                        <div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.CountyID, new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.CountyID, new SelectList(Model.AgencyCountyList, "AgencyCountyID", "AgencyCounty", Model.CountyID), "", new { @class = "form-control input-sm", tabindex = 10, style = "width:100%" })
+                            </div>
+                        </div><div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.HearingTypeID, "Hearing Type", new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", tabindex = 11, style = "width:100%" })
+                            </div>
+                        </div><div class="form-group  col-md-4 col-sm-4">
+                            @Html.LabelFor(m => m.ClassificationID, "Classification", new { @class = "control-label  col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.ClassificationID, Model.ClassificationList, "", new { @class = "form-control input-sm", tabindex = 12, style = "width:100%" })
+                            </div>
+                        </div>
+                        
+                        <div class="clearfix"></div>
+                        <div class="form-group  col-md-4 col-sm-4">
+
+
+                            @Html.LabelFor(m => m.NoRace, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.CheckBoxFor(m => m.NoRace, new { @class = "form-control input-sm ", tabindex = 12 })
+                            </div><br /><br />
+                        </div>
+    <div class="form-group  col-md-4 col-sm-4">
+        @Html.LabelFor(m => m.NoFutureAR, new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.CheckBoxFor(m => m.NoFutureAR, new { @class = "form-control input-sm ", tabindex = 12 })
+        </div><br /><br />
+    </div>
+    <div class="form-group  col-md-4 col-sm-4">
+        @Html.LabelFor(m => m.MedicationCurrentID, "Medication Current", new { @class = "control-label  col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(m => m.MedicationCurrentID, Model.MedicationCurrentList, "", new { @class = "form-control input-sm", tabindex = 13, style = "width:100%" })
+        </div>
+    </div><div class="clearfix"></div>
+ 
+    <div class="form-group  col-md-4 col-sm-4">
+        @Html.LabelFor(m => m.NoCompletedARM, "No Completed AR 6M", new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.CheckBoxFor(m => m.NoCompletedARM, new { @class = "form-control input-sm ", tabindex = 15 })
+        </div><br /><br />
+    </div>
+    <div class="form-group  col-md-4 col-sm-4">
+        @Html.LabelFor(m => m.MedicationEverID, "Medication Ever", new { @class = "control-label  col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(m => m.MedicationEverID, Model.MedicationEverList, "", new { @class = "form-control input-sm", tabindex = 15, style = "width:100%" })
+        </div>
+    </div>
+
+</div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 col-sm-12 center-block">
+    <div class="widget row">
+        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+            <span class="widget-caption" >
+                <strong>Results</strong>
+
+                <span id="spanHeaderTextMain"  >
+                   
+
+
+                </span>
+
+
+            </span>
+            <div class="widget-buttons " id="divHeaderSection">
+              
+                <div style="margin-top:-5px">
+                    @*@Html.LabelFor(m => m.SortByID, "Sort By", new { @class = "control-label  col-md-4" })*@
+                    Sort By:
+                    @Html.DropDownListFor(m => m.SortByID, Model.SortByList, "", new { @class = "form-control input-sm", tabindex = 14, style = "width:150px;padding:1px !important;display:inline !important" })
+                </div> 
+              
+
+
+            </div>
+        </div>
+        <div class="widget-body col-md-12">
+
+
+            <div class="row" id="divMyCaseLoadReult">
+                <div id="myCaseLoadData">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom  default" tabindex="16">Search</button>
+        <button id="btnPrint" type="button" class="btn v-bottom  " tabindex="16">Print</button>
+        <button id="btnTransferCase" type="button" class="btn v-bottom  "  data-secure-id="@((int) LALoDep.Custom.Security.SecurityToken.TransferCase)" tabindex="17" onclick="document.location.href='/Inquiry/TransferCase/?pId=@Model.PersonID.ToEncrypt()&roleTypeId=@Model.MyCaseloadRoleTypeCodeID.ToEncrypt()'">Transfer Case</button>
+
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        @*var $onViewLoad = '@ViewBag.viewOnLoad';*@
+        var $onViewLoad = 'True';
+
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Inquiry/MyCaseLoadV2.js?v=" + Guid.NewGuid())"></script>
+}
+
+<style>
+    .btn.btn-labeled{padding-left:10px;}
+</style>

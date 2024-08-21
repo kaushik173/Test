@@ -1,0 +1,6 @@
+NoteSubject	String	50	Subject1
+NoteEntry	Memo	test note
+NoteType	String	50	Type1
+CreatedBy	String	100	Smith, Joe
+SortDate	String	50	20071231
+GroupID	Number	1

@@ -1,0 +1,482 @@
+﻿@using LALoDep.Core.Custom.Extensions;
+@model LALoDep.Models.Administration.UserAddEditViewModel
+@{
+    var displayNoneHideMonthlySalaryBenefits = LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessTo(LALoDep.Custom.Security.SecurityToken.HideMonthlySalaryBenefits) ? "style='display:none !important;'" : "";
+    ViewBag.Title = "User Edit";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "UserAddEditForm", @class = "form-inline  center-block", autocomplete = "off" }))
+{
+    @Html.HiddenFor(m => m.JcatsUserData.JcatsUserID)
+
+    @Html.HiddenFor(m => m.JcatsUserData.PersonID)
+    @Html.HiddenFor(m => m.JcatsUserData.PersonNameID)
+
+    <div class="row userInfo">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">User Information</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.PersonNameSalutationCodeID, "Salutation", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.JcatsUserData.PersonNameSalutationCodeID, Model.SalutationList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.PersonNameFirst, "First Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.JcatsUserData.PersonNameFirst, new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.JcatsUserData.PersonNameLast, "Last Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.JcatsUserData.PersonNameLast, new { @class = "form-control input-sm", tabindex = 3, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.PersonNameSuffixCodeID, "Suffix", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.JcatsUserData.PersonNameSuffixCodeID, Model.SuffixList, "", new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserLoginName, "Login Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.JcatsUserData.JcatsUserLoginName, new { @class = "form-control input-sm JcatsUserLoginName", tabindex = 6, style = "width:98%", autocomplete = "off" })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserPassword, "Reset Password", new { @class = "control-label" })
+                            @Html.PasswordFor(m => m.JcatsUserData.JcatsUserPassword, new { @class = "form-control input-sm", tabindex = 7, style = "width:98%", autocomplete = "new-password" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsGroupID, "Security Group", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.JcatsUserData.JcatsGroupID, Model.Groups, "", new { @class = "form-control input-sm", tabindex = 8, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserLevelCodeID, "User Level", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.JcatsUserData.JcatsUserLevelCodeID, Model.UserLevelList, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:98%" })
+                        </div>
+                        @if (Model.JcatsUserID.HasValue && Model.JcatsUserID.Value > 0)
+                        {<div class="form-group col-md-2">
+                                @Html.LabelFor(m => m.JcatsUserData.JcatsUserLevelCodeID, "User Signature", new { @class = "control-label" })<br />
+                                <a href="#" onclick="OpenCustomPopup('/Users/UploadSignature/@Model.JcatsUserID.Value.ToEncrypt()', '60%', '300h', 'Upload Signature File');" class="color-link "><i class="fa fa-upload m-0"></i>  Upload</a>
+                            </div>
+
+
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserStartDate, "User Start Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.JcatsUserData.JcatsUserStartDate, new { @class = "form-control input-sm date-picker", tabindex = 10 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserEndDate, "User End Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.JcatsUserData.JcatsUserEndDate, new { @class = "form-control input-sm date-picker", tabindex = 11 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.JcatsUserData.JcatsUserTimeOut, "Timeout (minutes)", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.JcatsUserData.JcatsUserTimeOut, new { @class = "form-control input-sm number", style = "width:98%", tabindex = 11 })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.JcatsUserData.AgencyID, "User Home Agency", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.JcatsUserData.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 11, style = "width:98%" })
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.SupervisorPersonID, "Current Supervisor", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SupervisorPersonID, new SelectList(Model.SupervisorList, "PersonID", "SupervisorDisplay", Model.SupervisorPersonID), "", new { @class = "form-control input-sm", tabindex = 11, style = "width:98%" })
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row userInfo">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Staff/Contact Information</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="row">
+                        @Html.HiddenFor(m => m.StaffInfo.StaffInfoID)
+                        @Html.HiddenFor(m => m.StaffInfo.EmailToSecondaryPersonContactID)
+
+                        @Html.HiddenFor(m => m.StaffInfo.EmailToPrimaryPersonContactID)
+
+                        @Html.HiddenFor(m => m.StaffInfo.WorkPersonContactID)
+
+                        @Html.HiddenFor(m => m.StaffInfo.FaxPersonContactID)
+                        @Html.HiddenFor(m => m.StaffInfo.MobilePersonContactID)
+
+                        @Html.HiddenFor(m => m.StaffInfo.EmailPrimaryPersonContactID)
+                        @Html.HiddenFor(m => m.StaffInfo.EmailSecondaryPersonContactID)
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoBarNumber, "Bar #", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.StaffInfoBarNumber, new { @class = "form-control input-sm", tabindex = 12, style = "width:98%" })
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoBarAdmittedDate, "Bar Admitted Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StaffInfo.StaffInfoBarAdmittedDate, new { @class = "form-control input-sm date-picker", tabindex = 13 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 ">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoEligibilityEffectiveDate, "Eligibility Effective Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StaffInfo.StaffInfoEligibilityEffectiveDate, new { @class = "form-control input-sm date-picker", tabindex = 14 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 ">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoEligibilityEndingDate, "Eligibility Ending Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StaffInfo.StaffInfoEligibilityEndingDate, new { @class = "form-control input-sm date-picker", tabindex = 15 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group  col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.WorkPhone, "Work Phone", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.WorkPhone, new { @class = "form-control input-sm  phone_format", tabindex = 16, style = "width:200px" })
+                        </div><div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.MobilePhone, "Mobile Phone", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.MobilePhone, new { @class = "form-control input-sm phone_format", tabindex = 17, style = "width:200px" })
+                        </div>
+
+
+
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.Fax, "Fax #", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.Fax, new { @class = "form-control input-sm phone_format", tabindex = 18, style = "width:98%" })
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoEmployeeStatusCodeID, "Employee Status", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.StaffInfo.StaffInfoEmployeeStatusCodeID, Model.EmployeeStatusList, "", new { @class = "form-control input-sm", tabindex = 19, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.StaffInfoEmployeeID, "Employee ID", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.StaffInfoEmployeeID, new { @class = "form-control input-sm", maxlength = 50, tabindex = 20, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.EmailPrimary, "Primary Email", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.EmailPrimary, new { @class = "form-control input-sm", tabindex = 21, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.UsePrimaryEmail, "Use Primary Email", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.StaffInfo.UsePrimaryEmail, new { @class = "form-control input-sm", tabindex = 22 })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.EmailSecondary, "Secondary Email", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StaffInfo.EmailSecondary, new { @class = "form-control input-sm", tabindex = 23, style = "width:98%" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.UseSecondaryEmail, "Use Secondary Email", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.StaffInfo.UseSecondaryEmail, new { @class = "form-control input-sm", tabindex = 24 })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.AlternateContactPersonID, "Alternate Contact Email", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.StaffInfo.AlternateContactPersonID, Model.AlternateContacts, "", new { @class = "form-control input-sm", tabindex = 25, style = "width:98%" })
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.StaffInfo.EmailToAlternatePersonContactFlag, "Include Alternative Contact Email", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.StaffInfo.EmailToAlternatePersonContactFlag, new { @class = "form-control input-sm", tabindex = 26 })
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Title IVe Information</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.StaffTitle, "Staff Title", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.StaffTitle, new { @class = "form-control input-sm", tabindex = 26, style = "width:98%", maxlength = "150" })
+                        </div>
+                        <div class="form-group   col-md-3"  @Html.Raw(displayNoneHideMonthlySalaryBenefits)>
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.PercentBenefitsCAC, "% Salary & Benefits paid by CAC", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.PercentBenefitsCAC, "{0:0.00}", new { @class = "form-control input-sm number", tabindex = 26, style = "width:98%" })
+
+                        </div>
+                        <div class="form-group   col-md-3"  @Html.Raw(displayNoneHideMonthlySalaryBenefits)>
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.PercentBenefitsFFDRP, "% Salary & Benefits paid by FFDRP", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.PercentBenefitsFFDRP, "{0:0.00}", new { @class = "form-control input-sm number", tabindex = 26, style = "width:98%" })
+
+                        </div>
+
+                        <div class="form-group   col-md-3" @Html.Raw(displayNoneHideMonthlySalaryBenefits)>
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.MonthlySalaryAndBenefits, "Monthly Salary And Benefits", new { @class = "control-label" })
+
+
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.MonthlySalaryAndBenefits, "{0:0.00}", new { @class = "form-control input-sm  number", tabindex = 26, style = "width:98%" })
+
+
+                        </div>
+                        <div class="clearfix"  @Html.Raw(displayNoneHideMonthlySalaryBenefits)></div>
+
+                        <div class="form-group   col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.IsEmployee, "Is Employee", new { @class = "control-label" })
+                            <br />
+                            @Html.CheckBox("TitleIVeStaffInfo_IsEmployee", Model.TitleIVeStaffInfo.IsEmployee.ToInt() == 1, new { @class = "form-control input-sm", tabindex = 26 })
+
+                        </div>
+                        <div class="form-group   col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.FullTime, "FullTime", new { @class = "control-label" })
+                            <br />
+                            @Html.CheckBox("TitleIVeStaffInfo_FullTime", Model.TitleIVeStaffInfo.FullTime.HasValue ? Model.TitleIVeStaffInfo.FullTime.Value : false, new { @class = "form-control input-sm", tabindex = 26 })
+
+                        </div>
+                        <div class="form-group   col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.AlternateWorkSchedule, "Alternate Work Schedule", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.AlternateWorkSchedule, new { @class = "form-control input-sm", tabindex = 26, style = "width:98%", maxlength = "150" })
+
+                        </div>
+                        <div class="form-group   col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.NormalWorkHours, "Normal Work Hours", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TitleIVeStaffInfo.NormalWorkHours, new { @class = "form-control input-sm", tabindex = 26, style = "width:98%", maxlength = "150" })
+
+                        </div>
+                        <div class="form-group   col-md-3">
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.NeedsActivityLog, "Needs Activity Log", new { @class = "control-label" })
+                            <br />
+                            @Html.CheckBox("TitleIVeStaffInfo_NeedsActivityLog", Model.TitleIVeStaffInfo.NeedsActivityLog.HasValue ? Model.TitleIVeStaffInfo.NeedsActivityLog.Value : false, new { @class = "form-control input-sm", tabindex = 26 })
+
+
+                        </div>
+                        <div class="form-group col-md-3"  @Html.Raw(displayNoneHideMonthlySalaryBenefits)>
+                            @Html.LabelFor(m => m.TitleIVeStaffInfo.OHCodeID, "Overhead Code", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.TitleIVeStaffInfo.OHCodeID, Model.OHCodeList, "", new { @class = "form-control input-sm", tabindex = 26, style = "width:98%" })
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row userInfo" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Available For Selection On Legal Party Screen For Agency(s)</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th class="">Agency</th>
+                                    @*<th width="100">Home Agency</th>*@
+                                    <th width="100"></th>
+                                    <th width="150">Start Date</th>
+                                    <th width="150">End Date</th>
+                                    <th width="100">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.SelectedAgencyList.Where(o => o.AgencyID == 0))
+                                {
+
+                                    <tr class="agencyInfoRow">
+                                        <td>
+                                            @Html.HiddenFor(m => item.RoleID, new { id = "item_RoleID-0", @class = "item_RoleID" })
+                                            @Html.DropDownListFor(m => item.RoleTypeCodeID, Model.Roles, "", new { id = "item_RoleTypeCodeID-0", @class = "form-control input-sm setSelectedValue item_RoleTypeCodeID", tabindex = 26, style = "width:100%", data_default_value = item.RoleTypeCodeID })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.AgencyID, Model.AgencyList, "", new { id = "item_AgencyID-0", @class = "form-control input-sm setSelectedValue ddlAgencyID ddlAgencyID item_AgencyID", tabindex = 26, style = "width:100%", data_default_value = item.AgencyID })
+                                        </td>
+                                        @*<td class="@Model.HomeAgencyID">
+                                                @if (item.AgencyID == Model.HomeAgencyID)
+                                                {
+                                                    @Html.RadioButton("HomeAgency-0", item.AgencyID, true, new { tabindex = "26" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.RadioButton("HomeAgency-0", item.AgencyID, false, new { tabindex = "26" })
+
+                                                }
+                                            </td>*@
+                                        <td class="@Model.HomeAgencyID">
+                                        </td>
+                                        <td class="">
+
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.RoleStartDate, new { id = "item_RoleStartDate-0", @class = "form-control input-sm date-picker item_RoleStartDate", tabindex = 26 })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+
+                                        </td>
+                                        <td class="">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.RoleEndDate, new { id = "item_RoleEndDate-0", @class = "form-control input-sm date-picker item_RoleEndDate", tabindex = 26 })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class=""><a class="btn btn-danger btn-xs delete" tabindex="26" data-id="@item.AgencyID"><i class="fa fa-trash-o"></i>Delete</a></td>
+                                    </tr>
+                                }
+                                @foreach (var item in Model.SelectedAgencyList.Where(o => o.AgencyID != 0))
+                                {
+
+                                    <tr class="agencyInfoRow">
+                                        <td>
+                                            @Html.HiddenFor(m => item.RoleID, new { id = "item_RoleID-" + item.AgencyID, @class = "item_RoleID" })
+                                            @Html.DropDownListFor(m => item.RoleTypeCodeID, Model.Roles, "", new { id = "item_RoleTypeCodeID-" + item.RoleTypeCodeID, @class = "form-control input-sm setSelectedValue item_RoleTypeCodeID", tabindex = 26, style = "width:100%", data_default_value = item.RoleTypeCodeID })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => item.AgencyID, Model.AgencyList, "", new { id = "item_AgencyID-" + item.AgencyID, @class = "form-control input-sm setSelectedValue ddlAgencyID, item_AgencyID", tabindex = 26, style = "width:100%", data_default_value = item.AgencyID })
+                                        </td>
+                                        @*<td class="@Model.HomeAgencyID">
+                                                @if (item.AgencyID == Model.HomeAgencyID)
+                                                {
+                                                    @Html.RadioButton("HomeAgency-" + item.AgencyID, item.AgencyID, true, new { tabindex = "26", @class = "HomeAgency" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.RadioButton("HomeAgency-" + item.AgencyID, item.AgencyID, false, new { tabindex = "26", @class = "HomeAgency" })
+
+                                                }
+                                            </td>*@
+                                        <td class="@Model.HomeAgencyID">
+                                        </td>
+                                        <td class="">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.RoleStartDate, new { id = "item_RoleStartDate-" + item.AgencyID, @class = "form-control input-sm date-picker item_RoleStartDate", tabindex = 26 })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.RoleEndDate, new { id = "item_RoleEndDate-" + item.AgencyID, @class = "form-control input-sm date-picker item_RoleEndDate", tabindex = 26 })
+                                                <span class="input-group-addon datepicker-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class=""><a class="btn btn-danger btn-xs delete" data-id="@item.AgencyID" tabindex="26"><i class="fa fa-trash-o"></i>Delete</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="pageChanges" value="0" />
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @{
+            var addOrEditPermission = false;
+        }
+        @if (Model.JcatsUserID.HasValue && Model.JcatsUserID.Value > 0)
+        {
+            if (LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessTo(LALoDep.Custom.Security.SecurityToken.EditUser))
+            {
+
+                <button id="save" type="submit" class="btn btn-primary v-bottom default" tabindex="26" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.EditUser)">Save</button>
+                <button id="saveMore" type="submit" class="btn btn-default v-bottom" tabindex="26" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.EditUser)">Save/More</button>
+                addOrEditPermission = true;
+            }
+            if (LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessTo(LALoDep.Custom.Security.SecurityToken.DeleteUser))
+            {
+                <button id="btnDelete" type="submit" class="btn btn-default v-bottom" tabindex="26" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.DeleteUser)">Delete</button>
+            }
+            <button id="btnLoginAsUser" type="submit" class="btn btn-default v-bottom" tabindex="26">Login as @Model.JcatsUserData.JcatsUserLoginName</button>
+        }
+        else if (LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessTo(LALoDep.Custom.Security.SecurityToken.AddUser))
+        {
+            <button id="save" type="submit" class="btn btn-primary v-bottom default" tabindex="26" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.AddUser)">Save</button>
+            <button id="saveMore" type="submit" class="btn btn-default v-bottom" tabindex="26" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.AddUser)">Save/More</button>
+            addOrEditPermission = true;
+        }
+        @if (!addOrEditPermission)
+        {
+            <button id="cancel" type="submit" class="btn btn-primary v-bottom default" tabindex="26">Cancel</button>
+        }
+        else
+        {
+            <button id="cancel" type="submit" class="btn btn-default v-bottom" tabindex="26">Cancel</button>
+        }
+
+    </div>
+}
+<style>
+    .full-wdth {
+        width: 100% !important;
+    }
+</style>
+@section scripts
+{
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $jcatsUserID = '@Model.JcatsUserID';
+        var $personID = '@Model.PersonID';
+        var $userHas960 = '@(LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessTo(LALoDep.Custom.Security.SecurityToken.ReadOnlyExceptTitleIVE) ? 1 : 0)';
+        if ($userHas960 == '1') {
+            $('.userInfo input,.userInfo select').prop('disabled', true);
+            $('.userInfo a').css({ 'cursor': 'not-allowed' }).removeAttr('onclick');
+            $('.userInfo a.delete').removeClass('delete');
+        }
+
+        var supervisorList = [ @Html.Raw(string.Join(",", Model.SupervisorList.Select(x=> "{ AgencyID: " +x.AgencyID+ ", PersonID:"+ x.PersonID+ ", SupervisorDisplay:\"" +x.SupervisorDisplay + "\", Selected:"+ x.Selected+ "}" )))];
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/UsersAddEdit.js?v=" + Guid.NewGuid())"></script>
+}

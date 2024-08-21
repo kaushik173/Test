@@ -1,0 +1,4 @@
+Date	DateTime		01/01/2010
+CountType	String	50	Clients
+Agency	String	50	DLGSD - MCO
+Total	Number		99999

@@ -1,0 +1,199 @@
+﻿@model LALoDep.Models.Administration.AdminSystemValueUpdateViewModel
+@using LALoDep.Custom.Security
+@{
+    ViewBag.Title = "System Value <br />Update";
+    
+    var displySystemName = Model.SystemValueTypeEntry + " (" + ViewBag.SelectedCounts + " / " + Model.SytemsValueUpdateList.Count + ")";
+    
+}
+
+<div class="row" id="divSyayemVal">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                
+                
+                <span class="widget-caption">@displySystemName</span>
+                
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table id="SysValUpdateTable" class="table table-bordered table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th class="gridSmall">System Value</th>
+                                <th class="gridAction">Sequence</th>
+                                <th>Code Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SytemsValueUpdateList != null && Model.SytemsValueUpdateList.Count() > 0)
+                            {
+                                for (int count = 0; count < Model.SytemsValueUpdateList.Count; count++)
+                                {
+                                    <tr>
+                                        @Html.HiddenFor(m => m.SytemsValueUpdateList[count].CodeID)
+                                        @Html.HiddenFor(m => m.SytemsValueUpdateList[count].SystemValueID)
+                                        @Html.HiddenFor(m => m.SytemsValueUpdateList[count].RecordStateID)
+                                        <td>
+                                            @Html.CheckBoxFor(m => m.SytemsValueUpdateList[count].Selected, new { @class = "form-control input-sm", autofocus = true, tabindex = count + 1 })
+                                            @Html.Hidden("hdnSystemValueFlag_" + count, Model.SytemsValueUpdateList[count].Selected, new { @id = "hdnSystemValueFlag_" + count, name = "hdnSystemValueFlag_" + count })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.SytemsValueUpdateList[count].SystemValueSequence, new { @class = "form-control input-sm", tabindex = count + 1 })
+                                            @Html.Hidden("hdnSystemValueSequence_" + count, Model.SytemsValueUpdateList[count].SystemValueSequence, new { @id = "hdnSystemValueSequence_" + count, name = "hdnSystemValueSequence_" + count })
+                                        </td>
+                                        <td>
+                                            <label id="lbl_@count">@Html.Raw(Model.SytemsValueUpdateList[count].CodeValue) 
+                                            @if (Model.SytemsValueUpdateList[count].ActiveAgencyCodeFlag == 0)
+                                            {
+                                                <span class="red"> (No Active Agency Code)</span>
+                                            }
+                                            </label>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter
+    {
+    <div class="boxfloat text-center">
+        <button id="save" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.UpdateSystemValue)" tabindex="@(Model.SytemsValueUpdateList.Count+1)">Save</button>
+        <button id="return" type="button" class="btn btn-default v-bottom" data-secure-id="@((int)SecurityToken.UpdateSystemValue)" tabindex="@(Model.SytemsValueUpdateList.Count+2)">Save/<u>R</u>eturn</button>
+        <button id="cancel" type="button" class="btn btn-default v-bottom" tabindex="@(Model.SytemsValueUpdateList.Count+3)">Cance<u>l</u></button>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+
+        $BaseURL = '/';
+        var origin_wrapper_height = 0, origin_content_height = 0;
+
+        $countRecords = 0;
+        function submitButton(buttonID) {
+            var adminSystemValueUpdateViewModel = getData(buttonID);
+            if ($countRecords == 0) {
+                if (buttonID == 1)
+                    window.location.href = '/Administration/SystemValues';
+                else {
+                    Notify('Nothing has been changed.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '/Administration/SystemValuesAddEdit',
+                    data: { 'viewModel': adminSystemValueUpdateViewModel },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.URL != '') {
+                            window.location.href = $BaseURL + data.URL;
+                        }
+                    }
+                });
+            }
+        }
+
+        function getData(buttonID) {
+            var adminSystemValueUpdateViewModel = {
+                'ButtonID': buttonID,
+                'SystemValueTypeID': '@Model.SystemValueTypeID',
+                'SystemValueTypeEntry': '@Model.SystemValueTypeEntry',
+                'SytemsValueUpdateList': []
+            }
+            for ($count = 0; $count < '@Model.SytemsValueUpdateList.Count'; $count++) {
+                $Delete = false;
+                $Insert = false;
+                $Update = false;
+                if ($('#SytemsValueUpdateList_' + $count + '__Selected').prop('checked') && $("#hdnSystemValueFlag_" + $count).val() == "False") {
+                    $Insert = true;
+                }
+                else if (!($('#SytemsValueUpdateList_' + $count + '__Selected').prop('checked')) && $("#hdnSystemValueFlag_" + $count).val() == "True") {
+                    $Delete = true;
+                }
+                else if (($('#SytemsValueUpdateList_' + $count + '__SystemValueSequence').val()) != ($("#hdnSystemValueSequence_" + $count).val())) {
+
+                    $Update = true;
+                }
+
+                $InSystemValue = 1;
+                if ($Delete || $Insert || $Update) {
+                    $countRecords = parseInt($countRecords) + 1;
+                    adminSystemValueUpdateViewModel.SytemsValueUpdateList.push({
+                        'CodeID': $('#SytemsValueUpdateList_' + $count + '__CodeID').val(),
+                        'CodeValue': $('#lbl_' + $count).text(),
+                        'InSystemValue': $InSystemValue,
+                        'SystemValueID': $('#SytemsValueUpdateList_' + $count + '__SystemValueID').val(),
+                        'SystemValueSequence': $('#SytemsValueUpdateList_' + $count + '__SystemValueSequence').val(),
+                        'RecordStateID': $('#SytemsValueUpdateList_' + $count + '__RecordStateID').val(),
+                        'Delete': $Delete,
+                        'Insert': $Insert,
+                        'Update': $Update
+                    });
+                }
+            }
+            return adminSystemValueUpdateViewModel;
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            calc_height = $(window).height();
+            var _offset = 25;
+            origin_wrapper_height = $('body>div.container-fluid').height();
+            origin_content_height = $('#divSyayemVal.table-responsive').height();
+
+            $("#divSyayemVal .table-responsive").children().first().parentsUntil("body").each(function () {
+
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        //console.log(calc_height + " - " + $(this).outerHeight(true));
+                        if ($(this).attr("id") == 'loading')
+                            return;
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            //console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            //console.log("total: " + calc_height);
+            $('#divSyayemVal .table-responsive').css('max-height', calc_height + 'px');
+
+            return calc_height;
+        }
+
+        $('#cancel').click(function () {
+            window.location.href = "/Administration/SystemValues";
+        });
+
+        $('#save').on("click", function () {
+            submitButton(1);
+        });
+
+        $('#return').on("click", function () {
+            submitButton(2);
+        });
+
+        $(window).bind('resize', function () {
+            fitCalculatedHeightForSearchDataTable();
+        });
+        $(document).ready(function () {
+            fitCalculatedHeightForSearchDataTable();
+        });
+    </script>
+}

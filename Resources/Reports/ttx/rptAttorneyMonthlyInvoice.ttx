@@ -1,0 +1,30 @@
+Invoice Date	DateTime		05/07/2005
+Invoice Number	String	50	123456
+BillTo1	String	100	Judicial Council of California
+BillTo2	String	100	Administrative Office of the Courts
+BillTo3	String	100	455 Golden Gate Avenue
+BillTo4	String	100	San Fransico, CA 94102
+Re1	String	100	Court-Appointed Dependency Services for the
+Re2	String	100	Superior Court of California, County of San Diego
+State Bar #	String	100	SD999587A
+Social Security or Tax ID	String	100	123-45-6789
+ContractNumber	String	100	A-555555555
+Extraordinary Expenses	Currency		$2500.40
+InCourtFlag	Number		1
+Date	DateTime		01/01/2002
+Case Number	String	50	PD12345679A
+Time Billed	Number		45.5
+Amount Billed	Currency		$150.00
+Task Code	String	50	In-Court
+Phase Code	String	50	Phase
+Party Represented	String	50	Child
+Explanation of Task	String	250	Descript of work here
+Attorney Name	String	100	Smith, Michael
+Address	String	100	123 Anywhere Street
+City, State, Zip	String	100	Chandler, AZ, 82226
+Telephone	String	100	(480) 722-1213
+Fax	String	100	(480) 722-1219
+Court System	String	100	San Diego County PD
+StartDate	DateTime		01/01/2002
+EndDate	DateTime		01/31/2002
+GroupHeader	String	100	In-Court

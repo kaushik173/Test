@@ -1,0 +1,478 @@
+﻿@model LALoDep.Models.CaseSearchExtendedViewModel
+@{
+    ViewBag.Title = "Adv Search</br> For Case";
+    var tabIndex = 1;
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+<div class="row" id="searchCaseAdvancedSearchPanel">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 search-criteria" id="searchCriteria">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-md-12 searchCaseAdvancedSearchPanel" id="searchCaseAdvancedSearchParameters">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form-advanced", @class = "form-inline  center-block" }))
+                {
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="row col-md-12 padding-5">
+                                    <span class="col-md-12 col-sm-12 label-default control-label">Client</span>
+
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientLastName, "Client Last Name", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientLastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientFirstName, "Client First Name", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientDOB, "Client DOB", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.ClientDOB, new { @class = "form-control input-sm date-picker DOBValidation", tabindex = ++tabIndex, maxlength = 10, style = "width:120%" })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientAddress, "Client Address", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientAddress, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientCity, "Client City", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientCity, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientStateID, "Client State", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.ClientStateID, new SelectList(Model.State, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex,style="width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientZip, "Client Zip ", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientZip, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientPhoneNumber, "Client Phone ", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientPhoneNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ClientSSN, "Client SSN ", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ClientSSN, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Legal Number</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.BookingNumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.BookingNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.PetitionNumber, "JCATS #", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.PetitionNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CountyCounselNumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CountyCounselNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HHSANumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.HHSANumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.InmateNumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.InmateNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaseNumber, "Case #", new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CaseNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Child</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ChildLastName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ChildLastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ChildFirstName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ChildFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ChildDOB, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.ChildDOB, new { @class = "form-control input-sm date-picker DOBValidation", tabindex = ++tabIndex, maxlength = 10, style = "width:120%" })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Parent</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentLastName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentLastName, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentFirstName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentDOB, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.ParentDOB, new { @class = "form-control input-sm date-picker DOBValidation", tabindex = ++tabIndex, maxlength = 10, style = "width:120%" })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentAddress, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentAddress, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentCity, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentCity, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentStateID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentStateID, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentZip, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentZip, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentPhone, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentPhone, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentSSN, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.ParentSSN, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Staff</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.AgencyAttorneyID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.AgencyAttorneyID, new SelectList(Model.Attorney, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.InvestigatorID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.InvestigatorID, new SelectList(Model.Investigator, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.LegalAssistantID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.LegalAssistantID, new SelectList(Model.Paralegal, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.RoleStatus, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.RoleStatus, new SelectList(Model.Status, "Key", "Value"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">CareTaker</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaretakerLastName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CaretakerLastName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaretakerFirstName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CaretakerFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaretakerAddress, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CaretakerAddress, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaretakerPhoneNumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.CaretakerPhoneNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                             
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Social Worker</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.SocialWorkerLastName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.SocialWorkerLastName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.SocialWorkerFirstName, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.SocialWorkerFirstName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.SocialWorkerPhoneNumber, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(m => m.SocialWorkerPhoneNumber, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Hearing</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HearingTypeID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.HearingTypeID, new SelectList(Model.HearingType, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HearingDate, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex, maxlength = 10 })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HearingTime, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.HearingTime, new { @class = "form-control input-sm time-picker", tabindex = ++tabIndex })
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-clock-o"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HearingOfficerID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.HearingOfficerID, new SelectList(Model.HearingOfficer, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.HearingDepartmentID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.HearingDepartmentID, new SelectList(Model.CaseDepartment, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaseDepartmentID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.CaseDepartmentID, new SelectList(Model.HearingDepartment, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="row padding-5">
+                                    <span class="col-md-12 label-default control-label">Miscellaneous</span>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.AllegationID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.AllegationID, new SelectList(Model.Allegation, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.CaseStatus, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.CaseStatus, new SelectList(Model.Status, "Key", "Value"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.PetitionStatus, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.PetitionStatus, new SelectList(Model.Status, "Key", "Value"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.LanguageID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.LanguageID, new SelectList(Model.Language, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ParentalRightsTerminationDate, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.ParentalRightsTerminationDate, new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex, maxlength = 10, style = "width:100%" })
+                                            <span class="input-group-addon datepicker-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.PetitionTypeID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.PetitionTypeID, new SelectList(Model.PetitionType, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                                <div class="row padding-5">
+                                    @Html.LabelFor(m => m.ReportFilingDueTypeID, new { @class = "col-md-6 control-label" })
+                                    <div class="col-md-6 no-padding-right">
+                                        @Html.DropDownListFor(m => m.ReportFilingDueTypeID, new SelectList(Model.RFDType, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row" id="searchCaseAdvancedSearchPanelTableDiv">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="searchCaseAdvancedTableDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding" id="searchCaseAdvanced">
+                        <thead>
+                            <tr>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Case Role</th>
+                                <th>HHSA</th>
+                                <th>JCATS #</th>
+                                <th>CloseDate</th>
+                                <th>Case #</th>
+                                <th>Attorney</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Search</button>
+        <button id="reset" type="submit" class="btn btn-default v-bottom" tabindex="@(++tabIndex)"><u>R</u>eset</button>
+    </div>
+}
+
+
+@section scripts
+{
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Inquiry/AdvCaseSearch.js?v=" + Guid.NewGuid())"></script>
+}

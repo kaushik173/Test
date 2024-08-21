@@ -1,0 +1,221 @@
+﻿.page-container {
+    margin-top: 15px;
+    padding-bottom:30px;    
+    -webkit-transition: width 1s;
+    transition: width 1s;
+}
+
+.tutorial-container {
+    width: 0;
+    height: calc(100% - 120px);
+    position: fixed;
+    padding: 15px 20px 15px 20px;
+    border-left: 1px solid #ccc;
+
+}
+
+.tutorial-container .widget.row {
+    height: 100%;
+}
+
+.tutorial-container .widget-header {
+}
+
+.tutorial-container .widget-body {
+    height: calc(100% - 40px);
+}
+
+.tutorial-content,.tutorial-list {
+    height: 100%;
+    width: 100%;
+}
+
+.tutorial-title, .tutorial-list-title {
+   font-weight: 600;
+   font-size: 24px;
+   padding: 5px 0;
+   text-decoration: underline;
+}
+
+.tutorial-subtitle, .tutorial-list-group-title {
+   font-weight: 600;
+   font-size: 18px;
+   font-style: italic;
+   width: 100%;
+}
+
+.tutorial-body, .tutorial-note, .tutorial-error, .tutorial-list-body, .tutorial-navigate {
+    padding-top: 10px;
+    width: 100%;
+}
+
+.tutorial-body ul{
+    padding-top: 10px;
+    width: 100%;
+}
+
+.tutorial-errors {
+    margin-top: 20px;
+    padding-left: 24px;
+}
+
+.tutorial-errors li {
+    font-weight: 600;
+    color: red;
+    list-style: square;
+}
+
+.tutorial-list-item, .tutorial-navigate {
+    height: 30px;
+    width: 100%;
+    background-color: #c6c5c5;
+    text-align: left;
+    padding: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 12px;
+}
+
+.tutorial-navigate {
+    font-style: italic;
+    font-size: 16px;
+    border-radius: 3px;
+    background-color: lightsteelblue;
+    white-space: nowrap;
+}
+
+.tutorial-navigate i {
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+}
+
+.tutorial-list-item.no-priority {
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px #c6c5c5 dashed;
+    pointer-events: none;
+    cursor: default;
+}
+
+
+.tutorial-list-item-title {
+    width: 80%;
+    float: left;
+    pointer-events: none;
+    height: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tutorial-list-item-tags {
+    width: 15%;
+    float: right;
+    text-align: right;
+    height: 100%;
+    overflow: hidden;
+    min-width: 16px;
+    white-space: nowrap;
+}
+
+.tutorial-tag {
+    padding: 2px;
+}
+
+.tutorial-tag.tutorial-tag-info {
+    cursor: help;
+    color: darkslateblue;
+}
+
+.tutorial-tag.tutorial-tag-complete {
+    cursor: help;
+    color: darkseagreen;
+}
+
+.tutorial-tag.tutorial-tag-error {
+    cursor: help;
+    color: red;
+}
+
+.tutorial-list-item.priority {
+    border-bottom: 3px solid black;
+    margin-bottom: 10px;
+}
+.tutorial-list-group:not(:first-of-type) {
+    margin-top: 15px;
+}
+
+.tutorial-button.available {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.tutorial-button {
+    font-size: 18px;
+    text-align: center;
+    min-width: 24px;
+    padding: 2px;
+    opacity: 0.5;
+}
+
+.widget-buttons .tutorial-button {
+    margin: 0 2px;
+}
+
+.tutorial-button.tutorial-scroll-lock {
+    cursor: help;
+}
+
+.tutorial-button.tutorial-open {
+    position: absolute;
+    right: -12px;
+}
+
+.main-container.tutorial-open .tutorial-container {
+    display: inline-block;
+    width: 25%;
+}
+
+.main-container.tutorial-open .page-container {
+    float: left;
+    width: 75%;
+}
+
+.main-container.tutorial-masked .tutorial-mask-holes {
+    opacity: 0.3;
+}
+
+.tutorial-mask-holes path {
+    opacity: 0;
+}
+
+.main-container.tutorial-masked .tutorial-mask-primary {
+    opacity: 0.08
+}
+
+.tutorial-mask {
+    position: fixed;
+    top: -10px;
+    left: -10px;
+    height: calc(100% + 20px);
+    width: calc(100% + 20px);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999999;
+}
+
+.tutorial-container .widget-buttons {
+    user-select: none;
+}
+
+.tutorial-related {
+    margin-top: 20px;
+}
+
+.tutorial-aspect-hidden {
+    display: none !important;
+}

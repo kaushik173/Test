@@ -1,0 +1,185 @@
+﻿@model LALoDep.Models.Case.CreateOtherAgencyCaseViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Create Other Agency Case";
+    var tabindex = 3;
+
+}
+<style>
+    /*.form-inline .input-group {
+            display: table;
+        }*/
+</style>
+<form id="frmCreateOtherAgencyCase">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Create Other Agency Case</span>
+
+                </div>
+                <div class="widget-body col-xs-12">
+                  
+                        <div class="form-inline">
+                            <div class="row">
+                                <div class="form-group col-md-4 col-sm-3">
+                                    @Html.LabelFor(m => m.AttorneyAndAgencyID, "When Creating New Case select the Attorney", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.AttorneyAndAgencyID, Model.AttorneyList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+                                </div>
+
+                                <div class="form-group col-lg-4 col-md-4">
+                                    @Html.LabelFor(m => m.ApptDate, "and the Appt. Date", new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.ApptDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 2, maxlength = "10" })
+                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">This Case's Info</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="workedForList">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">
+                                        Select Client(s) for New Case
+                                    </th>
+                                    <th>
+                                        Case #
+                                    </th>
+                                    <th>
+                                        DOB
+                                    </th>
+                                    <th>
+                                        Representing Attorneys on this case
+                                    </th>
+
+                                </tr>
+
+
+                            </thead>
+                            <tbody>
+                                @if (Model.CaseRolesList != null && Model.CaseRolesList.Count > 0)
+                                {
+                                    foreach (var item in Model.CaseRolesList)
+                                    {
+                                        <tr data-personid="@item.PersonID" class="@(item.ClientFlag==1?" highLightBlue":"")">
+                                            <td width="30" style="vertical-align: middle">
+                                                <input type="checkbox" value="@item.PersonID" tabindex="@(++tabindex)" data-childflag="@item.ChildFlag" class="chkPerson" @(Model.CaseRolesList.Count == 1 ? "checked" : "") @(item.ClientFlag.Value == 1 ? "disabled" : "") />
+                                            </td>
+                                            <td width="200" style="vertical-align: middle">@item.PersonDisplay</td>
+                                            <td style="vertical-align: middle">@item.CaseInfo</td>
+                                            <td style="vertical-align: middle">@item.DOBAge</td>
+                                            <td style="vertical-align: middle">@item.RepresentingAtty</td>
+
+
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Conflict Check Search Results</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCase">
+                            <thead>
+                                <tr>
+                                    <th>JCATS #</th>
+                                    <th>Agency</th>
+                                    <th>Case Role</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>DOB</th>
+                                    <th>Gender</th>
+                                    <th>Case #</th>
+                                    <th>Close Date</th>
+                                    <th>Attorney</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ConflictResultsList != null && Model.ConflictResultsList.Count > 0)
+                                {
+                                    foreach (var item in Model.ConflictResultsList)
+                                    {
+                                        <tr  class="@(item.RoleClient==1?" highLightBlue":"")">
+                                            <td>
+                                           <a target="_blank" href="/Case/Main/@item.CaseID.ToEncrypt()">@item.CaseNumber</a>
+                                            </td>
+
+                                            <td>@item.Agency</td>
+
+                                            <td>@item.Role</td>
+
+                                            <td>@item.PersonNameLast</td>
+
+                                            <td>@item.PersonNameFirst</td>
+
+                                            <td>@item.DOB</td>
+
+                                            <td>@item.Sex</td>
+
+                                            <td>@item.PetitionDocketNumber</td>
+
+                                            <td>@item.ClosedDate</td>
+                                            <td>@item.LeadAttorney</td>
+
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section fixedfooter{
+<div class="boxfloat text-center">
+   
+         
+        <button id="btnCreate" type="button" tabindex="@(++tabindex)"   class="btn btn-primary  v-bottom default ">Create Other Agency Case</button>
+         
+    
+</div>
+
+}
+
+@section scripts
+{<script src="@Url.Content("~/Scripts/Application-Script/Case/CreateOtherAgencyCase.js?v=" + Guid.NewGuid())"></script>
+
+
+
+} 

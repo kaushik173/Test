@@ -1,0 +1,9 @@
+ReportTitle	String	200	Test Report Title
+ReportGroupID		Number	1
+AttorneyLastName	String	50	Elliot
+AttorneyFirstName	String	30	Lorraine
+AgencyName	String	100	PD
+Department	String	100	1
+CaseNumber	String	20	AAA111
+PersonID		Number	2
+AgencyID		Number	1

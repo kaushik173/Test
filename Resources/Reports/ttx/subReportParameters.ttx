@@ -1,0 +1,4 @@
+ReportParameterHeaderName	String	200	Start Date
+ReportParameterHeaderValue	Memo
+ReportTitle	String	200	This is the Report Title
+ReportDefFlag	Number		1

@@ -1,0 +1,98 @@
+﻿
+@model LALoDep.Models.Administration.TrainingEditViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = (Model.TrainingID == 0 ? "Add" : "Edit") + " Training For <br /> " + Model.Person.FirstName + " " + Model.Person.LastName;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Training Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "TrainingEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.TrainingID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+
+                    <input type="hidden" name="hdn_personID" id="hdn_personID" value="@Model.Person.PersonID.ToEncrypt()" />
+                    @Html.HiddenFor(m => m.Person.PersonID)
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.CourseTitle, "Course Title", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.CourseTitle, new { @class = "form-control input-sm", style = "width:98%", tabindex = 1, autofocus = true, maxlength = "50" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.TrainingProvider, "Training Provider", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.TrainingProvider, new { @class = "form-control input-sm", style = "width:98%", tabindex = 2 ,maxlength="50"})
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.SubjectMatter, "Subject Matter", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SubjectMatter, new { @class = "form-control input-sm", style = "width:98%", tabindex = 3, maxlength = "50" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", tabindex = 4, maxlength = 10 })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate, "End Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", tabindex = 5, maxlength = 10 })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Participatory, "Participatory", new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.Participatory, new { @class = "form-control input-sm", tabindex = 6 })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Hours, "Hours", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Hours, new {  @class = "form-control input-sm numeric-val", style = "width:98%", tabindex = 7 })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CreditTypeID, "Credit Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CreditTypeID, Model.CreditTypeList, "", new { @class = "form-control input-sm", tabindex = 8, style = "width:98%" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.VenueID, "Venue", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.VenueID, Model.VenueList, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:98%" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.TrainingIVeEligibleCodeID, "IV-E Eligible", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.TrainingIVeEligibleCodeID, Model.TrainingIVeEligibleCodeList, "", new { @class = "form-control input-sm", tabindex = 9, style = "width:150px", data_valdatestartdate = "07/01/2020" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="update" type="submit" class="btn btn-primary v-bottom default" tabindex="9">Save</button>
+        <button id="cancel" type="submit" class="btn btn-default v-bottom" tabindex="10" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.ViewMyTraining)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/TrainingEdit.js?v=" + Guid.NewGuid())"></script>
+}

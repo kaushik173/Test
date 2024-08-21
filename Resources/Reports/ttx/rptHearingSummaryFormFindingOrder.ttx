@@ -1,0 +1,4 @@
+HearingID	Number		1
+FindingOrderType	String	100	Psychological Evaluation Ordered
+Persons	String	200	Mom Gold, Dad Gold
+Notices	String	200	Notification to Mother's Counsel, Notification to Father's Counsel

@@ -1,0 +1,7 @@
+Dept	String	100	Dept 1 (98 Records)
+Case #	String	100	TEST123
+InitHrg	DateTime		01/01/1999
+PrePerm	DateTime		02/01/1999
+Perm	DateTime		03/01/1999
+PostPerm	DateTime		04/01/1999
+CaseID	Number		10294099

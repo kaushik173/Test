@@ -1,0 +1,30 @@
+EventDate	DateTime		01/01/1999
+EventTime	DateTime		1:30PM
+EventType	String	100	Hearing
+HearingType	String	100	C/26
+Department	String	100	1
+Petitions	String	2000	00000
+Children	String	2000	Geena Gold
+Clients	String	2000	Geena Gold
+Result	String	100	Completed
+CaseID	Number		304
+HearingID	Number		440
+StartDateParameter	String	100	01/01/1999
+EndDateParameter	String	100	01/01/1999
+LastNameParameter	String	100	Dip
+FirstNameParameter	String	100	Say
+Hearing2Type	String	100	Juris
+Hearing2DateTime	DateTime		01/01/1999
+Hearing3Type	String	100	Juris
+Hearing3DateTime	DateTime		01/01/1999
+CaseNumber	String	100	2001J3P0001
+Hearing2Department	String	100	1
+Hearing3Department	String	100	1
+DefenderName	String	100	Abbott
+PetitionID	Number		21390
+EventDateTime	DateTime		01/01/1999 1:30 PM
+HearingTypeParameter	String	100	Juris
+AgencyID	Number		1
+AgencyName	String	100	AgencyName
+RequestedForName	String	100	John Lauerman
+MP	String	50	X

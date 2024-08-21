@@ -1,0 +1,120 @@
+﻿@model LALoDep.Models.Administration.MyTrainingViewModel
+@{
+    ViewBag.Title = "Training For </br>" + Model.PersonName;
+}
+
+<style>
+    .grandTotal {
+        font-weight: bold;
+    }
+</style>
+
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Training-search-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(x => x.PersonID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", autofocus = "autofocus", tabindex = 1, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.VenueID, "Venue", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.VenueID, Model.VenueList, "", new { @class = "form-control input-sm", tabindex = 5, style = "width:98%" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class=" row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Training Summary</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="TrainingSummary">
+                            <thead>
+                                <tr>
+                                    <th>Credit Type</th>
+                                    <th>Participatory</th>
+                                    <th>Non-participatory</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" id="trainingDiv">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption"></span>
+                    <div class="widget-buttons ">
+                        <button id="addTrainingEntry" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(Model.PersonID.ToString())" type="button" data-secure-id="@((int) LALoDep.Custom.Security.SecurityToken.AddTraining)" class=" btn btn-default padding-5" tabindex="13">Add Training Entry</button>
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="Training">
+                            <thead>
+                                <tr>
+                                    <th>Course Title</th>
+                                    <th>Start Date</th>
+                                    <th>Credit Type</th>
+                                    <th>Venue</th>
+                                    <th style="width: 60px;text-align:right !important;" class="text-right">Hours</th>
+                                    <th style="width: 30px;"></th>
+                                </tr>		
+
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="filter" type="submit" class="btn btn-primary v-bottom default" tabindex="3" data-secure-id="@((int) LALoDep.Custom.Security.SecurityToken.ViewMyTraining)">Search</button>
+        <button id="print" type="button" class="btn  v-bottom " tabindex="4" data-secure-id="@((int) LALoDep.Custom.Security.SecurityToken.ViewMyTraining)">Print</button>
+        <button id="cancel" type="button" class="btn  v-bottom " tabindex="5" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.ViewMyTraining)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/Training.js?v=" + Guid.NewGuid())"></script>
+}

@@ -1,0 +1,149 @@
+﻿@model LALoDep.Models.CaseOpening.ActionRequestModel
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Most Recent AR";
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+
+@Html.Hidden("HearingID")
+
+
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Action Requests</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                        <thead>
+                            <tr>
+                                <th width="80">Print </th>
+                                <th>Type </th>
+                                <th>Request For </th>
+                                <th>Request Date </th>
+                                <th>Due Date </th>
+                                <th> Completed Date</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.ActionRequestList)
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="btn btn-info btn-xs    printAR" data-id="@item.HearingReportFilingDueID.ToEncrypt()"><i class="fa fa-print"></i> Print</a>
+
+
+                                    </td>
+                                    <td>
+                                        @item.Type
+
+
+                                    </td>
+                                    <td>
+                                        @item.RequestedFor
+                                    </td>
+                                    <td>
+                                        @item.HearingReportFilingDueOrderDate.ToDefaultFormat()
+
+
+
+                                    </td>
+                                    <td>
+                                        @item.HearingReportFilingDueDate.ToDefaultFormat()
+
+
+                                    </td>
+                                    <td>
+                                        @item.HearingReportFilingDueEndDate.ToDefaultFormat()
+
+
+                                    </td>
+
+
+
+                                </tr>
+                                var profileList = Model.ProfileList.Where(o => o.HearingReportFilingDueID == item.HearingReportFilingDueID.Value).ToList();
+                                foreach (var profile in profileList)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td>@profile.ProfileDisplay On @profile.ProfilePersonDisplay</td>
+                                        <td> </td>
+                                        <td></td>
+                                        <td>
+                                            <a class="btn btn-info btn-xs    printProfile" data-roleid="@profile.RoleID" data-rfdid="@profile.HearingReportFilingDueID" data-profiletypecodeid="@profile.ProfileTypeCodeID.Value"><i class="fa fa-print"></i> Print</a>
+
+                                          
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+
+
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="1">Return to Calendar</button>
+    </div>
+}
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/ActionRequest.js?v=" + Guid.NewGuid())"></script>
+    @if (Model.PrintAR)
+    {
+       
+        <script>
+            setTimeout(function () {
+                PrintAR('@Model.MostRecentARHearingRequestID.ToEncrypt()');
+            }, 500)
+        </script>
+    }
+@if (Model.PrintARProfile)
+{
+
+    <script>
+            setTimeout(function () {
+                $('.printProfile[data-rfdid="@Model.MostRecentARHearingRequestID"]:eq(0)').click();
+            }, 500)
+    </script>
+}
+
+
+
+
+       
+    <script>
+
+        $('#btnBackToCalendar').click(function () {
+
+            window.location.href = '/Task/QuickCalMyCalendar?HearingDate=' + $('.hearingDate').data('date');
+        })
+
+
+    </script>}

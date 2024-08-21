@@ -1,0 +1,242 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@model LALoDep.Models.Administration.JudgeDeptTransferViewModel
+@{
+    ViewBag.Title = "Judge Transfer for<br/>";
+    int tabIndex = 0;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "judgeTransfer-form", @class = "form-inline center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Transfer Within Agency Group</span>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyGroupID, "Agency Group", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyGroupID, Model.AgencyGroupList, new { @class = "form-control input-sm", tabindex = ++tabIndex, autofocus = "autofocus" })
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Hearing Search Criteria</span>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AttorneyPersonID, "Assigned Attorney", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AttorneyPersonID, Model.AttorneyPersonList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.JudgePersonID, "Hearing Judge", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.JudgePersonID, Model.JudgePersonList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DeptCodeID, "Hearing Dept", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DeptCodeID, Model.DeptCodeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingStartDate, "Hearing Start Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingStartDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingEndDate, "Hearing End Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingEndDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Update To Judge/Dept</span>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UpdateJudgePersonID, "Update To Judge	", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.UpdateJudgePersonID, Model.UpdateJudgePersonList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UpdateDeptCodeID, "Update To Dept", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.UpdateDeptCodeID, Model.UpdateDeptCodeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div id="searchResult"></div>
+        </div>
+    </div>
+
+
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Search</button>
+        <button id="btnTransfer" type="button" class="btn btn-default v-bottom hidden" tabindex="@(++tabIndex)">Transfer</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        @if((Model.AgencyGroupID.HasValue && Model.AgencyGroupID.Value > 0))
+        {
+
+         <text>$("#AgencyGroupID").val('@Model.AgencyGroupID.Value.ToEncrypt()')</text>
+        }
+
+        $("#AgencyGroupID").on("change", function () {
+            document.location.href = '/Administration/JudgeDeptTransfer/' + $("#AgencyGroupID").val();
+        });
+        $("#btnSearch").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($("#JudgePersonID").val() == '' && $("#DeptCodeID").val() == '') {
+                notifyDanger("Department or Judge is required.");
+                $("#JudgePersonID").focus();
+                return false;
+            }
+
+
+
+
+            if ($("#HearingStartDate").val() == "") {
+                $("#HearingStartDate").focus();
+                notifyDanger("Hearing Start Date is required.");
+                return false;
+            }
+
+
+            var yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (!(new Date($("#HearingStartDate").val()) >= moment('@DateTime.Now.ToString("d")'))) {
+                $("#HearingStartDate").focus();
+                notifyDanger("Hearing Start Date cannot be in the past.");
+                return false;
+            }
+
+
+
+            if ($("#HearingEndDate").val() != '' && moment($("#HearingStartDate").val()) > moment($("#HearingEndDate").val())) {
+                $("#HearingEndDate").focus();
+                notifyDanger("Hearing End Date cannot be prior to Hearing Start Date.");
+                return false;
+            }
+
+
+
+            if (hasFormChanged("judgeTransfer-form")) {
+
+
+                var data = $("#judgeTransfer-form").serialize();
+                $.ajax({
+                    type: "POST", url: '/Administration/JudgeDeptTransfer', data: data,
+                    success: function (result) {
+                        $('#searchResult').html(result);
+                        if ($("#warningMessage").length>0)
+                            $('#btnTransfer').removeClass('hidden')
+                        else
+                            $('#btnTransfer').addClass('hidden')
+                    }
+                });
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        });
+
+        $("#btnTransfer").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($("#UpdateJudgePersonID").val() == '' && $("#UpdateDeptCodeID").val() == '') {
+                notifyDanger(" Update To Judge and/or Update To Dept is required is required.");
+                $("#UpdateJudgePersonID").focus();
+                return false;
+            }
+
+
+            if (hasFormChanged("judgeTransfer-form")) {
+                var msg = $("#warningMessage").text() + $("#UpdateJudgePersonID option:selected").text() + " and Dept " + $("#UpdateDeptCodeID option:selected").text();
+
+                confirmBox(msg, function (result) {
+                    if (result) {
+                        var data = $("#judgeTransfer-form").serialize();
+                        $.ajax({
+                            type: "POST", url: '/Administration/JudgeDeptTransferSubmit', data: data,
+                            success: function (result) {
+                                RequestSubmitted();
+
+                                if (result.isSuccess) {
+                                    notifySuccess('Data Saved Successfully!.');
+                                    setTimeout(function () {
+
+                                        document.location.href = '/Administration/JudgeDeptTransfer/' + $("#AgencyGroupID").val();
+                                    }, 1000)
+                                }
+
+                            }
+                        });
+                    }
+                });
+
+
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        });
+
+
+
+
+        $(document).ready(function () {
+            setInitialFormValues("judgeTransfer-form");
+        });
+
+    </script>
+}

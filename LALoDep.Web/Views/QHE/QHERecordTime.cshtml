@@ -1,0 +1,68 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+
+@model LALoDep.Models.Case.RecordTimeViewModel
+@{
+    ViewBag.Title = "QHE Record Time";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>                
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "recordTime-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m=>m.HearingID)
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.WorkerPersonID, "Worker", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.WorkerPersonID, new SelectList(Model.Workers, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.ClientPersonID, "Client", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ClientPersonID, new SelectList(Model.Clients, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = 2, @style = "width:100%" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    <button id="btnAddNew" class="btn btn-default btn-sm" data-secure-id="@((int)SecurityToken.RecordTimeAdd)" title="Add Time">Add Time</button>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12" id="recordTimeData">
+                <div class="table-responsive">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_steps", new { id = Model.HearingID.ToEncrypt() })
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="4">Search</button>
+        <button id="btnPrint" type="button" class="btn v-bottom default" tabindex="5">Print</button>
+        <button id="saveAndExit" type="button" class="btn btn-default v-bottom " tabindex="20">Save/Exit QHE </button>
+        <button id="SaveAndNextQHECase" type="button" class="btn btn-default v-bottom " tabindex="20">Save/Next QHE Case</button>
+    </div>
+}
+
+@section scripts{
+    <script>
+        var $hearingID = '@Model.HearingID.ToEncrypt()';
+        var calnderPersonId = '@TempData.Peek("PersonID")';
+        var entryPageId = '@TempData.Peek("SourcePage")';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/QHE/RecordTime.js?v=" + Guid.NewGuid())"></script>
+}

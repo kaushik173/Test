@@ -1,0 +1,7 @@
+CaseNumber	String	20	2000J3P0078
+AttorneyLastName	String	50	Barrett
+AttorneyFirstName	String	50	Andy
+Clients	String	250	Lisa Portune, Ned Portune
+Petitions	String	250	CSI123, CSI123B
+Reason	String	250	No Time Recorded
+AgencyName	String	250	Public Defender

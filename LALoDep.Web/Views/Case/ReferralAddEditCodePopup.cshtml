@@ -1,0 +1,136 @@
+﻿@model LALoDep.Models.Case.ReferralAddEditCodePopupViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = " ";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px">
+        <div class="widget row">
+
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "quickadd-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.RecordType)
+                    @Html.HiddenFor(m => m.ControlID)
+                <div class="row">
+                    @if (Model.RecordType == "ImmigrationAgency")
+                    {
+                        <div class="form-group  col-xs-6">
+                            @Html.LabelFor(m => m.Value, "Value", new { @class = "control-label" })<br />
+                            @Html.TextBoxFor(m => m.Value, new { @class = "form-control input-sm ", tabindex = 1, maxlength=100, autofocus = "autofocus" })
+                        </div>
+                        <div class="form-group col-xs-6">
+                            @Html.LabelFor(m => m.ShortValue, "Short Value", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.ShortValue, new { @class = "form-control input-sm ", tabindex = 2, maxlength = 25 })
+
+                        </div>
+                    }
+                    else if (Model.RecordType == "ImmigrationAttorney")
+                    {
+
+                        <div class="form-group  col-xs-6">
+                            @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })<br />
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm ", tabindex = 1, maxlength = 50, autofocus = "autofocus" })
+                        </div>
+                        <div class="form-group col-xs-6">
+                            @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm ", tabindex = 2, maxlength = 50 })
+
+                        </div>
+
+                    }
+
+
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default v-bottom" tabindex="3">Add</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="4">Cancel </button>
+    </div>
+}
+@section Scripts{
+
+    <script>
+        setTimeout(function () {
+            $('#LastName').focus();
+            $('#Value').focus();
+
+        }, 1000);
+        function Validation() {
+            if ($('#LastName').val() == '' && $('#LastName').length > 0) {
+                isValid = false;
+                parent.notifyDanger('Last Name is required!');
+                $('#LastName').focus();
+                return false;
+            }
+            if ($('#FirstName').val() == '' && $('#FirstName').length>0) {
+                isValid = false;
+                parent.notifyDanger('First Name is required!');
+                $('#FirstName').focus();
+                return false;
+            }
+           
+            if ($('#Value').val() == '' && $('#Value').length > 0) {
+                isValid = false;
+                parent.notifyDanger('Value is required!');
+                $('#Value').focus();
+                return false;
+            }
+            if ($('#ShortValue').val() == '' && $('#ShortValue').length > 0) {
+                isValid = false;
+                parent.notifyDanger('Short Value is required!');
+                $('#ShortValue').focus();
+                return false;
+            }
+            return true;
+        }
+
+
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            var isvalid = Validation();
+
+            if (isvalid) {
+                var params = $('#quickadd-form').serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '/Case/ReferralAddEditCodePopupSave',
+                    data: params,
+                    success: function (result) {
+                        if (result.isSuccess) {
+                         
+                            parent.InsertDropDownData(result.CodeID, result.CodeValue, '@Model.ControlID')
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+        });
+
+        $("#btnCancel").on("click", function () {
+             parent.ClosePopup();
+        });
+
+    </script>
+
+}

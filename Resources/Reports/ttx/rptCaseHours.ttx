@@ -1,0 +1,11 @@
+CaseNumber	String	20	2000J3P0087
+Clients	String	250	Andy Barrett, Joe Barrett
+StartDate	DateTime		01/01/2000
+EndDate	DateTime		02/02/2001		
+StaffFirstName	String	50	Jake
+StaffLastName	String	50	Plummer
+StaffRole	String	50	Social Worker
+Hours	Number		21.1
+StartDateParameter	DateTime		01/31/2000
+EndDateParameter	DateTime		01/31/2000
+AgencyName	String	250	Public Defender

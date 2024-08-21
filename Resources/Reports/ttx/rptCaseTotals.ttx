@@ -1,0 +1,15 @@
+Department	String	50	Deparment A
+Week 1 Total	Number		20
+Week 1 Date	DateTime		01/01/2000
+Week 2 Total	Number		30
+Week 2 Date	DateTime		01/08/2000
+Week 3 Total	Number		25
+Week 3 Date	DateTime		01/15/2000
+Week 4 Total	Number		27
+Week 4 Date	DateTime		01/22/2000
+Week 5 Total	Number		19
+Week 5 Date	DateTime		01/29/2000
+MonthParameter	String	20	January
+YearParameter	Number		2000
+AgencyName	String	200	Public Defender
+Branch	String	100	Branch Name

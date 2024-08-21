@@ -1,0 +1,86 @@
+﻿jtutorial.js
+    
+purpose		- provide a configurable interface for interactive , on-page help and tutorials for general app and page usage,
+			- the design goal is for make the adding of new tutorials, steps, and selection of effect as idiot-proof as possible solely thorugh adding configuration elements. 
+			- a host application could grow indefinitely, change platforms, redesign framework, and require minimal to no change to the source code here
+	
+files		- jtutorial.js
+				* main source, requires jquery
+			- config.json
+				* configuration: this is where new pages, steps, body content, and modifiers should be added. Organized in a tree.
+				schema : {
+								"meta": {
+								  "widgetSelector": ( string )	css selector to find tutorial widget ,
+								  "pageSelector":	( string )	css slector to find the page (whatever main container is ajacent to the tutorial container),
+								  "wraperSelector": ( string )	css slector for the container that wraps both of the above,
+								  "useAnimations":	( bool )	if false just uses 0 for  all animation lengths,
+								  "animations": {
+									"blinkMask": {
+								      "value":		( string )	css value or element property value e.g. opacity ,
+									  "valueType":  ( string )	css OR property ,
+									  "valueTarget":( string )	css slector if csss ,
+									  "valueEnd":   ( num )		value that should show at end
+									  "valueOrig":  ( string )	explicit original value if it may not be what was seen at the start,
+									  "valueRemain":( bool )	if true goes back to valueOrig or value observed at start,
+									  "duration":   ( ms )		time in ms a period should last,
+									  "periods": 3, ( num )		number of times the animation should repeat
+									  "periodEase": ( bool )	if true reverts to original value each cycle over the same duration, instead of immediately
+									},
+									"scrollMask": {
+									  // same properties as above
+									},
+									.
+									.
+									.
+								  },
+								  "keepAliveOnClose": ( bool ) // decides when closed if the widget should completely restart or just stop displaying,
+								  "errorTypes": {
+									"tutorialIllFormed":( string ) msg to display,
+									"stepIllFormed":	( string ) ..,
+									"groupIllFormed":	( string ) ..,
+									"maskIllFormed":	( string ) ..,
+									"tutorialNotFound":	( string ) ..,
+									"stepNotFound":		( string ) ..,
+									"groupNotFound":	( string ) ..,
+									"maskNotFound":		( string ) ..
+								  }
+								}
+								"groups": {			// Will display as button list in list with a subtitle headers
+									"Group Title" : {			// Key is subtitle to display on list tab
+										"Tutorial Title" : {	// Key is button text in list, big title when on selected tab
+											"Step Title" : {	// Key is subtitle under big tutorial title on selected tab
+											""
+												"body" : [] (string(s)) will be joined together, array to be multi-line and readable inside JSON spec. might see some simple HTML tags (e.g. FontAwesome)
+												"transitions" : [] "select from items of meta.animations"
+												"mask" : [
+													{
+														"targetType":	( string ) "css" OR "widgetCaption",
+														"target" :		( string ) value to look for the above
+														"modifiers" : {
+															"addTop"		: ( pixels ) add dimension to the box if not quite right
+															"addRight"		: ( pixels ) ..
+															"addBottom"		: ( pixels ) ..
+															"addLeft"		: ( pixels ) ..
+															.
+															.
+															.
+														}
+													}
+													.
+													.
+													.
+												],
+											}
+											.
+											.
+											.
+										},
+										.
+										.
+										.
+									},
+									.
+									.
+									.
+								}
+							}

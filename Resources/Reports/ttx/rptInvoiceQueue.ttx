@@ -1,0 +1,6 @@
+InvoiceDate	String	50	01/01/2001
+Client	String	100	Last Name, First Name
+Petition #	Memo		NJ13967A, NJ13967B, NJ13967C
+Hearing	Memo		C-21E, C-Special
+Division	String	100	DLGSD - PPO
+Branch	String	100	BranchName

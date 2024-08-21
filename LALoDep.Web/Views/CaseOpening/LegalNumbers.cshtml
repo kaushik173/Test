@@ -1,0 +1,162 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.CaseOpening.LegalNumberModel
+@{
+    ViewBag.Title = "Legal Numbers";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-search-form", @class = "form-inline  center-block" }))
+{
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add Legal Numbers  </span>
+                    <div class="widget-buttons">
+
+
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRoles">
+                            <thead>
+                                <tr>
+                                    <th>  Role</th>
+                                    <th>Party Name </th>
+                                    <th>CC Number</th>
+                                    <th >HHSA Number </th>
+                                    <th >SS Number </th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var index = 0;
+                                }
+                                @foreach (var item in Model.RoleList)
+                                {
+
+
+                                    <tr @if (item.RoleClient == 1) { <text> class="highLightBlue " </text>                    }>
+                                        <td>
+                                            @item.Role
+                                            @Html.HiddenFor(m => item.PersonID )
+
+
+                                        </td>
+                                        <td>@item.PersonName</td>
+                                        <td>
+                                            @if (index == 0)
+                                            {
+                                                index++;
+                                                @Html.TextBoxFor(m => item.CCNumber, new { @class = "form-control input-sm  input-sm uppercase", tabindex = 1, style = "width:100% !important;", autofocus = "autofocus" })
+                                            }
+                                            else
+                                            {
+                                                     @Html.TextBoxFor(m => item.CCNumber, new { @class = "form-control input-sm  input-sm uppercase", tabindex = 1, style = "width:100% !important;" })
+                                       
+                                            }
+                                             
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => item.HHSANumber, new { @class = "form-control input-sm  input-sm uppercase ", tabindex = 1, style = "width:100% !important;" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => item.SSNumber, new { @class = "form-control input-sm  input-sm uppercase SSNumber", tabindex = 1, style = "width:100% !important;" })
+                                        </td>
+
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                     
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Legal Numbers for Case Parties </span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                            <thead>
+                                <tr>    
+                                    <th>Role </th>
+                                    <th>Party Name </th>
+                                    <th>Type</th>
+                                    <th width="150">Number </th>
+                             
+                                  
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.LegalNumberList)
+                                {
+                                    <tr @if (item.RoleClient == 1) { <text> class="highLightBlue " </text>                   }>
+                                        <td>
+
+                                            @item.RoleTypeCodeValue
+                                        </td>
+                                        <td>@item.PersonNameFirst @item.PersonNameLast</td>
+                                        <td>@item.LegalNumberTypeCodeValue</td>
+                                        <td>
+                                            @item.LegalNumberEntry
+                                        </td>
+
+
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@Html.Partial("_steps")
+@section scripts
+{
+
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/LegalNumbers.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="saveAndContinue" type="submit" class="btn btn-primary v-bottom default" tabindex="2" data-secure-id="@((int)SecurityToken.AddLegalNumber)"> Save/Continue</button>
+        <button id="saveAndAdd" type="submit" class="btn btn-default v-bottom " tabindex="3" data-secure-id="@((int)SecurityToken.AddLegalNumber)">Save/Add More   </button>
+
+
+
+
+
+    </div>
+
+}

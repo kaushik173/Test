@@ -1,0 +1,8 @@
+CreditType	String	50	Credit Type Here
+P	Number		100
+NP	Number		100
+Total	Number		200
+AgencyName	String	200	Public Defender
+StartDate	DateTime		1/1/2001
+EndDate	DateTime		2/2/2002
+StaffName	String	100	Last, First

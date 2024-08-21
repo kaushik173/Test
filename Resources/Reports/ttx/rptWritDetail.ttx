@@ -1,0 +1,16 @@
+Clients	String	250	Charlie Barrett, Charlie Barrett
+RequestedByFirstName	String	30	Charlie
+RequestedByLastName	String	50	Barrett
+Petitions	String	250	12345A, 12345B
+CaseNumber	String	25	2001J3P0032
+AmountAuthorized	Currency		100.0000
+DateAuthorized	DateTime		01/01/1999
+ProviderName	String	100	Andy B
+ExpenseType	String	100	Bonding Study
+PanelCase	String	10	Yes
+DateForwardedToAccounting	DateTime		01/01/1999
+AmountPaid	Currency		100.00
+DatePaid	DateTime		01/01/1999
+StartDateParameter	String	50	Start Date: 01/01/1999
+EndDateParameter	String	50	End Date: 01/01/1999
+AgencyName	String	200	Public Defender

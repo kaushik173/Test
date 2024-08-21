@@ -1,0 +1,8 @@
+Role	String	50	Agency 1
+ParentName	String	100	Smith, John
+PersonDOB	DateTime		01/01/2000
+SS	String	50	Home
+SSN	String	50	111222333
+Address	String	100	2000 Test Way, Juniper, CA
+Phone	String	100	111-222-333
+GroupID	Number	1

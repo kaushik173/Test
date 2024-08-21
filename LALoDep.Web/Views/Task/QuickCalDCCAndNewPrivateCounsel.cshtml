@@ -1,0 +1,112 @@
+﻿@model LALoDep.Models.Task.QuickCalDCCAndNewPrivateCounselViewModel
+@{
+    ViewBag.Title = "QuickCalDCCAndNewPrivateCounsel";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    var labelTitle = Model.AddMode == "DCC" ? "DCC" : "Private Counsel";
+    var refreshMethod = Model.AddMode == "DCC" ? "self.parent.DCCDropdownRefresh(result.NewPersonID)" : "self.parent.PrivateCounselDropdownRefresh(result.NewPersonID)";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 10px 0 10px">
+        <div class="widget row">
+
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickCalDCCAndNewPrivateCounsel-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.HearingID)
+                    @Html.HiddenFor(m => m.AddMode)
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            @Html.LabelFor(m => m.FirstName, labelTitle + " First Name", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm ", tabindex = 1, autofocus = "autofocus" })
+
+
+                        </div>
+                        <div class="form-group  col-xs-6">
+                            @Html.LabelFor(m => m.LastName, labelTitle + " Last Name", new { @class = "control-label" })<br />
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm ", tabindex = 2 })
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default v-bottom" tabindex="3">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="5">Cancel </button>
+    </div>
+}
+@section Scripts{
+
+    <script>
+        setTimeout(function () {
+            $('#FirstName').focus();
+
+        }, 1000);
+        function Validation() {
+            if ($('#FirstName').val() == '') {
+                isValid = false;
+                parent.notifyDanger('@labelTitle First Name is required!');
+                $('#FirstName').focus();
+                return false;
+            }
+            if ($('#LastName').val() == '') {
+                isValid = false;
+                parent.notifyDanger('@labelTitle Last Name is required!');
+                $('#LastName').focus();
+                return false;
+            }
+            return true;
+        }
+
+
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            var isvalid = Validation();
+
+            if (isvalid) {
+                var params = $('#QuickCalDCCAndNewPrivateCounsel-form').serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/QuickCalDCCAndNewPrivateCounsel',
+                    data: params,
+                    success: function (result) {
+                        if (result.Status == "Done") {
+                            if (result.ErrorMessage != "") {
+                                parent.AlertBoxWithCallback(result.ErrorMessage, function (result) {
+                                });
+                            }
+                            else {
+                                @Html.Raw(refreshMethod)
+                            }
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+        });
+
+        $("#btnCancel").on("click", function () {
+            //OpenCustomPopup('/Task/QuickCalDCCAndNewPrivateCounsel/' + $(this).data('id') + '?AddMode=PrivateCounsel', 500, 300, 'Add New Private Council');
+            parent.ClosePopup();
+        });
+
+    </script>
+
+}

@@ -1,0 +1,88 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model  LALoDep.Domain.Expense.Expense_GetHeader_spResult
+    @using LALoDep.Models
+@{ 
+    Layout = null;
+}
+
+    @if (Model == null)
+    {
+        return;
+    }
+
+    @{
+
+
+
+        var index = 1;
+        var items = new List<LALoDep.Models.MenuItem> { new MenuItem() { Action = "ExpenseNG", Controller = "Case", Title= Model.ExpenseHeader
+    }
+    , new MenuItem() { Action = "ExpenseNGFiles", Controller = "Case",  Title= Model.AttachedFiles   }
+
+   };
+
+    }
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div data-target="#simplewizard-steps" class="wizard" id="simplewizard">
+                <ul class="steps">
+                    @foreach (var item in items)
+                    {
+                    <li data-target="#simplewizardstep1" class="enable">
+                        @if (Model.ExpenseID > 0)
+                        {
+                            <a href="@Url.Action(item.Action, item.Controller, new {id = Model.ExpenseID.ToEncrypt()})" class="" title="@item.Tooltip">
+                                <span class="step">@index</span> @item.Title
+                            </a>
+                        }
+                        else
+                        {<a href="@Url.Action(item.Action, item.Controller)" class="" title="@item.Tooltip">
+                                <span class="step">@index</span> @item.Title
+                            </a>
+
+                        }
+
+                        <span class="chevron"></span>
+                    </li>
+                        index++;
+
+
+
+                    }
+
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+    <style>
+        .wizard ul li .chevron {
+            border: 19px solid transparent;
+            border-left: 11px solid #d4d4d4;
+            border-right: 0;
+            display: block;
+            position: absolute;
+            right: -10px;
+            top: 0;
+            z-index: 1;
+        }
+    </style>
+ 
+
+<br />
+
+    <script>
+
+    $(function () {
+
+        $('#simplewizard a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).parent().addClass('active');
+
+            }
+        });
+    
+    });
+    </script>

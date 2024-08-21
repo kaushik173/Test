@@ -1,0 +1,128 @@
+﻿ 
+@model  LALoDep.Models.Inquiry.CalendarManagementViewModel
+
+@{
+    ViewBag.Title = "Calendar<br/> Management";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "calendarmanagement", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                    <div class="row">
+
+
+
+                        <div class="form-group col-md-2 col-sm-6 ">
+                            <div class="remove-padding">
+                                <label for="StarEndtDate" class="control-label">Start Date - End Date</label>
+                                <input tabindex="1" type="text" id="StarEndtDate" value="@Model.StartDate - @Model.EndDate" class="form-control daterange input-sm" style="width: 100% !important;" />
+
+                            </div>
+
+                        </div>
+
+
+
+                        @Html.HiddenFor(c => c.StartDate)
+                        @Html.HiddenFor(c => c.EndDate)
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divAttorney">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Results
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12" id="calendarData">
+                
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    
+<script>
+
+
+
+
+    $(function () {
+
+        $('.daterange').daterangepicker({ autoClose: true, "linkedCalendars": false, }, function (start, end) {
+            $('#StartDate').val(start.format('MM/DD/YYYY'));
+            $('#EndDate').val(end.format('MM/DD/YYYY'));
+        });
+    
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            IPadKeyboardFix();
+            $('#calendarmanagement').submit();
+
+        });
+        $('#calendarmanagement').on('submit', function (e) {
+            e.preventDefault();
+
+            var $form = $('#calendarmanagement');
+
+            $.ajax({
+                type: "POST", url: '/Inquiry/CalendarManagement', data: $form.serialize(), success: function (data) {
+   
+                    $('#calendarData').html(data);
+                } 
+            });
+        });
+        $('#btnPrint').on('click', function (e) {
+            var data = {
+                'StartDate': $('#StartDate').val(),
+                'EndDate': $('#EndDate').val(),
+            };
+            
+
+            $.download($('#hdnCurrentSessionGuidPath').val() + '/Inquiry/PrintCalendarManagement', data, "POST", 'target="_blank"');
+        });
+
+
+        
+        $('#btnSearch').click();
+    });
+</script>
+
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom  default"  >
+            Process
+        </button>
+        @*<button id="btnPrint" type="submit" class="btn btn-default v-bottom hidden ">
+            Print
+        </button>*@
+
+
+        
+    </div>
+}

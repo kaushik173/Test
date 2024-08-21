@@ -1,0 +1,4 @@
+ClientRoleID	Number		1
+HearingType	String	100	Jurisdictional
+HearingDateTime	DateTime		01/01/2002 08:00 AM
+Department	String	20	10

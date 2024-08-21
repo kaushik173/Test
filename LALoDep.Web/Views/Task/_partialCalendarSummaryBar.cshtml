@@ -1,0 +1,140 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Domain.pd_Case.qcal_StatusBarHeader_spResult
+@using LALoDep.Models
+<div class="row" id="CalendarSummaryBar">
+    <div class="col-md-12 col-sm-12 center-block " style="padding: 0 20px 0 20px">
+        <div class="widget row">
+ 
+        </div>
+    </div>
+</div>
+@{
+    
+
+    var index = 1;
+
+    var items = new List<LALoDep.Models.MenuItem> { new MenuItem() { Action = "CalendarAppearanceSheet", Controller = "Task", Title="Sheet",
+        Tooltip = "Appearance Sheet" },
+            new MenuItem() { Action = "CalendarAppearanceNotes", Controller = "Task",Title="Notes", Tooltip = "Appearance Notes" }
+            ,
+            new MenuItem() { Action = "FindingsAndOrders", Controller = "Case",Title="F & O", Tooltip = "Findings & Orders" }
+            
+            , new MenuItem() { Action = "CalendarActivitySheet", Controller = "Task",  Title="Activity",              Tooltip = "Activity Sheet" },
+            new MenuItem() { Action = "CalendarMostRecentAR", Controller = "Task", Tooltip = "Most Recent AR" ,Title="AR"}
+             , new MenuItem() { Action = "CalendarAttachedFiles", Controller = "Task",  Tooltip = "Attached Files",Title="Files" }
+
+       };
+    if (LALoDep.Custom.UserEnvironment.UserManager.IsUserAccessToSecurity(LALoDep.Custom.Security.SecurityToken.ViewAdvisements))
+    {
+        items.Add(new MenuItem() { Action = "Advisements", Controller = "Case", Title = "Adv", Tooltip = "Advisement of Rights" });
+
+
+
+    }
+    items.Add(new MenuItem() { Action = "CalendarToDo", Controller = "Task", Title = "To Do", Tooltip = "Calendar To Do" });
+}
+ 
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div data-target="#simplewizard-steps" class="wizard" id="simplewizard">
+            <ul class="steps">
+                @foreach (var item in items)
+                {
+                    <li data-target="#simplewizardstep1" class="enable">
+                        <a href="@Url.Action(item.Action, item.Controller, new {id = Model.HearingID.ToEncrypt(),caseId=Model.CaseID.ToEncrypt()})" class="" title="@item.Tooltip">
+                            <span class="step">@index</span> @item.Title
+                        </a>
+                        <span class="chevron"></span>
+                    </li>
+                    index++;
+
+
+
+                }
+
+            </ul>
+        </div>
+        <div class="step-content" id="simplewizard-steps">
+            <div class="form-inline">
+
+
+                <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-label  ">
+                        @Html.DisplayFor(m => m.CaseName)
+                    </div>
+                </div>
+                <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-label  ">
+                        <a href="/g/@(Guid.NewGuid().ToString("N"))/Case/Main/@Model.CaseID.ToEncrypt()" target="_blank" style="text-decoration:underline;">
+                            @Html.DisplayFor(m => m.CaseNumber)
+                        </a>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-label  ">
+                        @Html.DisplayFor(m => m.HearingType)
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3 col-xs-2">
+                    <div class="form-label  hearingDate" data-date="@Model.HearingDate.ToDateTime().ToString("d")">
+                        @Html.DisplayFor(m => m.HearingDate)
+                    </div>
+                </div>
+                <div class="form-group col-md-3  col-sm-3 col-xs-2">
+                    <div class="form-label  ">
+                        @Html.DisplayFor(m => m.HearingDeptCal)
+                    </div>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>
+<style>
+    #CalendarSummaryBar .control-label {
+        border-bottom: solid 0px #aaa;
+        display: block !important;
+        margin: 2px 0px;
+    }
+
+    #CalendarSummaryBar .form-group {
+    }
+    .wizard ul li .chevron {
+    border: 19px solid transparent;
+    border-left: 11px solid #d4d4d4;
+    border-right: 0;
+    display: block;
+    position: absolute;
+    right: -10px;
+    top: 0;
+    z-index: 1;
+}
+</style>
+
+
+
+
+
+
+<input value="@Model.HearingDate" id="WizardHearingDate" type="hidden" />
+
+<script>
+
+    $(function () {
+
+        $('#simplewizard a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).parent().addClass('active');
+
+            }
+            if (Contains($(this).attr('href'), 'FindingsAndOrders') && (Contains(document.location.href, 'AddFindingsAndOrders') || Contains(document.location.href, 'EditFindingsAndOrders'))) {
+                $(this).parent().addClass('active');
+            }
+        });
+
+
+    });
+</script>

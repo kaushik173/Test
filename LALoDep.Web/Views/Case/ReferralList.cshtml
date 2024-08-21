@@ -1,0 +1,199 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model  LALoDep.Models.Case.ReferralViewModel
+@{
+    ViewBag.Title = "Referral List";
+}
+<style>
+    .widget-buttons .form-control {
+        display: inline-block;
+    }
+
+    body.Compact .widget-buttons .form-control {
+        padding: 1px;
+        position: relative;
+        top: -5px;
+        height: 22px !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    Referrals
+                </span>
+                <div id="referral-title" class="widget-buttons form-inline">
+                    <span>Add Referral For:</span>
+                    @if (Model.ReferralPersonList.Count() == 1)
+                    {
+                        @Html.DropDownListFor(m => m.ReferralPersonId, Model.ReferralPersonList,  new { @class = "form-control input-sm" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(m => m.ReferralPersonId, Model.ReferralPersonList, "", new { @class = "form-control input-sm" })
+
+                    }
+                    &nbsp;&nbsp;
+                    <span> Type:</span>
+                    @if (Model.ReferralTypeList.Count() == 1)
+                    {
+                        @Html.DropDownListFor(m => m.ReferralTypeId, Model.ReferralTypeList,  new { @class = "form-control input-sm" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(m => m.ReferralTypeId, Model.ReferralTypeList, "", new { @class = "form-control input-sm" })
+
+                    }
+                    <button id="btnReferralAdd" type="button" class="btn btn-sm btn-default" data-secure-id="@(SecurityToken.ReferralAdd.GetHashCode())">Add New</button>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblReferralList">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Request Date</th>
+                                <th>Completed Date</th>
+                                <th>Assigned To</th>
+                                <th>Eligibility</th>
+                                <th>Attached Files</th>
+                                <th>Copied To</th>
+                                <th style="width:60px"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ReferralList)
+                            {
+                            <tr>
+                                <td class="text-nowrap">@item.Client</td>
+                                <td class="text-nowrap">
+                                    @if (item.CanEditFlag == 0)
+                                    {<span>  @item.ReferralType </span>
+
+                                }
+                                else
+                                {
+                                    <a href="/Case/@item.NG_NavigationURL/@item.ReferralID.ToEncrypt()">@item.ReferralType</a>
+
+                                }
+
+
+                                </td>
+                                <td>@item.RequestDate</td>
+                                <td>@item.CompleteDate</td>
+                                <td>@item.AssignedTo</td>
+                                <td>@item.Eligibility</td>
+                                <td><a href="#" data-secure-link-id="@(SecurityToken.ReferralAttachFiles.GetHashCode())"></a> @item.AttachedFilesDisplay</td>
+                                <td>
+                                    <a target="_blank" href="/Case/CaseRedirect/@item.CopiedToCaseID.ToEncrypt()?redirectUrl=/Case/@item.NG_NavigationURL/@item.CopiedToReferralID.ToEncrypt()">@item.CopiedToDisplay</a>
+
+                                     
+                                </td>
+                                <td>
+                                    @if (item.CanEditFlag == 1)
+                                    {
+                                        <a href="javascript:void(0);" class="btn btn-danger btn-xs delete" data-id="@item.ReferralID.ToEncrypt()"><i class="fa fa-trash-o"></i> Delete</a>
+
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $("#btnReferralAdd").on("click", function () {
+
+            if ($('#ReferralPersonId').val() == "") {
+                notifyDanger('Referral For is required.');
+                $('#ReferralPersonId').focus();
+                return false;
+            }
+
+            if ($('#ReferralTypeId').val() == "") {
+                notifyDanger('Referral Type is required.');
+                $('#ReferralTypeId').focus();
+                return false;
+            }
+            var arr = $('#ReferralTypeId').val().split('|');
+            window.location.href = "/Case/" + arr[1] + "?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + arr[0];
+            
+                
+            //if ($('#ReferralTypeId').val() == '2AFAA026EAAAE00A') {//Educational Assistance
+            //    window.location.href = "/Case/ReferralAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //} else if ($('#ReferralTypeId').val() == 'E47F4200D683FE5B') {//Care
+            //    window.location.href = "/Case/ReferralCareAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //}
+            //else if ($('#ReferralTypeId').val() == 'D971F484BC58B072') {//MHAT
+            //    window.location.href = "/Case/ReferralMHATAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //} else if ($('#ReferralTypeId').val() == 'DC6ECBC91A7FB007') {//CSEC
+            //    window.location.href = "/Case/ReferralCSECAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //}
+            //else if ($('#ReferralTypeId').val() == '737C57D6AD39FBDE') {//Peer
+            //    window.location.href = "/Case/ReferralPeerAdvocateAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //} else if ($('#ReferralTypeId').val() == '528E73FE813A0D02') {//Peer
+            //    window.location.href = "/Case/ReferralImmigrationAdvisorAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+            //} else  {
+               
+            //    window.location.href = "/Case/ReferralAddEdit?roleId=" + $('#ReferralPersonId').val() + "&referralTypeCodeId=" + $('#ReferralTypeId').val();
+
+
+            //}
+        });
+
+        $(document).ready(function () {
+            $("#tblReferralList").DataTable({
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                //"bSort": false,
+                "bInfo": false,
+                "loadingRecords": "Loading...",
+                "processing": "Processing...",
+                "deferRender": true,
+                "columnDefs": [
+                    { "orderable": false, "targets": [2, 3, 4, 5, 6,7] }
+                ]
+            });
+        });
+        $('body').on('click', '.delete', function () {
+            var id = $(this).attr('data-id');
+            var tr = $(this).parent().parent();
+
+            confirmBox("Are you sure you want to remove selected record?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST", url: '/Case/ReferralDelete/' + id,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.isSuccess) {
+                                tr.remove();
+                                Notify('Selected record delete successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                                setTimeout(function () {
+                                    document.location.href = document.location.href;
+
+                                }, 1000)
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        }
+                    });
+                }
+                else {
+
+                }
+            });
+        });
+
+    </script>
+}

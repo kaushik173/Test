@@ -1,0 +1,8 @@
+Date	DateTime		01/31/2001
+Case #	String	50	123456
+Case Name	String	100	Smith, Joe
+Party Rep	String	100	Type A
+Task	String	100	Task A
+Phase	String	100	Phase A
+Hours	Number		30.5
+GroupingID	Number		1

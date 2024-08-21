@@ -1,0 +1,112 @@
+﻿@model LALoDep.Models.Administration.UsersViewModel
+
+@{
+    ViewBag.Title = "User List";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "UsersView-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.Agencies, "", new { @class = "form-control input-sm", tabindex = 3, style = "width:98%" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.JcatsGroupID, "Security Group", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.JcatsGroupID, Model.SecurityGroups, "", new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(m => m.RoleTypeCodeID, "Role", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RoleTypeCodeID, Model.Roles, "", new { @class = "form-control input-sm", tabindex = 5, style = "width:98%" })
+                    </div>
+                    <div class="form-group col-md-1">
+                        @Html.LabelFor(m => m.ActiveUserOnly, "Active Users", new { @class = "control-label" })
+                        @*@Html.CheckBoxFor(m => m.ActiveUserOnly, new { @class = "form-control input-sm", tabindex = 6 })*@
+                        <input id="chkActiveUserOnly" type="checkbox" name="chkActiveUserOnly" tabindex ="6" class="form-control input-sm"   onchange="$('#ActiveUserOnly').val($(this).is(':checked'))"/>
+
+                        <input id="ActiveUserOnly" type="hidden" name="ActiveUserOnly" tabindex="6" class="form-control input-sm" value="@(Model.ActiveUserOnly ? "true" : "false")" />
+
+                    </div>
+                    <div class="form-group col-md-1">
+                        @Html.LabelFor(m => m.OpenPositionsOnly, "Open Positions", new { @class = "control-label" })
+                        @*@Html.CheckBoxFor(m => m.OpenPositionsOnly, new { @class = "form-control input-sm", tabindex = 7 })*@
+                         <input id="chkOpenPositionsOnly" type="checkbox" name="chkOpenPositionsOnly" tabindex="6" class="form-control input-sm"   onchange="$('#OpenPositionsOnly').val($(this).is(':checked'))" />
+
+                        <input id="OpenPositionsOnly" type="hidden" name="OpenPositionsOnly" tabindex="6" class="form-control input-sm" value="@(Model.OpenPositionsOnly ? "true" : "false")" />
+                    </div>
+                }
+               
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="UsersView">
+                         <thead>
+                            <tr>
+                                <th class="">Name</th>
+                                <th class="">Agency</th>
+                                <th class="">Security Group</th>
+                                <th class="">Role</th>
+                                <th class="">User Level (Supv)</th>
+                                <th class="">Last Login</th>
+                                <th class="">User End Date</th>
+                                <th class="">Login Name</th>
+                                <th class="" style="width: 50px;"></th>
+                                <th class="" style="width: 50px;"></th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Search</button>
+        <button id="btnAdd" type="button" class="btn v-bottom default" tabindex="9">Add</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/Users.js?v=" + Guid.NewGuid())"></script>
+}

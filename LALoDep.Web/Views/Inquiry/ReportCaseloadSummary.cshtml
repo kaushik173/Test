@@ -1,0 +1,269 @@
+﻿@using LALoDep.Custom
+@model LALoDep.Models.Inquiry.ReportCaseloadSummaryViewModel
+@{
+    ViewBag.Title = "Report Caseload Summary";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Caseload Summary</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-parameter-form", @class = "form-horizontal center-block", onsubmit = "return false" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.AgencyID, new SelectList(Model.AgencyList, "AgencyID", "AgencyName"),  new { @class = "form-control input-sm", tabindex = 1 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CaseStatus, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.CaseStatus, new SelectList(Model.StatusList, "Key", "Value"), new { @class = "form-control input-sm", tabindex = 2 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientType, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.ClientType, new SelectList(Model.ClientTypeList, "Key", "Value"), new { @class = "form-control input-sm", tabindex = 3 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartDate, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            <div class="input-group" style="width: 120px;">
+                                <input name="StartDate" id="StartDate" maxlength="10" class="form-control input-sm date-picker" tabindex="4" />
+                                <span class="input-group-addon" id="datepicker-trigger-startdate">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $("#datepicker-trigger-startdate").bind("click", function () {
+                            if ($("#StartDate").val() == '') {
+                                $("#StartDate").val(getDate()).datepicker("show");
+                            }
+                            else { $("#StartDate").datepicker("show"); }
+                        });
+                    </script>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            <div class="input-group" style="width: 120px;">
+                                <input name="EndDate" id="EndDate" maxlength="10" class="form-control input-sm date-picker" tabindex="5" />
+                                <span class="input-group-addon" id="datepicker-trigger-enddate">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $("#datepicker-trigger-enddate").bind("click", function () {
+                            if ($("#EndDate").val() == '') {
+                                $("#EndDate").val(getDate()).datepicker("show");
+                            }
+                            else { $("#EndDate").datepicker("show"); }
+                        });
+                    </script>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDate, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            <div class="input-group" style="width: 120px;">
+                                <input name="HearingDate" id="HearingDate" maxlength="10" class="form-control input-sm date-picker" tabindex="6" />
+                                <span class="input-group-addon" id="datepicker-trigger-hearingdate">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $("#datepicker-trigger-hearingdate").bind("click", function () {
+                            if ($("#HearingDate").val() == '') {
+                                $("#HearingDate").val(getDate()).datepicker("show");
+                            }
+                            else { $("#HearingDate").datepicker("show"); }
+                        });
+                    </script>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTypeID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.HearingTypeID, new SelectList(Model.HearingTypeList, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = 7 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AttorneyID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @if ((bool)ViewBag.IsLineUser)
+                            {
+                                @Html.DropDownListFor(m => m.AttorneyID, new SelectList(Model.AttorneyList, "PersonID", "PersonNameDisplay"), new { @class = "form-control input-sm", tabindex = 8, data_defaultvalue = Model.AttorneyID })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(m => m.AttorneyID, new SelectList(Model.AttorneyList, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = 8, data_defaultvalue = Model.AttorneyID })
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.InvestigatorID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.InvestigatorID, new SelectList(Model.InvestigatorList, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm", tabindex = 9 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.DepartmentID, new SelectList(Model.DepartmentList, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = 10 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyCountyID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.AgencyCountyID, new SelectList(Model.AgencyCountyList, "AgencyCountyID", "AgencyCounty"), "", new { @class = "form-control input-sm", tabindex = 10 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DesignatedDayID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.DesignatedDayID, new SelectList(Model.DesignatedDayList, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = 11 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PlacedWithParent, new { @class = "col-md-5 control-label no-padding-right", tabindex = 12 })
+                        <div class="col-md-3">
+                            @Html.CheckBoxFor(m => m.PlacedWithParent)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddressTypeID, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.AddressTypeID, new SelectList(Model.AddressTypeList, "CodeID", "CodeValue"), "", new { @class = "form-control input-sm", tabindex = 13 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SortBy, new { @class = "col-md-5 control-label no-padding-right" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.SortBy, new SelectList(Model.SortByList, "Key", "Value"), new { @class = "form-control input-sm", tabindex = 14 })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="generate" type="submit" class="btn btn-primary v-bottom default" tabindex="15">Generate</button>
+        <button id="back" type="submit" class="btn btn-default v-bottom" tabindex="16"><u>B</u>ack</button>
+    </div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(window).on("keydown", handleHotkey);
+
+        function handleHotkey(e) {
+            if (!e.ctrlKey) return;
+            switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                case 'b':
+                    $('#back').trigger('click');
+                    e.preventDefault();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $('#back').click(function () {
+            window.location.href = "/Inquiry/Reports";
+        });
+        $('#generate').click(function (e) {
+            e.preventDefault();
+
+            if (!$('#AgencyID').val()) {
+                Notify('Agency is required', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                return false;
+            }
+            if ($('#StartDate').val() || $('#EndDate').val()) {
+                var startDate = $('#StartDate').val();
+                var endDate = $('#EndDate').val();
+                if (!startDate) {
+                    Notify('Start Date is required if End Date is entered.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+                if (!endDate) {
+                    Notify('End Date is required if Start Date is entered.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+                if (!compareDates(startDate, endDate)) {
+                    Notify('End Date cannot be before Start Date.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/Inquiry/ReportCaseloadSummary',
+                data: $("#case-parameter-form").serialize(),
+                dataType: 'json',
+                success: function (returnValue) {
+                    if (!(returnValue.errorMessage)) {
+                       // window.location = '/Inquiry/Download?file=' + returnValue.FileName;
+                        var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                        $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/Download', 'file=' + returnValue.FileName, 'POST', _target);
+
+                    }
+                    else {
+                        Notify(returnValue.errorMessage, 'bottom-right', '4000', 'info', 'fa-info', true);
+                    }
+                },
+                error: function () {
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $(window).on("keydown", handleHotkey);
+        });
+
+        function compareDates(start, end) {
+            var startDate = new Date(start);
+            var endDate = new Date(end);
+            if (endDate < startDate) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function getDate(d) {
+            d = (d || new Date());
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            return (month < 10 ? '0' : '') + month + '/' +
+                   (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

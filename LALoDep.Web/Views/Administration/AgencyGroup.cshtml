@@ -1,0 +1,187 @@
+﻿@model LALoDep.Models.Administration.AgencyGroupViewModel
+@{
+    ViewBag.Title = "AgencyGroup";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm-agency-group", @class = "form-inline" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    <table>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.AgencyGroupID, "Agency Group : ", new { @class = "control-label" })</td>
+                            <td>@Html.DropDownListFor(m => m.AgencyGroupID, Model.AgencyGroupList, new { @class = "form-control input-sm", })</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dvAgencyGroupForm" class="row">
+        @Html.Partial("_AgencyGroupPartial", Model)
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default">Save</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function valdation() {
+            if (!$("#AgencyGroup").hasValue()) {
+                notifyDanger("Agency Group is required.");
+                $("#AgencyGroup").focus();
+                return false;
+            }
+
+            if (!$("#AgencyGroupAbbreviation").hasValue()) {
+                notifyDanger("Agency Group Abbreviation is required.");
+                $("#AgencyGroupAbbreviation").focus();
+                return false;
+            }
+
+            if (!$("#AgencyGroupAbbreviation").hasValue()) {
+                notifyDanger("Agency Group Abbreviation is required.");
+                $("#AgencyGroupAbbreviation").focus();
+                return false;
+            }
+
+            if ($("#TitleIVeStartDate").hasValue() && $("#TitleIVeEndDate").hasValue() && moment($("#TitleIVeEndDate").val()) < moment($("#TitleIVeStartDate").val())) {
+                notifyDanger("Title IVe End Date can not be prior than Title IVe Start Date.");
+                $("#TitleIVeEndDate").focus();
+                return false;
+            }
+
+            if ($("#NumberOfSocialWorkers").hasValue() && Number($("#NumberOfSocialWorkers").val()) > 500) {
+                notifyDanger("Number of Social Workers can not be more than 500");
+                $("#NumberOfSocialWorkers").focus();
+                return false;
+            }
+
+            if ($("#NumberOfInvestigators").hasValue() && Number($("#NumberOfInvestigators").val()) > 500) {
+                notifyDanger("Number of Investigators can not be more than 500");
+                $("#NumberOfInvestigators").focus();
+                return false;
+            }
+
+
+            if ($("#NumberOfParalegals").hasValue() && Number($("#NumberOfParalegals").val()) > 500) {
+                notifyDanger("Number Of Paralegals can not be more than 500");
+                $("#NumberOfParalegals").focus();
+                return false;
+            }
+
+            if ($("#NumberofAdminAssistants").hasValue() && Number($("#NumberofAdminAssistants").val()) > 500) {
+                notifyDanger("Number of Admins can not be more than 500");
+                $("#NumberofAdminAssistants").focus();
+                return false;
+            }
+
+            if ($('#IsStreamlinerYes').is(':checked') && ($("#FullReviewMonth1").val() == '' || $("#FullReviewMonth2").val() == '') ) {
+                if (!$("#FullReviewMonth1").hasValue()) {
+                    notifyDanger("Full Review Month 1 is required.");
+                    $("#FullReviewMonth1").focus();
+                    return false;
+                }
+                if (!$("#FullReviewMonth2").hasValue()) {
+                    notifyDanger("Full Review Month 2 is required.");
+                    $("#FullReviewMonth2").focus();
+                    return false;
+                }
+            }
+
+           
+            return true;
+        }
+
+        $("#AgencyGroupID").on("change", function () {
+            var agencyGroupId = $(this).val();
+            $.ajax({
+                url: "@Url.Action("GetAgencyGroup")", data: { id: agencyGroupId }, type:"POST",
+                success: function (result) {
+                    $("#dvAgencyGroupForm").html(result);
+                    if ($("#dvAgencyGroupForm #divSelectCounty").length > 0) {
+
+                       OpenCustomModal($("#dvAgencyGroupForm #divSelectCounty").html(), 'Select County', 400,300)
+                    }
+
+                    setInitialFormValues("frm-agency-group");
+                }
+            });
+        });
+        $("body").on("click", ".select-county", function () {
+            var agencyGroupId = $("#AgencyGroupID").val();
+            var agencyCountyId = $(this).data('id');
+          
+            $.ajax({
+                url: "@Url.Action("GetAgencyGroup")", data: { id: agencyGroupId, agencyCountyId: agencyCountyId}, type:"POST",
+                success: function (result) {
+                    $("#dvAgencyGroupForm").html(result);
+                    CloseModal();
+
+                    setInitialFormValues("frm-agency-group");
+                }
+            });
+        });
+        
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("frm-agency-group")) {
+                if (valdation()) {
+                    var data = $("#frm-agency-group").serialize();
+                    if (moment($("#TitleIVeStartDate").val()) > moment() || moment($("#TitleIVeEndDate").val()) > moment()) {
+                        confirmBox("Title IVe Start Date or End Date is future date, Are you sure want to continue?", function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "@Url.Action("SaveAgencyGroup")", data: data, type: "POST",
+                                    success: function (result) {
+                                        if (result.isSuccess) {
+                                            RequestSubmitted();
+                                            window.location.reload();
+                                        }
+                                        else {
+                                            notifyDanger(result.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        $.ajax({
+                            url: "@Url.Action("SaveAgencyGroup")", data: data, type: "POST",
+                            success: function (result) {
+                                if (result.isSuccess) {
+                                    RequestSubmitted();
+                                    window.location.reload();
+                                }
+                                else {
+                                    notifyDanger(result.message);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        });
+
+        $(document).ready(function () {
+            $("#AgencyGroupID").trigger('change');
+            setInitialFormValues("frm-agency-group");
+        });
+    </script>
+}  

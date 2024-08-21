@@ -1,0 +1,195 @@
+﻿@model LALoDep.Models.Task.MonthlyInvoiceAddModel
+@using LALoDep.Core.Custom.Extensions
+
+@{
+    ViewBag.Title = "Monthly Invoice Add";
+}
+
+<div class="row" id="divResultSet">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.NotYetIncludedHeaderDisplay</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="clientNotIncludeded">
+                        <thead>
+                            <tr>
+                                <th class="">JCATS #</th>
+                                <th class="">Case #</th>
+                                <th class=""> Appt Date  </th>
+                                <th class="">Petition Date</th>
+                                <th class="">Client Name</th>
+                                <th class="">Client Type</th>
+                                <th class=""> Next Hearing</th>
+                                <th class="">Close Date </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ClientNotIncluded != null && Model.ClientNotIncluded.Count > 0)
+                            {
+                                foreach (var clientDtl in Model.ClientNotIncluded)
+                                {
+                                    <tr>
+                                        <td><a href="/Case/Main/@(clientDtl.CaseID.ToEncrypt())">@clientDtl.CaseID</a></td>
+                                        <td>@clientDtl.PetitionDocketDisplay</td>
+                                        <td>@(clientDtl.CaseAppointmentDate.HasValue ? clientDtl.CaseAppointmentDate.Value.ToString("d") : "")</td>
+                                        <td>@(clientDtl.PetitionFileDateMIN.HasValue ? clientDtl.PetitionFileDateMIN.Value.ToString("d") : "")</td>
+                                        <td>@clientDtl.ClientDIsplay</td>
+                                        <td>@clientDtl.ClientRoleType</td>
+                                        <td>@clientDtl.NextCourtDisplay</td>
+                                        <td>@(clientDtl.PetitionCloseDateMAX.HasValue ? clientDtl.PetitionCloseDateMAX.Value.ToString("d") : "")</td>
+
+
+                                    </tr>
+                                }
+                            }
+                            @*else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No data available in table</td>
+                                    </tr>
+                                }*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divClientIncluded">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.PrevioulyIncludedHeaderDisplay</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="clientIncludeded">
+                        <thead>
+                            <tr>
+                                <th class="">JCATS #</th>
+                                <th class="">Case #</th>
+                                <th class=""> Appt Date  </th>
+                                <th class="">Petition Date</th>
+                                <th class="">Client Name</th>
+                                <th class="">Client Type</th>
+                                <th class=""> Next Hearing</th>
+                                <th class="">Close Date </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ClientIncluded != null && Model.ClientIncluded.Count > 0)
+                            {
+                                foreach (var clientDtl in Model.ClientIncluded)
+                                {
+                                    <tr>
+                                        <td><a   href="/Case/Main/@(clientDtl.CaseID.ToEncrypt())">@clientDtl.CaseID</a></td>
+                                        <td>@clientDtl.PetitionDocketDisplay</td>
+                                        <td>@(clientDtl.CaseAppointmentDate.HasValue ? clientDtl.CaseAppointmentDate.Value.ToString("d") : "")</td>
+                                        <td>@(clientDtl.PetitionFileDateMIN.HasValue ? clientDtl.PetitionFileDateMIN.Value.ToString("d") : "")</td>
+                                        <td>@clientDtl.ClientDIsplay</td>
+                                        <td>@clientDtl.ClientRoleType</td>
+                                        <td>@clientDtl.NextCourtDisplay</td>
+                                        <td>@(clientDtl.PetitionCloseDateMAX.HasValue ? clientDtl.PetitionCloseDateMAX.Value.ToString("d") : "")</td>
+
+
+                                    </tr>
+                                }
+                            }
+                            @*else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No data available in table</td>
+                                    </tr>
+                                }*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Model.ClientNotIncluded.Count > 0)
+        {
+            <button id="btnAdd" type="submit" class="btn btn-primary v-bottom default" tabindex="1">Add Invoive</button>
+        }
+        <button id="btnCancel" type="submit" class="btn btn-default v-bottom default" tabindex="2">Cancel@(Model.ClientNotIncluded.Count == 0 ? "-No Clients" : "")</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        var oTableClientNotIncluded = $("#clientNotIncludeded").dataTable({
+            "searching": false,
+            "bSort": false,
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+        });
+
+        var oTableClientIncluded = $("#clientIncludeded").dataTable({
+            "searching": false,
+            "bSort": false,
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+        });
+
+        function adjustHightOfResultList() {
+            var calc_height = $(window).height();
+            var _offset = 0;//125;
+            $("#divResultSet").parentsUntil("body").each(function () {
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            console.log("total: " + calc_height);
+
+            var notIncludHeight = (calc_height * 50) / 100;
+            var includHeight = (calc_height * 50) / 100;
+
+            notIncludHeight = notIncludHeight < 250 ? 250 : notIncludHeight;
+            $('#divResultSet .dataTables_scrollBody').css('max-height', notIncludHeight + 'px');
+            oTableClientNotIncluded.fnAdjustColumnSizing();
+
+            includHeight = includHeight < 250 ? 250 : includHeight;
+            $('#divClientIncluded .dataTables_scrollBody').css('max-height', includHeight + 'px');
+            oTableClientIncluded.fnAdjustColumnSizing();
+        }
+
+        $("#btnAdd").on("click", function () {
+            $.ajax({
+                type: "POST", url: '/MonthlyInvoiceList/AddInvoiceSave',
+                success: function (result) {
+                    window.location.href = "@Url.Action(MVC.MonthlyInvoiceList.Search())";
+                },
+                dataType: 'json'
+            });
+
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = "@Url.Action(MVC.MonthlyInvoiceList.Search())";
+        });
+
+        $(document).ready(function () {
+            adjustHightOfResultList();
+        });
+
+        $(window).bind('resize', function () {
+            adjustHightOfResultList();
+        });
+    </script>
+}

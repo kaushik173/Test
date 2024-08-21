@@ -1,0 +1,11 @@
+County	String	100	Imperial
+AgencyGroup	String	100	Anderholt
+Children	Number		333
+Parents		Number		222
+Petitions	Number		333
+Cases		Number		222
+GroupSort	Number		1
+NMDOpen	Number		155
+NMDTotal	Number		400
+MedOpen	Number		199
+MedTotal	Number		590

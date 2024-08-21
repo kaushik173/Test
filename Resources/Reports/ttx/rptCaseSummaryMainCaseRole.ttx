@@ -1,0 +1,5 @@
+Role	String	50	Tester
+FullName	String	100	Smith, John
+Contact	String	50	550-2222
+ContactType	String	50	Test Contact Type
+GroupID	Number	1

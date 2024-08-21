@@ -1,0 +1,23 @@
+ClientLastName	String	50	ABBAS	
+ClientFirstName	String	50	PHILLIP
+Street	String	100	9872 SHIRLEY GARDENS DR. #8
+City	String	50	SANTEE
+State	String	20	CA
+ZipCode	String	20	92071
+HearingDate	String	07/09/2001
+HearingTime	String	8:30 AM
+HearingDepartment	String	20	1
+AttorneyLastName	String	50	LastName
+AttorneyFirstName	String	50	FirstName
+AttorneyInitials	String	10	AI
+UserInitials	String	10	UI
+AgencyName	String	50	AgencyName
+AgencyDisplay1	String	50	AgencyDisplay1
+AgencyDisplay2	String	50	AgencyDisplay2
+BranchCourtName	String	50	BranchCourtName
+BranchStreet	String	50	BranchStreet
+BranchCSZ	String	100	City, State  Zip
+BranchPhoneNbr	String	50	BranchPhoneNbr
+BranchFaxNbr	String	50	BranchFaxNbr
+AttachingParagraph	Memo		I am attaching a copy of the Petition as well as the Detention Report.  Please review these before the next court date.
+Enclosure	String	100	Enclosure

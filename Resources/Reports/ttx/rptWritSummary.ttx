@@ -1,0 +1,10 @@
+ExpenseMonth	String	20	Jan
+ExpenseYear	String	50	2000
+AmountAuthorized	Currency		200.0000
+AmountForwardedToAccounting	Currency		200.0000
+AmountPaid	Currency		100.0000
+WritCount	Number		1
+StartDate	String	50	01/01/1999
+EndDate	String	50	01/01/2000
+AgencyName	String	500	Public Defender
+WritCount2	Number		1

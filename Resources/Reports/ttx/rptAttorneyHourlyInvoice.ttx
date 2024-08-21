@@ -1,0 +1,17 @@
+Invoice Date	DateTime		05/07/2005
+Invoice Number	String	50	123456
+BillTo1	String	100	Judicial Council of California
+BillTo2	String	100	Administrative Office of the Courts
+BillTo3	String	100	455 Golden Gate Avenue
+BillTo4	String	100	San Fransico, CA 94102
+Re1	String	100	Court-Appointed Dependency Services for the
+Re2	String	100	Superior Court of California, County of San Diego
+Attorney Name	String	100	Smith, Michael
+Address	String	100	123 Anywhere Street
+CSZ	String	100	Chandler, AZ, 82226
+Phone #	String	100	(480) 722-1213
+SSN	String	100	123-45-6789
+State Bar #	String	100	SD999587A
+ServicesDateRange	String	100	Mar 1, 2007 to Mar 31, 2007
+VoidedFlag	Number		1
+RemitTo	String	100	Agency Address Name Here

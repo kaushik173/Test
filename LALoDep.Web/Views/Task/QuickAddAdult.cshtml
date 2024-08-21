@@ -1,0 +1,229 @@
+﻿@model  LALoDep.Models.Task.QuickAddAdultViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+    ViewBag.Title = "Quick Add Adult";
+}
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "quick-add-adult-form" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add New Adult Party</span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body form-inline">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.BirthDate, "DOB", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control   input-sm  input-sm date-picker-control", maxlength = "10", style = "width:100% !important;" })
+                            <span class="input-group-addon datepicker-control-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RaceCodeID, "Race", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RaceCodeID, Model.RaceList, "", new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SexCodeID, "Gender", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.SexCodeID, Model.SexList, "", new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RoleTypeID, "Role", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.RoleTypeID, Model.RoleList, "", new { @class = "form-control input-sm" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Active Petitions</span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="SelectAll" id="chkAllPetetion" /> <label for="chkAllPetetion">All</label></th>
+                                    <th>Child</th>
+                                    <th>Case #</th>
+                                    <th>File Date</th>
+                                    <th>File Type</th>
+                                    <th>Association</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PetitionList != null && Model.PetitionList.Any())
+                                {
+                                    int counter = 0;
+                                    foreach (var item in Model.PetitionList)
+                                    {
+                                        <tr class="trPetition">
+                                            <td>
+                                                <input type="checkbox" name="PetitionList[@counter].PetitionID" value="@item.PetitionID" class="chkPetetion" @(item.Selected == 1 ? "checked=\"checked\"" : "") />
+                                                <input type="hidden" name="PetitionList[@counter].ChildPersonID" value="@item.ChildPersonID" />
+                                                <input type="hidden" name="PetitionList[@counter].PetitionFileDate" value="@item.PetitionFileDate" />
+                                            </td>
+                                            <td>@item.ChildDisplay</td>
+                                            <td>@item.PetitionDocketNumber</td>
+                                            <td>@item.PetitionFileDate</td>
+                                            <td>@item.PetitionType</td>
+                                            <td>
+                                                @if (item.ShowAssocationFlag == 1)
+                                                {
+                                                    @Html.DropDownList("PetitionList[" + counter + "].DefaultAssocationTypeCodeID", new SelectList(Model.AssociationList, "CodeID", "CodeDisplay", item.DefaultAssocationTypeCodeID), "", new { @class = "form-control input-sm ddlAssociation" })
+                                                }
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                    <tr></tr>
+                                }
+                                else
+                                {
+                                    <tr><td class="text-center" colspan="100%">No data found</td> </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnCancel" type="submit" class="btn btn-default v-bottom">Cancel</button>
+    </div>
+
+}
+
+
+@section scripts{
+    <script type="text/javascript">
+        function validation() {
+            if (!hasFormChanged('quick-add-adult-form')) {
+                notifyDanger('Nothing was changed.');
+                $("#LastName").focus();
+                return false;
+            }
+
+            if ($("#LastName").val() == "") {
+                notifyDanger('Last name is required.');
+                $("#LastName").focus();
+                return false;
+            }
+
+            if ($("#FirstName").val() == "") {
+                notifyDanger('First name is required.');
+                $("#FirstName").focus();
+                return false;
+            }
+
+            if ($("#SexCodeID").val() == "") {
+                notifyDanger('Gender is required.');
+                $("#SexCodeID").focus();
+                return false;
+            }
+            if ($("#RoleTypeID").val() == "") {
+                notifyDanger('Role is required.');
+                $("#RoleTypeID").focus();
+                return false;
+            }
+
+            if ($("#tblPetitionInCase .chkPetetion:checked").length == 0) {
+                notifyDanger('At least one Active Petition must be checked.');
+                $("#tblPetitionInCase .chkPetetion:first").focus();
+                return false;
+            }
+
+            var isValid = true;
+
+            var totalPetetions = $("#tblPetitionInCase .trPetition").length;
+            for (var indx = 0; indx < totalPetetions; indx++) {
+                var $tr = $("#tblPetitionInCase .trPetition").eq(indx);
+               
+                if ($(".ddlAssociation", $tr).length > 0 && $(".ddlAssociation", $tr).val() == "" && $tr.find('.chkPetetion:checked').length > 0) {
+                    isValid = false;
+                    $(".ddlAssociation", $tr).focus();
+                    notifyDanger('Association is required on all children that are checked.');
+                    break;
+                }
+            }
+            return isValid;
+        }
+
+        $("#btnSave").on("click", function () {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            var data = $("#quick-add-adult-form").serialize();
+            if (validation()) {
+                $.ajax({
+                    type: "POST", url: '/Task/QuickAddAdult', data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {
+                            RequestSubmitted();
+                            parent.notifySuccess('Data Saved Successfully!.');
+                            setTimeout(function () {
+                                self.parent.document.location.href = self.parent.document.location.href;
+                                parent.ClosePopup();
+                            }, 1000);
+                        } else {
+                            document.location.href = result.URL;
+
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#btnCancel").on("click", function () {
+            parent.ClosePopup()
+        });
+
+        $("#chkAllPetetion").on("click", function () {
+            var isChecked = $(this).is(":checked");
+            $("#tblPetitionInCase .chkPetetion").each(function (i, e) {
+                $(this).prop("checked", isChecked);
+            });
+        });
+
+        $("#tblPetitionInCase .chkPetetion").on("click", function () {
+            var allSelected = $("#tblPetitionInCase .chkPetetion:checked").length == $("#tblPetitionInCase .chkPetetion").length
+            $("#chkAllPetetion").prop("checked", allSelected);
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues('quick-add-adult-form');
+            setTimeout(function () {
+
+                $('#LastName').focus()
+            }, 500)
+        });
+    </script>
+}

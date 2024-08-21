@@ -1,0 +1,7 @@
+Attorney	String	100	Bobby Barrett
+CaseNumber	String	50	234235424
+ApptDate	String	50	01/01/1999
+FirstPmtDate	String	50	01/01/1999
+13MnthPmtDate	String	50	01/01/1999
+Amount	Currency		100.0000
+GroupID	Number		1

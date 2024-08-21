@@ -1,0 +1,128 @@
+﻿@model  LALoDep.Models.Administration.UserGroupBySecurityItemViewModel
+@{
+    ViewBag.Title = "Group Security <br>by Security Item";
+}
+
+<div class="container-fluid row" id="mainOuterDiv">
+    <div class="row" id="topdivHeight">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Group Security Filter Criteria 
+                    </span>
+                    <div class="widget-buttons">
+                        <a href="#" id="collapse" data-toggle="collapse">
+                            <i class="fa fa-minus"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+
+                    <div class="row row-margin">
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "UserGroupBySecurityItemForm", @class = "form-inline  center-block" }))
+                        {
+                            @Html.HiddenFor(m => m.SecurityItemId)
+                            <div class="form-group col-md-4 col-sm-4 nopadding-left">
+                                @Html.LabelFor(m => m.AgencyId, "Agency", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.AgencyId, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:100%" })
+                            </div>
+
+                            <div class="form-group col-md-4 col-sm-4">
+                                @Html.LabelFor(m => m.JcatsGroupName, "User Group Name", new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.JcatsGroupName, new { @class = "form-control input-sm", tabindex = 4, style = "width:100%" })
+                            </div>
+
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" id="userGroupActiveInactiveTablesDiv">
+        <div class="col-md-6">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        <label>Current Group Access Rights For @Model.SecurityItemDescription</label>
+                    </span>
+
+                </div>
+                <div class="widget-body col-md-12">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="userGroupActiveTable">
+                        <thead>
+
+                            <tr>
+                                <th width="100">
+                                    <input type="checkbox" id="checkboxAllActive" onclick="CheckAllActive()" />
+                                    All
+                                </th>
+                                <th>
+                                    Group Name
+                                </th>
+
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        <label>Restricted Groups</label>
+                    </span>
+
+                </div>
+                <div class="widget-body col-md-12">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="userGroupInactiveTable">
+                        <thead>
+                           
+                            <tr>
+                                <th width="100">
+                                    <input type="checkbox" id="checkboxAllInactive" onclick="CheckAllInactive()" />
+                                    All
+                                </th>
+                                <th>
+                                    Group Name
+                                </th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@section fixedfooter
+    {
+    <div class="boxfloat text-center">
+        <button id="btnFilter" type="submit" class="btn btn-primary v-bottom default" tabindex="5"><u>F</u>ilter</button>
+        <button id="return" type="button" class="btn btn-default v-bottom" tabindex="6">Save/<u>R</u>eturn</button>
+        <button id="save" type="submit" class="btn btn-default v-bottom default" tabindex="5"><u>S</u>ave</button>
+        <button id="cancel" type="button" class="btn btn-default v-bottom" tabindex="7">Cance<u>l</u></button>
+    </div>
+}
+
+
+@section scripts
+{
+    <script>
+        var groupId = '@Request.QueryString["groupId"]';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/GroupSecurityBySI.js?v=" + Guid.NewGuid())"></script>
+
+}

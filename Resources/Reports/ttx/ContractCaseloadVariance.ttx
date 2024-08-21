@@ -1,0 +1,13 @@
+County	String	100	Alapaha
+ContractCaseload3	Number		35
+ContractCaseload2	Number		35
+ContractCaseload1	Number		40
+ChildClient	Number		50
+ParentClient	Number		70
+Month3Client	Number		60
+Month2Client	Number		60
+Month1Client	Number		60
+AgencyCounty	String	100	Alapaha
+Month3	String	50	1/1/1999
+Month2	String	50	1/1/1999
+Month1	String	50	1/1/1999

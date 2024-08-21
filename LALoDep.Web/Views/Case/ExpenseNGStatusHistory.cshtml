@@ -1,0 +1,75 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.Expense.Expense_GetStatusHistory_spResult>
+@{
+    ViewBag.Title = "Go To";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+}
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+        background-color: #fff !important;
+    }
+
+        body:before {
+            background-color: #fff !important;
+        }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+
+@if (Model.Count() > 0)
+{
+    <div class="row">
+        <div >
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                    <thead>
+                        <tr>
+
+                            <th>Date </th>
+                            <th>Status </th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>@item.StatusDate</td>
+                                <td>@item.StatusDisplay</td>
+
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        
+            <button  type="submit" class="btn btn-primary v-bottom "   onclick="self.parent.ClosePopup()">Close</button>
+         
+        
+    </div>
+
+}

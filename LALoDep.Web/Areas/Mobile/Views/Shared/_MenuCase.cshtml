@@ -1,0 +1,25 @@
+﻿@model Jcats.SD.UI.ViewModels.MenuCaseModelView
+@*<div class="form-inline" style="margin-left: 15px;">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline" }))
+    {
+        if (Model.CaseID != 0)
+        {
+
+         
+            <div class="form-group  col-xs-6">
+                @Html.LabelFor(m => m.PDAPDNumber, new { @class = "control-label" })
+                <div class="form-label">
+                    <a href="@Url.Action("Main", "Case", new { id = Model.EncryptCaseID })">@Html.DisplayFor(m => m.PDAPDNumber)</a>
+                </div>
+            </div>    <div class="form-group  col-xs-6">
+        @Html.LabelFor(m => m.Client, new { @class = "control-label" })
+        <div class="form-label">@Html.DisplayFor(m => m.Client)</div>
+    </div>
+
+
+        }
+
+    }
+</div>*@
+
+<a href="@Url.Action("CaseInfo", "Case", new { id = Jcats.SD.UI.Custom.Utility.Encrypt(Model.CaseID.ToString()) })">@Model.PDAPDNumber</a> - @Model.Client

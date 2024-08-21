@@ -1,0 +1,171 @@
+﻿@model LALoDep.Models.Case.AddAppealViewModel
+@{
+    var display = string.Empty;
+    if (Model.IsEdit)
+    {
+        display = "Edit Appeal";
+    }
+    else
+    {
+        display = "Add Writs/Appeal";
+    }
+    ViewBag.Title = display;
+
+    display = ViewBag.pageTitle != "" ? ViewBag.pageTitle : display;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@display</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addWriteAppeals-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.PetitionID)
+                    @Html.HiddenFor(m => m.EncryptedAppealID)
+                    @Html.HiddenFor(m => m.IsEdit)
+                    @Html.HiddenFor(m => m.NoteID)
+                    @Html.HiddenFor(m => m.AttorneyRoleID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppealFileDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.AppealFileDate, new { @class = "form-control input-sm date-picker required", tabindex = 1, autofocus = "autofocus", maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppealTypeCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AppealTypeCodeID, new SelectList(Model.Types, "CodeID", "CodeShortValue"), "", new { @class = "form-control input-sm agency-group required", tabindex = 2, style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppealDocketNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.AppealDocketNumber, new { @class = "form-control input-sm required", tabindex = 3 })
+                    </div>
+                    if (!Model.IsEdit)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AttorneyTypeCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AttorneyTypeCodeID, Model.AttorneyTypes, new { @class = "form-control input-sm  required", autofocus = "autofocus", tabindex = 3, style = "width:100%;" })
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.PersonID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PersonID, Model.Attorney, "", new { @class = "form-control input-sm required", tabindex = 4, style = "width:100%;" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group ">
+                            @Html.LabelFor(m => m.AttorneyRoleID, "Attorney", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AttorneyRoleID, Model.Attorney, "", new { @class = "form-control input-sm required", tabindex = 4, style = "width:100%;", disabled= "disabled" })
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppealOralArgumentDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.AppealOralArgumentDate, new { @class = "form-control input-sm date-picker required", tabindex = 5, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    if (!Model.IsEdit)
+                    {
+                        <div class="form-group  ">
+                            @Html.LabelFor(m => m.MotionDecisionCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.MotionDecisionCodeID, Model.Decisions, "", new { @class = "form-control input-sm ", tabindex = 6, style = "width:100%;" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AppealDecisionDate, new { @class = "control-label" })
+                            <div class="input-group">
+
+                                @Html.TextBoxFor(m => m.AppealDecisionDate, new { @class = "form-control input-sm date-picker ", tabindex = 7, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            @Html.LabelFor(m => m.NoteEntry, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm ", tabindex = 8, style = "width:100%" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="9">Save</button>
+        <button id="btnCancel" type="button" class="btn v-bottom " tabindex="10">Cancel</button>
+    </div>
+}
+
+@section scripts
+    {
+
+    <script>
+        function Validation() {
+
+            var flag = true;
+            var message;
+            $('.required').each(function () {
+
+                if ($(this).val() == '') {
+                    if ($(this).parent().find('.control-label').text() == '')
+                        message = $(this).parent().parent().find('.control-label').text();
+                    else
+                        message = $(this).parent().find('.control-label').text();
+                    Notify(message + ' is required', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    $(this).focus();
+                    flag = false;
+                    return false;
+                }
+
+            });
+            return flag;
+        }
+        function SaveData() {
+            var data = $("#addWriteAppeals-form").serialize();
+
+            $.ajax({
+                type: "POST", dataType: 'json', url: '/WritsAppeals/AddEditAppealsSave', data: data,
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        window.location.href = "/WritsAppeals/List";
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        $('#btnSave').on('click', function () {
+            if (Validation())
+                SaveData();
+            else
+                return false;
+        });
+        $('#btnCancel').on('click', function () {
+            window.location.href = "/WritsAppeals/List";
+        });
+
+
+
+    </script>
+}

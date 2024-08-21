@@ -1,0 +1,70 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.Mobile.pd_WorkGetByCaseID_spResult>
+@{
+    ViewBag.Title = "Record Time";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    <a href="@Url.Action("CaseInfo", "Case", new { id = ViewBag.CaseID })">@ViewBag.CaseNumber</a> - @ViewBag.ClinetName
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="caseloadListDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="caseloadList">
+                        <thead>
+                            <tr>
+                                <th>Worker</th>
+                                <th>Date</th>
+                                <th>Date</th>
+                                <th>Descr.</th>
+                                <th>Ph.</th>
+                                <th>Hr..</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count() > 0)
+                            {
+                                foreach (var recordTime in Model)
+                                {
+                                    <tr>
+                                        <td> @recordTime.WorkerLastName, @recordTime.WorkerFirstName</td>
+                                        <td><a href="@Url.Action(MVC.Mobile.Case.RecordTimeEdit(recordTime.WorkID.ToEncrypt()))"> @recordTime.WorkStartDate</a></td>
+                                        <td>@recordTime.WorkDescriptionCodeMobileValue</td>
+                                        <td>@recordTime.Phase</td>
+                                        <td>@recordTime.WorkHours.Value.ToString("F")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-align-center">No data available in table</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="addNewTime" type="submit" class="btn btn-sm btn-primary default">Add Time</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $("#addNewTime").on("click", function () {
+            window.location.href = '@Url.Action(MVC.Mobile.Case.RecordTimeAdd())';
+        });
+    </script>
+}

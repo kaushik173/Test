@@ -1,0 +1,444 @@
+﻿@model LALoDep.Models.Task.TrainingUploadViewModel
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "Training Import";
+
+    var tabindex = 1;
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Upload Xls/Xlsx File</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "uploadForm", enctype = "multipart/form-data", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            <br />
+                            <button id="btnUpload" type="button" class="btn btn-primary v-bottom " tabindex="@(tabindex++)">Browse For File To Import</button>
+                            <input type="file" name="UploadFile" id="UploadFile" style="display:none" />
+                            <br />
+                        </div>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.TrainingUploadFileModelList.Any())
+{
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption" id="countSearchResult"> Result</span>
+                </div>
+                <div class="widget-body col-xs-12" id="divResultDisplay">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblImport">
+                            <thead>
+                                <tr>
+                                    <th>Ignore </th>
+                                    <th>PersonID </th>
+                                    <th style="width:300px">Person </th>
+
+                                    <th>Course Title</th>
+                                    <th>Provider</th>
+                                    <th>Subject Matter</th>
+                                    <th> Credit Type </th>
+                                    <th>Participatory</th>
+                                    <th style="width:80px">Hours</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th> Venue </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @for (var i = 0; i < Model.TrainingUploadFileModelList.Count; i++)
+                                {
+                                    var item = Model.TrainingUploadFileModelList[i];
+                                    if (item.JcatsPersonID.HasValue == false && item.CourseTitle == "" && item.Provider == "" && item.SubjectMatter == "" && item.JcatsCreditTypeCodeID == null)
+                                    {
+                                        continue;
+                                    }
+                                    <tr>
+
+                                        <td>
+                                            <input type="checkbox" class="chkIgnore" />
+
+                                        </td>
+                                        <td>
+
+                                            @if (Model.PersonList.Any(o => o.Value == item.JcatsPersonID.ToString()))
+                                            {
+                                            <input type="text" class="form-control input-sm" value="@item.JcatsPersonID" tabindex="@(++tabindex)" readonly />
+                                            }
+                                            else
+                                            {  <input style="color:red" class="form-control input-sm" type="text" value="@item.JcatsPersonID" tabindex="@(++tabindex)" readonly />
+
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @Html.DropDownListFor(m => m.TrainingUploadFileModelList[i].JcatsPersonID, Model.PersonList, "", new { @class = "form-control input-sm JcatsPersonID", tabindex = ++tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelList[i].JcatsPersonID })
+                                        </td>
+
+                                        <td>
+                                            @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].CourseTitle, new { @class = "form-control input-sm CourseTitle ", tabindex = ++tabindex,maxlength=50 })
+
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].Provider, new { @class = "form-control input-sm Provider ", tabindex = ++tabindex, maxlength = 50 })
+
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].SubjectMatter, new { @class = "form-control input-sm SubjectMatter ", tabindex = ++tabindex, maxlength = 50 })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.TrainingUploadFileModelList[i].JcatsCreditTypeCodeID, Model.CreditTypeList, "", new { @class = "form-control input-sm JcatsCreditTypeCodeID", tabindex = ++tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelList[i].JcatsCreditTypeCodeID })
+                                        </td>
+                                        <td>
+                                            @Html.CheckBoxFor(m => m.TrainingUploadFileModelList[i].Participatory, new { @class = "form-control input-sm Participatory", tabindex = ++tabindex })
+
+
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].Hours, new { type = "number", @class = "form-control input-sm numeric-val Hours", style = "width:98%", tabindex = ++tabindex })
+                                        </td>
+                                        <td>
+
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].StartDate, new { @class = "form-control input-sm date-picker StartDate", tabindex = ++tabindex, maxlength = ++tabindex })
+                                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.TrainingUploadFileModelList[i].EndDate, new { @class = "form-control input-sm date-picker EndDate", tabindex = ++tabindex, maxlength = ++tabindex })
+                                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.TrainingUploadFileModelList[i].JcatsVenueCodeID, Model.VenueList, "", new { @class = "form-control input-sm JcatsVenueCodeID", tabindex = ++tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelList[i].JcatsVenueCodeID })
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model.TrainingUploadFileModelForAddModeList.Any())
+{
+    ++tabindex;
+    <table style="display:none;" id="tblAddNewRow">
+        @for (var i = 0; i < Model.TrainingUploadFileModelForAddModeList.Count; i++)
+        {
+            var item = Model.TrainingUploadFileModelForAddModeList[i];
+            if (item.JcatsPersonID.HasValue == false && item.CourseTitle == "" && item.Provider == "" && item.SubjectMatter == "" && item.JcatsCreditTypeCodeID == null)
+            {
+                continue;
+            }
+        <tr class="trNew">
+
+            <td>
+                <input type="checkbox" class="chkIgnore" />
+
+            </td>
+            <td></td>
+            <td>
+
+                @Html.DropDownListFor(m => m.TrainingUploadFileModelForAddModeList[i].JcatsPersonID, Model.PersonList, "", new { @class = "form-control input-sm JcatsPersonID", tabindex = tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelForAddModeList[i].JcatsPersonID })
+            </td>
+
+            <td>
+                @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].CourseTitle, new { @class = "form-control input-sm CourseTitle ", tabindex = tabindex, maxlength = 50 })
+
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].Provider, new { @class = "form-control input-sm Provider ", tabindex = tabindex, maxlength = 50 })
+
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].SubjectMatter, new { @class = "form-control input-sm SubjectMatter ", tabindex = tabindex, maxlength = 50 })
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.TrainingUploadFileModelForAddModeList[i].JcatsCreditTypeCodeID, Model.CreditTypeList, "", new { @class = "form-control input-sm JcatsCreditTypeCodeID", tabindex = tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelForAddModeList[i].JcatsCreditTypeCodeID })
+            </td>
+            <td>
+                @Html.CheckBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].Participatory, new { @class = "form-control input-sm Participatory", tabindex = tabindex })
+
+
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].Hours, new { type = "number", @class = "form-control input-sm numeric-val Hours", style = "width:98%", tabindex = tabindex })
+            </td>
+            <td>
+
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].StartDate, new { @class = "form-control input-sm date-picker StartDate", tabindex = tabindex, maxlength = tabindex })
+                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </td>
+            <td>
+
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.TrainingUploadFileModelForAddModeList[i].EndDate, new { @class = "form-control input-sm date-picker EndDate", tabindex = tabindex, maxlength = tabindex })
+                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.TrainingUploadFileModelForAddModeList[i].JcatsVenueCodeID, Model.VenueList, "", new { @class = "form-control input-sm JcatsVenueCodeID", tabindex = tabindex, style = "width:98%", data_default = Model.TrainingUploadFileModelForAddModeList[i].JcatsVenueCodeID })
+            </td>
+        </tr>
+        }
+    </table>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+        @if (Model.TrainingUploadFileModelList.Any())
+        {        <button id="btnImport" type="button" class="btn btn-primary v-bottom default " tabindex="@(tabindex++)">Import</button>
+        <button id="btnImportAdd" type="button" class="btn btn-default v-bottom   " tabindex="@(tabindex++)">Add New</button>
+
+        }
+    </div>
+}
+@section scripts{
+    <script src="/assets/js/select2/select2.js"></script>
+
+    <script type="text/javascript">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+               <text>
+        notifyDanger('@Model.ErrorMessage');
+        </text>
+            }
+        function GetData() {
+            var data = [];
+
+            $('#tblImport tbody tr').each(function () {
+                var $tr = $(this);
+
+
+                if ($tr.find('.chkIgnore').is(':checked') == false) {
+                    data.push({
+                        'JcatsPersonID': $tr.find('.JcatsPersonID').val(),
+                        'CourseTitle': $tr.find('.CourseTitle').val(),
+                        'Provider': $tr.find('.Provider').val(),
+                        'SubjectMatter': $tr.find('.SubjectMatter').val(),
+                        'JcatsCreditTypeCodeID': $tr.find('.JcatsCreditTypeCodeID').val(),
+                        'Hours': $tr.find('.Hours').val(),
+                        'StartDate': $tr.find('.StartDate').val(),
+                        'EndDate': $tr.find('.EndDate').val(),
+                        'JcatsVenueCodeID': $tr.find('.JcatsVenueCodeID').val(),
+                        'Participatory': $tr.find('.Participatory').is(':checked'),
+
+                    });
+
+                }
+
+            })
+            var model = { 'TrainingUploadFileModelList': data, 'FileName': '@Model.FileName' };
+            return model;
+        }
+        function Validations() {
+            var flag = true;
+
+            $('#tblImport tbody tr').each(function () {
+                var $tr = $(this);
+
+
+                if ($tr.find('.chkIgnore').is(':checked') == false && flag) {
+
+                    if ($tr.find('.JcatsPersonID').val() == '' || $tr.find('.JcatsPersonID').val() == null) {
+                        isValid = false;
+                        $tr.find('.JcatsPersonID').focus();
+                        notifyDanger('Person is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.CourseTitle').val() == '') {
+                        isValid = false;
+                        $tr.find('.CourseTitle').focus();
+                        notifyDanger('Course Title is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.Provider').val() == '') {
+                        isValid = false;
+                        $tr.find('.Provider').focus();
+                        notifyDanger('Provider is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.SubjectMatter').val() == '') {
+                        isValid = false;
+                        $tr.find('.SubjectMatter').focus();
+                        notifyDanger('Subject Matter is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+
+                    if ($tr.find('.JcatsCreditTypeCodeID').val() == '' || $tr.find('.JcatsCreditTypeCodeID').val() == null) {
+                        isValid = false;
+                        $tr.find('.JcatsCreditTypeCodeID').focus();
+                        notifyDanger('Credit Type is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.Hours').val() == '') {
+                        isValid = false;
+                        $tr.find('.Hours').focus();
+                        notifyDanger('Hours is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if (($tr.find('.Hours').val() > 0 && $tr.find('.Hours').val() <= 999) == false) {
+                        isValid = false;
+                        $tr.find('.Hours').focus();
+                        notifyDanger('Hours must be a positive numeric value between 0 and 999.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.StartDate').val() == '') {
+                        isValid = false;
+                        $tr.find('.StartDate').focus();
+                        notifyDanger('Start Date is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if (moment($tr.find('.StartDate').val()) > moment()) {
+                        isValid = false;
+                        $tr.find('.StartDate').focus();
+                        notifyDanger('Start Date can not be a future date.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.EndDate').val() == '') {
+                        isValid = false;
+                        $tr.find('.EndDate').focus();
+                        notifyDanger('End Date is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if (moment($tr.find('.StartDate').val()) > moment($tr.find('.EndDate').val())) {
+                        isValid = false;
+                        $tr.find('.EndDate').focus();
+                        notifyDanger('End Date can not be earlier than Start Date.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+                    if ($tr.find('.JcatsVenueCodeID').val() == '' || $tr.find('.JcatsVenueCodeID').val() == null) {
+                        isValid = false;
+                        $tr.find('.JcatsVenueCodeID').focus();
+                        notifyDanger('Venue is required.');
+                        flag = false;
+                    }
+                    if (!flag)
+                        return flag;
+
+                }
+
+            })
+
+            return flag;
+        }
+
+        $("#btnImport").on("click", function () {
+            if (Validations()) {
+                var model = GetData();
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/ImportTraining',
+                    data: model,
+                    success: function (result) {
+                        console.log(result)
+                        if (result.Status === "Done") {
+                            $('#divResultDisplay').html('');
+                            $('#divResultDisplay').html('<div class="alert alert-info">' + result.Message + '</div>');
+
+                        } else {
+
+                            notifyDanger(result.Message);
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+
+        });
+
+        $('select').each(function () {
+            $(this).val($(this).attr('data-default'));
+
+        });
+        $(document).ready(function () {
+            $('#tblImport .JcatsPersonID').select2();
+        });
+        $("#btnUpload").click(function () {
+
+            if ($('#tblImport tbody tr').length > 0) {
+                confirmBox("Are you sure you want to browse for a new file and cancel imports of all records below?", function (result) {
+                    if (result) {
+                        $("#UploadFile").trigger('click');
+                    }
+                });
+            }
+            else {
+                $("#UploadFile").trigger('click');
+            }
+        });
+        $('#UploadFile').change(function () {
+            $('#uploadForm').submit();
+        });
+        $('#btnImportAdd').click(function () {
+            var $tr = $('#tblAddNewRow tr').clone();
+            $('#tblImport tbody').append($tr);
+            $('#tblImport tbody tr:last  .JcatsPersonID').select2();
+        });
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

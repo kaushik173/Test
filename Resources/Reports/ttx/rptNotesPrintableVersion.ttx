@@ -1,0 +1,13 @@
+NoteID	Number		1
+Client	String	150	
+PD/APD #	String	25	
+Appt Date	DateTime		1/1/2005		
+Status	String	100	Open
+Petition #	String	50	
+Attorney	String	150	
+NoteDate	DateTime		2/2/2005		
+NoteClient	String	150	
+NoteType	String	100	Note/Pro/Case
+NoteSubject	String	250	Prosecution Note
+NoteEntry	Memo		
+Created By	String	100	Smith

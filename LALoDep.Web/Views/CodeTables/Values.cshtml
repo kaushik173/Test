@@ -1,0 +1,87 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Administration.CodeTableViewModel
+@{
+    ViewBag.Title = "Codes";
+}
+<style>
+    .widget-buttons label{
+        width:100%;
+        display:block;
+        
+    }
+    .widget-buttons .form-control {
+    height: 25px;
+    width: 200px;
+    display: inline;
+    margin-left:8px;
+}
+    .Standard .widget-buttons label{
+        padding-top:5px;
+    }
+</style>
+<div class="row" id="divSearchResultCurrent">
+<div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+    <div id="current" class="widget row">
+        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+            <span class="widget-caption">Current Code Values</span>
+            <div class="widget-buttons">
+            
+            </div>
+        </div>
+        <div class="widget-body col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="CurrentCodeTableView">
+                    <thead>
+                    <tr>
+                        <th class="">Value</th>
+                        <th class="">Short Value</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+    <div class="row" id="divSearchResultOther">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div id="other" class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Other Agency Code Values</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="OtherCodeTableView">
+                            <thead>
+                                <tr>
+                                    <th class="">Value</th>
+                                    <th class="">Short Value</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnCancel" type="submit" class="btn btn-primary v-bottom default">Cancel</button>
+
+        <button id="btnAddCode" type="button" class="btn btn-default" data-secure-id="@((int)SecurityToken.AddCode)">Add New Code</button>
+    </div>
+}
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $codeTypeID = '@Model.CodeTypeID';
+        var $EncryptedCodeTypeID = '@Model.CodeTypeID.ToEncrypt()';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/CodeTableValues.js?v=" + Guid.NewGuid())"></script>
+}

@@ -1,0 +1,15 @@
+RequestedByFirstName	String	50	Florence
+RequestedByLastName	String	50	Cannata
+RequestDate	DateTime		11/30/2000
+DueDate	DateTime		11/30/2000
+Petitions	String	250	CSI00017A, CSI00017B
+RequestedForFirstName	String	50	Brian
+RequestedForLastName	String	50	Blackwood
+CompletedDate	DateTime		
+Clients	String	250	Mom Gold (07/07/1967)
+SocialWorkerFirstName	String	50	Bella
+SocialWorkerLastName	String	50	Smith
+NextHearingType	String	100	Disposition
+NextHearingDateTime	DateTime		05/12/2000 01:30 PM
+NextHearingDepartment	String	50	2
+AgencyName	String	200	Public Defender, Alternate Public Defender (ICO, CPO, PPO)

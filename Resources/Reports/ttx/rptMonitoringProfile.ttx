@@ -1,0 +1,12 @@
+RFDID	Number		175
+PersonID	Number		12345
+FirstName	String	50	Mom
+LastName	String	50	Gold
+DOB	DateTime		01/01/1967
+CareTakerFirstName	String	50	FName
+CareTakerLastName	String	50	LName
+ProfileQuestion	String	500	Do you have any pets?
+ProfileAnswer	String	500	Yes
+OnRFD	Number		0
+Comment	Memo		This is a test note.
+SocialWorker	String	90	Jenny Jones

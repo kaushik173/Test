@@ -1,0 +1,272 @@
+﻿@using LALoDep.Custom.Security;
+@model LALoDep.Models.Case.CSECEditViewModel
+@{
+    ViewBag.Title = "CSE-IT List";
+}
+<style>
+    tr.warning,
+    tr.warning td {
+        color: #444 !important;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CSECEdit", @class = "form-inline", data_val = "false" }))
+{
+    @Html.HiddenFor(m => m.CSECID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    <div class="form-group col-sm-4 col-md-4">
+                        @Html.LabelFor(m => m.Child, "Child", new { @class = "control-label" })
+                        <label for="Child" class="form-control-static input-sm" style="width:100%">@Model.Child</label>
+                    </div>
+
+                    <div class="form-group col-sm-2 col-md-2">
+                        @Html.LabelFor(m => m.DueDate, "Due Date", new { @class = "control-label" })
+                        <label for="DueDate" class="form-control-static" style="width:100%">@Model.DueDate</label>
+                    </div>
+                    <div class="form-group col-sm-2 col-md-2">
+                        @Html.LabelFor(m => m.CompletionDate, "Completion Date", new { @class = "control-label" })
+                        <label for="CompletionDate" class="form-control-static" style="width:100%">@Model.CompletionDate</label>
+                    </div>
+                    <div class="form-group col-sm-2 col-md-2">
+                        @Html.LabelFor(m => m.AssignedTo, "Assigned To", new { @class = "control-label" })
+                        <label for="AssignedTo" class="form-control-static" style="width:100%">@Model.AssignedTo</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" id="divQuestionnaire">
+        <div class="col-md-12 col-sm-12" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    @if (Model.Questions != null && Model.Questions.Any())
+                    {
+                        var questions = Model.Questions.GroupBy(x => new { x.GroupID, x.GroupDisplay });
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblQuestions">
+                            @foreach (var group in questions)
+                                {
+                            <tr>
+                                <th>@group.Key.GroupDisplay</th>
+                                <th>No Information</th>
+                                <th>No Concern</th>
+                                <th>Possible Concern</th>
+                                <th>Clear Concern</th>
+                            </tr>
+
+                                    foreach (var que in group)
+                                    {
+                            <tr id="" class="questions @(Model.Answers[que.QuestionEnum] == null ? "warning" : "") " data-question-enum="@que.QuestionEnum">
+                                <td>@que.Question</td>
+                                <td>@Html.RadioButton("group-" + que.QuestionEnum, -1, Model.Answers[que.QuestionEnum] == -1, new { @class = "answer" })</td>
+                                <td>@Html.RadioButton("group-" + que.QuestionEnum, 0, Model.Answers[que.QuestionEnum] == 0, new { @class = "answer" })</td>
+                                <td>@Html.RadioButton("group-" + que.QuestionEnum, 1, Model.Answers[que.QuestionEnum] == 1, new { @class = "answer" })</td>
+                                <td>@Html.RadioButton("group-" + que.QuestionEnum, 2, Model.Answers[que.QuestionEnum] == 2, new { @class = "answer" })</td>
+                            </tr>
+                                    }
+                                }
+
+                        </table>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class="text-center">No data found</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="divResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Note</span>
+                </div>
+                <div class="widget-body col-xs-12 form-inline">
+                    @Html.TextAreaFor(m => m.CSECNote, new { @class = "form-control", style = "width:100%;" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (string.IsNullOrEmpty(Model.CompletionDate))
+        {
+            <button id="btnDraft" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.CSECQuestionnaireEdit)">Save As Draft</button>
+            <button id="btnSubmit" type="button" class="btn btn-default v-bottom default" disabled="disabled" data-secure-id="@((int)SecurityToken.CSECQuestionnaireEdit)">Submit</button>
+        }
+        <button id="btnBack" type="button" class="btn v-bottom btn-default">Back</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+
+            calc_height = $(window).height();
+            var _offset = 40;
+            $("#divQuestionnaire .table-responsive").children().first().parentsUntil("body").each(function () {
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+
+                        if ($(this).attr("id") == 'loading')
+                            return;
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+            calc_height = calc_height - _offset;
+            calc_height = calc_height < 250 ? 250 : calc_height;
+
+            $("#divQuestionnaire .table-responsive").css('max-height', calc_height + 'px');
+
+            return calc_height;
+        }
+
+        function allQuestionAnswered() {
+            var allAnswerd = true;
+            for (var indx = 0; indx < $(".questions").length; indx++) {
+                var $tr = $(".questions").eq(indx);
+                var enumName = $tr.data('question-enum');
+                if (!$('input[name=group-' + enumName + ']', $tr).is(':checked')) {
+                    allAnswerd = false;
+                    break;
+                }
+            }
+            return allAnswerd;
+        }
+
+        function getData(buttonId) {
+            var data = {
+                CSECID: $("#CSECID").val(),
+                CSECNote: $("#CSECNote").val(),
+                CSECNoteChanged: $("#CSECNote").IsValueChanged(),
+                buttonId: buttonId,
+                Answers: []
+            }
+
+            for (var indx = 0; indx < $(".questions").length; indx++) {
+                var $tr = $(".questions").eq(indx);
+                var enumName = $tr.data('question-enum');
+
+                if ($('input[name=group-' + enumName + ']', $tr).is(':checked')) {
+                    if ($('input[name=group-' + enumName + ']:checked', $tr).IsRadioChanged()) {
+                        data.Answers.push({
+                            Key: enumName,
+                            Value: $('input[name=group-' + enumName + ']:checked', $tr).val()
+                        });
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        function save(buttonId) {
+            
+            var data = getData(buttonId);
+            $.ajax({
+                type: "POST", url: '@Url.Action(MVC.Case.CSECEditSave())', data: data,
+                success: function (result) {
+                    RequestSubmitted();
+                    if (result.isSuccess) {
+                        if (result.showMessage) {
+                            AlertBoxWithTitleAndCallback(result.alertTitle,result.alertMessage, function (result) {
+                                @if (Request.QueryString["page"] != null)
+                                {
+                                    <text>  window.location.href = '@Request.QueryString["page"]';</text>
+                                }else
+                                {
+                                    <text>  window.location.href = '@Url.Action(MVC.Case.CSEC())';</text>
+                                }
+
+                            });
+
+                        } else {
+                            @if (Request.QueryString["page"] != null)
+                            {
+                                <text>  window.location.href = '@Request.QueryString["page"]';</text>
+                            }else
+                            {
+                                <text>  window.location.href = '@Url.Action(MVC.Case.CSEC())';</text>
+                            }
+                        }
+
+
+                    }
+                }
+            });
+        }
+        function saveAnswers(buttonId) {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest())
+                return;
+
+            if (hasFormChanged('CSECEdit')) {
+                if (buttonId == 2 && !allQuestionAnswered()) {
+                    notifyDanger("All question must be answerd to submit.");
+                    return;
+                }
+
+                if (buttonId == 2) {
+                    confirmBox("You have answered all the questions. If you press Yes then you will no longer be able to change your answers. Submit?", function (result) {
+                        if (result) {
+                            save(buttonId);
+                        }
+                    });
+                } else {
+                    save(buttonId);
+                }
+
+            }
+            else {
+                notifyDanger("No changes were made.");
+            }
+        }
+
+        $("#tblQuestions").on("click", ".answer", function () {
+            $(this).parents('tr').removeClass("warning");
+            $('#btnSubmit').prop("disabled", !allQuestionAnswered());
+        });
+
+        $("#btnDraft").on("click", function () {
+            saveAnswers(1);
+        });
+
+        $("#btnSubmit").on("click", function () {
+            saveAnswers(2);
+        });
+
+        $("#btnBack").on("click", function () {
+            @if (Request.QueryString["page"] != null)
+                            {
+                              <text>  window.location.href = '@Request.QueryString["page"]';</text>
+                            }else
+                            {
+                                 <text>  window.location.href = '@Url.Action(MVC.Case.CSEC())';</text>
+                            }
+        });
+
+        //$(window).bind('resize', function () {
+        //    fitCalculatedHeightForSearchDataTable();
+        //});
+
+        $(document).ready(function () {
+            $('#btnSubmit').prop("disabled", !allQuestionAnswered());
+
+            //fitCalculatedHeightForSearchDataTable();
+
+            setInitialFormValues('CSECEdit');
+
+        });
+    </script>
+}

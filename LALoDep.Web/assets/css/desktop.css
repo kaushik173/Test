@@ -1,0 +1,174 @@
+﻿
+/*body, #menuAction a, .control-label, .form-control {
+    font-size: 8pt !important;
+}
+
+.table thead > tr > th {
+    font-size: 8pt !important;
+    font-weight: 600;
+}
+
+.widget-header > .widget-caption {
+    line-height: 25px;
+    padding: 0;
+    margin: 0;
+    float: left;
+    text-align: left;
+    font-weight: 400 !important;
+    font-size: 12px;
+}
+
+.widget-header {
+    position: relative;
+    min-height: 25px !important;
+    height: 30px !important;
+    background: #fff;
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.3);
+    -moz-box-shadow: 0 0 4px rgba(0,0,0,.3);
+    box-shadow: 0 0 4px rgba(0,0,0,.3);
+    color: #555;
+    padding-left: 12px;
+    text-align: right;
+}
+
+.form-control {
+    padding: 5px;
+}
+
+    .form-control.input-sm {
+        height: 25px;
+    }
+
+    .form-control[type="checkbox"].input-sm {
+        height: 20px;
+    }
+
+.input-group-addon {
+    height: 25px;
+    font-size: 8pt;
+}
+
+.widget-body.col-xs-12 {
+    padding: 5px !important;
+}
+
+.navbar {
+    padding: 0;
+    margin: 0;
+    border: none;
+    height: 37px;
+    min-height: 37px;
+    z-index: 200;
+}
+
+.widget-buttons .btn, .btnlink {
+    display: inline-block;
+    padding: 2px 10px !important;
+    font-size: 10px !important;
+    line-height: 15px !important;
+    width: auto !important;
+}
+
+.widget-buttons .btn {
+    margin-top: -11px;
+}
+
+.table.table-padding thead > tr > th, .table > tr > td {
+    padding: 3px 2px;
+}
+
+.table {
+    margin: 0px;
+}
+
+.btn-xs {
+    font-size: 8pt !important;
+    padding: 1px 3px !important;
+}
+
+    .btn-xs > .fa, .btn-xs > .typcn, .btn-xs > .glyphicon, .btn-xs > [class*="wi-"] {
+        font-size: 8pt !important;
+    }*/
+
+.widget-body.col-xs-12, .widget-body {
+    padding: 2px 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.table.table-padding thead > tr > th, .table > tr > td {
+    padding: 2px 4px;
+}
+
+.table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+    padding: 2px 4px;
+}
+
+table.dataTable.table-condensed .sorting:after, table.dataTable.table-condensed .sorting_asc:after, table.dataTable.table-condensed .sorting_desc:after {
+    top: 3px;
+}
+
+.table .btn-xs {
+    font-size: 8pt !important;
+    padding: 1px 3px !important;
+}
+
+.table {
+    margin: 0px;
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 1px !important;
+    margin-bottom: 1px !important;
+    max-width: none !important;
+}
+
+.widget-header > .widget-caption {
+    line-height: 25px;
+}
+
+.widget-header {
+    min-height: 25px !important;
+    height: 30px !important;
+}
+
+.widget-buttons .btn {
+    margin-top: -11px;
+}
+
+.widget-buttons .btn, .btnlink {
+    padding: 4px 10px !important;
+    line-height: 15px !important;
+    width: auto !important;
+}
+
+.row {
+    margin-top: -2px;
+    clear: both;
+}
+
+.widget-buttons .form-control {
+    height: 25px;
+}
+
+.widget-buttons .input-group-addon {
+    height: 13px;
+    padding: 3px 12px;
+}
+
+.widget-buttons .input-group {
+    top: -5px;
+}
+
+.widget-caption select.input-sm {
+    height: 21px !important;
+    padding: 1px 2px !important;
+    line-height: 25px;
+    top: 2px;
+    position: relative;
+}
+
+.eshareLoading {
+    position: relative;
+    top: -4px !important;
+}

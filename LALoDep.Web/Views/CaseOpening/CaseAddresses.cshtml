@@ -1,0 +1,467 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.CaseOpening.CaseAddressesViewModel
+@{ bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+    ViewBag.Title = "Case<br/> Addresses";
+    var editAddressMode = Model.AddressID > 0;
+}
+<style>
+    .pac-container:after {
+        /*Disclaimer: not needed to show 'powered by Google' if also a Google Map is shown /*/
+        background-image: none !important;
+        height: 0px;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-addresses-form" }))
+{
+    @Html.HiddenFor(m => m.CountryID)
+    @Html.HiddenFor(m => m.StateID)
+    @Html.HiddenFor(m => m.AddressStreet)
+    @Html.HiddenFor(m => m.PlacementAgencyAddress)
+    @Html.HiddenFor(m => m.AddressHomePhone)
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary ">
+                    <span class="widget-caption">Address</span>
+                    <div class="widget-buttons">&nbsp;</div>
+                </div>
+                <div class="widget-body  col-md-12">
+                    <div class="row">
+                        <input type="hidden" name="AddressID" value="@Model.AddressID" />
+                        <div class="form-group col-md-1 col-sm-4 ">
+                            @Html.LabelFor(m => m.StateCodeID, "State", new { @class = "control-label" })
+                            <select class="form-control input-sm" name="StateCodeID" id="StateCodeID" tabindex=1, style="width:98%;color:red" autofocus="autofocus">
+                                <option value="" data-id=""> </option>
+                                @foreach (var item in Model.StateCode)
+                                {
+                                <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.StateCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                }
+                            </select>
+                            @Html.HiddenFor(m => m.StateCodeID, new { id = "hdn_StateCodeID" })
+                        </div>
+                        <div class="form-group col-md-3 col-sm-4 ">
+                            @Html.LabelFor(m => m.Street, "Street", new { @class = "control-label" })
+                            <label class="control-label pull-right red" id="lblStreet" style="display:none;">**Possible Existing Address**</label>
+                            <label class="control-label pull-right red" id="lblStreetPlacement" style="display:none;">**Possible Existing Placement Agency**</label>
+                            @Html.TextBoxFor(m => m.Street, new { @class = "form-control input-sm street_number", @autofocus = "autofocus", tabindex = 2 })
+                            @Html.ValidationMessageFor(m => m.Street)
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+                            @Html.LabelFor(m => m.City, "City", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control input-sm locality", tabindex = 3 })
+                            @Html.ValidationMessageFor(m => m.City)
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+                            @Html.LabelFor(m => m.CountryCodeID, "Country", new { @class = "control-label" })
+                            <select class="form-control input-sm" id="CountryCodeID" tabindex=4, style="width:98%">
+                                <option value=""></option>
+                                @foreach (var item in Model.CountryCode)
+                                {
+                                <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.CountryCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                }
+                            </select>
+                            @Html.HiddenFor(m => m.CountryCodeID, new { id = "hdn_CountryCodeID" })
+                        </div>
+                        <div class="form-group col-md-1 col-sm-4 ">
+                            @Html.LabelFor(m => m.ZipCode, "Zip Code", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control input-sm postal_code", tabindex = 5 })
+                            @Html.ValidationMessageFor(m => m.ZipCode)
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+                            @Html.LabelFor(m => m.HomePhone, "Address Phone", new { @class = "control-label" })
+                            <label class="control-label pull-right red" id="lblHomePhone" style="display:none;">**Possible Existing Address**</label>
+                            @Html.TextBoxFor(m => m.HomePhone, new { @class = "form-control input-sm phone_format ", tabindex = 6 })
+                            @Html.ValidationMessageFor(m => m.HomePhone)
+                        </div>
+                        <div class="form-group col-md-1 col-sm-4 ">
+                            @Html.LabelFor(m => m.CanText, "Can Text", new { @class = "control-label" })
+                            <div>@Html.CheckBoxFor(m => m.CanText, new { tabindex = 7 })</div>
+                        </div>
+                        @if (!editAddressMode)
+                        {
+                        <div class="form-group col-md-5 col-sm-5 ">
+                            @Html.Label("OR Placement Agency/Institution", new { @class = "control-label" })
+                           
+                            <select class="form-control input-sm" id="PlacementAgencyAddressID" tabindex="8" style="width:98%" name="PlacementAgencyAddressID">
+                                <option value=""></option>
+                                @foreach (var item in Model.PlacementAgencyAddressList)
+                                {
+                                    var ids = item.Value.Split('|');
+                                    <option value="@ids[0]" data-id="@ids[1]" @(@ids[0].ToIntNullable() == Model.PlacementAgencyAddressID ? "selected=\"selected\"" : null)>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-7 col-sm-7 ">
+                            @Html.LabelFor(m => m.ExistingAddressID, "Or Existing Address", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ExistingAddressID, Model.ExistingAddresses, "", new { @class = "form-control input-sm", tabindex = 8 })
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (!editAddressMode)
+            {
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary ">
+                    <span class="widget-caption">People In Case</span>
+                    <div class="widget-buttons">
+                        <a href="/Case/ContactInfo" class="btn btn-labeled btn-default btn "> Contact Information </a>
+                        <a class="btn btn-labeled btn-default btn " id="btnShowAll">Show All</a>
+                    </div>
+                </div>
+
+                <div class="widget-body  col-md-12">
+                    @{
+                            var persons = Model.PeopleInCase.GroupBy(o => o.PersonID).Select(grp => grp.First()).ToList();
+                            Model.PersonCount = persons.Count;
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            @{
+                                    var personCountIndex = 0;
+
+                                    foreach (var person in persons)
+                                    {
+                                        var addresses = Model.PeopleInCase.Where(o => o.PersonID == person.PersonID && o.PersonAddressID.HasValue).ToList();
+                                        var addressCountIndex = 0;
+                                <tr class="group">
+                                    <th>@Html.Raw(person.NameDisplay)</th>
+                                    <th width="150">Address Type</th>
+                                    <th width="130">Start Date</th>
+                                    <th width="130">End Date</th>
+
+                                    <th width="60"></th>
+
+                                </tr>
+                                <tr class="personRow">
+                                    <td>
+                                        @Html.Hidden("AddressCount" + personCountIndex, addresses.Count)
+                                        @Html.Hidden("PersonID" + personCountIndex, person.PersonID)
+                                        @Html.Raw(person.ContactDisplay)
+                                    </td>
+                                    <td>@Html.DropDownList("PersonAddressTypeCodeID" + personCountIndex, person.RoleType == "Child" ? Model.TypeCode : Model.NonChildAddressType, "", new { @class = "form-control input-sm TypeField", tabindex = 8, style = "width:98%" })</td>
+                                    <td>
+
+                                        <div class="input-group">
+                                            @Html.TextBox("StartDate" + personCountIndex, DateTime.Now.ToString("MM/dd/yyyy"), new { @class = "form-control input-sm date-picker-control", tabindex = 8, style = "width: 100% !important;", maxlength = "10" })
+                                            <span class="input-group-addon datepicker-control-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+
+                                        <div class="input-group">
+                                            @Html.TextBox("EndDate" + personCountIndex, "", new { @class = "form-control input-sm date-picker-control", tabindex = 8, style = "width: 100% !important;", maxlength = "10" })
+                                            <span class="input-group-addon datepicker-control-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td></td>
+
+                                </tr>
+
+                                        foreach (var address in addresses)
+                                        {
+
+                                <tr class="addressRow @(address.PersonAddressEndDate.ToDefaultFormat()!=""?"hasEndDate hidden":"")">
+                                    <td>
+                                        @Html.Hidden("AddressID" + personCountIndex + "-" + addressCountIndex, address.AddressID)
+
+                                        @Html.Hidden("RecordStateID" + personCountIndex + "-" + addressCountIndex, address.RecordStateID)
+                                        @Html.Hidden("PersonAddressTypeCodeID" + personCountIndex + "-" + addressCountIndex, address.PersonAddressTypeCodeID)
+                                        @Html.Hidden("PersonAddressID" + personCountIndex + "-" + addressCountIndex, address.PersonAddressID)
+                                        @if (address.PlacementAgency.IsNullOrEmpty())
+                                                    {
+                                                    <a href="/CaseOpening/CaseAddresses?addressId=@(address.AddressID.ToEncrypt())@((Request.QueryString["dataentry"] != null) ? "&dataentry=true" : "")" data-secure-link-id="@((int)SecurityToken.EditAddress)">
+
+                                                        @Html.Raw(address.PlacementAgency)   @(address.AddressStreet + @", " + address.AddressCity + @", " + address.State + @" " + address.AddressZipCode + @" " + address.AddressHomePhone + " " + HttpUtility.HtmlDecode(address.LivesWith))
+                                                    </a>
+                                                    }
+                                                    else
+                                                    {
+                                                    <span>
+
+                                                        @address.PlacementAgency   @(address.AddressStreet + @", " + address.AddressCity + @", " + address.State + @" " + address.AddressZipCode + @" " + address.AddressHomePhone)
+                                                    </span>
+                                                    }
+                                    </td>
+                                    <td> @address.AddressType</td>
+                                    <td>
+
+                                        <div class="input-group">
+                                            @Html.TextBox("StartDate" + personCountIndex + "-" + addressCountIndex, address.PersonAddressStartDate.ToDefaultFormat(), new { @class = "form-control input-sm date-picker-control", tabindex = 8, style = "width: 100% !important;", maxlength = "10" })
+                                            <span class="input-group-addon datepicker-control-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+
+                                        <div class="input-group">
+                                            @Html.TextBox("EndDate" + personCountIndex + "-" + addressCountIndex, address.PersonAddressEndDate.ToDefaultFormat(), new { @class = "form-control input-sm date-picker-control", tabindex = 8, style = "width: 100% !important;", maxlength = "10" })
+                                            <span class="input-group-addon datepicker-control-trigger">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <a style="cursor:pointer;" class="btn btn-danger btn-xs delete  btn-delete" data-id="@address.PersonAddressID" data-secure-id="@((int)SecurityToken.DeleteAddress)"><i class="fa fa-trash-o"></i> Delete</a>
+
+                                    </td>
+                                </tr>
+                                            addressCountIndex++;
+                                        }
+
+                                        personCountIndex++;
+                                    }
+                            }
+
+                        </table>
+                    </div>
+
+                    @Html.HiddenFor(m => m.PersonCount)
+                </div>
+            </div>
+
+
+                                    }
+        </div>
+    </div>
+    @section scripts
+{
+        @{
+            var useHereMaps = System.Configuration.ConfigurationManager.AppSettings["UseHereMaps"];
+        }
+        @if (string.IsNullOrEmpty(useHereMaps) || (!string.IsNullOrEmpty(useHereMaps) && useHereMaps == "false"))
+        {
+
+
+            <script src="@Url.Content("//maps.googleapis.com/maps/api/js?key=" + LALoDep.Custom.UtilityFunctions.GetGoogleApiKeyFromConfig() + "&libraries=places")"></script>
+            <script type="text/javascript">
+            var placeSearch, autocomplete;
+            var componentForm = {
+                Street: 'short_name',
+                route: 'long_name',
+                City: 'long_name',
+                administrative_area_level_1: 'short_name',
+                country: 'long_name',
+                ZipCode: 'short_name'
+            };
+
+            function initAutocomplete() {
+
+
+                // Create the autocomplete object, restricting the search to geographical
+                // location types
+                autocomplete = new google.maps.places.Autocomplete(
+                    //type {!HTMLInputElement} */
+
+                    (document.getElementById('Street')),
+                    {
+                        types: ['geocode'],
+                        componentRestrictions: { country: "us" },//defalut,
+                    });
+
+                // When the user selects an address from the dropdown, populate the address
+                // fields in the form.
+
+                //set defult bound of seected state
+                setBoundByState();
+
+                autocomplete.addListener('place_changed', fillInAddress);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+
+            function fillInAddress() {
+
+                // Get the place details from the autocomplete object.
+                var place = autocomplete.getPlace();
+                // Get each component of the address from the place details
+                // and fill the corresponding field on the form.
+                var street = '';
+                var valZipCode = '';
+                var valCity = '';
+                var valState = '';
+
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+                    if (addressType == "street_number" || addressType == "route") {
+                        street = street + " " + place.address_components[i].long_name;
+                    }
+
+                    else if (addressType == "locality") {
+                        valCity = place.address_components[i].long_name;
+                        document.getElementById('City').value = valCity;
+                    }
+                    else if (addressType == "postal_code") {
+                        valZipCode = place.address_components[i].long_name;
+                        document.getElementById('ZipCode').value = valZipCode;
+                    }
+                    else if (addressType == "administrative_area_level_1") {
+                        valState = place.address_components[i].short_name;
+                        $('#StateCodeID option[data-id="' + valState + '"]').prop('selected', true);
+                        setBoundByState();
+                    }
+                }
+                //set street
+                document.getElementById('Street').value = $.trim(street);//substring(1);//remove firt ','
+            }
+
+            function setBoundByState() {
+
+                var geocoder = new google.maps.Geocoder();
+                var address = $('#StateCodeID option:selected').text();// + ', ' + $('#CountryCodeID option:selected').text();
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        //alert("location : " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng());
+                        var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
+                        autocomplete.setBounds(bounds);
+                    } else {
+                        //alert("Something got wrong " + status);
+                    }
+                });
+
+            }
+
+            $('#StateCodeID').on('change', function () {
+                //alert($apiKey);
+                setBoundByState();
+            });
+
+            $('#CountryCodeID').on('change', function () {
+                var country = $(this).find(':selected').attr('data-id')
+                autocomplete.setComponentRestrictions({ 'country': country });
+            });
+
+            </script>
+
+        }
+        else
+        {
+            <text>
+               <script>
+                   var addressLookupAppId = '@System.Configuration.ConfigurationManager.AppSettings["HereMapAppId"]';
+                   var addressLookupApiKey = '@System.Configuration.ConfigurationManager.AppSettings["HereMapApiKey"]';
+               </script>
+                <link href="~/assets/css/auto-Complete.css" rel="stylesheet" />
+
+<script src="/assets/other/jquery-ui-1.10.4.custom.min.js"></script>
+
+
+                <script src="/assets/other/address-auto-complete.js"></script>
+
+                <script>
+                    $("#CountryCodeID").on("change", function () {
+                        if ($(this).val() == "2246") {
+                            $("#Street").initAddressAutoComplete(function (address) {
+                                var stateId = $("#StateCodeID").val();
+                                for (var indx = 0; indx < $("#StateCodeID option").length; indx++) {
+                                    var option = $("#StateCodeID option").eq(indx);
+                                    if (address.state != undefined && option.attr('data-id').trim().toUpperCase() == address.state.toUpperCase()) {
+                                        stateId = option.val();
+                                        break;
+                                    }
+                                }
+                                $("#StateCodeID").val(stateId);
+                                $("#City").val(address.city);
+                                $("#ZipCode").val(address.postalCode);
+                            });
+                        }
+                        else {
+                            $("#Street").removeAddressAutoComplete();
+                        }
+                    });
+
+                    $(function () {
+
+
+
+                        $("#CountryCodeID").trigger("change");
+                    })
+
+                </script>
+            </text>
+        }
+        @if (!editAddressMode)
+        {
+            <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/CaseAddresses.js?v=" + Guid.NewGuid())"></script>
+        }
+        else
+        {
+            <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/CaseAddressEdit.js?v=" + Guid.NewGuid())"></script>
+
+        }
+        <script>
+            $(function () {
+
+                $('#btnShowAll').click(function () {
+                    if ($.trim($(this).text()) == 'Show All') {
+                        $(this).text('Show Less');
+                        $('.addressRow.hasEndDate').removeClass('hidden');
+
+                    } else {
+                        $(this).text('Show All');
+                        $('.addressRow.hasEndDate').addClass('hidden');
+                    }
+                })
+
+
+            })
+        </script>
+    }
+            }
+
+<!--script-->
+@section fixedfooter{
+
+    <div class="boxfloat text-center">
+        @if (Request.QueryString["dataentry"] != null)
+        {
+
+            if (!editAddressMode)
+            {
+                <button id="btnSaveAndReturn" type="submit" class="btn   btn-primary v-bottom  default" tabindex="14" data-secure-id="@((int)SecurityToken.AddAddress)">Save</button>
+            }
+        }
+        else
+        {
+            if (!editAddressMode)
+            {
+                <button id="btnSaveAndContinue" type="submit" class="btn btn-primary v-bottom  default" tabindex="13" data-secure-id="@((int)SecurityToken.AddAddress)">Save/Continue</button>
+                <button id="btnSaveAndReturn" type="submit" class="btn  v-bottom  default" tabindex="14" data-secure-id="@((int)SecurityToken.AddAddress)">Save/<u>Add More</u></button>
+            }
+        }
+
+        @if (!editAddressMode)
+        {
+            <button id="btnSaveAndPrint" type="submit" class="btn  v-bottom  default" tabindex="15">Save/<u>P</u>rint</button>
+        }
+        @if (editAddressMode)
+        {
+            <button id="btnSaveAndContinue" type="submit" class="btn btn-primary v-bottom  default" tabindex="13" data-secure-id="@((int)SecurityToken.AddAddress)">Save</button>
+        }
+
+
+    </div>
+
+}
+@if (Request.QueryString["dataentry"] == null)
+{
+    @Html.Partial("_steps")
+
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>

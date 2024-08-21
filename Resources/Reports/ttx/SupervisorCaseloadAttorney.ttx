@@ -1,0 +1,13 @@
+CaseTotal	Number		9
+NppCases	Number		9
+NewThisMonth	Number		9
+NewThisWeek	Number		9
+NewLastWeek	Number		9
+ClosedThisMonth	Number		9
+NewToday	Number		9
+AttorneyLastName	String	50	Elliot
+AttorneyFirstName	String	30	Lorraine
+Department	String	100	1
+Branch	String	100	KM
+AgencyName	String	200	PD
+AsOfDate	DateTime		1/1/2001

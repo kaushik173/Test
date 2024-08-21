@@ -1,0 +1,538 @@
+﻿@model  LALoDep.Models.IVEActvityLog.IVEActvityLogExecViewModel
+@{
+    ViewBag.Title = "Actvity Log";
+}
+<style>
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    table#activity-head {
+        width: 100%;
+        border: 0;
+        font-size: 115%;
+    }
+
+        table#activity-head th {
+            padding-right: 15px;
+            text-align: right;
+            border: none !important;
+        }
+
+        table#activity-head th, table#activity-head td {
+            padding-bottom: 10px;
+        }
+
+    .activity-sheet > tbody > tr > td {
+        padding: 0;
+    }
+
+        .activity-sheet > tbody > tr > td input {
+            min-width: 40px;
+            text-align: right;
+        }
+
+    .activity-sheet .activity-header {
+        min-width: 150px;
+        padding-left: 10px;
+    }
+
+
+    .activity-sheet .day-total {
+        text-align: right;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .activity-sheet .day-header {
+        width: 50px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .activity-sheet td.success, .activity-sheet th.success {
+        border-bottom: 2px solid #dff0d8 !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    td.danger, .activity-sheet th.danger {
+        border-bottom: 2px solid #f2dede !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .activity-sheet .child-total th {
+        background-color: #efefef;
+    }
+
+    .activity-sheet tfoot th {
+        font-weight: 700 !important;
+    }
+
+    .highlightGray {
+        background-color: #eee;
+    }
+</style>
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+</style>
+@Html.Hidden("hdnActivityLogID", Model.ActivityLogID)
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget margin-left-10 margin-right-10">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    Activity Log for Executive Directors and Administrators
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                <h3 class="text-center no-margin-top"></h3>
+                <table id="activity-head">
+                    <tr>
+                        <th style="width:5%;">Name:</th>
+                        <td style="width:28%;">
+                            @Model.PersonName &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a onclick="OpenCustomPopup('/Task/IVEActvityLogListAgencyEmployees?page=IVEActivityLogExec', 500, 500, 'Switch to different employee')" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.IVEChangePersonOnActivityLog)">Switch to different employee</a>
+                        </td>
+                        @*<td style="width:10%;"></td>
+                            <td style="width:23%;"></td>*@
+                        <th style="">Year:</th>
+                        <td style="width:220px;"><span id="spnYear" data-year="@Model.ActivityMonth.Year">@Model.ActivityMonth.Year</span></td>
+                    </tr>
+                    <tr>
+                        <th>Title:</th>
+                        <td><span id="spnTitle">@Model.Title</span></td>
+                        <th class="hidden">County:</th>
+                        <td class="hidden">  </td>
+                        <th>Month:</th>
+                        <td id="monthPicker" data-date="@(Model.ActivityMonth.ToString("MM"))/@Model.ActivityMonth.ToString("yyyy")" data-date-format="mm/yyyy" data-date-viewmode="months" data-date-minviewmode="months">
+                            <span id="spnMonth" data-month="@Model.ActivityMonth.Month">@Model.ActivityMonth.ToString("MMMM") </span>
+                            <button id="btnMonth" type="button" class="btn btn-default btn-sm btn-link"><i class="fa fa-calendar"></i></button>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="dvActivity" class="dvActivity">
+
+
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVEActivityLog-form" }))
+                    {@Html.Hidden("PersonID", Model.PersonID)
+                        @Html.HiddenFor(m => m.AgencyCountyID)
+                        @Html.HiddenFor(m => m.ActivityLogID)
+                        @Html.HiddenFor(m => m.ActivityMonth)
+                        @Html.HiddenFor(m => m.DateSignedEmployee)
+                        @Html.HiddenFor(m => m.DateSignedSupervisor)
+                        <div class="col-md-8 col-lg-6 col-md-offset-1 col-lg-offset-2" style="padding:0px">
+                            <table id="tblMontholySummary" class="tblForm">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-right">
+                                            Please enter the monthly % of time spent on <strong> Non-Dependency Related/ FFDRP Ineligible</strong> activites: <br />
+
+                                            <small>
+                                                Including, but not limited to: % of organization that relates to non-depedency practice (e.g., organization is 80% dependency and 20% criminal, therefore 20% would be included; grant work, lobbying, policy work, and training.
+                                            </small>
+                                        </td>
+                                        <td style="width:150px;vertical-align:top;">
+
+                                            @Html.TextBoxFor(m => m.NonDependPercent_ExecDir, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;" })
+
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Please enter the monthly % of <strong>paid time-off</strong>: </td>
+                                        <td style="width:150px;vertical-align:top;">
+
+                                            @Html.TextBoxFor(m => m.TimeOffPercent_ExecDir, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;" })
+
+
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Total Monthly % FFDRP Eligible (for time worked) :</td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.FFDRPWorked, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">PTO Reimbursment Rate  :</td>
+                                        <td>
+
+                                            @Html.TextBoxFor(m => m.PTOReimbursmentRate_ExecDir, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Total Monthly % FFDRP Eligible (for paid time-off):</td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.FFDRPPaidTimeOff, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+                                        </td>
+                                    </tr>
+                                    <tr id="tblDetail" class="hide">
+                                        <td colspan="2">
+                                            <div   style="padding:0px">
+                                                <table  class="table table-bordered table-condensed table-hover table-padding table-striped">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th>County Name</th>
+                                                            <th>
+                                                                Time Worked
+                                                            </th>
+                                                            <th>
+                                                                Time Paid Off
+                                                            </th>
+                                                            <th>
+                                                                Total By County
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table></div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">Total Monthly % FFDRP Eligible:</td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.TotalFFDRPEligible, "{0:0.00}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div class="widget margin-left-10 margin-right-10">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">Certification</span>
+            </div>
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+
+                        <div class="text-center margin-bottom-20"><i>To the best of my knowledge and belief, the facts stated are accurate and in full compliance with legal and FFDRP requirements.</i></div>
+                        <table style="width:100%">
+                            <tr>
+                                <td><strong>SIGNATURE</strong></td>
+                                <td style="width:30px;"></td>
+                                <td><strong>DATE</strong></td>
+                                <td style="width:30px;"></td>
+                                <td style="width:30px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom: 2px solid #000 !important;" class="padding-top-20">
+                                    <span id="spnEmpName" class="signature-text">
+                                        @if (!string.IsNullOrEmpty(Model.DateSignedEmployee))
+                                        {
+                                            @Model.EmployeeName
+                                        }
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td id="tdEmpSignedDate" style="width:100px;border-bottom:2px solid  #000 !important;">
+                                    @(Model.DateSignedSupervisor)
+                                </td>
+                                <td></td>
+                                <td>
+                                    <button id="btnSaveEmpSign" class="btn btn-sm btn-default save-signature @(string.IsNullOrEmpty(Model.DateSignedEmployee) ? "" : "hide")" data-signature-type="Employee">Save Signature</button>
+                                    @*<button id="btnRemoveEmpSign" class="btn btn-sm btn-default save-signature @((!string.IsNullOrEmpty(Model.DateSignedEmployee) && string.IsNullOrEmpty(Model.DateSignedSupervisor)) ? "" : "hide")" data-signature-type="Remove">Remove Signature</button>*@
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+@section fixedfooter{
+
+    <div id="btn-section" class="boxfloat text-center   ">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+
+    </div>
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function adjustInputHeight() {
+            $("#activitySheet table tr").each(function () {
+                var inHeight = $("td:first .activity-name", $(this)).outerHeight();
+                $(".activity-day", $(this)).css({ height: inHeight + "px", minHeight: "28px" });
+            });
+        }
+        function getActivityHeader() {
+
+            $("#btnAddOtherCounty").removeClass('btn-disabled')
+            var data = {
+
+                year: $("#spnYear").data('year'),
+                month: $("#spnMonth").data('month'),
+                PersonID: $("#PersonID").val()
+            };
+            $('#ActivityMonth').val($("#spnMonth").data('month') + '/1/' + $("#spnYear").data('year'))
+            $.ajax({
+                type: "POST", url: '@Url.Action("GetActivityExecHeader")', data: data, cache: false,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $("#spnTitle").html(result.data.Title);
+                        $("#AgencyCountyID").val(result.data.AgencyCountyID)
+                        $("#hdnActivityLogID").val(result.data.ActivityLogID);
+                        $("#ActivityLogID").val(result.data.ActivityLogID);
+
+                        var empSignedDate = result.data.DateSignedEmployee;
+                        var supSignedDate = result.data.DateSignedSupervisor;
+                        $("#DateSignedEmployee").val(result.data.DateSignedEmployee);
+                        $("#DateSignedSupervisor").val(result.data.DateSignedSupervisor);
+                        if (empSignedDate == "") {
+                            $("#spnEmpName").html("");
+                            $("#btn-section").removeClass("hide");
+                            $("#btnSaveEmpSign").removeClass("hide");
+                            $("#btnSaveSupSign").addClass("hide");
+                            $("#btnRemoveEmpSign").addClass("hide");
+                        }
+                        else {
+                            $("#spnEmpName").html(result.data.EmployeeName);
+                            $("#btn-section").addClass("hide");
+                            $("#btnSaveEmpSign").addClass("hide");
+                            if (supSignedDate == "") {
+                                $("#btnSaveSupSign").removeClass("hide");
+                                $("#btnRemoveEmpSign").removeClass("hide");
+                            }
+                        }
+
+                        if (result.data.UseWorkHoursForActivityLog == 1) {
+                            $("#btn-section").addClass("hide");
+                        }
+                        $("#tdEmpSignedDate").html(empSignedDate);
+
+
+
+                        $("#spnSupSignedName").html(result.data.SupervisorSignedName);
+                        $("#tdSupSignedDate").html(supSignedDate);
+
+                        $("#NonDependPercent_ExecDir").val(result.data.NonDependPercent_ExecDir.toFixed(2));
+                        $("#TimeOffPercent_ExecDir").val(result.data.TimeOffPercent_ExecDir.toFixed(2));
+                        $("#FFDRPWorked").val(result.data.FFDRPWorked.toFixed(2));
+                        $("#PTOReimbursmentRate_ExecDir").val(result.data.PTOReimbursmentRate_ExecDir.toFixed(2));
+                        $("#FFDRPPaidTimeOff").val(result.data.FFDRPPaidTimeOff.toFixed(2));
+                        $("#TotalFFDRPEligible").val(result.data.TotalFFDRPEligible.toFixed(2));
+
+                        if (result.data.TitleIVeExecDirCountyAllocationList.length > 0) {
+                            $('#tblDetail').removeClass('hide')
+                            $('#tblDetail tbody').html('');
+                            $.each(result.data.TitleIVeExecDirCountyAllocationList, function (index, jsonObject) {
+                                $tr = '<tr><td>' + jsonObject.CountyName + '</td><td class="text-right">' + jsonObject.TimeWorkPercent + '%</td><td class="text-right">' + jsonObject.PaidTimeOFf + '%</td><td class="text-right">' + jsonObject.TotalByCounty + '%</td></tr>'
+                                 
+
+                                $('#tblDetail tbody').append($tr);
+                            });
+                        } else {
+                            $('#tblDetail').addClass('hide')
+                        }
+                       
+
+
+                        setInitialFormValues("IVEActivityLog-form");
+                    }
+                }
+            });
+        }
+
+
+
+
+
+
+
+        function GetFormData() {
+            $('#IVEActivityLog-form :disabled').addClass('disabled-fields')
+            $('.disabled-fields').prop('disabled', false);
+            var data = $('#IVEActivityLog-form').serialize();
+            $('.disabled-fields').prop('disabled', true);
+            return data;
+        }
+
+        function saveActivity(buttonId) {
+
+
+
+            if (!$("#btn-section").hasClass("hide")) {
+
+                var percentageFunds = parseInt($('#NonDependPercent_ExecDir').val()) + parseInt($('#TimeOffPercent_ExecDir').val());
+                if (percentageFunds > 100) {
+                    IsValid = false;
+                    $('#NonDependPercent_ExecDir').focus();
+                    notifyDanger('The non-dependency percentage, and the paid time-off % must be under 100%.');
+                    return false;
+
+                }
+
+                var formData = GetFormData();
+                $.ajax({
+                    type: "POST", url: '@Url.Action("IVEActivityLogExec")', data: formData, cache: false,
+                    success: function (result) {
+                        if (buttonId == 1) {
+                            if (result.isSuccess) {
+                                notifySuccess("Data saved successfully.");
+                                ///   setInitialFormValues("IVEActivityLog-form");
+                                getActivityHeader();
+
+                            }
+                            else {
+                                notifyDanger(result.message);
+                            }
+                        }
+
+                        else {
+                            getActivityHeader();
+                        }
+                    }
+                });
+            }
+            else {
+                if (buttonId != 1) {
+                    getActivityHeader();
+                }
+            }
+        }
+
+
+
+
+
+        $('#monthPicker').datepicker().on('changeDate', function (ev) {
+
+            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            if (hasFormChanged("IVEActivityLog-form")) {
+
+
+                $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                $("#spnYear").html(ev.date.getFullYear());
+                $("#spnYear").data('year', ev.date.getFullYear());
+
+                $('#monthPicker').datepicker('hide');
+
+                setTimeout(function () {
+                    var oldDate = $("#monthPicker").data('date');
+                    $("#monthPicker").data('old-value-on-pageload', oldDate);
+                }, 500);
+
+                saveActivity(3);
+
+            } else {
+
+                $("#spnMonth").html(monthNames[ev.date.getMonth()]);
+                $("#spnMonth").data('month', ev.date.getMonth() + 1);
+
+                $("#spnYear").html(ev.date.getFullYear());
+                $("#spnYear").data('year', ev.date.getFullYear());
+
+                $('#monthPicker').datepicker('hide');
+                setTimeout(function () {
+                    var oldDate = $("#monthPicker").data('date');
+                    $("#monthPicker").data('old-value-on-pageload', oldDate);
+                }, 500);
+
+                getActivityHeader();
+            }
+        });
+
+        $(".save-signature").on("click", function () {
+            var data = $(this).data();
+            if (data.signatureType == 'Remove') {
+                $("#DateSignedSupervisor").val('');
+            } else {
+                $("#DateSignedSupervisor").val(moment().format('MM/DD/YYYY'));
+            }
+
+
+            saveActivity(1);
+
+            @*
+            setTimeout(function () {
+
+                $.ajax({
+                    type: "POST", url: '@Url.Action("SaveSignature")', data: { activityLogId: $("#hdnActivityLogID").val(), signatureType: data.signatureType }, cache: false,
+                    success: function (result) {
+                        if (result.isSuccess) {
+                            getActivityHeader();
+                            notifySuccess("Signature updated successfully.");
+                            if (data.signatureType == 'Super') {
+                                $('#btnRemoveEmpSign').addClass("hide");
+                                $('#btnSaveSupSign').addClass("hide");
+                            }
+                        }
+                    }
+                });
+
+            }, 1000);*@
+
+
+        });
+
+
+        $("#btnSave").on("click", function () {
+            if (hasFormChanged("IVEActivityLog-form")) {
+
+                saveActivity(1);
+
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        });
+
+
+
+
+
+        $(document).ready(function () {
+
+
+
+            var date = $("#monthPicker").data('date');
+            $("#monthPicker").data('old-value-on-pageload', date);
+            getActivityHeader();
+
+        });
+    </script>
+}

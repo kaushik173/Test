@@ -1,0 +1,376 @@
+﻿{
+    "meta": {
+      "widgetSelector": ".tutorial-container",
+      "pageSelector": ".page-container",
+      "wrapperSelector": ".main-container",
+      "useAnimations": true,
+      "animations": {
+        "blinkMask": {
+          "value": "opacity",
+          "valueType": "css",
+          "valueTarget":  ".tutorial-mask-holes path",
+          "valueEnd": 1,
+          "valueOrig": 0,
+          "valueRemain": false,
+          "duration": 200,
+          "periods": 3,
+          "periodEase": false
+        },
+        "scrollMask": {
+          "value": "scrollTop",
+          "valueType": "property",
+          "valueTarget": "html, body",
+          "valueEnd": "stateMapValue",
+          "stateMapValue": "scrollLevel",
+          "valueRemain": true,
+          "duration": 180,
+          "periods": 1
+        }
+      },
+      "keepAliveOnClose": true,
+      "errorTypes": {
+        "navigate":                   "Please use the navigation link below to proceed",
+        "selectCase":                 "This tutorial needs a case to be selected",
+        "tutorialIllFormed":          "",
+        "stepIllFormed":              "",
+        "groupIllFormed":             "",
+        "maskIllFormed":              "",
+        "listElementFail":            "jtutorial: was unable to find an element to attatch the tutorial list",
+        "tutorialNotFound":           "jtutorial: was unable to retreive the referenced tutorial configuration, make sure it is complete",
+        "stepNotFound":               "",
+        "groupNotFound":              "",
+        "maskNotFound":               "jtutorial: unable to locate an element target for the mask in the configuration for this step",
+        "animationNotFound":          "jtutorial: step tried to play an animation type that was not found in the configuration",
+        "animationMapError":          "jtutorial: step tried to play an animation type that could not be mapped to its values properly",
+        "eventTargetNotFound":        "jtutorial: step tried to trigger an event but no cadidate targets was not found",
+        "eventTargetAmbiguous":       "jtutorial: step tried to trigger an event but multiple targets could not be narrowed down, try including a filter property",
+        "eventBadTargetIndexFilter":  "jtutorial: step tried to trigger an event but an index filter on multiple candidates was not in bounds"
+      }
+    },
+  "groups": {
+    "Getting Started": {
+      "Navigation": {
+        "startPage": "",
+        "relatedTutorials": [
+          "User Settings"
+        ],
+        "steps": {
+          "Navigation Intro": {
+            "mask": [ ],
+            "body": [
+              "Welcome to the navigation tutorial. ",
+              "To begin press either the <i class=\"fa fa-play-circle\"/> button or the <i class=\"fa fa-step-forward\"/> button above"
+            ]
+          },
+          "Navigation Bar": {
+            "mask": [
+              {
+                "targetType": "css",
+                "target": ".navbar-inner"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "This is the navbar, here you will find your way to all your needed pages as well as various settings and logout for your account"
+            ]
+          },
+          "User Name and Logout": {
+            "mask": [
+              {
+                "targetType": "css",
+                "target": ".account-area"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "On the right you will find your username. Click it and you will see the option to log out"
+            ]
+
+          },
+          "Page Selection": {
+            "events": [
+              {
+                "type": "click",
+                "targetType": "css",
+                "target": ".dropdown-toggle",
+                "filter": 0,
+                "filterType": "index"
+              }
+            ],
+            "mask": [
+              {
+                "targetType": "css",
+                "target": "#menuAction",
+                "modifiers": {
+                  "addBottom": "15"
+                }
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "In the center you will find three dropdowns where you will locate pages for all your case management tasks. ",
+              "A fourth for Data Entry will be availible if there is a case selected. "
+            ]
+
+          },
+          "User Preferences/Session": {
+            "mask": [
+              {
+                "targetType": "css",
+                "target": ".top-left-home"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "On the left is your dropdown to manage your user settings as well as some usefull session tasks like refreshing, help, and going to your home page"
+            ]
+
+          },
+          "Conclusion": {
+            "mask": [ ],
+            "body": [
+              "Those are the basics for navigation, more specifics for User Settings can be found in the User Settings tutorial"
+            ]
+          }
+        }
+      },
+      "User Settings": {
+        "startPage": "",
+        "relatedTutorials": [
+          "Navigation"
+        ],
+        "steps": {
+          "Intro": {
+            "body": [
+              "User Settings Intro"
+            ]
+          }
+        }
+      },
+      "Adding/Opening a Case": {
+        "startPage": "/Task/QuickAddCaseSearch",
+        "startPageTitle":  "Quick Add Case Search",
+        "relatedTutorials": [
+          "Closing a Case",
+          "Updating a Case"
+        ],
+        "steps": {
+          "Intro": {
+            "body": [
+              "The Quick Add Case is to be used when the family has three or less children. ",
+              "Otherwise, it is best to use the Add Appointment Case. ",
+              "The Quick Add Case task is a two step process consisting of the search page and the add page. ",
+              "To begin press either the <i class=\"fa fa-play-circle\"/> button or the <i class=\"fa fa-step-forward\"/> button above."
+            ]
+          },
+          "Search Page": {
+            "body": [
+              "First you will be presented with the search page; the case you are looking for may already exist. It's required form items are: <ul>",
+              "<li><strong>Agency:</strong> The agency for wich the case will be added.  It will default if as a user only has access to one agency.</li>",
+              "<li><strong>Mother Name, Case #:</strong> Enter one or both</li>",
+              "</ul>",
+              "Fill out more to narrow down the search further."
+            ]
+          },
+          "Search Page (2)": {
+            "saveStateForNext":  true,
+            "body": [
+              "<strong>Children, Mother, and Father names and Case #s</strong><br/><br/>",
+              "To be populated with the new case's names and case #s. ",
+              "Upon clicking the 'Search' button, it will search all cases in your agency group and return all cases that match any of the names or Case #s. ",
+              "This is helpful to determine if there are conflicting cases. <br/><br/>",
+              "If the exact case you're attempting to add is in the result set then you should select it and begin updating it instead of adding a new case. ",
+              "If you do not find the case you're attempting to add then use the 'Bypass Search Results' button in order to begin adding the new case. ",
+              "Using Quick Add Case, you will be presented with a one-screen case opening page. <br/><br/>",
+              "<strong>Please complete the required form items and search to continue. Bypass if necessary to see the 'Add' page."
+            ]
+          },
+          "Adding the Case": {
+            "overrideStartPage":  true,
+            "body": [
+              "The 'Add' page will contain form items for the information you wish to include on the case, namely: <ul>",
+              "<li><strong>Roles: </strong>(up to three children and three adults)</li>",
+              "<li><strong>Clients: </strong>(singular if an adult, multiple if children)</li>",
+              "<li>Associations</li>",
+              "<li><strong>Address and 'lives with' relationships</strong></li>",
+              "<li><strong>Legal Parties: </strong> judge and inner-office attorney</li>",
+              "<li>Court department and initial hearing (along with the appearing attorney)</li>",
+              "<li>Petition file date, type, and allegations</li>",
+              "<li><strong>Note: </strong>initial case note</li>",
+              "<li><strong>Language: </strong>Spanish speaking checkbox for each role.</li>",
+              "</ul>"
+            ]
+          },
+          "Conclusion": {
+            "overrideStartPage":  true,
+            "body": [ "Follow related links below for other tutorials, or return to the menu by clicking the <li class='fa fa-bars'/> button" ]
+          }
+
+        }
+      },
+      "Closing a Case": {
+        "startPage": "",
+        "relatedTutorials": [
+          "Adding/Opening a Case",
+          "Updating a Case"
+        ],
+        "steps": {
+          "Intro": {
+            "body": [
+              "Intro"
+            ]
+          }
+        }
+      },
+      "Updating a Case": {
+        "startPage": "",
+        "relatedTutorials": [
+          "Adding/Opening a Case",
+          "Closing a Case"
+        ],
+        "steps": {
+          "Intro": {
+            "body": [
+              "Intro"
+            ]
+          }
+        }
+      },
+      "Navigation: Inquiry": {
+        "startPage": "",
+        "relatedTutorials": [
+          "Main"
+        ],
+        "steps": {
+          "Intro": {
+            "body": [
+              "Intro"
+            ]
+          }
+        }
+      }
+    },
+    "Pages": {
+      "Search For Case": {
+        "startPage": "/Case/Search",
+        "relatedTutorials": [ ],
+        "steps": {
+          "Intro": {
+            "mask": [ ],
+            "body": [
+              "Intro "
+            ]
+          },
+          "Step 1 Title": {
+            "mask": [ ],
+            "body": [
+              ""
+            ]
+          },
+          "Step 2 Title": {
+            "mask": [ ],
+            "body": [
+              ""
+            ]
+          }
+        }
+      },
+      "Main": {
+        "accessRole": "",
+        "startPage": "/Case/Main",
+        "startCondition": "select a case",
+        "relatedTutorials": [
+          "Adding/Opening a Case",
+          "Closing a Case",
+          "Updating a Case"
+        ],
+        "steps": {
+          "Intro: Case/Main": {
+            "mask": [ ],
+            "body": [
+              "Welcome to the Case/Main tutorial. ",
+              "This page is the hub where you will come edit and view details about a case. ",
+              "To begin press either the <i class=\"fa fa-play-circle\"/> button or the <i class=\"fa fa-step-forward\"/> button above."
+            ]
+          },
+          "Case Created By": {
+            "mask": [
+              {
+                "targetType": "widgetCaption",
+                "target": "Case Created By"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "The Case Created By and Created On links route to the general Case Edit page. ",
+              "The Case Flow Update link is simply a quick way to get back into the Add Appointment Case task screens, ",
+              "which allows a user to finish the case opening task if they were unable to do so for whatever reason."
+            ]
+
+          },
+          "People In Case": {
+            "mask": [
+              {
+                "targetType": "widgetCaption",
+                "target": "People in Case"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "This section has two views, one for Current people (excludes roles with an end date), ",
+              "and another for All people (includes roles with an end date). ",
+              "The toggle switch for these two views is the icon in the section header. ",
+              "The default view is Current People in Case."
+            ]
+          },
+          "Petitions in Case": {
+            "mask": [
+              {
+                "targetType": "widgetCaption",
+                "target": "Petitions in Case",
+                "targetAlternate": "Petition In Case"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "This section lists all petitions on the case. ",
+              "The child and Add Petition links are for the purpose of updating and adding petitions."
+            ]
+
+          },
+          "Hearings in Case": {
+            "mask": [
+              {
+                "targetType": "widgetCaption",
+                "target": "Hearings in Case",
+                "targetAlternate": "Hearing in Case"
+              }
+            ],
+            "transitions": [ "blinkMask" ],
+            "body": [
+              "Similar to the People in Case section, this section has two views, ",
+              "one for Incomplete hearings (excludes hearings that have been resulted), ",
+              "and another for All hearings (includes all hearings). ",
+              "The toggle switch for these two views is the icon in the section header.",
+              "The default view is Incomplete Hearings in Case. ",
+              "The date/time and Add Hearing links are for the purpose of updating and adding hearings. ",
+              "On each hearing, you will also notice the following four links that can be utilized to track ",
+              "more detailed information about each hearing if desired.",
+              "They are as follows: <ul>",
+              "<li>Att: for entry of attendance</li>",
+              "<li>F/O: for entry of findings and orders</li>",
+              "<li>Plea: for entry of pleas</li>",
+              "<li>Pos: for entry of positions</li></ul>"
+            ]
+          },
+          "Conclusion": {
+            "mask": [ ],
+            "body": [
+              "Please refer to the related tutorials for more in depth information on how to manage a case"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

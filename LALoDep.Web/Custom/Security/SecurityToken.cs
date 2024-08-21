@@ -1,0 +1,317 @@
+﻿namespace LALoDep.Custom.Security
+{
+    public enum SecurityToken
+    {
+        SearchCase = 101,
+        AdvCaseSearch = 168,
+        ViewLegalNumber = 51,
+        ViewCase = 21,
+        SCCInvoiceQueue = 356,
+        AddSCCInvoiceQueue = 357,
+        EditSCCInvoiceQueue = 358,
+        ARSummary = 173,
+
+        MonthlyInvoiceList = 369,
+        AddMonthlyInvoice = 370,
+        EditMonthlyInvoice = 371,
+
+        ViewCaseMainPage = 109,
+        ToDoList = 242,
+        EditCase = 24,
+        ViewHearing = 44,
+        AddHearing = 45,
+        EditHearing = 46,
+        DeleteHearing = 47,
+        ViewPerson = 67,
+        EditPerson = 69,
+        ViewPetition = 71,
+        AddPetition = 72,
+        EditPetition = 73,
+        DeletePetition = 74,
+        AddRole = 90,
+        DeleteRole = 92,
+        ViewAttendance = 127,
+        ViewFindingsAndOrders = 132,
+        AddFindingsAndOrders = 133,
+        EditFindingsAndOrders = 134,
+        DeleteFindingsAndOrders = 135,
+        ViewPlea = 136,
+        ViewCourtPosition = 140,
+        HourlyInvoiceList = 323,
+        HourlyInvoiceAdd = 324,
+        HourlyInvoiceEdit = 325,
+        MyJCATSSupvAttorney = 239,
+        InvoiceQueue = 212,
+        ViewCalendarManagement = 105,
+        UserGroups = 40,
+        EditUserGroup = 42,
+        ViewCaseLoadManagement = 103,
+        ViewMyCalendar = 104,
+        TransferHearingOfficer = 225,
+        ViewReports = 222,
+        AddCase = 23,
+        SearchByPhysicalFile = 346,
+        EditUserGroupSecurity = 42,
+        ViewTrainingSummary = 126,
+        ViewNote = 59,
+        AddNote = 60,
+        DeleteNote = 62,
+        DeleteOtherUserNotes = 318,
+        ViewMyTraining = 121,
+        EditTraining = 123,
+        DeleteTrainig = 124,
+        AddTraining = 122,
+        CopyPetition = 217,
+        AddLegalNumber = 52,
+        EditLegalNumber = 53,
+        DeleteLegalNumber = 54,
+        AddDeletePetitionRole = 75,
+        ViewHearingRates = 228,
+        AddHearingRates = 229,
+        EditHearingRates = 230,
+        DeleteHearingRates = 231,
+        AddAllegation = 10,
+        EditAllegation = 11,
+        DeleteAllegation = 12,
+        MyJCATSAttorney = 238,
+        ViewCountyCounsel = 264,
+        AddUser = 98,
+        EditUser = 99, ViewUser = 97,
+        DeleteUser = 100,
+        viewMyCaseLaod = 102,
+        ViewSystemValue = 174,
+        UpdateSystemValue = 175,
+        ViewAddress = 1,
+        AddAddress = 2,
+        EditAddress = 3,
+        DeleteAddress = 4,
+        UsersPage = 97,
+        ViewAssociation = 17,
+        AddAssociation = 18,
+        DeleteAssociation = 20,
+        ViewMyJCATSInvParalegal = 240,
+        ViewQuickAR = 247,
+        EditActionRequest = 87,
+        CodeTable = 26,
+        ViewContactInformation = 218,
+        AddContactInformation = 219,
+        EditContactInformation = 220,
+        DeleteContactInformation = 221,
+        EditRole = 91,
+        TransferCase = 167,
+        EditAttorneyStartEndDates = 372,
+        AddSubpoena = 281,
+        DeleteSubpoena = 284,
+        EditSubpoena = 285,
+        ViewSubpoena = 286,
+        MotionsView = 55,
+        MotionAdd = 56,
+        MotionEdit = 57,
+        MotionDelete = 58,
+        AppealsView = 13,
+        AddAppealsView = 14,
+        DeleteAppeal = 16,
+        ViewAppealDecision = 152,
+        AddAppealDecision = 153,
+        EditAppealDecision = 154,
+        DeleteAppealDecision = 155,
+        ViewActionRequest = 85,
+        AddActionRequest = 86,
+        DeleteActionRequest = 88,
+        QuickAR = 247,
+        EditDueDate = 334,
+        ConflictAdd = 244,
+        ConfictEdit = 158,
+        ConflictDelete = 245,
+        RecordTimeview = 114,
+        RecordTimeAdd = 115,
+        RecordTimeEdit = 116,
+        RecordTime_Hours = 113,
+        RecordTimeDelete = 117,
+        ExpenseView = 340,
+        ExpenseAdd = 341,
+        ExpenseEdit = 342,
+        ExpenseDelete = 343,
+        TransferActionRequest = 252,
+        CaseDelete = 25, 
+        CaseSecured = 22,
+        ViewAKA = 5,
+        AddAKA = 6,
+        EditAKA = 7,
+        DeleteAKA = 8,
+        EditPlea = 138,
+        EditAttendance = 130,
+        AddPos = 141,
+        EdiPos = 142,
+        ViewBatchHearing = 368,
+        ViewChangePassword = 178,
+
+        AssignInvestigator = 293,
+        EditARDueDate = 334,
+        EditRFDViewProfile = 82,
+        EditRFDAddProfile = 83,
+        EditRFDDeleteProfile = 84,
+        EditRFDEditProfile = 215,
+
+        ViewCourtDepartment = 169,
+        AddCourtDepartment = 170,
+        EditCourtDepartment = 171,
+        DeleteCourtDepartment = 172,
+
+        ViewJudicialOfficer = 260,
+        AddJudicialOfficer = 261,
+        EditJudicialOfficer = 262,
+        DeleteJudicialOfficer = 263,
+        CaseCleanup_View = 309,
+        CaseCleanup_SeeAllAttorneys = 310,
+        MyJCATSManagement = 241,
+
+        DeleteInvoice = 213,
+        RegenerateInvoice = 214,
+        AttachFileView = 330,
+        AttachFileAdd = 331,
+        AttachFileEdit = 332,
+        AttachFileDelete = 333,
+        AttachFileUploadFilePaperless = 1000,
+
+        AddCode = 27,
+        EditCode = 28,
+        ViewHelpPages = 326,
+        AddHelpPage = 327,
+        EditHelpPage = 328,
+        DeleteHelpPage = 329,
+
+        ViewLeave = 161,
+        AddLeave = 163,
+        EditLeave = 165,
+        DeleteLeave = 166,
+        CalendarNumbering = 376,
+
+        CSECQuestionnaire = 380,
+        CSECQuestionnaireAdd = 381,
+        CSECQuestionnaireEdit = 382,
+        CSECQuestionnaireDelete = 383,
+        EditAdvisements = 390,
+        ViewAdvisements = 389,
+        TextMessage = 800,
+
+        Referral = 500,
+        ReferralAdd = 501,
+        ReferralAttachFiles = 504,
+
+        AddMonthlyInvoiceAdminMode = 600,
+        ViewJudgeDeptTransferPage = 520,
+        QuickCalendar = 375, TrainingImport = 125,
+
+        RecordTimeNonCaseView = 114,
+        IVEActvityLog = 900,
+        IVEInvoice = 901,
+        AgencyGroup = 1100,
+        IVEChangePersonOnActivityLog=907,
+        IVEActivityLogExecDirector = 908,
+        ReadOnlyExceptTitleIVE = 960,
+        HideMonthlySalaryBenefits = 961,
+            CreateOtherAgencyCase = 1200,
+        InvoiceApprovedJCC=910
+            ,
+        AddExpenseNG = 1301,
+        EditExpenseNG = 1302,
+        AdminInvoice = 1404,
+        DeleteAdvisements=1391,
+        ImportPaidInvoices = 1407,
+        ReferralEventCalendar = 507,
+
+    }
+    public class PageLevelSecurityItemIds
+    {
+        public const string SearchCasePage = "101,51,21,1500";
+        public const string AdvSearchCasePage = "168,51,21,1500";
+        public const string SCCInvoiceQueuePage = "356,358,357";
+        public const string CaseMainPage = "109,71,72,73,74,44,45,46,47,127,132,136,140,24,69,67,92,90,375";
+        public const string ARSummary = "173";
+        public const string MonthlyInvoiceList = "369,370,371,600";
+        public const string HourlyInvoiceList = "323,324,325";
+        public const string InvoiceQueue = "212,251";
+        public const string MasterCalanderPage = "105";
+        public const string UserGroups = "40,41,42,43";
+        public const string CaseLoadManagementPage = "103,102,158";
+        public const string ViewMyCalendarPage = "104,225";
+        public const string AddApptCasePage = "21,23";
+        public const string SearchByPhysicalFile = "346,21";
+        public const string TrainingSummary = "126";
+        public const string Training = "121,122,123,124";
+        public const string CaseOpeningPetitionPage = "71,72,217,73";
+        public const string NotesPage = "59,60,62,318,115";
+        public const string LegalNumberPage = "51,52,53,54";
+        public const string CaseOpeningPetitionAddEditPage = "72,73,74,75,10,11,12";
+        public const string AddEditHearingRates = "228,229,230,231";
+        public const string HearingRates = "228,229,230";
+        public const string CountyCounsel = "264,265,266,267,218";
+        public const string AddEditCountyCounsel = "99,100";
+        public const string MyCaseLoadPage = "102,246,167";
+        public const string SystemValuePage = "174,175";
+        public const string CaseOpeningAddressPlacement = "1,2,3,4";
+        public const string UsersPage = "97,98,99,100,51,169,218";
+        public const string CaseOpeningAssociates = "17,18,20";
+        public const string CaseOpeningLegalNumbers = "51,52";
+        public const string MyJCATSInvParalegalPages = "240,87,247";
+        public const string CodeTable = "26";
+        public const string UsersEdit = "100,99,97,960,961,98";
+        public const string CodeTablesValue = "26,27,28";
+        public const string ViewContactInformation = "218,219,220,221";
+        public const string CaseOpeningLegalParties = "90,91,167,372";
+        public const string ViewSubpoenaPage = "286,284,281,285";
+        public const string MotionsView = "55,56,57,58";
+        public const string AppealsView = "13,14,15,16,153,154,152";
+        public const string AppealsDecisionViewPage = "152,153,154,155";
+        public const string CaseOpeningHearing = "45,46,47";
+        public const string CaseOpeningActionRequest = "85,86,87,88,247,334";
+        public const string CaseOpeningActionRequestAdd = "86,293,294";
+        public const string ConflictPage = "244,158,245,246";
+        public const string RecordTimePage = "114,115,116,117,113";
+        public const string RecordTimeNonCasePage = "114,115,116,117,113";
+        public const string ExpensePage = "340,341,342,343";
+        public const string MyARQueuePage = "85,87,247,252";
+        public const string CaseMainInfoPages = "67,5,1,44,93,17";
+        public const string CaseMainCaseEditPages = "24,25,22";
+        public const string AKAsPages = "5,6,7,8";
+        public const string MainPleaPages = "136,138";
+        public const string AttendancePages = "127,130";
+        public const string MainPosPages = "140,141,142,143";
+        public const string MoreInfoOnPetitionPages = "71";
+        public const string BatchHearingPage = "368";
+        public const string ChangePasswordPage = "178";
+        public const string EditARPage = "87,293,88,334";
+        public const string QuickARPage = "247,113";
+        public const string EditPersonPage = "69";
+        public const string EditRFDProfilePage = "82,83,215";
+        public const string CourtDepartmentPage = "169,170,171,172";
+        public const string JudicialOfficersListPage = "260,261,262,263,169,218";
+        public const string EditRFDProfileQuestion = "82,83,84,215";
+        public const string CaseCleanupPage = "101,21,310,309";
+        public const string FindingsAndOrders = "132,133,134,135";
+        public const string QHEPosPages = "90,140,141,142,143";
+        public const string InvoiceList = "212,214,213,46";
+        public const string AttachFile = "330,331,332,333,1000";
+
+        public const string EditCode = "26,28";
+        public const string AdministratorHelpPage = "326,327,328,329";
+        public const string LeavePage = "161,163,165,166";
+        public const string CalendarNumbering = "376";
+        public const string QuickCalendar = "376";
+        public const string CSECQuestionnaire = "380,381,382,383";
+        public const string AdvisementsView = "390,1391";
+        public const string TextMessage = "800";
+        public const string JudgeDeptTransferPage = "520";
+        public const string Referral = "500,501,504";
+
+        public const string IVEActvityLogPage = "900,907";
+        public const string IVEInvoicePage = "901,910";
+        public const string IVEActivityLogExecPage = "908,907";
+        public const string AgencyGroup = "1100";
+
+        public const string CreateOtherAgencyCase = "1200";
+
+        public const string CaseExpenseNG = "1301,1302"; public const string CaseInvoiceAddEdit = "1400,1401,1402,1403,1404";
+    }
+}

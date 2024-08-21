@@ -1,0 +1,48 @@
+﻿@using LALoDep.Core.Custom.Extensions;
+
+@model IEnumerable<LALoDep.Domain.ref_Referral.ref_ReferralSummary_spResult>
+
+<table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblReferralSummary">
+    @if (Model != null && Model.Any())
+    {
+        var groupedData = Model.GroupBy(x => x.ReferralCategory);
+
+        foreach (var item in groupedData)
+        {
+            <thead>
+                <tr>
+                    <th>@item.Key</th>                    
+                    <th>Total Pending</th>
+                    <th>No Due Date</th>
+                    <th>Past Due</th>
+                    <th>Due within 7 Days</th>
+                    <th>Due within 15 Days</th>
+                    <th>Due > 15 Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reffral in item)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("ReferralQueue", new { id= reffral.ReferralPersonID.ToEncrypt()})">@reffral.NameDisplay</a></td>
+                        <td>@reffral.TotalPending</td>
+                        <td>@reffral.NoDueDate</td>
+                        <td>@reffral.PastDue</td>
+                        <td>@reffral.DueWithin7Days</td>
+                        <td>@reffral.DueWithin15Days</td>
+                        <td>@reffral.DueOver15Days</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    }
+    else
+    {  
+        <tbody>
+            <tr><td class="text-center">No result found</td></tr>
+        </tbody>
+    }
+</table>
+
+
+

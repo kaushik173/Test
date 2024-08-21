@@ -1,0 +1,8 @@
+Case Number	String	100	ABC123456
+Assigned Attorney	String	100	Smith, Michael
+Initial Hearing Date	DateTime		01/01/2005
+Party Represented	String	100	Child
+Children Represented	Number		10
+ParmAttorneyName	String	100	Smith, Michael
+ParmStartDate	DateTime		01/01/2005
+ParmEndDate	DateTime		01/31/2005

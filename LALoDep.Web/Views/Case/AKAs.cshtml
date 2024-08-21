@@ -1,0 +1,104 @@
+﻿@model IEnumerable<LALoDep.Domain.pd_Role.pd_RoleGetByCaseIDChildRespondent_spResult>
+@{
+    ViewBag.Title = "AKAs";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">AKAs</span>
+                <div class="widget-buttons">
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="akasList">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th style="width:50px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count() > 0)
+                            {
+                                foreach (var item in Model.ToList())
+                                {
+                                    <tr>
+                                        <td>@item.Role</td>
+                                        <td>@item.PersonNameLast</td>
+                                        <td>@item.PersonNameFirst</td>
+                                        <td>
+                                            @if (item.AKACount > 0)
+                                            {
+                                                <a class="btn btn-info btn-xs akasviewFor" data-person="@item.PersonNameLast, @item.PersonNameFirst" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonID.ToString())"><i class="fa fa-eye"></i>View AKAs</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-info btn-xs" href="@Url.Action("AKAsAddEdit","Case", new { id=LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonID.ToString()), name= item.PersonNameLast+", "+item.PersonNameFirst })"><i class="fa fa-plus"></i> Add AKAs</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="row" id="divPersonAKAs">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption" id="akasFor"></span>
+                    <div class="widget-buttons pull-right">
+                        <input type="button" class="btn btn-default " name="AddLegalNumber" value="" id="btnAddakasrFor" />
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="akasForList" data-person-id="">
+                            <thead>
+                                <tr>
+                                    <th style="width:160px">Preferred Name (AKA)</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th style="width:30px"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    @if (Model != null && Model.Count() > 0)
+    {
+        <div class="boxfloat text-center">
+            <button id="btnSave" type="submit" class="btn btn-sm btn-primary default">Save</button>
+        </div>
+    }
+}
+
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/AkasList.js?v=" + Guid.NewGuid())"></script>
+}

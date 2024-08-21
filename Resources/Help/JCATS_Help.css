@@ -1,0 +1,1193 @@
+P.Normal
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 12pt
+}
+H1
+{
+    TEXT-ALIGN: center;
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 12pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 16pt
+}
+H2
+{
+    TEXT-ALIGN: center;
+    TEXT-INDENT: 0in;
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    COLOR: #3366ff;
+    FONT-SIZE: 18pt
+}
+H3
+{
+    MARGIN: 12pt 0in 6pt;
+    FONT-FAMILY: Verdana;
+    COLOR: black;
+    FONT-SIZE: 12pt
+}
+H4
+{
+    LINE-HEIGHT: 125%;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 16pt
+}
+H5
+{
+    TEXT-ALIGN: center;
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+H6
+{
+    TEXT-ALIGN: center;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 11pt
+}
+P.Heading7
+{
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 9pt
+}
+P.Heading8
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.Index1
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 10pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index2
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 20pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index3
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 30pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index4
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 40pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index5
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 50pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index6
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 60pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index7
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 70pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index8
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 80pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Index9
+{
+    TEXT-INDENT: -10pt;
+    MARGIN: 0in 0in 0pt 1.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Toc1
+{
+    FONT-STYLE: italic;
+    TEXT-INDENT: -0.25in;
+    MARGIN: 12pt 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman Bold;
+    FONT-SIZE: 13pt;
+    FONT-WEIGHT: bold
+}
+P.Toc2
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 6pt 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.Toc3
+{
+    MARGIN: 0in 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.Toc4
+{
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.Toc5
+{
+    MARGIN: 0in 0in 0pt 40pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Toc6
+{
+    MARGIN: 0in 0in 0pt 50pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Toc7
+{
+    MARGIN: 0in 0in 0pt 60pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Toc8
+{
+    MARGIN: 0in 0in 0pt 70pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Toc9
+{
+    MARGIN: 0in 0in 0pt 80pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Header
+{
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    PADDING-BOTTOM: 0in;
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 0pt;
+    PADDING-LEFT: 0in;
+    PADDING-RIGHT: 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt;
+    BORDER-TOP: medium none;
+    BORDER-RIGHT: medium none;
+    PADDING-TOP: 0in
+}
+P.Footer
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt
+}
+P.IndexHeading
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt
+}
+P.Caption
+{
+    MARGIN: 6pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.BodyText
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.BodyTextIndent
+{
+    MARGIN: 0in 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.BodyText2
+{
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+A:link
+{
+    COLOR: blue;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+SPAN.Hyperlink
+{
+    COLOR: blue;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+A:visited
+{
+    COLOR: purple;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+SPAN.HyperlinkFollowed
+{
+    COLOR: purple;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.utblparacnt
+{
+    TEXT-ALIGN: center;
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt
+}
+P.utblpara
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt
+}
+P.uSecTitle
+{
+    TEXT-ALIGN: center;
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 12pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 16pt;
+    FONT-WEIGHT: bold
+}
+P.utheme
+{
+    MARGIN: 6pt 0in;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 12pt
+}
+P.upara
+{
+    MARGIN: 3pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.ubullet1
+{
+    FONT-STYLE: italic;
+    TEXT-INDENT: -0.25in;
+    MARGIN: 6pt 0in 4pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.upara2bold
+{
+    MARGIN: 6pt 0in 6pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.utblhd
+{
+    TEXT-ALIGN: center;
+    MARGIN: 1pt 0in;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.utblparaital
+{
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt
+}
+P.utblparabold
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.utblparaind
+{
+    TEXT-INDENT: -0.1in;
+    MARGIN: 0in 0in 0pt 0.1in;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 10pt
+}
+P.utblbullet
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.upara10bold
+{
+    MARGIN: 12pt 0in 6pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.uparaital
+{
+    FONT-STYLE: italic;
+    MARGIN: 3pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.ubulletital
+{
+    FONT-STYLE: italic;
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.NavigationSteps
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.Heading2X
+{
+    LINE-HEIGHT: 125%;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 16pt;
+    FONT-WEIGHT: bold
+}
+P.Heading3X
+{
+    FONT-STYLE: italic;
+    MARGIN: 9pt 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.xbullet
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xparaun
+{
+    MARGIN: 6pt 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.HeaderL
+{
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    PADDING-BOTTOM: 0in;
+    FONT-STYLE: italic;
+    MARGIN: 0in 0in 0pt;
+    PADDING-LEFT: 0in;
+    PADDING-RIGHT: 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt;
+    BORDER-TOP: medium none;
+    BORDER-RIGHT: medium none;
+    PADDING-TOP: 0in
+}
+P.FooterL
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt
+}
+P.xSecTitle
+{
+    LINE-HEIGHT: 150%;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 16pt;
+    FONT-WEIGHT: bold
+}
+P.xlist1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 9pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xlistbullet1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 9pt 1in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xpara2bold
+{
+    MARGIN: 9pt 0in 9pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.utblbullet2
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.unavboldc
+{
+    TEXT-ALIGN: center;
+    MARGIN: 12pt 0in;
+    FONT-FAMILY: Times New Roman Bold;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.ubulletital2
+{
+    FONT-STYLE: italic;
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 0pt 1in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.utblnote
+{
+    MARGIN: 6pt 0in 0pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.ulist
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 0in 0in 3pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.nbullet1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 3pt 0in 3pt 1in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ngraphicc
+{
+    TEXT-ALIGN: center;
+    MARGIN: 6pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ngraphicL
+{
+    MARGIN: 6pt 0in 6pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ngraphicLL
+{
+    MARGIN: 6pt 0in 6pt 21.15pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.nhead1
+{
+    MARGIN: 0.5in 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.nhead1np
+{
+    MARGIN: 0.5in 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.nhead2
+{
+    MARGIN: 12pt 0in 0pt 0.25in;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.nlist1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 6pt 0in 6pt 0.75in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.nlist1parab
+{
+    MARGIN: 3pt 0in 3pt 0.75in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt;
+    FONT-WEIGHT: bold
+}
+P.nlist1para
+{
+    MARGIN: 3pt 0in 3pt 0.75in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.nlist2
+{
+    TEXT-INDENT: -0.5in;
+    MARGIN: 6pt 0in 6pt 1.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ntblpa
+{
+    MARGIN: 3pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ntblnote
+{
+    TEXT-INDENT: -35.1pt;
+    MARGIN: 3pt 0in 3pt 35.1pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.nparanote
+{
+    TEXT-INDENT: -35.1pt;
+    MARGIN: 3pt 0in 3pt 1in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.npara1
+{
+    MARGIN: 6pt 0in 6pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.npara1b
+{
+    MARGIN: 6pt 0in 6pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt;
+    FONT-WEIGHT: bold
+}
+P.ntblbul1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 3pt 0in 3pt 35.1pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt
+}
+P.ntblpa8
+{
+    MARGIN: 1pt 0in 4pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt
+}
+P.ntblpab
+{
+    MARGIN: 3pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 11pt;
+    FONT-WEIGHT: bold
+}
+P.ntblpa9
+{
+    MARGIN: 1pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 9pt
+}
+P.ntblpa9b
+{
+    MARGIN: 1pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 9pt;
+    FONT-WEIGHT: bold
+}
+P.ntitle
+{
+    TEXT-ALIGN: center;
+    MARGIN: 0in 0in 12pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 16pt;
+    FONT-WEIGHT: bold
+}
+P.UserInput
+{
+    TEXT-TRANSFORM: uppercase;
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Courier;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.SystemOutput
+{
+    MARGIN: 0in 0in 6pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.fmtblpara
+{
+    MARGIN: 6pt 0in;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 10pt
+}
+P.fmtblhd
+{
+    MARGIN: 6pt 0in;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.fmtitle
+{
+    MARGIN: 0in 0in 12pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.fmpara
+{
+    MARGIN: 0in 0in 12pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 11pt
+}
+P.titlepg1
+{
+    FONT-VARIANT: small-caps;
+    MARGIN: 3.75in 0in 0pt;
+    FONT-FAMILY: Arial;
+    COLOR: black;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold
+}
+P.titlepg2
+{
+    MARGIN: 30pt 0in 0pt;
+    FONT-FAMILY: Arial;
+    COLOR: black;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.titlepg3
+{
+    MARGIN: 0.25in 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 18pt;
+    FONT-WEIGHT: bold
+}
+P.titlepg4
+{
+    MARGIN: 48pt 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.titlepg5
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Arial;
+    FONT-SIZE: 14pt
+}
+P.Footerline
+{
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    PADDING-BOTTOM: 0in;
+    MARGIN: 0in 0in 3pt;
+    PADDING-LEFT: 0in;
+    PADDING-RIGHT: 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt;
+    BORDER-TOP: medium none;
+    BORDER-RIGHT: medium none;
+    PADDING-TOP: 0in
+}
+P.FooterLline
+{
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    PADDING-BOTTOM: 0in;
+    MARGIN: 0in 0in 3pt;
+    PADDING-LEFT: 0in;
+    PADDING-RIGHT: 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 8pt;
+    BORDER-TOP: medium none;
+    BORDER-RIGHT: medium none;
+    PADDING-TOP: 0in
+}
+P.xbullet1
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 4pt 0in 4pt 1.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xbullet2
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 4pt 0in 4pt 0.75in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xparahdbi
+{
+    FONT-STYLE: italic;
+    MARGIN: 6pt 0in 3pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.xbullet1x
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 3pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xlist
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 9pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.utblbullet3
+{
+    TEXT-INDENT: -13.5pt;
+    MARGIN: 0in 0in 0pt 48.6pt;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xparab
+{
+    MARGIN: 4pt 0in;
+    FONT-FAMILY: Verdana;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.xbullet3
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 4pt 0in 4pt 1in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xbullet4
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 4pt 0in 4pt 1.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xpara
+{
+    MARGIN: 4pt 0in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xparaun2
+{
+    MARGIN: 6pt 0in 0pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.xparaun3
+{
+    MARGIN: 6pt 0in 0pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.xparaun4
+{
+    MARGIN: 6pt 0in 0pt 0.75in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    TEXT-DECORATION: underline;
+    text-underline: single
+}
+P.xpara2
+{
+    MARGIN: 4pt 0in 4pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.Heading2map
+{
+    MARGIN: 0in 0in 0pt;
+    FONT-FAMILY: Verdana;
+    COLOR: #3366ff;
+    FONT-SIZE: 14pt;
+    FONT-WEIGHT: bold
+}
+P.upara2
+{
+    MARGIN: 3pt 0in 3pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+P.xlistb
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 9pt 0.25in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+P.xlist1np
+{
+    TEXT-INDENT: -0.25in;
+    MARGIN: 9pt 0in 9pt 0.5in;
+    FONT-FAMILY: Times New Roman;
+    FONT-SIZE: 12pt
+}
+lfo44
+{
+    TEXT-INDENT: 0in;
+    FONT-FAMILY: Times New Roman;
+    MARGIN-LEFT: 0in
+}
+OL
+{
+    MARGIN-TOP: 0px;
+    MARGIN-BOTTOM: 0px
+}
+UL
+{
+    MARGIN-TOP: 0px;
+    MARGIN-BOTTOM: 0px
+}
+.DataTextHOV
+{
+    TEXT-TRANSFORM: none;
+    BACKGROUND-COLOR: #c0c0c0;
+    TEXT-INDENT: 2pt;
+    FONT-FAMILY: Arial, Verdana;
+    COLOR: black;
+    FONT-SIZE: 10pt
+}
+.DataText
+{
+    TEXT-TRANSFORM: none;
+    TEXT-INDENT: 2pt;
+    FONT-FAMILY: Arial, Verdana;
+    COLOR: black;
+    FONT-SIZE: 10pt
+}
+.DataTextLink
+{
+    TEXT-INDENT: 2pt;
+    FONT-FAMILY: Arial, Verdana;
+    COLOR: #103090;
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: normal;
+    TEXT-DECORATION: underline
+}
+.ContentDiv
+{
+    Z-INDEX: 0;
+    POSITION: absolute;
+    TEXT-ALIGN: left;
+    WIDTH: 99%;
+    FONT-FAMILY: Arial, Verdana;
+    HEIGHT: 99%;
+    VISIBILITY: visible;
+    FONT-SIZE: 10pt;
+    OVERFLOW: auto
+}
+.DataTextLabel
+{
+    FONT-FAMILY: Arial, Verdana;
+    FONT-SIZE: 12pt;
+    FONT-WEIGHT: bold
+}
+.img_whs1
+{
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    WIDTH: 23px;
+    HEIGHT: 34px;
+    BORDER-TOP: medium none;
+    BORDER-RIGHT: medium none
+}
+DIV.whs2
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    PADDING-BOTTOM: 31pt;
+    PADDING-LEFT: 1pt;
+    PADDING-RIGHT: 4pt;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid;
+    PADDING-TOP: 1pt
+}
+.DataTextRow
+{
+    TEXT-TRANSFORM: capitalize;
+    BACKGROUND-COLOR: #f8f6f7;
+    FONT-FAMILY: Arial, Verdana;
+    FONT-SIZE: 8pt
+}
+TABLE.whs1
+{
+    BORDER-BOTTOM: 1px solid;
+    BORDER-LEFT: 1px solid;
+    BORDER-TOP: 1px solid;
+    BORDER-RIGHT: 1px solid
+}
+IMG.whs9
+{
+    WIDTH: 23px;
+    HEIGHT: 34px
+}
+DIV.whs10
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    PADDING-BOTTOM: 31pt;
+    PADDING-LEFT: 1pt;
+    PADDING-RIGHT: 4pt;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid;
+    PADDING-TOP: 1pt
+}
+TD.r2c1S
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 1.1in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2S
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 1.1in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2S
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 1.1in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1XS
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 0.6in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2XS
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 0.6in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c1XS
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 0.6in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2XS
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 0.6in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1s
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 1.1in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1XXL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 4.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2XXL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 4.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c1XXL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 4.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2XXL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 4.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1L
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 2.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2L
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 2.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c1L
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 2.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2L
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 2.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1M
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 1.6in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2M
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 1.6in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c1M
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 1.6in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2M
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 1.6in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c1XL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 3.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r1c2XL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 3.2in;
+    BORDER-TOP: #000000 0.5pt solid;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c1XL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt solid;
+    WIDTH: 3.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+TD.r2c2XL
+{
+    BORDER-BOTTOM: #000000 0.5pt solid;
+    BORDER-LEFT: #000000 0.5pt;
+    WIDTH: 3.2in;
+    BORDER-TOP: #000000 0.5pt;
+    BORDER-RIGHT: #000000 0.5pt solid
+}
+.ButtonText
+{
+    FONT-FAMILY: Arial, Verdana;
+    COLOR: white;
+    FONT-SIZE: 8pt;
+    FONT-WEIGHT: bolder;
+    TEXT-DECORATION: none
+}

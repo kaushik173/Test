@@ -1,0 +1,96 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model IEnumerable<LALoDep.Domain.Advisement.Advisement_GetForAttorney_spResult>
+@{
+    ViewBag.Title = " ";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+} 
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+               background-color: #fff !important;
+    }
+    body:before {
+     
+    background-color: #fff !important;
+}
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+ <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+    <div class="widget row">
+       
+        <div class="widget-body col-xs-12">
+
+
+           
+
+
+                <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+
+                    <thead>
+                        <tr>
+
+                            <th>Due Date</th>
+                            <th>JCATS #</th>
+                            <th>
+                                Type
+                            </th>
+                            <th>Client</th>
+                            <th>Case Name</th>
+
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="trRecords">
+
+                                <td>
+                                    @if (item.AlertFlag == 1)
+                                {
+                                    <span style="color:red">@item.DueDate</span>
+                                }
+                                else
+                                {
+                                    <span>@item.DueDate</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Case/Advisements/?caseId=@item.CaseID.ToEncrypt()" target="_blank">@item.CaseNumber</a>
+
+
+
+                            </td>
+                            <td>
+                                @item.TypeDisplay
+                            </td>
+                            <td>
+                                @item.Client
+                            </td>
+                            <td>
+                                @item.CaseName
+                            </td>
+                        </tr>
+
+
+                        }
+                    </tbody>
+                </table>
+
+           
+
+        </div>
+    </div>
+</div>

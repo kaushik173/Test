@@ -1,0 +1,4 @@
+Atty	String	100	Attylast, Attyfirst
+Dept	String	50	00000000000000000000000000000000000000000000000401
+Total	Number		99999
+DeptDisplay	String	50	401

@@ -1,0 +1,229 @@
+﻿@model LALoDep.Models.AccountLoginViewModel
+
+@{
+    Layout = null;
+    var summary = string.Empty;
+
+    var rememberMeUsername = "";
+    if (ViewBag.RememberMeUsername != null)
+    {
+        rememberMeUsername = (string)ViewBag.RememberMeUsername;
+    }
+
+}
+
+<!doctype html>
+<html class="fixed">
+<head>
+
+    <!-- Basic -->
+    <meta charset="UTF-8">
+
+    <meta name="keywords" content="Jcats Louisiana Dependency" />
+    <meta name="description" content="Jcats Louisiana Dependency">
+    <meta name="author" content="Canyon Solutions Inc.">
+    <title>Jcats Louisiana Dependency</title>
+    <!-- Mobile Metas -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Web Fonts  -->
+    <link href="/assets/fonts/Open-Sans/css/fonts.css" rel="stylesheet" />
+    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">*@
+    @Styles.Render("~/assets/css/styles")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/assets/js/jquery")
+
+    <link href="~/Content/login.css" rel="stylesheet" />
+
+    <style>
+        .login-container {
+            position: relative;
+            margin: 10% auto;
+            max-width: none;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="loginDiv login-container animated fadeInDown">
+        <center>
+            <!-- start: page -->
+            <div style="margin-left:00px">
+                <center>
+                    <img src="/assets/img/Logo_canyon.png" />
+                </center>
+            </div>
+            <div class="loginbox">
+                <br />
+                <center><h4>JCATS Dependency. </h4></center>
+                <div class="panel-body form-box">
+                    @using (Html.BeginForm(null, null, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Width)
+                        @Html.HiddenFor(m => m.AvailWidth)
+                        @Html.HiddenFor(m => m.Height)
+                        @Html.HiddenFor(m => m.AvailHeight)
+                        <input name="ReturnUrl" value="@ViewBag.ReturnUrl" type="hidden" />
+                        <div class="loginbox-textbox username">
+                            @if (string.IsNullOrEmpty(rememberMeUsername) || (Model != null))
+                            {
+                                <div class="input-group ">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    @Html.TextBoxFor(m => m.Username, new { @class = " ", autofocus = "autofocus", placeholder = "Username", autocapitalize = "none" })
+                                </div>
+
+                            }
+                            else
+                            {
+                                @Html.Hidden("Username", rememberMeUsername)
+                                if (rememberMeUsername.Length > 3)
+                                {
+                                    var lastCharacters = rememberMeUsername.Substring(3);
+                                    string stars = lastCharacters.Aggregate("", (current, c) => current + "*");
+                                    rememberMeUsername = rememberMeUsername.Replace(lastCharacters, stars);
+                                }
+
+
+                                <div class="loginbox-textbox username">
+                                    <div class="input-group ">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input type="text" class=" " value="@rememberMeUsername" autocapitalize="none" id="txtUsername" />
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        if (string.IsNullOrEmpty(rememberMeUsername) || (Model != null))
+                        {
+                            <div class="loginbox-textbox password">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    @Html.PasswordFor(m => m.Password, new { @class = " ", placeholder = "Password" })
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="loginbox-textbox password">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    @Html.PasswordFor(m => m.Password, new { @class = " ", placeholder = "Password", autofocus = "autofocus" })
+                                </div>
+                            </div>
+                        }
+
+                        <br />
+                        <div class="row">
+                            <div class="checkbox-custom checkbox-default" style="width:190px;margin-right: auto;margin-left:auto;">
+                                <input id="RememberMe" name="rememberme" type="checkbox" @if (!string.IsNullOrEmpty(rememberMeUsername)) { <text> checked="checked" </text> } />
+                                <label for="RememberMe">Remember Me</label>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="text-right" style=" margin-right auto;margin-left:auto;">
+                                <button type="submit" class="btn btn-info hidden-xs btn-lg btn-block">Sign In</button>
+                                <button type="submit" class="btn btn-info btn-block btn-lg visible-xs mt-lg">Sign In</button>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="loginbox-bottom">
+                                <a href="/Account/ForgotPassword">Forgot your password?</a>
+                            </div>
+                        </div>
+
+                        summary = string.Join("<br/>", ViewData.ModelState.ToList().SelectMany(c => c.Value.Errors.Select(e => e.ErrorMessage)).ToList());
+
+                        @*<span class="mt-lg mb-lg">
+                        @Html.ValidationSummary()
+                    </span>*@
+                    }
+                </div>
+            </div>
+
+            @if (System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] != null && System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"].ToLower() != "prod")
+            {
+                <div class="text-danger" style=" width: 349px; margin-top: 15px; height: 30px; background: #fff; border: 1px solid #ccc; box-shadow: #ccc 3px; padding: 5px">
+                    <label class="control-label"> DEVELOPMENT ENVIRONMENT</label>
+                </div>
+            }
+
+            <br />
+
+
+
+
+            @if (ViewBag.MaintenanceMessage != null)
+            {
+
+                <div class="alert alert-danger" style="margin:5px 40px;"><h5>@ViewBag.MaintenanceMessage</h5></div>
+            }
+</div>
+    @Scripts.Render("~/assets/js/scripts")
+    @Scripts.Render("~/scripts/js")
+    <script src="assets/js/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script>
+        $(function () {
+
+            var setMargin = function () {
+                var margin = ($(window).height() / 2) - 230
+                // $(".login-box").css("margin-top", margin + "px");
+                $(".loginDiv").css("margin-top", margin + "px");
+                //loginDiv
+            }
+            $(window).resize(function () {
+                setMargin();
+            })
+            $(document).ready(function () {
+                setMargin();
+            });
+
+            $('#Width').val(screen.width);
+            $('#Height').val(screen.height);
+            $('#AvailWidth').val(screen.availWidth);
+            $('#AvailHeight').val(screen.availHeight);
+            if ($('#Username').length < 0) {
+                $('#Username').focus();
+
+            }
+            if ($('#Password').length < 0) {
+                $('#Password').focus();
+
+            }
+
+
+            $('#txtUsername').on('change', function () {
+                if (!Contains($('#txtUsername').val(), '*')) {
+                    $('#Username').val($(this).val());
+                }
+            });
+        });
+
+        if ((window !== window.parent)) {
+
+            self.parent.document.location.href = '/Account/Login';
+        }
+    </script>
+    @if (@summary.Length > 0)
+    {
+
+        <script>$(document).ready(function () { Notify('@Html.Raw(summary)', 'bottom-right', '5000', 'danger', 'fa-warning', true); });</script>
+    }
+
+    </center>@{
+        string url = HttpContext.Current.Request.Url.Host;
+        if (url.Contains("traincaaocng"))
+        {
+            <div class="text-danger" style="position:fixed;bottom:60px;right:10px;height:30px;background:#fff;border:1px solid #ccc;box-shadow: #ccc 3px;padding:5px">
+                <label class="control-label">TRAINING Environment</label>
+            </div>
+        }
+      
+    }
+
+</body>
+
+</html>

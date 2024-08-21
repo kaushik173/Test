@@ -1,0 +1,184 @@
+﻿@model LALoDep.Models.Case.NoteAddEditViewModel
+@{
+    ViewBag.Title = "Note Add<br/> Edit";
+    var tabIndex = 1;
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "NoteAddEdit", @class = "form-inline  center-block" }))
+        {
+            @Html.HiddenFor(m => m.NoteID)
+            @Html.HiddenFor(m => m.AgencyID)
+            @Html.HiddenFor(m => m.NoteEntityCodeID)
+            @Html.HiddenFor(m => m.NoteEntityTypeCodeID)
+            @Html.HiddenFor(m => m.EntityPrimaryKeyID)
+            @Html.HiddenFor(m => m.CaseID)
+            @Html.HiddenFor(m => m.PetitionID)
+            @Html.HiddenFor(m => m.HearingID)
+            @Html.HiddenFor(m => m.RecordStateID)
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Note Add/Edit
+                    </span>
+                </div>
+                <div class="widget-body">
+                    <div class="row">
+                        @if (Model.HideNoteTypeFlag.HasValue && Model.HideNoteTypeFlag.Value == 1)
+                        {
+                            @Html.HiddenFor(m => m.NoteTypeCodeID)
+
+                        }
+
+                        else
+                        {
+                            <div class="form-group  col-md-4 col-sm-4  col-xs-4  @(Model.HideNoteTypeFlag.HasValue && Model.HideNoteTypeFlag.Value == 1 ? "hidden" : "")">
+                                @Html.LabelFor(m => m.NoteTypeCodeID, "Note Type", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.NoteTypeCodeID, new SelectList(Model.NoteTypeList, "CodeID", "NoteTypeDisplay"), "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                            </div>
+                        }
+
+                        <div class="form-group  col-md-8 col-sm-8  col-xs-8">
+
+                            @Html.LabelFor(m => m.NoteSubject, "Subject", new { @class = "control-label" })
+                            @if (Model.CanEditSubjectFlag.HasValue && Model.CanEditSubjectFlag.Value == 0)
+                            {
+                                @Html.TextBoxFor(model => model.NoteSubject, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%", @readonly = "readonly", maxlength = "50" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.NoteSubject, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%",maxlength="50" })
+                            }
+                        </div>
+                        <div class="form-group  col-md-12 col-sm-12  col-xs-12 ">
+                          
+                            @if (Model.ControlType == "RTF")
+                            {
+
+                                //if (!Model.NoteID.HasValue)
+                                //{
+                                //    //    Model.NoteEntry = "<h6><br/></h6>";
+                                //}
+                                @Html.LabelFor(m => m.NoteEntry, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(model => model.NoteEntry, new { @class = "form-control input-sm summernote", tabindex = ++tabIndex, style = "width:100%" })
+
+                            }
+                            else
+                            {
+                                @Html.LabelFor(m => m.NoteEntry, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(model => model.NoteEntry, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%" })
+
+                            }
+
+
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            if (Model.NotePersonList != null && Model.NotePersonList.Count > 0)
+            {
+                <div class="widget row   @(Model.HideClientsAttachedFlag.HasValue && Model.HideClientsAttachedFlag.Value==1?"hidden":"")">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Clients Attached To Note
+                        </span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5">
+                                <div class="form-label bg-label">
+                                    <input type="checkbox" id="chkAllClient" />
+
+                                    <label for="chkAllClient" style="margin-top: -6px">
+                                        All
+                                    </label>
+                                </div>
+                            </div>
+
+                            @foreach (var item in Model.NotePersonList)
+                            {
+                                <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5  ">
+                                    <div class="form-label bg-label">
+                                        <input type="checkbox" class="chkClient" data-notepersonid="@item.NotePersonID" data-personid="@item.PersonID" id="chk@(item.PersonID)" tabindex="@(++tabIndex)" @if (item.NotePersonID.HasValue && item.NotePersonID.Value > 0) { <text> checked="checked" </text>         } />
+                                        <label for="chk@(item.PersonID)" style="margin-top: -6px">
+                                            @item.PersonDisplay
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <div class="widget row panelRow @(Model.HideBroadcastNotesFlag.HasValue && Model.HideBroadcastNotesFlag.Value==1?"hidden":"")">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Broadcast Notes Display Pages
+                    </span>
+                </div>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5">
+                            <div class="form-label bg-label">
+                                <input type="checkbox" id="chkAll" />
+
+                                <label for="chkAll" style="margin-top: -6px">
+                                    All
+                                </label>
+                            </div>
+                        </div>
+                        @if (Model.PanelList != null && Model.PanelList.Count > 0)
+                        {
+                            foreach (var item in Model.PanelList)
+                            {
+                                <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5 ckePanel">
+                                    <div class="form-label bg-label">
+                                        <input type="checkbox" class="chkPage" data-notepanelkey="@item.NotePanelKey" data-selected="@item.Selected" data-codeid="@item.CodeID" id="chk@(item.CodeID)" tabindex="@(++tabIndex)" @if (item.Selected == 1) { <text> checked="checked" </text>        } else { <text></text>       } />
+                                        <label for="chk@(item.CodeID)" style="margin-top: -6px">
+                                            @item.Type
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="@(++tabIndex)">Save</button>
+        <button id="btnSaveandRecordtime" type="button" class="btn btn-default " tabindex="@(++tabIndex)">Save/Record Time</button>
+        <button id="btnCancel" type="button" class="btn btn-default" tabindex="@(++tabIndex)"><u>C</u>ancel</button>
+    </div>
+}
+<link href="~/assets/js/editors/summernote/summernote.css" rel="stylesheet" />
+<style>
+    .note-list {
+        display: none !important;
+    }
+</style>
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/NoteAddEdit.js?v=" + Guid.NewGuid())"></script>
+
+    <script>
+
+
+        ApplySummernote();
+
+       
+
+       
+    </script>
+} 

@@ -1,0 +1,924 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4A6BBFD3-3401-4DCF-BBF9-8947AA81A64B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LALoDep.Domain</RootNamespace>
+    <AssemblyName>LALoDep.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddEditCountyCounsel\pd_AgencyGetSystemRoleByPersonID_spParams.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_AgencyGetSystemRoleByPersonID_spResult.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_PersonNameUpdate_spParams.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_RoleDelete_spParams.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_StaffGetAttorneyByPersonID_spParams.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_StaffGetAttorneyByPersonID_spResult.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_UserRoleInsert_spParams.cs" />
+    <Compile Include="AddEditCountyCounsel\pd_UserRoleUpdate_spParams.cs" />
+    <Compile Include="Advisement\AdvisementIUD_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetAlert_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetAttorneyList_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetByCaseID_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetForAttorney_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetForSupervisor_sp.cs" />
+    <Compile Include="Advisement\Advisement_GetStatusList_sp.cs" />
+    <Compile Include="Agency\AgencyGetCountyByAttorneyPersonID_spParams.cs" />
+    <Compile Include="Agency\AgencyGetByUserID_spParams.cs" />
+    <Compile Include="Agency\AgencyGetCountyByUserID_spParams.cs" />
+    <Compile Include="Agency\AgencyGetRegionByUserID_spParams.cs" />
+    <Compile Include="Agency\pd_AgencyCodeDelete_spParams.cs" />
+    <Compile Include="Agency\pd_AgencyCodeGetByCodeID_spParams.cs" />
+    <Compile Include="Agency\pd_AgencyCodeInsert_spParams.cs" />
+    <Compile Include="Agency\pd_AgencyGet_spParams.cs" />
+    <Compile Include="BatchHearing\pd_BatchHearingSearch_spParams.cs" />
+    <Compile Include="BatchHearing\pd_BatchHearingSearch_spResult.cs" />
+    <Compile Include="CADbModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CADbModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CADbModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CADbModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CADbModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="CaseAttribute\CaseAttributeDelete_spParams.cs" />
+    <Compile Include="CaseAttribute\CaseAttributeInsert_spParams.cs" />
+    <Compile Include="CaseAttribute\CaseAttributeUpdate_spParams.cs" />
+    <Compile Include="CaseFileGetByCaseID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COAC\coac_AttorneyList_sp.cs" />
+    <Compile Include="COAC\coac_CaseRoles_sp.cs" />
+    <Compile Include="COAC\coac_ConflictResults_sp.cs" />
+    <Compile Include="CommonUtilities.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpASPPageUpdate_spParams.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpGetASPPage_spParams.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpGetASPPage_spResult.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpLogInsert_spParams.cs" />
+    <Compile Include="com_Jcats\NG_pd_ChangePassword_spParams.cs" />
+    <Compile Include="com_Jcats\NG_pd_ChangePassword_spResult.cs" />
+    <Compile Include="com_Report\rpt_CaseSummary_spParams.cs" />
+    <Compile Include="CSEC\CSECAddNew_sp.cs" />
+    <Compile Include="CSEC\CSECGetSummary_sp.cs" />
+    <Compile Include="CSEC\CSECDelete_sp.cs" />
+    <Compile Include="CSEC\CSECUpdateToSubmitted_sp.cs" />
+    <Compile Include="CSEC\CSECUpdateNote_sp.cs" />
+    <Compile Include="CSEC\CSECUpdateAnswer_sp.cs" />
+    <Compile Include="CSEC\CSECGetQuestions_sp.cs" />
+    <Compile Include="CSEC\CSECGet_sp.cs" />
+    <Compile Include="CSEC\CSECGetList_sp.cs" />
+    <Compile Include="CSEC\CSECGetAddQuestionaireFor_sp.cs" />
+    <Compile Include="DbManager.cs" />
+    <Compile Include="Expense\ExpenseIUD_sp.cs" />
+    <Compile Include="Expense\Expense_GetByCaseID_sp.cs" />
+    <Compile Include="Expense\Expense_GetCodes_sp.cs" />
+    <Compile Include="Expense\Expense_GetHeader_sp.cs" />
+    <Compile Include="Expense\Expense_GetStaffMembers_sp.cs" />
+    <Compile Include="Expense\Expense_GetStatusHistory_sp.cs" />
+    <Compile Include="Expense\Expense_Get_sp.cs" />
+    <Compile Include="GoogleDrive\NG_GoogleDriveAPICredentialByAgencyID.cs" />
+    <Compile Include="HearingPrepNote\HearingPrepNoteGet_sp.cs" />
+    <Compile Include="HearingPrepNote\HearingPrepNoteIUD_sp.cs" />
+    <Compile Include="HearingPrepNote\HearingPrepNote_HoursGetHistory_sp.cs" />
+    <Compile Include="HearingPrepNote\HearingPrepNote_HoursIUD_sp.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseDelete_spParams.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseGetByCaseID_spResult.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseGet_spResult.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseGet_spParams.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseUpdate_spParams.cs" />
+    <Compile Include="HourlyExpense\pd_HourlyExpenseInsert_spParams.cs" />
+    <Compile Include="IVeActivity\TitleIVeActivityLogDetailGet_sp.cs" />
+    <Compile Include="IVeActivity\TitleIVeActivityLogDetailInsertUpdate_sp.cs" />
+    <Compile Include="IVeActivity\TitleIVeActivityLogGetOtherCountyText_sp.cs" />
+    <Compile Include="IVeActivity\TitleIVeActivityLogGet_sp.cs" />
+    <Compile Include="IVeActivity\TitleIVeCountyDropDown_sp.cs" />
+    <Compile Include="JcatsESignature\JcatsESignatureGetByJcatsUserID_sp.cs" />
+    <Compile Include="JcatsESignature\JcatsESignatureInsert_sp.cs" />
+    <Compile Include="JcatsESignature\JcatsESignatureUpdate_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageGetHistoryForCase_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageGetPermissions_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageGetSendTo_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageInsert_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageReply_sp.cs" />
+    <Compile Include="JcatsMessage\JcatsMessageUpdateStatus_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_GetAgencyGroup_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_GetAgency_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_GetAttorney_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_GetDept_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_GetJudge_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_Search_sp.cs" />
+    <Compile Include="JudgeDeptTrans\JudgeDeptTrans_TransferProcess_sp.cs" />
+    <Compile Include="Mobile\MobileCaseInsert_spParams.cs" />
+    <Compile Include="Mobile\MobileIndividualCalendar_sp.cs" />
+    <Compile Include="Mobile\pd_WorkGetByCaseID_sp.cs" />
+    <Compile Include="Mobile\pd_WorkRoleGetByWorkID_sp.cs" />
+    <Compile Include="NgInvoice\InvoiceCreateExtractFileForPayment.cs" />
+    <Compile Include="NgInvoice\NgInvoiceCounselIUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceDetail_Expense_IUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceDetail_RecordTime_IUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceImportIUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceImport_ProcessRecords_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceIUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoiceMinorIUD_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_CalcSummary_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetAttorneys_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetCodes_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetContractors_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetCounselHistory_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetCounselTypes_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetCounty_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetExpenses_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetForCaseFilter_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetForCase_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetInvoiceSummary_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetMinors_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetMyInvoiceQueue_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetRecordTime_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetStatusCodes_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetStatus_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetTotals_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_GetYearQuarter_sp.cs" />
+    <Compile Include="NgInvoice\NgInvoice_Get_sp.cs" />
+    <Compile Include="pd_Case\CaseSecuredIUD_sp.cs" />
+    <Compile Include="pd_Code\CodeGetWorkDescription_sp.cs" />
+    <Compile Include="pd_Code\CodeGetWorkIVeEligible_sp.cs" />
+    <Compile Include="pd_Code\pd_CodeGetByTypeIDForAdministration_sp.cs" />
+    <Compile Include="pd_Code\pd_PlacementAddressGetPermissions_sp.cs" />
+    <Compile Include="pd_Hearing\HearingContinuanceReasonGetForHearing_sp.cs" />
+    <Compile Include="pd_Hearing\HearingContinuanceReasonIUD_sp.cs" />
+    <Compile Include="pd_Hearing\HearingContinuanceRequestedByGetForHearing_sp.cs" />
+    <Compile Include="pd_Hearing\HearingContinuanceRequestedByIUD_sp.cs" />
+    <Compile Include="pd_Person\pd_PersonClassificationGetCodes_sp.cs" />
+    <Compile Include="pd_Petition\pd_PetitionRoleInsert_sp.cs" />
+    <Compile Include="pd_Petition\pd_PetitionRoleUpdate_sp.cs" />
+    <Compile Include="pd_Role\pd_RoleGetRoleTypesForPersonEdit_sp.cs" />
+    <Compile Include="pd_TrainingSummary\CodeGetTrainingIVeEligible_sp.cs" />
+    <Compile Include="pd_Work\WorkTimeIUD_sp.cs" />
+    <Compile Include="pd_Work\WorkTimeValidate_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_AddAssociation_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_AddNewCaseRole_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_ChildRoles_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_ExistingRoles_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_History_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_NewAssociationTypes_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ERH_NewCaseRoleTypes_sp.cs" />
+    <Compile Include="qcal\qcal_AS_HearingAttendanceGetAdditionalAttendee_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventGetAppearingAttorneys_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventGetCodes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventGetHistory_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventGet_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralAddNewCode_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralAddNewStaff_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventCalendarGetAgency_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventCalendarGetAppearingStaffAtty_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventCalendarGetCodes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventCalendarSearch_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralEventIUD_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGetCodes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGetYearQuarter_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralImmigrationGetCodes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralQueuePrint_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralStatusGetCodes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralStatusGetHistory_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralStatusIUD_sp.cs" />
+    <Compile Include="RTNC\RTNC_County_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeActivityLogExecDirGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeActivityLogExecDirInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeActivityLogListAgencyEmployees.cs" />
+    <Compile Include="TitleIVe\TitleIVeActivityLogMonthlySummaryGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeActivityLogSignatureUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeAgencyGroupCountyAllocationGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeAgencyGroupCountyAllocationInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeAgencyGroupGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeAgencyGroupInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeClaimFormGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeClaimFormUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeCodeDropDown_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeExpenseHeader_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeInvoiceGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeInvoiceInsertUpdate_sp .cs" />
+    <Compile Include="TitleIVe\TitleIVeInvoiceStatusGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeInvoiceSupportingDocGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeInvoiceSupportingDocInsertDelete_sp .cs" />
+    <Compile Include="TitleIVe\TitleIVeOperatingExpensesGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVePendingInvoiceGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVePersonnelGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVePersonnelInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeProfessionalServiceDelete_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeProfessionalServiceInsertUpdate_sp  .cs" />
+    <Compile Include="NG_com\NG_com_NavigationGetByCurrentURL_spParams.cs" />
+    <Compile Include="NG_com\NG_com_NavigationGetByCurrentURL_spResults.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpGetAllActive_spResult.cs" />
+    <Compile Include="com_Jcats\com_JcatsHelpGetAllActive_spParams.cs" />
+    <Compile Include="com_Report\com_ReportParameterHeaderInsert_spParams.cs" />
+    <Compile Include="com_Report\com_ReportParameterValueInsert_spParams.cs" />
+    <Compile Include="com_Report\com_ReportParameterHeaderDelete_spParams.cs" />
+    <Compile Include="com_Report\com_ReportSourceGetByReportID_spResult.cs" />
+    <Compile Include="com_Report\com_ReportSourceGetByReportID_spParams.cs" />
+    <Compile Include="CustomDataModel.cs" />
+    <Compile Include="NG_com\NG_DeviceTokenGetByUserID_sp.cs" />
+    <Compile Include="NG_com\NG_DeviceTokenIUD_sp.cs" />
+    <Compile Include="NG_com\NG_GoToNavigation_sp.cs" />
+    <Compile Include="NG_com_NavigationGetByCaseIDTaskID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NG_com_NavigationGetByCurrentURL_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NG_pd_SecurityGetBySecurityItemIDsUserID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NG_pd_UserLoginCheckGetByJcatsUserID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Address\pd_AddressGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Address\pd_AddressGetByPersonID_spResult.cs" />
+    <Compile Include="pd_Address\pd_AddressGetForPersonMoreInfo_sp.cs" />
+    <Compile Include="pd_Address\pd_AddressGetPlacementCodesByCaseID_spParams.cs" />
+    <Compile Include="pd_Address\pd_AddressGetPlacementCodes_spParams.cs" />
+    <Compile Include="pd_AgencyGetHomeByPersonID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Allegation\pd_AllegationGetByHearingID_spParams.cs" />
+    <Compile Include="pd_Allegation\pd_AllegationGetByPetitionID_spParams.cs" />
+    <Compile Include="pd_Allegation\pd_AllegationInsert_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionDelete_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionGetByAppealID_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionGetByAppealID_spResult.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionGet_spResult.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionGet_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealGet_spResults.cs" />
+    <Compile Include="pd_Appeals\pd_AppealGet_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealDelete_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealUpdate_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionUpdate_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_DecisionInsert_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealInsert_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealAttorneyGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Appeals\pd_AppealAttorneyGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealGetByPetitionID_spParams.cs" />
+    <Compile Include="pd_Appeals\pd_AppealGetByPetitionID_spResult.cs" />
+    <Compile Include="pd_ARSummary\pd_HearingReportFilingDueGetSummary_spParams.cs" />
+    <Compile Include="pd_ARSummary\pd_HearingReportFilingDueGetSummary_spResult.cs" />
+    <Compile Include="pd_Association\pd_AssociationGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Association\pd_AssociationGetByPersonIDCaseID_spParams.cs" />
+    <Compile Include="pd_Association\pd_AssociationGetForPersonMoreInfo_sp.cs" />
+    <Compile Include="pd_Calendar\qa_CaseloadGetForHearingAdd_sp.cs" />
+    <Compile Include="pd_Calendar\pd_CalendarGetByPetitionID_spParams.cs" />
+    <Compile Include="pd_Calendar\pd_CalendarGetByPetitionID_spResult.cs" />
+    <Compile Include="pd_Calendar\pd_CalendarGetSummaryByStaffStartDateEndDate_spParams.cs" />
+    <Compile Include="pd_Calendar\pd_CalendarGetSummaryByStaffStartDateEndDate_spResult.cs" />
+    <Compile Include="pd_Calendar\pd_GetLeaveForMyCalendar_spParams.cs" />
+    <Compile Include="pd_CaseGetOtherByPersonIDCaseID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_CaseGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_CaseLoad\MyCaseloadGetCodes_sp.cs" />
+    <Compile Include="pd_CaseLoad\MyCaseloadGetVersion2_sp .cs" />
+    <Compile Include="pd_CaseLoad\MyCaseloadGetVersionNumber_sp.cs" />
+    <Compile Include="pd_CaseLoad\pd_CaseloadGetByPersonIDCaseStatusAppointmentDate3Transfer_spParams.cs" />
+    <Compile Include="pd_CaseLoad\pd_CaseloadGetByPersonIDCaseStatusAppointmentDate3_spResult.cs" />
+    <Compile Include="pd_CaseLoad\pd_CaseloadGetByPersonIDCaseStatusAppointmentDate3_spParams.cs" />
+    <Compile Include="pd_CaseLoad\pd_CaseloadGetByStaff1_spResults.cs" />
+    <Compile Include="pd_CaseLoad\pd_CaseloadGetByStaff1_spParams.cs" />
+    <Compile Include="pd_CaseSearch_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Case\CaseFileGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseCleanupSearch_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseClosePetitionGet_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseDelete_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseGetByCaseNumber_sp.cs" />
+    <Compile Include="pd_Case\pd_CaseGetDefaults_spResults.cs" />
+    <Compile Include="pd_Case\pd_CaseGet_spResult.cs" />
+    <Compile Include="pd_Case\pd_CaseGet_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseSearchExtended_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseSearch_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseSearchExtended_spResults.cs" />
+    <Compile Include="pd_Case\pd_CaseSearch_spResults.cs" />
+    <Compile Include="pd_Case\pd_CaseTransfer_spParams.cs" />
+    <Compile Include="pd_Case\pd_CaseUpdateCaseName_spParams.cs" />
+    <Compile Include="pd_Case\pd_CopyCaseProcess_spParams.cs" />
+    <Compile Include="pd_Case\pd_HearingGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Case\pd_NewCaseSearch_spParams.cs" />
+    <Compile Include="pd_Case\pd_RelatedCasesGetList_sp.cs" />
+    <Compile Include="pd_CodeGetAllBySystemValueTypeID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_CodeTables\pd_CodeGetByTypeIDAndNotUserID_spParams.cs" />
+    <Compile Include="pd_CodeTables\pd_CodeGetByTypeIDAndNotUserID_spResult.cs" />
+    <Compile Include="pd_CodeTables\pd_CodeGetByTypeIDAndUserID_spParams.cs" />
+    <Compile Include="pd_CodeTables\pd_CodeGetByTypeIDAndUserID_spResult.cs" />
+    <Compile Include="pd_CodeTables\pd_CodeTypeGetAll_spParams.cs" />
+    <Compile Include="pd_CodeTables\pd_CodeTypeGetAll_spResult.cs" />
+    <Compile Include="pd_Code\pd_CodeGetAllBySystemValueTypeID_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeGetBySystemValueTypeID_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeGetBySysValAndUserID_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeGetBySystemValueTypeID_spResults.cs" />
+    <Compile Include="pd_Code\pd_CodeGetBySysValAndUserID_spResults.cs" />
+    <Compile Include="pd_Code\pd_CodeGetClientStatus_sp.cs" />
+    <Compile Include="pd_Code\pd_CodeGetNewNoteTypeByCaseID_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeGet_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeInsert_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeTypeGetForReport_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeUpdate_spParams.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictDelete_spParams.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictInsert_spParams.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictUpdate_spParams.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictGet_spResult.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictGet_spParams.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Conflict\pd_ConflictGetByCaseID_spParams.cs" />
+    <Compile Include="pd_CopyCase\pd_CopyCaseProcess_sp.cs" />
+    <Compile Include="pd_CopyCase\pd_CopyCaseTransferSubsetCheck_sp.cs" />
+    <Compile Include="pd_CopyCase\pd_CopyCaseTransferSubsetClients_sp.cs" />
+    <Compile Include="pd_CountyCounselList\pd_AttorneyListSearchGet_spParams.cs" />
+    <Compile Include="pd_CountyCounselList\pd_AttorneyListSearchGet_spResult.cs" />
+    <Compile Include="pd_CountyCounselList\pd_StaffDelete_spParams.cs" />
+    <Compile Include="pd_Department\pd_DepartmentDelete_spParams.cs" />
+    <Compile Include="pd_Department\pd_DepartmentGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Department\pd_DepartmentGet_spParams.cs" />
+    <Compile Include="pd_Department\pd_DepartmentInsert_spParams.cs" />
+    <Compile Include="pd_Department\pd_DepartmentUpdate_spParams.cs" />
+    <Compile Include="pd_EmployeeRoster\pd_EmployeeRosterSearchGet_spParams.cs" />
+    <Compile Include="pd_EmployeeRoster\pd_EmployeeRosterSearchGet_spResults.cs" />
+    <Compile Include="pd_CodeGetByTypeIDAndUserIDSortShortValue_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Code\pd_CodeGetByTypeIDAndUserID_spResults.cs" />
+    <Compile Include="pd_Code\pd_CodeGetByTypeIDAndUserID_spParams.cs" />
+    <Compile Include="pd_Code\pd_CodeGetByTypeIDAndUserIDSortShortValue_spResults.cs" />
+    <Compile Include="pd_Code\pd_CodeGetByTypeIDAndUserIDSortShortValue_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateDelete_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateGetByHearingID_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateGetByHearingTypeCodeIDAgencyID_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateGetByHearingTypeCodeIDAgencyID_spResult.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateGetLatest_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateGetLatest_spResult.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateInsert_spParams.cs" />
+    <Compile Include="pd_HearingRates\pd_HearingRateUpdate_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_CodeHearingFindingOrderTypeGetByHearingTypeCodeID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingAttendanceDelete_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingAttendanceGetByHearingID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingExpenseRequestBy_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingExpenseRequestBy_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderDelete_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderGetByHearingID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderGet_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderInsert_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderNoticeDelete_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderNoticeGetByHearingFindingOrderID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderNoticeGetByHearingID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderNoticeInsert_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderPersonDelete_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderPersonGetByHearingFindingOrderID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderPersonGetByHearingIDHearing_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderPersonInsertByRoleID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingFindingOrderUpdate_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGetByCaseIDRFD_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGetByPersonIDAndCaseID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGetByQheNextHearingID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGet_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingGet_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingInsert_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOfficerTransfer_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOpinionGetByHearingID_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOpinionGetByHearingID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOpinionGet_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOpinionInsert_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingOpinionUpdate_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingPleaGetByHearingIDChildren_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingPleaGetByHearingIDRespondent_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingPleaInsert_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingPleaUpdate_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGetByCaseID_spResults.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGetByDateRangeTypePersonID_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGetByDateRangeTypePersonID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGetByRequestedForPersonID_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGetByRequestedForPersonID_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueDelete_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGet_spResult.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueGet_spParams.cs" />
+    <Compile Include="pd_Hearing\pd_HearingReportFilingDueInsert_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HearingUpdateInvoiceAmount_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceGetAttorneyList_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceGetAttorneyList_spResult.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceGetWorkExpenseForInvoice_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceGet_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceInsertByBatch_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceSearch_spParams.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceSearch_spResult.cs" />
+    <Compile Include="pd_HourlyInvoiceList\pd_HourlyInvoiceUpdate_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetPending_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetPending_spResult.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetUnsentByInvoiceIDService_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetUnsentByInvoiceIDParent_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetUnsentByInvoiceIDPetition_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceGetUnsentByInvoiceID_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceHearingUpdate_spParams.cs" />
+    <Compile Include="pd_InvoiceQueue\pd_InvoiceUpdate_spParams.cs" />
+    <Compile Include="pd_Invoice\pd_InvoiceGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Invoice\pd_InvoiceItemGetByCaseID_spParams.cs" />
+    <Compile Include="pd_JcatsGroupAgencyGetByJcatsGroupID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_JcatsGroupGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_JcatsGroup\pd_JcatsGroupAgencyGetByJcatsUserID_spResults.cs" />
+    <Compile Include="pd_JcatsGroup\pd_JcatsGroupAgencyGetByJcatsUserID_spParams.cs" />
+    <Compile Include="pd_JcatsReport\pd_JcatsReportGetByUserID_spResults.cs" />
+    <Compile Include="pd_JcatsReport\pd_JcatsReportGetByUserID_spParams.cs" />
+    <Compile Include="pd_JudicialOfficer\pd_JudicialOfficerListSearchGet_spParams.cs" />
+    <Compile Include="pd_Leave\pd_LeaveDelete_spParams.cs" />
+    <Compile Include="pd_Leave\pd_LeaveGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Leave\pd_LeaveGet_spParams.cs" />
+    <Compile Include="pd_Leave\pd_LeaveInsert_spParams.cs" />
+    <Compile Include="pd_Leave\pd_LeaveUpdate_spParams.cs" />
+    <Compile Include="pd_LegalNumberGetByPersonID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_LegalNumber\pd_LegalNumberDelete_spParams.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberGetByCaseID_spResult.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberUpdate_spParams.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberInsert_spParams.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberGet_spParams.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberGet_spResult.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberGetByPersonID_spResult.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberGetByPersonID_spParams.cs" />
+    <Compile Include="pd_LegalNumber\pd_LegalNumberValidateRelatedNumber_sp.cs" />
+    <Compile Include="pd_MasterCalendar\pd_MasterCalendarGet_spResults.cs" />
+    <Compile Include="pd_MasterCalendar\pd_MasterCalendarGet_spParams.cs" />
+    <Compile Include="pd_Medication\pd_MedicationDelete_spParams.cs" />
+    <Compile Include="pd_Medication\pd_MedicationGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Medication\pd_MedicationInsert_spParams.cs" />
+    <Compile Include="pd_Medication\pd_MedicationUpdate_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceDetailGetByMonthlyInvoiceID_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGetAddInvoiceFor_sp.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGet_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceInsert_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceUpdate_spParams.cs" />
+    <Compile Include="pd_Motions\pd_MotionGetByPetitionID_spParams.cs" />
+    <Compile Include="pd_Motions\pd_MotionGetByPetitionID_spResult.cs" />
+    <Compile Include="pd_Motions\pd_MotionGetHeader_sp.cs" />
+    <Compile Include="pd_Motions\pd_MotionGet_spResult.cs" />
+    <Compile Include="pd_Motions\pd_MotionGet_spParams.cs" />
+    <Compile Include="pd_Motions\pd_MotionUpdate1_spParams.cs" />
+    <Compile Include="pd_Motions\pd_MotionInsert1_spParams.cs" />
+    <Compile Include="pd_Motions\pd_PetitionGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Motions\pd_PetitionGetByCaseID_spResult.cs" />
+    <Compile Include="pd_MyJcats\MyDailyTime_sp.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsInvestigatorCountsGet_spParams.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsAttorneyCountsGet_spParams.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsInvestigatorCountsGet_spResult.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsManagementCountsGet_spParams.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsManagementCountsGet_spResults.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsSupervisingAttorneyCountsGet_spParams.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsAttorneyCountsGet_spResults.cs" />
+    <Compile Include="pd_MyJcats\pd_MyJcatsSupervisingAttorneyCountsGet_spResult.cs" />
+    <Compile Include="pd_NoteGetByCaseID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Note\NG_pd_NoteGetByCaseIDASPPageName_spParams.cs" />
+    <Compile Include="pd_Note\NoteControlTypeGet_sp.cs" />
+    <Compile Include="pd_Note\NotePersonGetAll_sp.cs" />
+    <Compile Include="pd_Note\pd_NoteGetByEntity_spParams.cs" />
+    <Compile Include="pd_Note\pd_NoteGetForCodeID_sp.cs" />
+    <Compile Include="pd_Note\pd_NoteGet_spResult.cs" />
+    <Compile Include="pd_Note\pd_NoteGet_spParams.cs" />
+    <Compile Include="pd_Note\del_CodeGet_spParams.cs" />
+    <Compile Include="pd_Note\del_CodeGet_spResult.cs" />
+    <Compile Include="pd_Note\pd_CodeGetNewNoteTypeByCaseID_spParams.cs" />
+    <Compile Include="pd_Note\pd_CodeGetNewNoteTypeByCaseID_spResult.cs" />
+    <Compile Include="pd_Note\pd_EditAddNote_spParams.cs" />
+    <Compile Include="pd_Note\pd_NoteDelete_spParams.cs" />
+    <Compile Include="pd_Note\pd_NoteGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Note\pd_NoteGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Note\pd_NoteInsert_spParams.cs" />
+    <Compile Include="pd_Note\pd_NotePanelGetAllByNoteID_spParams.cs" />
+    <Compile Include="pd_Note\pd_NotePanelGetAllByNoteID_spResult2.cs" />
+    <Compile Include="pd_Note\pd_NoteUpdate_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonNamePreferredUpdate_sp.cs" />
+    <Compile Include="pd_Person\PersonRaceIUD_sp.cs" />
+    <Compile Include="pd_Person\PersonRace_GetList_sp.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForPersonMoreInfo_sp.cs" />
+    <Compile Include="pd_Training\pd_TrainingGetSummary_sp.cs" />
+    <Compile Include="pd_Training\pd_TrainingGetSupervisorList_sp.cs" />
+    <Compile Include="pd_Training\pd_TrainingGetVenueList_sp.cs" />
+    <Compile Include="pd_Users\Supervisor_GetList_sp.cs" />
+    <Compile Include="pd_Users\Supervisor_UpdateCurrent_sp.cs" />
+    <Compile Include="pd_Work\pd_WorkGetFilterByStaffType_sp.cs" />
+    <Compile Include="qa\pd_AssociationInsert_sp.cs" />
+    <Compile Include="qa\qa_AssociationCodes_sp.cs" />
+    <Compile Include="qa\qa_HearingGetForPetitionAdd_sp.cs" />
+    <Compile Include="qa\qa_PersonRoleAdd_sp.cs" />
+    <Compile Include="qa\qa_PetitionAdd_sp.cs" />
+    <Compile Include="qa\qa_PetitionGetForAdultPartyAdd_sp.cs" />
+    <Compile Include="qa\qa_PetitionRoleAdd_sp.cs" />
+    <Compile Include="qa\qa_RoleCodes_sp.cs" />
+    <Compile Include="qa\qa_RoleGetForPetitionAdd_sp.cs" />
+    <Compile Include="qcal\ClientStatusGetHistory_sp.cs" />
+    <Compile Include="qcal\ClientStatusIUD_sp.cs" />
+    <Compile Include="qcal\HearingCaseFileIUD_sp.cs" />
+    <Compile Include="qcal\pd_PersonClassificationGetByPersonIDClientStatus_sp.cs" />
+    <Compile Include="qcal\qcal_AppearanceNotes_spParams.cs" />
+    <Compile Include="pd_PDActionInsert_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_PDAction\pd_PDActionGetAllCasesByUserID_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionGetAllCasesByUserID_spResults.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionUpdate_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionInsert_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionGet_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionGet_spResults.cs" />
+    <Compile Include="com_Report\com_ReportParameterValueDelete_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonClassificationDelete_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonClassificationInsert_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonClassificationUpdate_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonContactDelete_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonContactGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonContactGetJcatsEmailByUserID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonContactUpdate_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonGetByCaseIDAddressID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonGetByCaseIDContact_spResults.cs" />
+    <Compile Include="pd_Person\pd_PersonContactGetByCaseID_spResults.cs" />
+    <Compile Include="pd_Person\pd_PersonContactGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonClassificationGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonGet_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonInsert_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonNameDelete_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonNameGetAKAByPersonID_spResult.cs" />
+    <Compile Include="pd_Person\pd_PersonNameGetAKAByPersonID_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonNameGet_spResult.cs" />
+    <Compile Include="pd_Person\pd_PersonNameGet_spParams.cs" />
+    <Compile Include="pd_Person\pd_PersonUpdate_spParams.cs" />
+    <Compile Include="pd_PetitionGetClosedByRoleID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Petition\pd_PetitionDelete_spParams.cs" />
+    <Compile Include="pd_Petition\pd_PetitionGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Petition\pd_PetitionGet_spParams.cs" />
+    <Compile Include="pd_Petition\pd_PetitionRoleDelete_spParams.cs" />
+    <Compile Include="pd_Profile\pd_PDActionGet_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileAnswerGetByProfileQuestionID_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileAnswerGetByProfileQuestionID_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileDelete_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGetCurrentByRoleIDRFD_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGetCurrentByRoleIDRFD_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGetList_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGetNextProfileQuestionIDRFD_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGetNextProfileQuestionIDRFD_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGet_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileGet_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileInsert_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileQuestionGetAllByQuestionIDRoleID_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileQuestionGetAllByQuestionIDRoleID_spResult.cs" />
+    <Compile Include="pd_Profile\pd_ProfileQuestionGetByProfileTypeCodeID_spParams.cs" />
+    <Compile Include="pd_Profile\pd_ProfileQuestionGetByProfileTypeCodeID_spResult.cs" />
+    <Compile Include="pd_QuickRFD\pd_QuickRFDAssociationTypeGet_spParams.cs" />
+    <Compile Include="pd_Report\MergeTemplateSearch_spResult.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonDelete_spParams.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonInsert_spParams.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonGetAllByPersonID_spResult.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonGetAllByPersonID_spParams.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Report\pd_ReportPersonGetByPersonID_spResult.cs" />
+    <Compile Include="pd_RoleGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Role\pd_QuickRFDClientGet_spResult.cs" />
+    <Compile Include="pd_Role\pd_RFDRoleContactGetByReportFilingDueID_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyAttorneyGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyAttorneyGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyAttorneyGet_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyInvestigatorGetByUserGroup_spParams.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pd_Role\pd_RoleAgencyInvestigatorGet_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDAndSysValue_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDAndSysValue_spResult.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDAndSysVal_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDBillingWorker_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForSubpoenaByCaseID_spResult.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForSubpoenaByCaseID_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDClientCriteria_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDClientCriteria_spResult.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDChildRespondent_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDForAssociation_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForPetition_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForPetition_spResult.cs" />
+    <Compile Include="pd_Role\pd_RoleGetByCaseIDClient_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGetForTransferCase_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleGet_spParams.cs" />
+    <Compile Include="pd_Role\pd_RoleInsert_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_AttorneyGetByCaseIDForSCCInvoice_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceClientGetByCaseID_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceClientGetByCaseID_spResult.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGetByCaseID_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGetByCaseID_spResult.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGet_spResult.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGet_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceRateTypeGetAll_spParams.cs" />
+    <Compile Include="pd_SearchByPhysicalFile\pd_JcatsGroupAgencyGetByJcatsGroupID_spParams.cs" />
+    <Compile Include="pd_SearchByPhysicalFile\pd_JcatsGroupAgencyGetByJcatsGroupID_spResult.cs" />
+    <Compile Include="pd_SearchByPhysicalFile\pd_PhysicalFileSearch_spParams.cs" />
+    <Compile Include="pd_SearchByPhysicalFile\pd_PhysicalFileSearch_spResult.cs" />
+    <Compile Include="pd_SecurityGetByJcatsGroupID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_SecurityGetByNotJcatsGroupID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Staff\pd_StaffGetAllByUserID_spParams.cs" />
+    <Compile Include="pd_Staff\pd_StaffGetAllByUserID_spResults.cs" />
+    <Compile Include="PD_JcatsUser\pd_JcatsUserGet_spResults.cs" />
+    <Compile Include="PD_JcatsUser\pd_JcatsUserGet_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGetAgencyList_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGetAgencyList_spResult.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGetAttorneyList_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceGetAttorneyList_spResult.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceSearch_spParams.cs" />
+    <Compile Include="pd_MonthlyInvoiceList\pd_MonthlyInvoiceSearch_spResult.cs" />
+    <Compile Include="pd_PDActionGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_PDActionSearchGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_PDAction\pd_PDActionDelete_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionUpdateStatusOnly_spParams.cs" />
+    <Compile Include="pd_PDAction\pd_PDActionSearchGet_spParams.cs" />
+    <Compile Include="pd_PersonGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_RoleAgencyAttorneyGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_RoleAgencyHearingOfficerGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_RoleAgencyInvestigatorGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_RoleAgencyLegalAssistantGet_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_RoleGetByCaseID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pd_Role\pd_RoleAgencyLegalAssistantGet_spResults.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyInvestigatorGet_spResults.cs" />
+    <Compile Include="pd_Role\pd_RoleGetLegalAll_spResults.cs" />
+    <Compile Include="pd_Role\pd_RoleAgencyGet_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGetAttorneyList_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceGetAttorneyList_spResult.cs" />
+    <Compile Include="Agency\AgencyGetGroupByUserID_spResults.cs" />
+    <Compile Include="Agency\AgencyGetGroupByUserID_spParams.cs" />
+    <Compile Include="pd_Staff\pd_StaffGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaDelete_spParams.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaAddressInsert_spParams.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaUpdate_spParams.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaInsert_spParams.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Subpoena\pd_SubpoenaGetByCaseID_spParams.cs" />
+    <Compile Include="pd_System\pd_SystemValueDelete_spParams.cs" />
+    <Compile Include="pd_System\pd_SystemValueUpdate_spParams.cs" />
+    <Compile Include="pd_System\pd_SystemValueInsert_spParams.cs" />
+    <Compile Include="pd_System\pd_SystemValueTypeGetAll_spResult.cs" />
+    <Compile Include="pd_System\pd_SystemValueTypeGetAll_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingDelete_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetByPersonIDStartDateEndDate_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetByPersonIDStartDateEndDate_spResult.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetSummaryByPersonIDStartDateEndDate_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetSummaryByPersonIDStartDateEndDate_spResult.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetSummaryByUserIDStartDateEndDate_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGetSummaryByUserIDStartDateEndDate_spResults.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGet_spParams.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingGet_spResult.cs" />
+    <Compile Include="pd_TrainingSummary\pd_TrainingUpdate_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_SecurityDelete_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_SecurityInsert_spParams.cs" />
+    <Compile Include="pd_UserGroups\com_JcatsGroupInsert_spParams.cs" />
+    <Compile Include="pd_UserGroups\com_JcatsGroupInsert_spResult.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupAgencyDelete_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupAgencyGetByJcatsGroupID_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupAgencyGetByJcatsGroupID_spResult.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupAgencyInsert_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupGetByUserID_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupGetByUserID_spResult.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupGet_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupGet_spResult.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupUpdate_spParams.cs" />
+    <Compile Include="pd_UserGroups\pd_JcatsGroupUpdate_spResult.cs" />
+    <Compile Include="pd_UserLoginCheckGetByJCATSUserID_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceSearch_spParams.cs" />
+    <Compile Include="pD_SCCInvoice\pd_SCCInvoiceSearch_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_AgencyGetHomeByPersonID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_AgencyGetHomeByPersonID_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_AgencyGetSystemRoleByPersonID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_AgencyGetSystemRoleByPersonID_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_CodeGetBySysValAndUserID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_CodeGetBySysValAndUserID_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_CodeGetByTypeIDAndUserID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_CodeGetByTypeIDAndUserID_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_JcatsGroupGetByUserID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_JcatsGroupGetByUserID_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_JCATSUserGet_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_JCATSUserGet_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_StaffInfoGetAlternateContacts_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_StaffInfoGetAlternateContacts_spResult.cs" />
+    <Compile Include="pd_Users\Edit\pd_StaffInfoGetByPersonID_spParams.cs" />
+    <Compile Include="pd_Users\Edit\pd_StaffInfoGetByPersonID_spResult.cs" />
+    <Compile Include="pd_Users\pd_CodeGetBySysValAndUserID_spParams.cs" />
+    <Compile Include="pd_Users\pd_CodeGetBySysValAndUserID_spResult.cs" />
+    <Compile Include="pd_Users\pd_JcatsGroupAgencyGetByJcatsUserID_spParams.cs" />
+    <Compile Include="pd_Users\pd_JcatsGroupAgencyGetByJcatsUserID_spResult.cs" />
+    <Compile Include="pd_Users\pd_JcatsGroupGetByUserID_spParams.cs" />
+    <Compile Include="pd_Users\pd_JcatsGroupGetByUserID_spResult.cs" />
+    <Compile Include="pd_Users\pd_StaffUserSearchGet_spParams.cs" />
+    <Compile Include="pd_Users\pd_StaffUserSearchGet_spResult.cs" />
+    <Compile Include="pd_Work\pd_WorkGet_spResult.cs" />
+    <Compile Include="pd_Work\pd_WorkGet_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkInsert1_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkDelete_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkGetByCaseID_spResult.cs" />
+    <Compile Include="pd_Work\pd_WorkGetByCaseID_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkRoleDelete_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkRoleGetByWorkID_spResult.cs" />
+    <Compile Include="pd_Work\pd_WorkRoleGetByWorkID_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkRoleInsert_spParams.cs" />
+    <Compile Include="pd_Work\pd_WorkUpdate1_spParams.cs" />
+    <Compile Include="qcal\qcal_AS_AddNewStaff_sp.cs" />
+    <Compile Include="qcal\qcal_AS_AllegationFindingUpdate_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ClientAddressAdd_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ClientAddressContactGet_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ClientAddressContactUpdate_sp.cs" />
+    <Compile Include="qcal\qcal_AS_ClientAddressGet_sp.cs" />
+    <Compile Include="qcal\qcal_AS_CreateAPOFFE_sp.cs" />
+    <Compile Include="qcal\qcal_AS_HearingCaseFileGetList_sp.cs" />
+    <Compile Include="qcal\qcal_AS_IncarcerationFacilityGet_sp.cs" />
+    <Compile Include="qcal\qcal_AS_NextHearingDefaultGet_sp.cs" />
+    <Compile Include="qcal\qcal_AS_PersonClassificationAddRemoveDetPlacement_sp.cs" />
+    <Compile Include="qcal\qcal_AttorneyListForQuickCaseAdd_sp.cs" />
+    <Compile Include="qcal\qcal_HearingNoteGetMain_sp.cs" />
+    <Compile Include="qcal\qcal_HearingNoteGetPreviousNotes_sp.cs" />
+    <Compile Include="qcal\qcal_HearingUpdateCalendarNumber_sp.cs" />
+    <Compile Include="qcal\qcal_HearingUpdateClientPresentFlag_sp.cs" />
+    <Compile Include="qcal\qcal_HearingUpdateReadyFlag_sp.cs" />
+    <Compile Include="qcal\qcal_NoteType_sp.cs" />
+    <Compile Include="qcal\qcal_QuickCaseAddGetDefaults_sp.cs" />
+    <Compile Include="qcal\qcal_ToDo_ActionType_sp.cs" />
+    <Compile Include="qcal\qcal_ToDo_AssignToStaff_sp.cs" />
+    <Compile Include="qcal\qcal_ToDo_History_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralClientCategoryGetByReferralID_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralContactInfo_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralForClientList_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGet602Petitions_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGetImmigrationAttorneyList_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGetRequestBy_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralGet_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralHeader_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralImmigrationGetByReferralID_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralImmigrationIUD_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralIUD_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralList_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralQueueDateRangeTypes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralQueue_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralReliefGetByReferralID_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralReliefIUD_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralSummaryModes_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralSummary_sp.cs" />
+    <Compile Include="ref_Referral\ref_ReferralTypeList_sp.cs" />
+    <Compile Include="rpt_Print\rpt_IndividualCalendar_spParams.cs" />
+    <Compile Include="rpt_Print\rpt_RecordTimePrintableVersion_spParams.cs" />
+    <Compile Include="pd_wt\wtRecordTimeGetCases_spResult.cs" />
+    <Compile Include="pd_wt\wtRecordTimeGetCases_spParams.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="rpt_AttorneyHourlyInvoice_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rpt_AttorneyHourlyInvoice_Sub_Details_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rpt_AttorneyHourlyInvoice_Sub_Services_sp_Result.cs">
+      <DependentUpon>CADbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rpt_Print\rpt_Caseload2_spParams.cs" />
+    <Compile Include="rpt_Print\rpt_NotesPrintableVersion_spParams.cs" />
+    <Compile Include="rpt_Print\rpt_ToDoListPrintableVersion_spParams.cs" />
+    <Compile Include="RTNC\RTNC_AgencyGroup_sp.cs" />
+    <Compile Include="RTNC\RTNC_Agency_sp.cs" />
+    <Compile Include="RTNC\RTNC_Search_sp.cs" />
+    <Compile Include="RTNC\RTNC_StaffMember_sp.cs" />
+    <Compile Include="RTNC\RTNC_Supervisor_sp.cs" />
+    <Compile Include="RTNC\RTNC_WorkDescription_sp.cs" />
+    <Compile Include="Services\UtilityService.cs" />
+    <Compile Include="sup_Case\sup_CaseNextHearingSet_spParams.cs" />
+    <Compile Include="sup_Case\sup_CasePetitionNumberSet_spParams.cs" />
+    <Compile Include="Tasks\FillinByAttorneyBatchSearch_spParams.cs" />
+    <Compile Include="TitleIVe\TitleIVeStaffGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeStaffInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVeTravelExpensesGet_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVOperatingExpensesInsertUpdate_sp.cs" />
+    <Compile Include="TitleIVe\TitleIVTravelExpensesAInsertUpdate_sp.cs" />
+    <Compile Include="TrainingImport\TrainingImport_GetCreditTypeList_sp.cs" />
+    <Compile Include="TrainingImport\TrainingImport_GetPersonList_sp.cs" />
+    <Compile Include="TrainingImport\TrainingImport_GetVenueList_sp.cs" />
+    <Compile Include="TrainingImport\TrainingImport_ProcessPendingRecords_sp.cs" />
+    <Compile Include="TrainingImport\TrainingImport_StageRecord_sp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="CADbModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CADbModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="CADbModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CADbModel.edmx</DependentUpon>
+      <LastGenOutput>CADbModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="CADbModel.edmx.diagram">
+      <DependentUpon>CADbModel.edmx</DependentUpon>
+    </None>
+    <None Include="CADbModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CADbModel.edmx</DependentUpon>
+      <LastGenOutput>CADbModel.cs</LastGenOutput>
+    </None>
+    <Compile Include="HourlyExpense\pd_HourlyExpenseGetByCaseID_spParams.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

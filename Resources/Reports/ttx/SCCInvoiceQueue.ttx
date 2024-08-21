@@ -1,0 +1,12 @@
+Attorney	String	100	Andrew Schilling
+Client	String	100	John Doe
+CaseNumber	String	50	SC1231
+NextHearingDate	String	50	12/02/1999
+CourtNumber	String	50	RTY1345
+InvoiceRateType	String	50	A1
+InvoiceAmount	String	50	$460.00
+InvoiceStatus	String	100	Paid
+InvoicePaidDate	String	50	12/02/1999
+InvoiceDate	String	50	12/02/1999
+InvoiceNumber	Number		118169
+ReferralSource	String	100	Source 1

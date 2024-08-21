@@ -1,0 +1,660 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.AttachPathViewModel
+@{
+    ViewBag.Title = "Attach File";
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+<div class="row">.
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"> Files</span>
+                <div class="widget-buttons">
+
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="form-group col-md-4 col-sm-6" style="margin:0px !important;padding:5px 0px !important;">
+                    <label class="control-label" for="WorkMileage">Category:</label>
+                    <input class="form-control input-sm" id="txtCategory" name="txtCategory" tabindex="-1" type="text" value="" autocomplete="off"
+                           style="display:inline !important; width:250px;">
+                </div>
+                <div class="form-group col-md-4 col-sm-6" style="margin:0px !important;padding:5px 0px !important;">
+                    <label class="control-label" for="txtDescription">Description:</label>
+                    <input class="form-control input-sm" id="txtDescription" name="txtDescription" tabindex="-1" type="text" value="" autocomplete="off"
+                           style="display:inline !important; width:250px;">
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="Files">
+                        <thead>
+                       
+                            <tr>
+                                @if (UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.AttachFileEdit))
+                                {
+                                    <th width="40">Edit</th>
+                                }
+                                <th>File Date</th>
+                                <th>Category</th>
+                                <th>File</th>
+                                @if (Model.SharePoint_UseFlag > 0)
+                                {
+                                    <th style="width:80px">SharePoint</th>
+                                }
+                                <th>Role</th>
+                                <th>Description</th>
+                                <th>Uploaded By</th>
+                                <th>Uploaded On</th>
+                                @if (Model.UseGoogleDriveUpload > 0)
+                                {
+                                    <th width="120">View/Annotate</th>}
+                        
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    @if (UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.AttachFileAdd))
+    {
+        <div class="boxfloat text-center">
+            <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="-1">Return to Calendar</button>
+            @if (Model.SharePoint_UseFlag == 1)
+            {
+                <button class="btn btn-default v-bottom btn-normal  " id="btnUploadFileSharePoint" data-toggle="modal" data-target="#myModalFileUpload" data-secure-id="@((int)SecurityToken.AttachFileUploadFilePaperless)">UPLOAD TO SHAREPOINT</button>
+            }
+            else if (Model.SharePoint_UseFlag == 2)
+            { <button class="btn btn-default v-bottom  btn-normal " id="btnUploadFile" data-toggle="modal" data-target="#myModalFileUpload">UPLOAD FILE TO JCATS</button>
+
+            <button class="btn btn-default v-bottom btn-normal  " id="btnUploadFileSharePoint" data-toggle="modal" data-target="#myModalFileUpload" data-secure-id="@((int)SecurityToken.AttachFileUploadFilePaperless)">UPLOAD TO SHAREPOINT</button>
+            }
+            else if (Model.UseGoogleDriveUpload == 1)
+            {
+                <button class="btn btn-default v-bottom   " id="btnUploadFileGoogle" data-toggle="modal" data-target="#myModalFileUpload" data-secure-id="@((int)SecurityToken.AttachFileUploadFilePaperless)">UPLOAD FILE (PAPERLESS)</button>
+            }
+            else if (Model.UseGoogleDriveUpload == 2)
+            {    <button class="btn btn-default v-bottom   " id="btnUploadFile" data-toggle="modal" data-target="#myModalFileUpload">UPLOAD FILE TO JCATS</button>
+
+            <button class="btn btn-default v-bottom   " id="btnUploadFileGoogle" data-toggle="modal" data-target="#myModalFileUpload" data-secure-id="@((int)SecurityToken.AttachFileUploadFilePaperless)">UPLOAD FILE (PAPERLESS)</button>
+            }
+            else
+            {
+                <button class="btn btn-default v-bottom   " id="btnUploadFile" data-toggle="modal" data-target="#myModalFileUpload">UPLOAD FILE TO JCATS</button>
+
+            }
+
+        </div>
+    }
+}
+
+<style>
+    .fileList.overflow {
+        height: 250px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        margin-top: 80px !important;
+    }
+</style>
+<input type="hidden" id="hdnType" value="1" />
+@section Scripts {
+    <script type="text/javascript">
+        $('#btnBackToCalendar').click(function () {
+            window.location.href = '/Task/QuickCalMyCalendar?HearingDate=' + $('.hearingDate').data('date');
+        });
+        $('#btnUploadFile').click(function(){
+            $('#hdnType').val('1');
+            BindFileUpload();
+        })
+        $('#btnUploadFileGoogle').click(function(){
+            $('#hdnType').val('2');   BindFileUpload();
+        })
+        $('#btnUploadFileSharePoint').click(function(){
+            $('#hdnType').val('3');
+            BindFileUpload();
+        })
+
+        var filesTable = $('#Files').dataTable({
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 20,
+            "bPaginate": true,
+            "ordering": true,
+            "aaSorting": [[@(UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.AttachFileEdit) ? 1:0), 'desc']],
+            "columns": [
+                   @if (UserEnvironment.UserManager.IsUserAccessTo(SecurityToken.AttachFileEdit))
+                   {
+                        <text> {
+                       "data": "CaseFileID",
+                       "bSortable": false,
+                       "render": function (data, type, full, meta) {
+                           return '<a class="btn btn-info btn-xs edit" data-id="' + full.CaseFileID + '"><i class="fa fa-edit"></i> Edit</a>&nbsp;';
+                       }
+                   },</text>
+                    }
+
+                    { "data": "CaseFileDate" },
+                    { "data": "Category" },
+                    {
+                        "data": "CaseFileName",
+                        "bSortable": false,
+                        "render": function (data, type, full, meta) {
+
+                            //return '<a href="' + full.DownloadPath + '" class="auto-download" data-id="' + full.CaseFileID + '">' + data + '</a>';
+                            if (full.SharePoint_FilePath==='') {
+                                return '<a href="javascript:;" data-url="' + full.DownloadPath + '" class="file-download" data-id="' + full.CaseFileID + '">' + data + '</a>';
+
+                            }
+                            else  if (full.SharePointFile_AllowDownloadLink==='1') {
+
+                                return '<a href="javascript:;" data-url="' + full.CaseFilePath + '" class="sfile-download" data-id="' + full.CaseFileID + '">' + data + '</a>';
+
+
+                            }else{
+                                return data;
+                            }
+
+
+                        }
+                    },
+                      @if (Model.SharePoint_UseFlag >0)
+            {
+                            <text>
+
+                      {
+                          "data": "CaseFileName",
+                          "bSortable": false,
+                          "render": function (data, type, full, meta) {
+
+                              if (full.SharePoint_FilePath!=='') {
+                                  return '<a href="' + full.SharePoint_FilePath + '" target="_blank" class="lnkViewSharePoint btn btn-info btn-xs" data-id="' + full.SharePoint_FilePath + '">View</a>';
+
+                              }
+                              return '';
+                          }
+                      }
+
+                      ,</text>
+                }
+                    { "data": "RoleDisplay", "bSortable": false, },
+                    { "data": "CaseFileDescription", "bSortable": false, },
+                    { "data": "UploadedBy", "bSortable": false, },
+                    { "data": "UploadedOn", "bSortable": false, }
+                      @if (Model.UseGoogleDriveUpload >0)
+        {
+           <text> , {
+                          "data": "CaseFileID",
+                          "bSortable": false,
+                          "render": function (data, type, full, meta) {
+                              if (Contains(full.DownloadPath,'DownloadDriveFile')) {
+
+
+                                  return                                     '<a class="btn btn-info btn-xs" href="https://drive.google.com/file/d/' + full.GoogleFileID + '/edit?usp=sharing"  target="_blank" data-id="' + full.CaseFileID + '" style="margin-right:5px;">View</a><a class="btn btn-info btn-xs    " href=\'' + full.KamiUrl + '\'  target="_blank" data-id="' + full.CaseFileID + '">Annotate</a>'
+                              }
+                              return '';
+                          }
+                      }</text>}
+
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+
+
+
+        $(function () {
+
+            var errorMessage = "@TempData["ErrorMessage"]";
+            if(errorMessage!= ""){
+                notifyDanger(errorMessage);
+            }
+
+            $('#txtCategory').on( 'keyup', function () {
+                populateFilesData(filesTable);
+            });
+            $('#txtDescription').on( 'keyup', function () {
+                populateFilesData(filesTable);
+            });
+            populateFilesData(filesTable);
+            $('#btnUpload').on('click', function () {
+                populateFilesData(filesTable);
+                $('#myModalFileUpload').modal('hide');
+
+            });
+
+            $('body').on('click', '.edit', function () {
+                OpenPopup('/Case/EditAttachFile/' + $(this).attr('data-id'), 'Edit File');
+            });
+            $('body').on('click', '.deleteFile', function () {
+
+                var id = $(this).attr('data-id');
+                var googlefileid = $(this).attr('data-googlefileid');
+
+                confirmBox("Are you sure you want to delete?", function (result) {
+
+                    if (result) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Case/DeleteFile/' + id+'?gfileid='+googlefileid,
+
+                            success: function (data) {
+                                if (data.Status == 'done') {
+                                    populateFilesData(filesTable);
+                                }
+
+                            },
+                            dataType: 'json'
+                        });
+                    }
+
+                });
+
+            });
+
+            $('body').on('click', '.file-download', function (e) {
+                e.preventDefault();
+                document.location.href = $(this).data('url');
+            });
+            $('body').on('click', '.sfile-download', function (e) {
+                e.preventDefault();
+                var data = {
+                    filePath:  $(this).data('url'),
+                    fileName:  $(this).text(),
+                }
+                
+                $.download('/Case/DownloadSharePointFile?fileName='+$(this).text()+'&filePath='+$(this).data('url'), data, "POST"); 
+            });
+
+        });
+        function ReloadData() {
+            populateFilesData(filesTable);
+        }
+        function populateFilesData(tbl) {
+    
+            $.ajax({
+                type: "POST", url: '/Case/GetFiles',data:{"Category": $('#txtCategory').val(),"Description":$('#txtDescription').val()}, dataType: 'json',
+                success: function (data) {
+                    setData(data, tbl);
+                    $('#loading').hide();
+                }
+            });
+
+        }
+
+        function setData(data, tbl) {
+            tbl.fnClearTable();
+            $('#ExistingFileName').val('');
+            if (data.data.length > 0) {
+                tbl.fnAddData(data.data);
+                showRowCount(tbl.fnSettings());
+                var fileNames=''
+                $(data.data).each(function(index,result){
+                    if(fileNames!='')
+                        fileNames+='{,}';
+                    fileNames+= result.CaseFileName
+                })
+                $('#ExistingFileName').val(fileNames);
+            }
+
+
+        }
+
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+        }
+
+        var getRowCount = function (settings) {
+            return settings.fnRecordsDisplay();
+        };
+
+        /* Show Row Count Next to Table Caption */
+        var showRowCount = function (settings) {
+            var rows = getRowCount(settings);
+            $(".row-count[data-parent-table='" + settings.sTableId + "']").html("(" + rows + ")");
+            if (parseInt(rows) > 2) {
+                $("#btn_" + settings.sTableId).show();
+            } else {
+                $("#btn_" + settings.sTableId).hide();
+            }
+        }
+
+
+    </script>
+
+    @Styles.Render("~/FileUpload/css")
+    @Scripts.Render("~/FileUpload/js")
+
+    <script>
+        $fileCount = 0;
+        function BindFileUpload() {
+            $('[tabindex="0"]').attr('tabindex', '-1')
+              var _url=$('#hdnType').val()=='1'?'/Case/AttachFileUpload': '/Case/AttachFileUploadToGoogleDrive';
+            if($('#hdnType').val()=='3'){
+                _url='/Case/AttachFileUploadToSharePoint';
+            }
+            $('#fileupload').fileupload({
+                url:_url,
+                //maxFileSize: 5000000,
+                //maxFileSize: @(System.Web.Configuration.WebConfigurationManager.AppSettings["MaxFileUploadSizeInMB"].ToInt()* 1024 * 1024 ),// 15 mb
+                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|pdf|txt|docx|doc|xls|xlsx|csv|ppt|pptx})$/i,
+                maxFileSize: @ViewBag.AttachFileMaxSize,
+                acceptFileTypes:/(\.|\/)(@ViewBag.AttachFileTypes)$/i,
+
+                });
+        $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+            var inputs = data.context.find(':input');
+            //if (inputs.filter(function () {
+            //    return !this.value && $(this).prop('required');
+            //}).first().focus().length) {
+            //    data.context.find('button').prop('disabled', false);
+            //    return false;
+            //}
+            var flag = true;
+            inputs.each(function () {
+
+                if ($(this).attr('required') == 'required' && $.trim($(this).val()).length == 0) {
+                    data.context.find('button').prop('disabled', false);
+
+                    notifyDanger($(this).attr('errormessage'));
+                    $(this).focus();
+                    flag = false;
+                    return false;
+                }
+            });
+            if (!flag)
+                return false;
+            if (flag) {
+                console.log(inputs)
+                data.formData = inputs.serializeArray();
+            }
+
+
+        });
+        $('#fileupload').bind('fileuploadadd', function (e, data) {
+            $('#btnCancelBottom').removeClass('hidden');
+            $('#btnStartBottom').removeClass('hidden');
+            $('.filesHeader').removeClass('hidden');
+            $('#btnUpload').addClass('hidden');
+            $('.fileupload-progress').addClass('hidden');
+        });
+
+        $('#fileupload').bind('fileuploadstopped', function (e, data) {
+            $('.fileupload-progress').addClass('hidden');
+            $('#btnUpload').removeClass('hidden');
+            $('#btnCancelBottom').addClass('hidden');
+            $('#btnStartBottom').addClass('hidden');
+        })
+        }
+        $(function () {
+
+            $('#myModalFileUpload').on('hidden.bs.modal', function (e) {
+                $('#btnCancelBottom').addClass('hidden');
+                $('#btnStartBottom').addClass('hidden');
+                $('.filesHeader').addClass('hidden');
+                $('tbody.files').html('');
+
+                $fileCount = 0;
+                $('.fileList').removeClass('overflow');
+                $('#btnUpload').addClass('hidden');
+            });
+
+
+            $('#btnStartBottom').on('click', function () {
+                var message=IsDuplicateFileName();
+                if(message.length>0){
+                    confirmBox(message, function (result) {
+
+                        if (result) {
+                            $('.fileupload-progress').removeClass('hidden');
+                            $('#btnStart').click();
+                        }else{
+                            $('#myModalFileUpload').modal('hide');
+                        }
+
+                    });
+                }
+
+                else{
+                    $('.fileupload-progress').removeClass('hidden');
+                    $('#btnStart').click();
+                }
+
+            });
+            $('#btnCancelBottom').on('click', function () {
+                $('#btnCancel').click();
+                $('#btnCancelBottom').addClass('hidden');
+                $('#btnStartBottom').addClass('hidden');
+                $('.filesHeader').addClass('hidden');
+                $('tbody.files').html('');
+                $('.fileList').removeClass('overflow');
+                $('#btnUpload').addClass('hidden');
+                $fileCount = 0;
+            });
+
+            $('#myModalFileUpload').on('show.bs.modal', function () {
+                var _offset = 300;
+                var headerHeight = $(".navbar.navbar-fixed-top:first").height();
+                var modelHeight = $(window).height() - headerHeight - _offset;
+                $('.modal-body', this).css({ height: modelHeight + "px" });
+
+                _offset = 100;
+                var calcHeight = (modelHeight- _offset).toFixed(0);
+
+                $(".fileList", this).css({ height: calcHeight + "px" });
+                $(this).data("calc-height", calcHeight);
+
+            });
+
+            $('#myModalFileUpload').on('shown.bs.modal', function () {
+                var _offset = 80;
+                var headerHeight = $(".navbar.navbar-fixed-top:first").height() + _offset;
+                $('.modal-dialog', this).animate({ marginTop: headerHeight + "px !important;" },300);
+            });
+        });
+
+        function ReduceLengthOfString(str, ln) {
+            if (str.length > ln) {
+                return str.substring(0, ln) + '..';
+            }
+            return str;
+        }
+        function IsDuplicateFileName() {
+            var message='';
+            var fileNames='';
+            var $inputFileName = $('.inputFileName');
+            $inputFileName.each(function(){
+
+
+                if(Contains($('#ExistingFileName').val(),$(this).val())){
+                    if(fileNames!='')
+                        fileNames+=', ';
+                    fileNames+= $(this).val();
+                }
+            })
+            if(fileNames.length>0){
+                if(Contains(fileNames,',')){
+                    message='This case already has attached files with these "'+fileNames+'" exact same files name. Do you want to continue?';
+                }else{
+                    message='This case already has an attached file with this "'+fileNames+'" exact same file name. Do you want to continue?';
+                }
+            }
+
+
+
+            return message;
+
+
+
+
+        }
+    </script>
+
+    <script id="template-upload" type="text/x-tmpl">
+
+        {%
+        $fileCount++;
+        if($fileCount>4){
+        $('.fileList').addClass('overflow');
+        }
+        %}
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-upload fade">
+
+            <td>
+                <input type="hidden" value="{%=file.name  %}" class="inputFileName" />
+
+                <p class="name">{%=file.name   %}</p>
+                @*<strong class="error text-danger"></strong>*@
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.RoleID, Model.RoleList, "", new { @class = "form-control input-sm", style = "width:100%;", tabindex = 1, name = "RoleID[]" })
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.CategoryID, Model.CategoryList, "", new { @class = "form-control input-sm", style = "width:100%;", tabindex = 1, name = "CategoryID[]", required = "true", errormessage = "Category is required", autofocus = "autofocus" })
+            </td>
+            <td>
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.FileDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 1, maxlength = "10", name = "FileDate[]", required = "true", errormessage = "File Date is required" })
+                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </td>
+            <td>
+                <textarea name="description[]" col="14" row="10" tabindex="1" style="width:300px"> </textarea>
+            </td>
+            <td>
+                <strong class="error text-danger"></strong>
+                <p class="size">Processing...</p>
+                <div class="progress progress-striped active hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+            </td>
+            <td class="hidden">
+                {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+                {% } %}
+                {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+                {% } %}
+            </td>
+        </tr>
+        {% } %}
+
+    </script>
+    <!-- The template to display files available for download -->
+    <script id="template-download" type="text/x-tmpl">
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-download fade">
+
+            <td>
+                <p class="name">
+                    {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                    {% } else { %}
+                    <span>{%=ReduceLengthOfString(file.name,15)%}</span>
+                    {% } %}
+                </p>
+
+            </td>
+            <td></td>
+            <td>
+                Done
+            </td>
+
+        </tr>
+        {% } %}
+    </script>
+}
+<div class="modal fade" id="myModalFileUpload"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:75%;">
+        <div class="modal-content" style="width:auto !important;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Upload File</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form id="fileupload" method="POST" enctype="multipart/form-data">
+                        <div class="row fileupload-buttonbar">
+                            <div>
+                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                <span class="btn btn-primary fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Add files...</span>
+                                    <input type="file" name="files[]" multiple>
+                                </span>
+                                <button type="submit" id="btnStart" class="btn btn-success start hidden">
+                                    <i class="glyphicon glyphicon-upload"></i>
+                                    <span>Start upload</span>
+                                </button>
+                                <button type="reset" id="btnCancel" class="btn btn-warning cancel hidden">
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                    <span>Cancel upload</span>
+                                </button>
+
+                            </div>
+                            <!-- The global progress state -->
+                            <div class=" fileupload-progress fade hidden">
+                                <!-- The global progress bar -->
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                </div>
+                                <!-- The extended global progress state -->
+                                <div class="progress-extended">&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="fileList">
+                            <table role="presentation" class="table table-striped table-padding" style="border-bottom:solid 0px #fff !important;">
+                                <thead class="filesHeader hidden">
+                                    <tr>
+                                        <th width="">File</th>
+                                        <th width="">Role</th>
+                                        <th width="">Category</th>
+                                        <th width="">File Date</th>
+                                        <th>Description</th>
+                                        <th width="">Size/Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="files"></tbody>
+                            </table>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer text-align-center">
+                <button type="submit" id="btnStartBottom" tabindex="2" class="btn btn-success start hidden">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" tabindex="-1"  id="btnCancelBottom" class="btn btn-warning cancel hidden">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-primary hidden" id="btnUpload">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" id="ExistingFileName" value="" />

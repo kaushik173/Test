@@ -1,0 +1,87 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.SubpoenaListViewModel
+@{
+    ViewBag.Title = "Subpoena List";
+    var tabIndex = 1;
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 padding-top-5 padding-bottom-5" style="height:40px !important">
+                <div class="col-md-4 bold col-xs-4 col-sm-4 padding-top-5 padding-bottom-5">   Select Hearing To Add To New Subpoena:</div>
+                <div class="col-md-4 col-xs-4 col-sm-4">
+                    @Html.DropDownListFor(model => model.HearingID, new SelectList(Model.HearingList, "EncryptedCodeID", "CodeValue"), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex, style = "width:100%" })
+                </div>
+                <div class="col-md-4 bold text-align-left col-xs-4 col-sm-4">
+                    <a class="btn btn-default btn-sm" id="btnAddNew" data-secure-id="@((int)SecurityToken.AddSubpoena)" tabindex="@(++tabIndex)"><u>A</u>dd </a>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblSubpoena">
+                        <thead>
+                            <tr>
+                                <th>Person</th>
+                                <th width="120">Creation Date</th>
+                                <th width="180">Date Served</th>
+                                <th>Hearing Date</th>
+                                <th>Hearing Time</th>
+                                <th>Department</th>
+                                <th width="65px">Print<input type="checkbox" class="chkPrintAll pull-right" /></th>
+                                <th width="30px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SubpoenaList != null && Model.SubpoenaList.Count > 0)
+                            {
+                                foreach (var item in Model.SubpoenaList)
+                                {
+                                    <tr data-subpoenaid="@item.SubpoenaID" data-agencyid="@item.AgencyID"
+                                        data-hearingid="@item.HearingID" data-subpoenaservedtoroleid="@item.SubpoenaServedToRoleID"
+                                        data-recordstateid="@item.RecordStateID" data-subpoenaserveddate="@item.SubpoenaServedDate">
+                                        <td>@item.SubpoenaServedToPersonName</td>
+                                        <td> @item.CreationDate</td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm date-picker-control fullwidth subpoenaServerdDate" @if (!Model.CanEditSubpoena) { <text> disabled="disabled" </text>    } value="@item.SubpoenaServedDate" type="text" style="width:100%" maxlength="10" tabindex="@(++tabIndex)" />
+                                                @if (Model.CanEditSubpoena)
+                                                {
+                                                    <span class="input-group-addon datepicker-control-trigger">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>@item.HearingDate</td>
+                                        <td>@item.HearingTime</td>
+                                        <td>@item.HearingDepartment</td>
+                                        <td class="text-align-right">
+                                            <input type="checkbox" class="chkPrint" data-id="@item.SubpoenaID" />
+                                        </td>
+                                        <td>
+                                            <a style="cursor:pointer;" class="btn btn-danger btn-xs delete" data-secure-id="@((int)SecurityToken.DeleteSubpoena)" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.SubpoenaID.ToString())"><i class="fa fa-trash-o"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom  default" data-secure-id="@((int)SecurityToken.EditSubpoena)" tabindex="@(++tabIndex)"><u>S</u>ave </button>
+        <button class="btn btn-default btn-sm " id="btnPrint" tabindex="@(++tabIndex)">Print</button>
+        <button class="btn btn-default btn-sm " id="btnPrintBlank" tabindex="@(++tabIndex)">Print Blank Subpoena</button>
+    </div>
+}@section Scripts {
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/SubpoenaList.js?v=" + Guid.NewGuid())"></script>
+
+
+
+
+}

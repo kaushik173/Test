@@ -1,0 +1,332 @@
+﻿@using System.Data
+@model LALoDep.Models.CaseOpening.ActionRequestEditModel
+@{
+    ViewBag.Title = "Edit AR ";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AREdit", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+            var roleList = Model.ClientRoleList.ToList();
+            @Html.Hidden("RoleCount", roleList.Count)
+            @Html.Hidden("HearingReportFilingDueID", Model.HearingReportFilingDueID)
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Edit Action Request  
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    <div class="row">
+                        <div class="form-group  col-md-4 col-sm-4  col-xs-4">
+
+                            @Html.LabelFor(m => m.RequestDate, "Request Date", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.RequestDate</span>
+
+
+
+                        </div>   <div class="form-group col-md-2 col-sm-4  col-xs-3">
+
+                            @Html.LabelFor(m => m.RequestTypeID, "Request Type", new { @class = "control-label " })
+                            <br />
+                            <span>@Model.RequestType</span>
+
+                        </div>
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.HearingID, "Hearing", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.Hearing</span>
+
+
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.RequestByID, "Request By", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.RequestBy</span>
+
+
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.RequestForID, "Request For (current month_previous month)", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.RequestForID, Model.RequestForList, "", new { @class = "form-control input-sm newroleinput", tabindex = 5, autofocus = "autofocus", style = "width:100%" })
+
+
+                        </div>
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-3">
+
+                            @Html.LabelFor(m => m.DueDate, "Due Date", new { @class = "control-label" })
+                            @if (Model.Completed)
+                            {
+                                <br/>
+                                @Model.DueDate    
+                               
+                                @Html.HiddenFor(model => model.DueDate)
+                                
+                            
+                            }
+                            else
+                            {
+                                 <div class="input-group">
+                               
+                                @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control input-sm date-picker-control", tabindex = 6, style = "width: 100% !important;", maxlength = "10" ,data_secure_disabled_id= ((int)LALoDep.Custom.Security.SecurityToken.EditActionRequest)})
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+                            }
+
+                        </div><div class="form-group  col-md-2 col-sm-3  col-xs-3  @(!Model.Completed?"hidden":"")">
+
+                            @Html.LabelFor(m => m.DueDate, "Completed Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.CompletedDate, new { @class = "form-control input-sm date-picker-control", tabindex = 6, style = "width: 100% !important;", maxlength = "10" })
+                                <span class="input-group-addon datepicker-control-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4  @(Model.Completed?"hidden":"")">
+
+                            @Html.LabelFor(m => m.Completed, "Completed", new { @class = "control-label" })
+                            <br />
+
+
+
+                            @Html.CheckBoxFor(o => o.Completed)
+
+
+
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+
+                            @Html.LabelFor(m => m.LegalResearchTypeID, "Legal Research Type", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.LegalResearchType</span>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            if (roleList.Count > 0)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Clients
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            <tr>
+                                <th>
+                                    Clients
+                                </th>
+                                <th>
+                                    Request
+                                </th>
+                                <th>
+                                    Completed
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                            <tbody>
+
+                                @for (var i = 0; i < roleList.Count; i++)
+                                {
+
+                                    <tr>
+                                        <td class="highLightBlue">
+                                            @roleList[i].ClientDisplay
+                                        </td>
+                                        <td>
+                                            @roleList[i].ContactType
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input name="ContactDate@(i)" id="ContactDate@(i)" value="@roleList[i].ContactDate" type="text" class="form-control input-sm date-picker-control" tabindex="6" style="width: 100% !important;" maxlength="10" />
+
+                                                <span class="input-group-addon datepicker-control-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                            <input name="ContactID@(i)" id="ContactID@(i)" value="@roleList[i].ContactID" type="hidden" class="form-control input-sm date-picker-control" tabindex="6" style="width: 100% !important;" maxlength="10" />
+                                            <input name ="ContactTypeID@(i)" id="ContactTypeID@(i)" value="@roleList[i].ContactTypeID" type="hidden" class="form-control input-sm date-picker-control" tabindex="6" style="width: 100% !important;" maxlength="10" />
+                                            <input name="RFDRoleID@(i)" id="RFDRoleID@(i)" value="@roleList[i].RFDRoleID" type="hidden" class="form-control input-sm date-picker-control" tabindex="6" style="width: 100% !important;" maxlength="10" />
+
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                        </table>
+
+
+
+
+                        <div class="clearfix"></div>
+
+
+
+                    </div>
+                </div>
+            }
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Request Note
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.RequestNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+                </div>
+
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Investigator Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.InvestigatorEvaluationNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+                    @Html.HiddenFor(model => model.InvestigatorEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Caretaker Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.CaretakerEvaluationNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+                    @Html.HiddenFor(model => model.CaretakerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Social Worker Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.SocialWorkerEvaluationNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+                    @Html.HiddenFor(model => model.SocialWorkerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Therapist Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.TherapistEvaluationNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+                    @Html.HiddenFor(model => model.TherapistEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Probation Officer's Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    @Html.TextAreaFor(model => model.ProbationOfficerEvaluationNote, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+                    @Html.HiddenFor(model => model.ProbationOfficerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+
+
+
+
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="9">Save/Continue</button>
+        <button id="btnSaveExit" type="submit" class="btn btn-default  " tabindex="10">Save/Exit AR</button>
+
+
+        <button id="btnSaveAndPrint" type="submit" class="btn btn-default  " tabindex="11">Save/Print</button>
+       
+
+    </div>
+
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/ActionRequestEdit.js?v=" + Guid.NewGuid())"></script>
+
+}

@@ -1,0 +1,52 @@
+﻿@using LALoDep.Custom
+@using System.Web.Mvc
+@{
+    var userManager = DependencyResolver.Current.GetService<UserManager>();
+}
+
+    <a href="#" data-toggle="dropdown" class="login-area dropdown-toggle">
+        <i class="fa custom-caret"></i>
+        <section>
+            <h2>
+                <span class="profile">
+                    <span>@userManager.UserExtended.FullName</span>
+                </span>
+            </h2>
+        </section>
+
+    </a>
+    <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+        <li class="username"><a>@userManager.UserExtended.FullName</a></li>
+        @*<li class="theme-area">
+            <ul class="colorpicker" id="skin-changer">
+                <li><a class="colorpick-btn" href="#" style="background-color:#5DB2FF;" rel="/assets/css/skins/blue.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#2dc3e8;" rel="/assets/css/skins/azure.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#03B3B2;" rel="/assets/css/skins/teal.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#53a93f;" rel="/assets/css/skins/green.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#FF8F32;" rel="/assets/css/skins/orange.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#cc324b;" rel="/assets/css/skins/pink.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#AC193D;" rel="/assets/css/skins/darkred.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#8C0095;" rel="/assets/css/skins/purple.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#0072C6;" rel="/assets/css/skins/darkblue.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#585858;" rel="/assets/css/skins/gray.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#474544;" rel="/assets/css/skins/black.min.css"></a></li>
+                <li><a class="colorpick-btn" href="#" style="background-color:#001940;" rel="/assets/css/skins/deepblue.min.css"></a></li>
+            </ul>
+        </li>*@
+        <!--/Theme Selector Area-->
+        <li class="dropdown-footer">
+            <a role="menuitem" href="#" tabindex="-1" onclick="Logout()">  Logout</a>
+        </li>
+    </ul>
+
+
+<script>
+    function Logout() {
+        localStorage.setItem("zoom", 100);
+        localStorage.setItem("count", 1);
+
+        simpleStorage.flush();
+        window.location.href = '@Url.Action("LogOff", "Account")';
+    }
+    
+</script>

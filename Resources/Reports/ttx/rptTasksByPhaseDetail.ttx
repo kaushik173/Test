@@ -1,0 +1,9 @@
+GroupValue	String	100	CLC
+Phase	String	100	Beginning through initial hearing
+Task	String	100	Document Review
+PhaseTotalCases	Number		244
+PhaseTotalHours	Number		244
+Total Cases	Number		100
+Total Hours	Number		1000
+Average Hours	Number	10
+% of Time	Number		0.12343

@@ -1,0 +1,187 @@
+﻿@using LALoDep.Core.Custom.Utility
+@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.QHEHearingViewModel
+@{
+    ViewBag.Title = "QHE Next Hearings";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QHEAddHEaring-form", @class = "form-inline" }))
+{
+    var time = DateTime.Parse(Model.HearingTime);
+    var hours = int.Parse(time.ToString("hh")).ToString();
+    var minutes = time.ToString("mm");
+    var am = time.ToString("tt").Replace(".", "");
+    @Html.HiddenFor(m=>m.HearingID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">QHE: Add Next Hearings To Case</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div id="allNewHearings">
+                        <div class="hearing" id="hearing-0">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.HearingTypeID, "Hearing Type", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", style = "width:100%" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.HearingDate, "Date", new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker WeekendValidation", style = "width:100%;", maxlength = "10", data_label = "Hearing Date" })
+                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="width: 200px;">
+                                    @Html.LabelFor(m => m.HearingTime, "Time", new { @class = "control-label" })
+                                    <br />
+                                    <div>
+                                        @Html.DropDownList("TimeHours", Utility.GetHoursList(hours), "", new { style = "width:54px;padding:3px;", data_oldvalue = hours, tabindex = 2 })  :
+                                        @Html.DropDownList("Minutes", Utility.GetMinutesList(minutes), "", new { style = "width:54px;padding:3px;", data_oldvalue = minutes, tabindex = 2 })
+                                        @Html.DropDownList("TimeAmPm", Utility.GetTimeAmPm(am), "", new { style = "width:54px;padding:3px;", data_oldvalue = am, tabindex = 2 })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.HearingOfficerID, "Officer", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.HearingOfficerID, Model.HearingOfficerList, "", new { @class = "form-control input-sm", style = "width:100%" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.DepartmentID, "Dept", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm", style = "width:100%" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.AppearingAttorneyID, "Appearing Attorney", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.AppearingAttorneyID, Model.AppearingAttorneyList, "", new { @class = "form-control input-sm", style = "width:100%" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 text-align-right padding-top-10">
+                            <button id="btnAddNewHearing" type="button" class="btn btn-default btn-sm" title="Add more"><i class="fa fa-plus"></i></button>
+                            <button id="btnRemoveHearing" type="button" class="btn btn-danger btn-sm" title="Remove last" disabled="disabled"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Petitions in Case</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                            <thead>
+                                <tr>
+                                    <th width="30"> <input type="checkbox" id="chkPetitionAll" /> </th>
+
+                                    <th>File Date</th>
+                                    <th>Close Date</th>
+                                    <th>Case #</th>
+                                    <th>Type </th>
+                                    <th>Child</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PetitionList)
+                                {
+                                    <tr @if (item.Client == 1) { <text> class="highLightBlue " </text>  }>
+                                        <td>
+                                            @if (item.PetitionCloseDate.HasValue)
+                                            {
+                                                <input type="checkbox" id="PetitionID" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-id="@item.PetitionID" value="@item.PetitionID" class="chkPetition" disabled="disabled" />
+
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="PetitionID" data-petitiontypecodeid="@item.PetitionTypeCodeID" data-id="@item.PetitionID" value="@item.PetitionID" class="chkPetition"   @(Model.PetitionList.Where(o => !o.PetitionCloseDate.HasValue).Count() == 1 ? "checked='checked'" : "") />
+
+                                            }
+                                        </td>
+                                        <td>@item.PetitionFileDate.ToDefaultFormat()</td>
+                                        <td>@item.CloseDate</td>
+                                        <td>@item.PetitionDocketNumber</td>
+                                        <td>@item.PetitionTypeCodeValue</td>
+                                        <td>@item.FirstName @item.LastName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.HearingList != null && Model.HearingList.Any())
+    {
+        <div class="row">
+            <div class="col-md-12 " style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Hearings in Case</span>
+                        <div class="widget-buttons">&nbsp;</div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Hearing Type</th>
+                                        <th>Hearing Officer</th>
+                                        <th>Appearing Attorney</th>
+                                        <th>Created By</th>
+                                        <th>Last Modified By</th>
+                                        <th>Hours Worked</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.HearingList)
+                                    {
+                                        <tr>
+                                            <td>@item.HearingDateTime.ToDefaultFormat("g")</td>
+                                            <td>@item.HearingTypeCodeValue </td>
+                                            <td>@item.HearingOfficerFirstName @item.HearingOfficerLastName</td>
+                                            <td>@item.AppearingAttorneyFirstName @item.AppearingAttorneyLastName</td>
+                                            <td>@item.CreatedBy</td>
+                                            <td>@item.LastModifiedBy</td>
+                                            <td>@item.AppearingAttorneyHours</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@Html.Partial("_steps", new { id = Model.HearingID.ToEncrypt() })
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSaveAndContinue" type="submit" data-secure-id="@((int)SecurityToken.AddHearing)" class="btn btn-primary v-bottom default">Save/Continue</button>
+        <button id="btnSaveAndExit" type="submit" data-secure-id="@((int)SecurityToken.AddHearing)" class="btn btn-default v-bottom ">Save/Exit QHE </button>
+        <button id="btnSaveAndNextQHECase" type="submit" data-secure-id="@((int)SecurityToken.AddHearing)" class="btn btn-default v-bottom ">Save/Next QHE Case</button>
+    </div>
+
+}
+@section scripts{
+    <script>
+        var $encryptedHearingId = '@Model.HearingID.ToEncrypt()';
+        var calnderPersonId = '@TempData.Peek("PersonID")';
+        var entryPageId = '@TempData.Peek("SourcePage")';        
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/QHE/NextHearing.js?v=" + Guid.NewGuid())"></script>
+}

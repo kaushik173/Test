@@ -1,0 +1,195 @@
+﻿@model LALoDep.Models.Inquiry.MyReportIndexViewModel
+@{
+    ViewData["Title"] = "My Reports";
+    var tabIndex = 1;
+}
+<script>
+    $SaveID = ';';
+    $oldSaveID = ';';
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "reports-form", ReturnUrl = Model.ReturnUrl }))
+{
+    <div id="loading" style="display: none; position:fixed !important;">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <div class="row" id="divSearchResult">
+        <div class="col-xs-12 col-md-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        My Reports
+                    </span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <table class="table table-hover table-bordered table-condensed" id="myReportsList">
+                        <thead>
+                            @*class="bordered-darkorange"*@
+                            <tr>
+                                <th style="width:80px;padding-left:5px;">
+                                    <input type="checkbox" id="checkAll" onclick="CheckAll()" tabindex="@(++tabIndex)" /> Active
+                                </th>
+                                <th style="width:350px">Report</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Reports.Count(); i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.CheckBox("Reports[" + i + "].Selected", Model.Reports[i].Selected, new { @class = "checkBoxClass", value = Model.Reports[i].ReportID, @onclick = "SelectionForSave(" + i + ")", tabindex = ++tabIndex })
+                                    </td>
+                                    <td>
+                                        @Model.Reports[i].ReportValue
+                                    </td>
+                                    <td>
+                                        @Model.Reports[i].ReportDescription
+                                    </td>
+                                </tr>
+                                <script>
+                                    if ('@Model.Reports[i].Selected' == "True") {
+                                        $SaveID += '@Model.Reports[i].ReportID' + ';';
+                                        $oldSaveID += '@Model.Reports[i].ReportID' + ';';
+                                    }
+                                </script>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="save" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Process</button>
+        <button id="cancel" type="submit" class="btn btn-default v-bottom" tabindex="@(++tabIndex)"><u>C</u>ancel</button>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+
+        var origin_wrapper_heightL = 0, origin_content_heightL = 0;
+
+        $(window).on("keydown", handleHotkey);
+
+        function handleHotkey(e) {
+            if (!e.ctrlKey) return;
+            switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                case 'c':
+                    $('#cancel').trigger('click');
+                    e.preventDefault();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function CheckAll() {
+            if ($('#checkAll').prop("checked") == true) {
+                $(".checkBoxClass").prop("checked", true);
+                $SaveID = ';';
+                $(".checkBoxClass").each(function () {
+                    $SaveID = $SaveID + $(this).val() + ";";
+                });
+
+            } else {
+                $('.checkBoxClass').prop("checked", false);
+                $SaveID = ';';
+            }
+        }
+
+        function SelectionForSave(checkboxID) {
+            if ($('#Reports_' + checkboxID + '__Selected').prop("checked") == true) {
+                $check = $('#Reports_' + checkboxID + '__Selected').val() + ";";
+                $SaveID = $SaveID + $check;
+                $counterChecked = 0;
+                $(".checkBoxClass").each(function () {
+                    if ($(this).prop("checked") == true) {
+                        $counterChecked = parseInt($counterChecked) + 1;
+                    }
+                });
+                if ($counterChecked == $(".checkBoxClass").length) {
+                    $('#checkAll').prop("checked", true);
+                }
+            }
+            else {
+                $uncheck = ";" + $('#Reports_' + checkboxID + '__Selected').val() + ";";
+                $SaveID = $SaveID.replace($uncheck, ";");
+                $('#checkAll').prop("checked", false);
+            }
+        }
+
+        $('#save').on('click', function (e) {
+            e.preventDefault();
+            var data = getData();
+            $.ajax({
+                type: "POST",
+                url: '/MyReport/MyReportSave',
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.URL != '') {
+                        window.location.href = data.URL;
+                    }
+                }
+            });
+        });
+
+        function getData(pageID) {
+            var fData = "saveReportIds=" + encodeURIComponent($SaveID);
+            fData += "&oldSavedReportIds=" + encodeURIComponent($oldSaveID);
+            fData += "&ReturnUrl=" + encodeURIComponent('@Model.ReturnUrl');
+            return fData;
+        }
+
+        $('#cancel').on('click', function (e) {
+            e.preventDefault();
+            window.location.href = '@Model.ReturnUrl';
+        });
+
+        $(document).ready(function () {
+
+            var oTable = $('#myReportsList').dataTable({
+                "searching": false,
+                "bSort": false,
+                "scrollY": "auto",
+                "scrollCollapse": true,
+                "paging": false,
+            });
+
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                $('#noteList').css('width', '100%');
+                fitCalculatedHeightForSearchDataTable();
+            });
+
+            function fitCalculatedHeightForSearchDataTable() {
+                var calc_height = 0;
+                if (oTable != null) {
+                    calc_height = $(window).height();
+                    var _offset = 25;
+                    $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                        $(this).siblings().each(function () {
+                            if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                                if ($(this).attr("id") == 'loading')
+                                    return;
+                                calc_height = calc_height - $(this).outerHeight(true);
+                            }
+                        });
+                        _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                    });
+                    calc_height = calc_height - _offset;
+                    $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                    oTable.fnAdjustColumnSizing();
+                }
+                return calc_height;
+            }
+        });
+    </script>
+}

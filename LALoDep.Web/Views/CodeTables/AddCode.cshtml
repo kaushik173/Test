@@ -1,0 +1,256 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Administration.AddEditCodeViewModel
+@{
+    ViewBag.Title = "Add Code";
+    int tabIndex = 0;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AddCode-form", @class = "form-inline center-block" }))
+{
+    @Html.HiddenFor(m => m.CodeTypeID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Add Code</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.CodeValue, "Value", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CodeValue, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex, style = "width:100%", maxlength = "100" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.CodeShortValue, "Short Value", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CodeShortValue, new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%", maxlength = "25" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.CodeTypeID == 7)
+        { <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Add Code</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div>
+                            <input type="hidden" name="AddressID" value="@Model.AddressID" />
+
+                            <div class="form-group col-md-3 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.Street, "Street", new { @class = "control-label" })
+
+                                @Html.TextBoxFor(m => m.Street, new { @class = "form-control input-sm street_number", @autofocus = "autofocus", tabindex = ++tabIndex, style = "width:100%;" })
+                                @Html.ValidationMessageFor(m => m.Street)
+
+                            </div>
+                            <div class="form-group col-md-2 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.City, "City", new { @class = "control-label" })
+
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control input-sm locality", tabindex = ++tabIndex, style = "width:100%;" })
+                                @Html.ValidationMessageFor(m => m.City)
+
+                            </div>
+                            <div class="form-group col-md-2 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.StateCodeID, "State", new { @class = "control-label" })
+                                <select class="form-control input-sm" id="StateCodeID" tabindex=@( ++tabIndex) , style="width:98%;color:red" autofocus="autofocus">
+                                    <option value=""></option>
+                                    @foreach (var item in Model.StateCode)
+                                    {
+                                        <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.StateCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                    }
+                                </select>
+                                @Html.HiddenFor(m => m.StateCodeID, new { id = "hdn_StateCodeID" })
+
+                                @*@Html.DropDownListFor(m => m.StateCodeID, Model.StateCode, new { @class = "form-control input-sm", tabindex = 1, style = "width:98%" })*@
+
+
+                                @*@Html.ValidationMessageFor(m => m.StateCodeID)*@
+
+                            </div>
+
+
+                            <div class="form-group col-md-1 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.ZipCode, "Zip Code", new { @class = "control-label" })
+
+                                @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control input-sm postal_code", tabindex = ++tabIndex, style = "width:80px;" })
+                                @Html.ValidationMessageFor(m => m.ZipCode)
+
+                            </div>
+                            <div class="form-group col-md-2 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.CountryCodeID, "Country", new { @class = "control-label" })
+                                <select class="form-control input-sm" id="CountryCodeID" tabindex=@( ++tabIndex), style="width:98%">
+                                    <option value=""></option>
+                                    @foreach (var item in Model.CountryCode)
+                                    {
+                                        <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.CountryCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                    }
+                                </select>
+                                @Html.HiddenFor(m => m.CountryCodeID, new { id = "hdn_CountryCodeID" })
+
+                                @*@Html.DropDownListFor(m => m.CountryCodeID, Model.CountryCode, new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })*@
+
+
+                                @*@Html.ValidationMessageFor(m => m.CountryCodeID)*@
+
+                            </div>
+
+                            <div class="form-group col-md-2 col-sm-4 ">
+
+                                @Html.LabelFor(m => m.HomePhone, "Phone", new { @class = "control-label" })
+
+                                @Html.TextBoxFor(m => m.HomePhone, new { @class = "form-control input-sm phone_format", tabindex = ++tabIndex })
+                                @Html.ValidationMessageFor(m => m.HomePhone)
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>}
+
+
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Agencies</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="row">
+                            <div class="col-md-12" style="background:#c6c5c5">
+                                <label>
+                                    @Html.CheckBox("AllAgencies", new { tabindex = ++tabIndex, })
+                                    <span>All Agencies </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row" id="code-agencies">
+                            @foreach (var agency in Model.CodeAgencies)
+                            {
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <label>
+                                        @if (agency.InAgency)
+                                        {
+                                            @Html.CheckBox("Agency", agency.Selected, new { @class = "code-in-agency", tabindex = ++tabIndex, data_agencyid = agency.AgencyID })
+                                        }
+                                        else
+                                        {
+                                            @Html.CheckBox("Agency", agency.Selected, new { @class = "code-not-in-agency", tabindex = ++tabIndex, data_agencyid = agency.AgencyID, disabled = "disabled" })
+                                        }
+                                        <span>@agency.AgencyName</span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" tabindex="@(++tabIndex)" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnCancel" type="button" tabindex="@(++tabIndex)" class="btn btn-default v-bottom">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function getData() {
+            var countryID = parseInt($("#CountryCodeID option:selected").val());
+            var stateID = parseInt($("#StateCodeID option:selected").val());
+
+            var data = {
+                CodeTypeID: $("#CodeTypeID").val(),
+                CodeValue: $("#CodeValue").val(),
+                CodeShortValue: $("#CodeShortValue").val(),
+                CountryCodeID: $('#CountryCodeID').val(),
+                StateCodeID: $('#StateCodeID').val(),
+                Street: $('#Street').val(),
+                City: $('#City').val(),
+                ZipCode: $('#ZipCode').val(),
+                HomePhone: $('#HomePhone').val(),
+                CodeAgencies: []
+            };
+
+            $(".code-in-agency:checked").each(function () {
+                var agency = {
+                    AgencyID: $(this).attr("data-agencyid")
+                }
+                data.CodeAgencies.push(agency);
+            });
+
+            return data;
+        }
+
+        $("#AllAgencies").on("click", function () {
+            var $chkAll = $(this);
+            $(".code-in-agency").each(function () {
+                $(this).prop("checked", $chkAll.is(":checked"));
+            });
+        });
+
+        $("#code-agencies").on("click", ".code-in-agency", function () {
+            $("#AllAgencies").prop("checked", $(".code-in-agency").length == $(".code-in-agency:checked").length);
+        });
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action(MVC.CodeTables.Values(Model.CodeTypeID.ToEncrypt()))';
+        }); $("#btnSave").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($("#CodeValue").val() == "") {
+                $("#CodeValue").focus();
+                notifyDanger("Value is Required field.");
+                return false;
+            }
+            if ($("#CodeShortValue").val() == "") {
+                $("#CodeShortValue").focus();
+                notifyDanger("Short value is Required field.");
+                return false;
+            }
+            if ($("#CodeTypeID").val() == '7') {
+                if ($("#Street").val() == "") {
+                    $("#Street").focus();
+                    notifyDanger("Street is Required.");
+                    return false;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").focus();
+                    notifyDanger("City is Required.");
+                    return false;
+                }
+                if ($("#StateCodeID").val() == "") {
+                    $("#StateCodeID").focus();
+                    notifyDanger("State is Required.");
+                    return false;
+                }
+
+            }
+            var data = getData();
+            console.log(data);
+            $.ajax({
+                type: "POST", url: "@Url.Action(MVC.CodeTables.AddCode())", data: data,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        RequestSubmitted();
+                        window.location.href = '@Url.Action(MVC.CodeTables.Values(Model.CodeTypeID.ToEncrypt()))';
+                    }
+                    else {
+                        notifyDanger('There is something wrong while processing request.');
+                    }
+                }
+            });
+        });
+
+    </script>
+}

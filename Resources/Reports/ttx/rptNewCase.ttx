@@ -1,0 +1,9 @@
+Attorney	String	100	Attorney
+Department	String	50	Department
+NewCases	Number		20
+NewCasesPanel	Number		20
+ClosedCases	Number		30
+OpenCases	Number		24
+AgencyName	String	200	Public Defender
+TransferIn	Number		10
+TransferOut	Number		12

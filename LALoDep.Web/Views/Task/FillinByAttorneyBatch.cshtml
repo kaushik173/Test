@@ -1,0 +1,378 @@
+﻿@model LALoDep.Models.Task.FillinByAttorneyBatchViewModel
+@{
+    ViewBag.Title = "Fill-in By Attorney Batch";    
+}
+<style>
+    input[type=checkbox].checkbox-slider {
+        width: 55px !important;
+        height: 25px;
+        left: auto;
+        opacity: 0;
+        position: absolute;
+    }
+
+        input[type=checkbox].checkbox-slider ~ .text {
+            margin: 5px 4px;
+            min-height: 20px;
+        }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "data-form", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Search</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.Agencies, "", new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group margin-bottom-5">
+                        <label for="reservation" class="control-label">Start Date - End Date</label>
+
+                        <input tabindex="2" type="text" id="reservation" value="@Model.StartDate - @Model.EndDate" class="form-control daterangeedit input-sm" style="width: 154px;" />
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AssignedAttorneyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AssignedAttorneyID, Model.AssignedAttorneyList, "", new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FillinCoverYesNo, new { @class = "control-label" })<br />
+                        <label>
+                            @Html.CheckBoxFor(m=> m.FillinCoverYesNo, new { id = "chkFillinCoverYesNo", @class="checkbox-slider yesno"})
+                            @*<input id="chkFillinCoverYesNo" name="FillinCoverYesNo" class="checkbox-slider yesno" type="checkbox" checked="checked">*@
+                            <span class="text"></span>
+                        </label>
+                        @*<input type="radio" name="rbtnFillinCoverYesNo" class="FillinCoverYesNo" id="rbtnFillinCoverYes" checked="checked" /> <label for="rbtnFillinCoverYes" style="top:-3px;position:relative;">Yes</label>
+                            <input type="radio" name="rbtnFillinCoverYesNo" class="FillinCoverYesNo" id="rbtnFillinCoverNo" /> <label for="rbtnFillinCoverNo" style="top:-3px;position:relative;">No</label>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Add Fill-In Attorney</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddFillInAttorneyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AddFillInAttorneyID, Model.AssignedAttorneyList, "", new { @class = "form-control input-sm", style = "width:200px", tabindex = 5 })
+                    </div>
+                    <div class="form-group  ">
+                        <label for="reservation" class="control-label">Start Date</label>
+                        <input tabindex="1" type="text" id="StartDate" value="@Model.StartDate" class="form-control  input-sm" disabled="disabled" />
+                    </div>
+                    <div class="form-group  ">
+                        <label for="reservation" class="control-label">End Date</label>
+                        <input tabindex="1" type="text" id="EndDate" value="@Model.EndDate" class="form-control  input-sm" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddAttorneyID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AddAttorneyID, Model.AssignedAttorneyList, "", new { @class = "form-control input-sm", tabindex = 2, disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddDepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AddDepartmentID, Model.DepartmentList, "", new { @class = "form-control input-sm", tabindex = 2, disabled = "disabled" })
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-inline center-block" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Hearings</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12   hideCheckbox" id="divData">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="tblData">
+                            <thead>
+                                <tr>
+                                    <th width="30">
+                                        <input type="checkbox" id="chkAll" />
+                                    </th>
+                                    <th>
+                                        Hearing Date
+                                    </th>
+                                    <th>
+                                        Hearing Type
+                                    </th>
+                                    <th>
+                                        Dept
+                                    </th>
+                                    <th>
+                                        Root Case#
+                                    </th>
+                                    <th>
+                                        Case Name
+                                    </th>
+                                    <th>
+                                        Assigned Attorney
+                                    </th>
+                                    <th>
+                                        Fill-in Attorney
+                                    </th>
+
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+}
+<style>
+    .hideCheckbox input {
+        display: none;
+    }
+</style>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="6">Search</button>
+        <button id="btnAdd" type="button" class="btn btn-default v-bottom" tabindex="7">
+            Add Fill-in Attorney
+        </button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        var date = new Date();
+        date.setDate(date.getDate());
+
+
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+            hideAllUnAuthorizedInputElements(secureIds);
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                calc_height = calc_height < 250 ? 250 : calc_height;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+
+        var oTable = $('#tblData').dataTable({
+            "searching": false,
+            "bSort": false,
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false, 
+            "columns": [
+                {
+                    "data": "RootCaseNbr","mData": null,
+                    "mRender": function (data, type, full) {
+                        return '<input type="checkbox" class="chkSelect" data-id="' + full.HearingID + '|' + full.HearingDate + '|' + full.CaseID + '|' + full.AgencyID + '"/> ';
+
+                    }
+                },
+                { "data": "HearingDate" },
+                { "data": "HearingType" },
+                { "data": "HearingDept" },
+                {
+                    "data": "RootCaseNbr", "mData": null,
+                    "mRender": function (data, type, full) {
+                        return '<a href="/Case/Main/' + full.EncryptedCaseID + '" class="lnkedit" >' + full.RootCaseNbr + '</a>';
+
+                    }
+                },
+                { "data": "CaseName" },
+                { "data": "AssignedAttorney" },
+                { "data": "FillinAttorney" },
+
+            ],
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        }).on('draw.dt', onTableDraw);
+
+        function getData() {
+            var checkedVaues = '';
+            //if ($('#rbtnFillinCoverNo').is(':checked')) {
+            if (!$("#chkFillinCoverYesNo").is(":checked")) {
+                $('.chkSelect:checked').each(function () {
+                    if (checkedVaues != '')
+                        checkedVaues += ',';
+
+                    checkedVaues += $(this).attr('data-id');
+                })
+            }
+            var data = $('#data-form').serialize() + '&StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val() + '&FillinCoverCheckedData=' + checkedVaues;
+            $('#AddAttorneyID').val($('#AssignedAttorneyID').val());
+            $('#AddDepartmentID').val($('#DepartmentID').val());
+            return data;
+        }
+
+        function loadData() {
+
+            if ($('#AgencyID').val() == '') {
+                Notify('Agency is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#AgencyID').focus();
+                return false;
+            }
+            if ($('#reservation').val() == '') {
+                Notify('Date range is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#reservation').focus();
+                return false;
+            }
+
+            if ($('#AssignedAttorneyID').val() == '' && $('#DepartmentID').val() == '') {
+                Notify('Assiged Attorney or Dept is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#AssignedAttorneyID').focus();
+                return false;
+            }
+
+
+            var data = getData();
+            $.ajax({
+                type: "POST", url: '/Task/FillinByAttorneyBatch', data: data, success: function (result) {
+                    setData(result);
+                }
+            });
+        }
+        function setData(data) {
+            oTable.fnClearTable();
+            if (data.data.length > 0) {
+                oTable.fnAddData(data.data);
+                fitCalculatedHeightForSearchDataTable();
+            }
+        }
+
+        //$('.FillinCoverYesNo').click(function () {
+        //    if ($('#rbtnFillinCoverNo').is(':checked')) {
+        //        $('#divData').removeClass('hideCheckbox');
+        //    } else {
+        //        $('#divData').addClass('hideCheckbox');
+        //    }
+
+        //});
+
+        $(window).bind('resize', function () {
+            $('#tblData').css('width', '100%');
+            fitCalculatedHeightForSearchDataTable();
+        });
+
+        $("#chkFillinCoverYesNo").on("click", function (e) {
+            if ($(this).is(":checked")) {
+                $('#divData').addClass('hideCheckbox');
+            }
+            else {
+                $('#divData').removeClass('hideCheckbox');
+            }
+        });
+
+
+        $('#chkAll').change(function () {
+            $('.chkSelect').prop('checked', $(this).is(':checked'));
+
+        })
+
+        $('.daterangeedit').daterangepicker({ autoClose: true, minDate: date }, function (start, end) {
+            $('#StartDate').val(start.format('MM/DD/YYYY'));
+            $('#EndDate').val(end.format('MM/DD/YYYY'));
+
+        });
+
+        $("#btnSearch").on("click", function () {
+            loadData();
+        });
+
+        $("#btnAdd").on("click", function () {
+            var data = getData();
+
+            if ($('#AgencyID').val() == '') {
+                Notify('Agency is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#AgencyID').focus();
+                return false;
+            }
+            if ($('#reservation').val() == '') {
+                Notify('Date range is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#reservation').focus();
+                return false;
+            }
+
+            if ($('#AssignedAttorneyID').val() == '' && $('#DepartmentID').val() == '') {
+                Notify('Assiged Attorney or Dept is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#AssignedAttorneyID').focus();
+                return false;
+            }
+
+            if ($('#AddFillInAttorneyID').val() == '') {
+                Notify('Add Fill-In Attorney is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#AddFillInAttorneyID').focus();
+                return false;
+            }
+            //if ($('#rbtnFillinCoverNo').is(':checked')) {
+            if (!$("#chkFillinCoverYesNo").is(":checked")) {
+                if ($('.chkSelect:checked').length == 0) {
+                    Notify('At least one Hearing must be checked to Add Fill-In Attorney.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    $('.chkSelect:first').focus();
+                    return false;
+                }
+            }
+
+            $.ajax({
+                type: "POST", url: '/Task/AddFillinByAttorneyBatch', data: data,
+                success: function (result) {
+                    if (result.Status == "Done") {
+                        Notify('Data saved Successfully!.', 'bottom-right', '3000', 'success', 'fa-smile-o', true);
+                        loadData();
+                    }
+                }
+            });
+        });
+
+    </script>
+}

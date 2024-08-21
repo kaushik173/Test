@@ -1,0 +1,6 @@
+[User]	String	100	Lastname, Firstname
+[Agency]	String	100	Agency Name
+[County]	String	100	County Name
+[Last Login]	DateTime		06/01/2014 12:55 PM
+[Last Ptn Add/Close]	DateTime		DateTime		05/31/2014 10:24 AM
+[Staff Position]	String	100	Attorney (Agency Name)

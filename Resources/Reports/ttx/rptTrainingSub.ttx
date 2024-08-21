@@ -1,0 +1,13 @@
+TrainingID	Number		
+AgencyID	Number		
+PersonID	Number		
+TrainingCourseTitle	String	300	
+TrainingProvider	String	100	
+TrainingSubjectMatter	String	100	
+TrainingCreditTypeID	Number		
+TrainingParticipatory	Number		
+TrainingHours	Number		
+TrainingCompletionDate	DateTime		
+RecordStateID	Number		
+RecordTimeStamp	String	100	
+TrainingCreditTypeCodeValue	String	100	

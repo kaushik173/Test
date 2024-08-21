@@ -1,0 +1,64 @@
+﻿@model LALoDep.Models.ARSummarySearchViewModel
+@{
+    ViewBag.Title = "AR Summary";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ARSummary-search-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.Hidden("htn_BackButtonButtonValue")
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.CheckBoxFor(m => m.IncludeAll, new { @class = "form-control input-sm control-trigger", tabindex = 1, style = "width:98%", autofocus = true })
+                        </div>
+                        @Html.LabelFor(m => m.IncludeAll, "Include Inactive Staff", new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(m => m.Mode, "Mode:", new { @class = "control-label" })
+                        <div class="form-group">
+                            @Html.DropDownListFor(m => m.Mode, Model.ModeList, "", new { @class = "form-control input-sm control-trigger", tabindex = 2 })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.CheckBoxFor(m => m.UnderAge5Only, new { @class = "form-control input-sm control-trigger", tabindex = 3, style = "width:98%"})
+                        </div>
+                        @Html.LabelFor(m => m.UnderAge5Only, "Under Age 5 Only", new { @class = "control-label" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" id="divMyCaseLoadReult">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">AR Summary</span>
+            </div>
+            <div class="widget-body col-md-12" id="ARSummaryList">
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Search</button>
+    </div>
+}
+
+@section scripts
+{   
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/ARSummarySearch.js?v=" + Guid.NewGuid())"></script>
+}

@@ -1,0 +1,4 @@
+AgencyName	String	100	Agency 1
+Phase	String	100	Phase 1
+Total Cases	Number		30
+NoPhaseDetailFlag	Number		1

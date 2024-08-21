@@ -1,0 +1,9 @@
+GroupingID	Number		1
+AgencyName	String	100	Agency A
+StaffType	String	100	Attorney
+StaffName	String	100	Last, First
+Total	Number		999.5
+InCourt	Number		800.0
+OutCourt	Number	199.5
+InCourtPercent	Number		80.04
+OutCourtPercent	Number		19.96

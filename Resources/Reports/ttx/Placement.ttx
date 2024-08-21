@@ -1,0 +1,25 @@
+ChildFullName	String	100	Christian, Misty
+ChildDOB	DateTime		07/24/1985
+PlacementAgency	String	100	New Alternatives #16 - CATC
+PlacementType	String	100	Licensed Group Home
+PlacementStreet	String	100	730 Main Street
+PlacementCity	String	100	San Diego
+PlacementState	String	50	California
+PlacementZipCode	String	20	91911
+PlacementPhoneNumber	String	20	111-222-3333
+ChildFirstPetition	String	20	A12345678
+AgencyAttorney	String	100	Brown, Marshal
+Investigator	String	100	Stevens, Susan
+LegalAssistant	String	100	Lau, Paul
+CareTaker	String	100	
+CountySocialWorker	String	100	
+NextHearingDateTime	DateTime		2001-11-06 13:30:00.000
+NextHearingType	String	100	Teen Review
+AgencyName	String	200	Public Defender
+ParmPlacementAgency	String	100	
+ParmPlacementType	String	200	Placement Type:  Licensed Group Home
+ParmCareTaker	String	100	
+ParmSocialWorker	String	100	
+ParmInvesitgator	String	100	
+ParmLegalAssistant	String	100	Legal Assistant:  Debbie Lauerman
+ParmAttorneyParameter	String	100	

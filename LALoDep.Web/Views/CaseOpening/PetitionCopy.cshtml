@@ -1,0 +1,182 @@
+﻿@model LALoDep.Models.CaseOpening.PetitionCopyModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "copyform", @class = "form-inline  center-block" }))
+{
+
+
+
+
+    if (Model.PetitionRoleList.ToList().Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionRoleList">
+                                <thead>
+                                    <tr>
+                                        <th width="50" > <input type="checkbox" id="chkAll" /> All </th>
+                                        <th>Case #   </th>
+                                        <th>Suffix </th>
+                                        <th>Child </th>
+                                        <th>DOB </th>
+                                        <th>Age </th>
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.PetitionRoleList)
+                                    {
+                                        if (item.NameDisplay != Model.Petition.LastName + ", " + Model.Petition.FirstName)
+                                        {
+                                            <tr @if (item.RoleClient == 1) { <text> class="highLightBlue " </text>                                   }>
+                                                <td>
+                                                    <input type="checkbox" id="chkSelected" class="chkSelected" />
+                                                </td>
+                                                <td>
+
+                                                    <input type="hidden" id="RoleID" value="@item.RoleID" />
+
+
+                                                    @Html.TextBox("DefaultPetitonNumber", item.DefaultPetitonNumber, new { @class = "form-control input-sm uppercase", tabindex = "1" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(o => item.Suffix, new { @class = "form-control input-sm uppercase", tabindex = "1" })
+                                                </td>
+                                                <td>@item.NameDisplay</td>
+
+                                                <td>@item.DOB</td>
+                                                <td>@item.Age</td>
+
+                                            </tr>
+
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+@section scripts
+{
+    <script>
+        
+        $('#chkAll').on('click', function () {
+
+            $('.chkSelected').prop('checked', $('#chkAll').is(':checked'));
+
+        });
+
+        $('#btnCopy').on('click', function () {
+
+            Save(1);
+
+        });
+
+        function Validation() {
+            var isValid = true;
+
+
+            if ($('.chkSelected:checked').length == 0) {
+                notifyDanger('At least one Copy To record must be selected.');
+                isValid = false;
+                return false;
+
+            }
+
+
+            return isValid;
+        }
+        function Save(buttonId) {
+
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+
+
+            var isvalid = Validation();
+
+            if (isvalid) {
+
+
+
+                petitionRole = [];
+
+                $('#tblPetitionRoleList tbody tr').each(function () {
+                    if ($(this).find('.chkSelected').is(':checked')) {
+                        petitionRole.push({
+                            'RoleID': $(this).find('#RoleID').val(),
+                            'DefaultPetitonNumber': $(this).find('#DefaultPetitonNumber').val(),
+                            'Suffix': $(this).find('#item_Suffix').val()
+                        });
+                    }
+                });
+                var model = {
+                    PetitionID: @Model.PetitionID,
+                    PetitionRoleList: petitionRole,
+                    PetitionFileDate: '@Model.PetitionFileDate',
+                    PetitionTypeCodeID: @Model.PetitionTypeCodeID
+                    }
+
+
+                var params = model;
+                $.ajax({
+                    type: "POST", url: '/CaseOpening/PetitionCopy', data: { model: params },
+                    success: function (result) {
+
+                        if (result.Status == "Done") {
+                            notifySuccess('Data Saved Successfully!.');
+                            RequestSubmitted();
+
+                            self.parent.document.location.href = self.parent.document.location.href;
+                        } else {
+
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+
+        }
+    </script>
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="btnCopy" type="submit" class="btn btn-primary v-bottom default" tabindex="5"> Copy</button>
+
+
+
+
+    </div>
+
+}

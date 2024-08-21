@@ -1,0 +1,88 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.CaseMainViewModel
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="roles">
+        <thead>
+            <tr>
+                <th class="text-nowrap">Date</th>
+                <th class="text-nowrap">Type</th>
+                <th>Officer</th>
+                <th>Appearing Attorney</th>
+                <th>Dept</th><th style="width:30px;"></th><th style="width:30px;"></th>
+                @*<th style="width:30px;"></th>
+                <th style="width:20px;"></th>
+                <th style="width:20px;"></th>
+                <th style="width:20px;"></th>
+                <th style="width:20px;"></th>*@
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Hearing)
+            {
+
+                var hearingPersons = Model.HearingPersons.Where(o => o.HearingID == item.HearingID).ToList();
+                var count = 0;
+                <tr class="@item.HearingID.ToEncrypt()">
+                    <td class="text-nowrap"><a data-secure-link-id="@((int)SecurityToken.EditHearing)" href="/CaseOpening/Hearing/@item.HearingID.ToEncrypt()?dataentry=true">@item.HearingDateTime.ToDefaultFormat("g")</a></td>
+                    <td class="text-nowrap">@item.HearingTypeCodeValue</td>
+                    <td>@item.HearingOfficerLastName@if (!item.HearingOfficerLastName.IsEmpty() && !item.HearingOfficerFirstName.IsEmpty())
+                    {<text>, </text>}@item.HearingOfficerFirstName</td>
+                    <td>@item.AppearingAttorneyLastName@if (!item.AppearingAttorneyLastName.IsEmpty() && !item.AppearingAttorneyFirstName.IsEmpty())
+                    {<text>, </text>}@item.AppearingAttorneyFirstName</td>
+                    <td>@item.HearingCourtDepartmentCodeValue</td>
+                    <td>
+                        <a class="btn btn-info btn-xs btnPrintHearing"  data-secure-id="@((int)SecurityToken.QuickCalendar)"  data-reportid="@item.ReportID" data-hearingId="@item.HearingID" > <i class="fa fa-print"></i> Print</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-info btn-xs" onclick="OpenCustomPopup('/Case/GoTo/@item.HearingID.ToEncrypt()', 300,250,'Go To')" > <i class="fa fa-external-link"></i> Go To</a>
+
+
+                    </td>
+                    @*<td>
+                        @if (item.NoDeleteFlag.HasValue && item.NoDeleteFlag.Value == 0)
+                        { <a class="btn btn-danger btn-xs deleteHearing" data-id="@item.HearingID" data-eid="@item.HearingID.ToEncrypt()" data-secure-id="@((int)SecurityToken.DeleteHearing)"><i class="fa fa-trash-o"></i>Delete</a>
+
+
+                        }
+
+
+                    </td>
+                    <td><a class="btn btn-info btn-xs" href="@Url.Action("Attendance", "Case", new { id = item.HearingID.ToEncrypt() })" data-secure-id="@((int)SecurityToken.ViewAttendance)">Att</a></td>
+                    <td>
+                        @if (item.HearingDateTime.Value <= DateTime.Now)
+                        {
+                            <a class="btn btn-info btn-xs" href="@Url.Action(MVC.Case.FindingsAndOrders(item.HearingID.ToEncrypt()))" data-secure-id="@((int)SecurityToken.ViewFindingsAndOrders)"> F/O</a>
+                        }
+
+                    </td>
+
+                    <td><a class="btn btn-info btn-xs" href="@Url.Action("Plea", "Case", new { id = item.HearingID.ToEncrypt() })" data-secure-id="@((int)SecurityToken.ViewPlea)">Plea</a></td>
+                    <td><a class="btn btn-info btn-xs" href="@Url.Action("Pos", "Case", new { id = item.HearingID.ToEncrypt() })" data-secure-id="@((int)SecurityToken.ViewCourtPosition)">Pos</a></td>*@
+
+                </tr>
+                <tr class="@item.HearingID.ToEncrypt()">
+                    <td colspan="6">
+                        @{
+                            var resultAdded = 0;
+                        }
+                        @foreach (var person in hearingPersons)
+                        {
+                            count++; 
+                              if (person.Resulted == 0 && resultAdded == 0)
+                            {
+                                resultAdded = 1;
+                                <span>(No Result) , </span>
+                            }
+                            <span class="@((person.RoleClient == 1) ? "highLightBlue" : "")">
+
+                                @person.PersonName
+                            </span> @((count < hearingPersons.Count) ? "," : "")
+                        }
+                    </td>
+                </tr>
+                            }
+        </tbody>
+    </table>
+</div>

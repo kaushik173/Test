@@ -1,0 +1,8 @@
+HearingID	Number		1
+ParentLastName	String	50	Gold
+ParentFirstName	String	50	Mom
+ParentRole	String	50	Mother
+ChildLastName	String	50	Gold
+ChildFirstName	String	50	Glenda
+Plea	String	50	Denied
+ParentID	Number		1

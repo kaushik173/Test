@@ -1,0 +1,7 @@
+HearingID	Number		1
+Type	String	50	Detention
+DateTime	String	50	01/08/2001 8:30 AM
+Officer	String	100	Bubis, Gary
+Department	String	50	E 18
+RequestedBy	String	100	Smith, Adam
+Agency	String	100	Public Defender

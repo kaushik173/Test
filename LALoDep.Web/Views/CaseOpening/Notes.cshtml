@@ -1,0 +1,132 @@
+﻿@model LALoDep.Models.CaseOpening.NotesModel 
+@{
+    ViewBag.Title = "Add Note ";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "NoteAdd", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Add Note 
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="row">
+                        <div class="form-group col-md-4 col-sm-4  col-xs-4">
+
+                            @Html.LabelFor(m => m.NoteTypeID, "Note Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.NoteTypeID, Model.NoteTypeList, "", new { @class = "form-control input-sm newroleinput", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+
+
+
+
+
+
+                       
+
+
+                        </div>
+
+
+
+                        <div class="form-group  col-md-8 col-sm-8  col-xs-8">
+
+                            @Html.LabelFor(m => m.Subject, "Note Subject", new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm ", tabindex = 2, style = "width:100%" })
+
+
+
+
+                        </div>
+                        <div class="form-group  col-md-12 col-sm-12  col-xs-12 ">
+
+                            @Html.LabelFor(m => m.Notes, "Note", new { @class = "control-label" })
+
+                            @Html.TextAreaFor(model => model.Notes, new { @class = "form-control input-sm ", tabindex = 3, style = "width:100%" })
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+           
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Broadcast Notes Display Pages
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+                        <div class="row">
+                            <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5">
+                                <div class="form-label bg-label">
+                                    <input type="checkbox"  id="chkAll" />
+
+                                    <label for="chkAll" style="margin-top: -6px">
+                                        All
+                                    </label>
+                                </div>
+                                </div>
+                            @foreach (var item in Model.BroadcastNotesPages)
+                            {
+                                <div class="form-group col-md-3 col-sm-4  col-xs-6 margin-bottom-5">
+
+
+                                    <div class="form-label bg-label">
+
+                                        <input type="checkbox" class="chkPage" data-pageid="@item.Value"   id="chk@(item.Value)" tabindex="4"     />
+
+                                        <label for="chk@(item.Value)" style="margin-top: -6px">
+                                            @item.Text
+                                        </label>
+                                    </div>
+
+
+                                </div>
+
+                            }
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+           
+
+
+
+        }
+    </div>
+</div>@Html.Partial("_steps")
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+       
+            <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="5">Save/Continue</button>
+ 
+            <button id="btnSaveAndAdd" type="submit" class="btn btn-default  " tabindex="6"><u>S</u>ave/Add More</button>
+
+        
+
+    </div>
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/Notes.js?v=" + Guid.NewGuid())"></script>
+
+}

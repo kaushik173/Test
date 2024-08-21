@@ -1,0 +1,656 @@
+﻿@using LALoDep.Core.Custom.Utility
+@using LALoDep.Custom
+@model LALoDep.Models.Task.QuickAddCaseViewModel
+@{
+    ViewBag.Title = "Quick Add Case";
+    int tabIndex = 0;
+}
+<style>
+    .form-inline .form-control {
+        width: 100%;
+    }
+
+    .widget-body .control-label {
+        margin-bottom: 0;
+        vertical-align: middle;
+        width: 100%;
+        margin: 5px 0px;
+        background: #e6e6fa;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Quick Add Case</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickAddCase-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.DOBRequiredForChildren)
+                    @Html.HiddenFor(o => o.AgencyID)
+                    for (int indx = 0; indx < 2; indx++)
+                    {
+                        if (Model.CasePersonList[indx].IsDefaultChecked)
+                        {
+                            Model.CasePersonList[indx].IsClient = Model.CasePersonList[indx].IsDefaultChecked;
+                        }
+
+                        var hiddedClass = indx == 1 ? " hidden-lg" : "";
+                        <div class="row @(indx == 0?"margin-bottom-5":"")">
+                            <div class="form-group col-md-1">
+                                @Html.Label("Client", new { @class = "control-label" + hiddedClass })
+                                <div>
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.CasePersonList[indx].IsClient, new { @class = "", tabindex = ++tabIndex })
+                                        <span> @Model.CasePersonList[indx].CheckBoxLabel</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Case #", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.Label("", new { @class = "form-label" })
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(Model.CasePersonList[indx].CaseNumber))
+                                    {
+                                        @Html.TextBoxFor(m => m.CasePersonList[indx].CaseNumber, new { @class = "form-control input-sm uppercase " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "").Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.CasePersonList[indx].CaseNumber, new { @class = "form-control input-sm uppercase " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "").Replace(" ", "") + "Field", @readonly = "readonly", tabindex = ++tabIndex })
+                                    }
+                                }
+                            </div>
+                            <div class="form-group col-md-2">
+                                @Html.Label("Role", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].RoleID, Model.RoleParentList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].RoleID })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].RoleID, Model.RoleChildList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].RoleID })
+                                }
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Last Name", new { @class = "control-label" + hiddedClass })
+                                @Html.TextBoxFor(m => m.CasePersonList[indx].LastName, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("First Name", new { @class = "control-label" + hiddedClass })
+                                @Html.TextBoxFor(m => m.CasePersonList[indx].FirstName, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("DOB", new { @class = "control-label" + hiddedClass })
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.CasePersonList[indx].DOB, new { @class = "form-control input-sm date-picker DOBValidation " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", maxlength = "10", tabindex = ++tabIndex })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Gender", new { @class = "control-label" + hiddedClass })
+                                @Html.DropDownListFor(m => m.CasePersonList[indx].SexTypeCodeID, Model.SexList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].SexTypeCodeID })
+                            </div>
+                            <div class="form-group col-md-2">
+                                @Html.Label("Association to Children", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].ChildrenAssociationTypeCodeID, Model.ChildrenAssociationTypeList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].ChildrenAssociationTypeCodeID })
+                                }
+                                else
+                                {
+                                    @Html.Label("", new { @class = "form-label" })
+                                }
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("SS", new { @class = "control-label" + hiddedClass })
+                                @Html.CheckBoxFor(m => m.CasePersonList[indx].IsSS, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Address", new { @class = "control-label" + hiddedClass })
+                                @Html.CheckBoxFor(m => m.CasePersonList[indx].HasAddress, new { @class = "chkAddress form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.AppointmentDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.AppointmentDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.IsPanel, new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IsPanel, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.CaseOfficerPersonID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CaseOfficerPersonID, Model.HearingOfficerList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.CaseDepartmentID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.CaseDepartmentID, Model.HearingDepartmentList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        @if (Model.CaseRefrelSourceList.Any())
+                        {
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(m => m.CaseRefrelSourceID, new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.CaseRefrelSourceID, Model.CaseRefrelSourceList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-md-3"></div>
+                        }
+
+                        <div class="form-group col-md-2">
+
+                            @Html.LabelFor(m => m.AttorneyPersonID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AttorneyPersonID, Model.AttorneyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.DesignatedDayCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.DesignatedDayCodeID, Model.DesignatedDayList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.PetitionFileDate, new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.PetitionFileDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = ++tabIndex })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.PetitionTypeCodeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PetitionTypeCodeID, Model.PetitionTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation1ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation1ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation2ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation2ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation3ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation3ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation4ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation4ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation5ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation5ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.Allegation6ID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Allegation6ID, Model.AllegationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.PhysicalFileName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.PhysicalFileName, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HearingTypeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.HearingDate, "Hearing Date/Time", new { @class = "control-label" })
+                            <div class="input-group pull-left " style="padding-right: 5px;">
+                                @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker WeekendValidation", maxlength = "10", tabindex = ++tabIndex, data_label = "Hearing Date" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <input type="hidden" name="HearingTime" id="HearingTime" value="08:30 AM" />
+                            @{
+
+                                var hours = "";
+                                var minutes = "";
+                                var am = "";
+
+                                var time = DateTime.Parse(Model.HearingTime);
+
+                                hours = int.Parse(time.ToString("hh")).ToString();
+                                minutes = time.ToString("mm");
+                                am = time.ToString("tt").Replace(".", "");
+
+                            }
+                            @Html.DropDownList("Hours", Utility.GetHoursList(hours), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = hours, data_oldvalue = hours, tabindex = ++tabIndex }) : @Html.DropDownList("Minutes", Utility.GetMinutesList(minutes), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = minutes, data_oldvalue = minutes, tabindex = ++tabIndex })  @Html.DropDownList("TimeAmPm", Utility.GetTimeAmPm(am), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = am, data_oldvalue = am, tabindex = ++tabIndex })
+
+
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.HearingDepartmentID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingDepartmentID, Model.HearingDepartmentList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.HearingOfficerID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.HearingOfficerID, Model.HearingOfficerList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.AppearingAttorneyID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AppearingAttorneyID, Model.AttorneyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+
+                            @Html.LabelFor(m => m.OtherHearingTypeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.OtherHearingTypeID, Model.HearingTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.OtherHearingDate, "Hearing Date/Time", new { @class = "control-label" })
+                            <div class="input-group pull-left " style="padding-right: 5px;">
+                                @Html.TextBoxFor(m => m.OtherHearingDate, new { @class = "form-control input-sm date-picker WeekendValidation", maxlength = "10", tabindex = ++tabIndex, data_label = "Hearing Date" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <input type="hidden" name="OtherHearingTime" id="OtherHearingTime" value="08:30 AM" />
+                            @{
+
+                                hours = "";
+                                minutes = "";
+                                am = "";
+
+                                time = DateTime.Parse("08:30 AM");
+
+                                hours = int.Parse(time.ToString("hh")).ToString();
+                                minutes = time.ToString("mm");
+                                am = time.ToString("tt").Replace(".", "");
+
+                            }
+                            @Html.DropDownList("Hours2", Utility.GetHoursList(hours), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = hours, data_oldvalue = hours, tabindex = ++tabIndex }) : @Html.DropDownList("Minutes2", Utility.GetMinutesList(minutes), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = minutes, data_oldvalue = minutes, tabindex = ++tabIndex })  @Html.DropDownList("TimeAmPm2", Utility.GetTimeAmPm(am), "", new { @class = "setSelectedValue", style = "width:54px;padding:3px;", data_default_value = am, data_oldvalue = am, tabindex = ++tabIndex })
+
+
+                        </div>
+                        <div class="form-group col-md-1">
+
+                            @Html.LabelFor(m => m.OtherHearingDepartmentID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.OtherHearingDepartmentID, Model.HearingDepartmentList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.OtherHearingOfficerID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.OtherHearingOfficerID, Model.HearingOfficerList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.OtherAppearingAttorneyID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.OtherAppearingAttorneyID, Model.AttorneyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.NoteTypeID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.NoteTypeID, Model.NoteTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(m => m.NoteSubject, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.NoteSubject, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-7">
+                            @Html.LabelFor(m => m.Note, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.Note, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            @Html.LabelFor(m => m.PlacementAddressID, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.PlacementAddressID, Model.PlacementAddressList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.Street, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Street, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-2">
+                            @Html.LabelFor(m => m.StateID, new { @class = "control-label" })
+                            @*@Html.DropDownListFor(m => m.StateID, Model.StateList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })*@
+                            <select class="form-control input-sm" id="StateID" name="StateID" tabindex="@(++tabIndex)">
+                                <option data-code=""></option>
+                                @foreach (var item in Model.StateList)
+                                {
+                                    <option value="@item.CodeID" data-code="@item.CodeShortValue" @(item.CodeID == Model.StateID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.ZipCode, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                        </div>
+                        <div class="form-group col-md-1">
+                            @Html.LabelFor(m => m.AddressPhone, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.AddressPhone, new { @class = "form-control input-sm phone_format", tabindex = ++tabIndex })
+                        </div>
+                    </div>
+
+                    for (int indx = 2; indx < 6; indx++)
+                    {
+                        var hiddedClass = indx != 2 ? " hidden-lg" : "";
+                        var cnt = 6 % indx;
+                        <div class="row margin-bottom-5">
+                            <div class="form-group col-md-1">
+                                @Html.Label("Client", new { @class = "control-label" + hiddedClass })
+                                <div>
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.CasePersonList[indx].IsClient, new { @class = "", tabindex = ++tabIndex })
+                                        <span> @Model.CasePersonList[indx].CheckBoxLabel </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Case #", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.Label("", new { @class = "form-label" })
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(Model.CasePersonList[indx].CaseNumber))
+                                    {
+                                        @Html.TextBoxFor(m => m.CasePersonList[indx].CaseNumber, new { @class = "form-control input-sm  uppercase " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.CasePersonList[indx].CaseNumber, new { @class = "form-control input-sm  uppercase " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", @readonly = "readonly", tabindex = ++tabIndex })
+                                    }
+
+                                }
+                            </div>
+                            <div class="form-group col-md-2">
+                                @Html.Label("Role", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].RoleID, Model.RoleParentList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].RoleID })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].RoleID, Model.RoleChildList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex, data_selected = Model.CasePersonList[indx].RoleID })
+                                }
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Last Name", new { @class = "control-label" + hiddedClass })
+                                @Html.TextBoxFor(m => m.CasePersonList[indx].LastName, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("First Name", new { @class = "control-label" + hiddedClass })
+                                @Html.TextBoxFor(m => m.CasePersonList[indx].FirstName, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("DOB", new { @class = "control-label" + hiddedClass })
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.CasePersonList[indx].DOB, new { @class = "form-control input-sm date-picker DOBValidation " + Model.CasePersonList[indx].CheckBoxLabel + "Field", maxlength = "10", tabindex = ++tabIndex })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Gender", new { @class = "control-label" + hiddedClass })
+                                @Html.DropDownListFor(m => m.CasePersonList[indx].SexTypeCodeID, Model.SexList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-2">
+                                @Html.Label("Association to Children", new { @class = "control-label" + hiddedClass })
+                                @if (Model.CasePersonList[indx].IsParent)
+                                {
+                                    @Html.DropDownListFor(m => m.CasePersonList[indx].ChildrenAssociationTypeCodeID, Model.ChildrenAssociationTypeList, "", new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel + "Field", tabindex = ++tabIndex })
+                                }
+                                else
+                                {
+                                    @Html.Label("", new { @class = "form-label" })
+                                }
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("SS", new { @class = "control-label" + hiddedClass })
+                                @Html.CheckBoxFor(m => m.CasePersonList[indx].IsSS, new { @class = "form-control input-sm " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                            <div class="form-group col-md-1">
+                                @Html.Label("Address", new { @class = "control-label" + hiddedClass })
+                                @Html.CheckBoxFor(m => m.CasePersonList[indx].HasAddress, new { @class = "form-control input-sm chkAddress " + Model.CasePersonList[indx].CheckBoxLabel.Replace(" ", "") + "Field", tabindex = ++tabIndex })
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Save/Main</button>
+        <button id="btnSaveAndAdd" type="button" class="btn btn-default v-bottom" tabindex="@(++tabIndex)">Save/Add Another Case</button>
+    </div>
+}
+
+@section scripts
+{
+    @{
+        var useHereMaps = System.Configuration.ConfigurationManager.AppSettings["UseHereMaps"];
+    }
+    @if (string.IsNullOrEmpty(useHereMaps) || (!string.IsNullOrEmpty(useHereMaps) && useHereMaps == "false"))
+    {
+        <script src="@Url.Content("//maps.googleapis.com/maps/api/js?key=" + LALoDep.Custom.UtilityFunctions.GetGoogleApiKeyFromConfig() + "&libraries=places")"></script>
+        <script type="text/javascript">
+            var placeSearch, autocomplete;
+            var componentForm = {
+                Street: 'short_name',
+                route: 'long_name',
+                City: 'long_name',
+                administrative_area_level_1: 'short_name',
+                country: 'long_name',
+                ZipCode: 'short_name'
+            };
+
+            function initAutocomplete() {
+
+
+                // Create the autocomplete object, restricting the search to geographical
+                // location types
+                autocomplete = new google.maps.places.Autocomplete(
+                   //type {!HTMLInputElement} */
+
+                    (document.getElementById('Street')),
+                    {
+                        types: ['geocode'],
+                        componentRestrictions: { country: "us" },//defalut,
+                    });
+
+                // When the user selects an address from the dropdown, populate the address
+                // fields in the form.
+
+                //set defult bound of seected state
+                setBoundByState();
+
+                autocomplete.addListener('place_changed', fillInAddress);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+
+            function fillInAddress() {
+
+                // Get the place details from the autocomplete object.
+                var place = autocomplete.getPlace();
+                // Get each component of the address from the place details
+                // and fill the corresponding field on the form.
+                var street = '';
+                var valZipCode = '';
+                var valCity = '';
+                var valState = '';
+
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+                    if (addressType == "street_number" || addressType == "route") {
+                        street = street + " " + place.address_components[i].long_name;
+                    }
+
+                    else if (addressType == "locality") {
+                        valCity = place.address_components[i].long_name;
+                        document.getElementById('City').value = valCity;
+                    }
+                    else if (addressType == "postal_code") {
+                        valZipCode = place.address_components[i].long_name;
+                        document.getElementById('ZipCode').value = valZipCode;
+                    }
+                    else if (addressType == "administrative_area_level_1") {
+                        valState = place.address_components[i].long_name;
+                        $('#StateID option:contains(' + valState + ')').prop('selected', true);
+                        setBoundByState();
+                    }
+                }
+                //set street
+                document.getElementById('Street').value = street;//substring(1);//remove firt ','
+            }
+
+            function setBoundByState() {
+
+                var geocoder = new google.maps.Geocoder();
+                var address = $('#StateID option:selected').data('code') == '' ? 'CA' : $('#StateID option:selected').data('code');// + ', ' + $('#CountryCodeID option:selected').text();
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        //alert("location : " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng());
+                        var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
+                        autocomplete.setBounds(bounds);
+                    } else {
+                        //alert("Something got wrong " + status);
+                    }
+                });
+
+            }
+
+            $('#StateID').on('change', function () {
+                //alert($apiKey);
+                setBoundByState();
+            });
+
+
+
+
+
+        </script>
+    }
+    else
+    {
+        <text>
+            <script>
+                var addressLookupAppId = '@System.Configuration.ConfigurationManager.AppSettings["HereMapAppId"]';
+                var addressLookupApiKey = '@System.Configuration.ConfigurationManager.AppSettings["HereMapApiKey"]';
+            </script>
+            <link href="~/assets/css/auto-Complete.css" rel="stylesheet" />
+
+            <script src="/assets/other/jquery-ui-1.10.4.custom.min.js"></script>
+
+
+            <script src="/assets/other/address-auto-complete.js"></script>
+
+            <script>
+
+
+
+
+                $(function () {
+
+                    $("#Street").initAddressAutoComplete(function (address) {
+                        var stateId = $("#StateID").val();
+                        for (var indx = 0; indx < $("#StateID option").length; indx++) {
+                            var option = $("#StateID option").eq(indx);
+                            console.log(option.attr('data-code'))
+                            console.log(address)
+                            if (address.state != undefined && option.attr('data-code').trim().toUpperCase() == address.state.toUpperCase()) {
+                                stateId = option.val();
+                                break;
+                            }
+                        }
+                        $("#StateID").val(stateId);
+                        $("#City").val(address.city);
+                        $("#ZipCode").val(address.postalCode);
+                    });
+
+
+                })
+
+            </script>
+        </text>
+    }
+
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $('#StateID option:contains("California")').prop('selected', true);
+
+                var attorneyId=@(Model.AttorneyPersonID.HasValue? Model.AttorneyPersonID.Value:0);
+                if(attorneyId>0){
+                    $('#AttorneyPersonID').val($('#AttorneyPersonID option[value*="'+attorneyId+'"]').val());
+
+                }
+            }, 500);
+
+
+
+        })
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/QuickAddCase.js?v=" + Guid.NewGuid())"></script>
+    <script>
+        setTimeout(function () {
+            $('.setSelectedValue').each(function () {
+
+                $(this).val($(this).attr('data-default-value'));
+            });
+            $('select').each(function () {
+                if($(this).attr('data-old-value-on-pageload')>0){
+
+                    $(this).val($(this).attr('data-old-value-on-pageload'));
+                }
+
+            })
+
+
+        }, 500);
+
+
+        $('#CasePersonList_0__RoleID,#CasePersonList_1__RoleID,#CasePersonList_4__RoleID,#CasePersonList_5__RoleID').change(function () {
+            var text = $(this).val();
+
+            if (text == '774') {
+                $(this).parent().parent().find('select[id*="__ChildrenAssociationTypeCodeID"]').val('1362');
+                $(this).parent().parent().find('select[id*="__SexTypeCodeID"]').val('763');
+            } else if (text == '782') {
+                $(this).parent().parent().find('select[id*="__ChildrenAssociationTypeCodeID"]').val('1397');
+
+                $(this).parent().parent().find('select[id*="__SexTypeCodeID"]').val('762');
+            } else {
+                $(this).parent().parent().find('select[id*="__SexTypeCodeID"]').val('');
+                $(this).parent().parent().find('select[id*="__ChildrenAssociationTypeCodeID"]').val('');
+
+            }
+        });
+    </script>
+}

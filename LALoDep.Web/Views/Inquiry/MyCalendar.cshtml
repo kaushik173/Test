@@ -1,0 +1,625 @@
+﻿@using LALoDep.Custom.Security
+@model  Jcats.SD.UI.ViewModels.MyCalendarModel
+@{
+
+    ViewBag.Title = "My Calendar<br/>For " + Model.AttorneyPersonName;           }
+
+<style>
+    .dataTables_paginate {
+        display: none;
+    }
+
+    .toggle-rows, .toggle-all {
+        font-size: 11px !important;
+        margin-left: 0px !important;
+        width: 65px !important;
+        line-height: 30px !important;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    My Calendar  For @Model.AttorneyPersonName
+                </span>
+                <div class="widget-buttons">
+                    <a style="cursor:pointer;display: none;" data-toggle="More" class="btn btn-labeled btn-primary btn-xs toggle-all" id="btnShowAll">Show All</a>
+                </div>
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mycalendar", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                    <div class="row">
+                        <div class="form-group ">
+                            <div class="remove-padding">
+                                <label for="StarEndtDate" class="control-label">Start Date - End Date</label>
+                                <input tabindex="1" type="text" id="StarEndtDate" value="@Model.StartDate - @Model.EndDate" class="form-control daterange input-sm" style="min-width:180px;" />
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="HearingType" class="control-label">Hearing Type </label>
+                            @Html.DropDownListFor(m => m.HearingTypeId, new SelectList(Model.HearingType, "HearingTypeId", "HearingTypeName", ""), "", new { @class = "form-control input-sm ", data_val = "false" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PendingHearingsOnly" class="control-label">Pending Hearings Only </label>
+                            <br />
+                            @Html.CheckBoxFor(m => m.PendingHearingsOnly)
+                        </div>
+                        @Html.HiddenFor(c => c.StartDate)
+                        @Html.HiddenFor(c => c.EndDate)
+                        @Html.HiddenFor(c => c.AttorneyPersonId)
+                        @Html.HiddenFor(c => c.AttorneyPersonName)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divTableView">
+    <div class="row" id="leaveSection">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">
+                        Leave Information
+                    </span>
+                    <div class="widget-buttons">
+                        <a style="cursor:pointer; display:none;" data-toggle="More" class="btn btn-labeled btn-primary btn-xs toggle-rows" id="btn_LeaveData" data-parent-table="#LeaveData">Show More</a>
+
+                    </div>
+                </div>
+                <div class="widget-body col-md-12">
+                    <div class="widget-main no-padding">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="LeaveData">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px !important;">Attorney</th>
+                                        <th class="">Type</th>
+                                        <th>Start Date</th>
+                                        <th>Start Time</th>
+                                        <th>End Date</th>
+                                        <th>End Time</th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Hearing</span>
+                    <div class="widget-buttons"></div>
+                </div>
+                <div class="widget-body col-md-12">
+                    <div class="widget-main no-padding">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="HearingData">
+                                <thead class="hidden">
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script src="/assets/js/fullcalendar/fullcalendar.js"></script>
+
+    <script type="text/javascript">
+
+        var oLeaveTable = $('#LeaveData').dataTable({
+            "ordering": false,
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": 2,
+            "bPaginate": true,
+            "columns": [
+                {
+
+                    "render": function (data, type, full, meta) {
+                        return '<a href="#"   >' + full.PersonNameLast + ' ' + full.PersonNameFirst + '</a>';
+                    }
+                },
+                { "data": "LeaveTypeCodeValue" },
+                { "data": "StartDate" },
+                { "data": "StartTime" },
+                { "data": "EndDate" },
+                { "data": "EndTime" }
+
+            ],
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+
+
+
+
+        var oHearingData = $('#HearingData').dataTable({
+            "ordering": false,
+            "lengthMenu": [2, -1],
+            "lengthChange": false,
+            "searching": false,
+            "bInfo": false,
+            "iDisplayLength": -1,
+            "bPaginate": true,
+            "columns": [
+                { "data": "EventDate" },
+                { "data": "EventTime" },
+                {
+                    "data": "HearingType",
+                    "render": function (data, type, full, meta) {
+                        return '<a href="/Case/Main/' + full.EncryptedCaseID + '"   >' + full.HearingType + '</a>';
+
+                    }
+                },
+                { "data": "Department" },
+                { "data": "Petitions" },
+                {"data": "Clients"},
+                {
+                    "data": "Result",
+                    //"render": function (data, type, full, meta) {
+                    //    if (data == "" || data == null)
+                    //    {
+                    //        return 'No';
+                    //    }
+                    //    else
+                    //    {
+                    //        return data;
+                    //    }
+                    //}
+                } ,{"data": "FillInFor"},
+                {
+                    "data": "QHE",
+                    "render": function (data, type, full, meta) {
+                        if (data == "QHE") {
+                            return '<a href="@Url.Action(MVC.QHE.QHEHearing())/' + full.EncryptedHearingID + '" onclick="fnQHEWizard(this)" data-hearingidlist=' + full.hearingIDList + ' data-encryptedcaseID=' + full.EncryptedCaseID + ' data-hearingID=' + full.EncryptedHearingID + ' class="btn btn-info btn-xs qhe">QHE</a>';
+                        }
+
+                        return '';
+                    }
+                }
+
+            ],
+            "columnDefs": [
+                { "visible": false, "targets": 0 }
+                ],
+            "order": [[1, 'asc']],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+
+                api.column(0, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '  <tr class="group"><th>' + group + '</th> <th>Type</th><th>Dept.</th><th>Petitions-Children</th><th>Clients</th><th>Result</th><th>Fill-In</th><th>QHE</th> </tr>'
+                        );
+                        last = group;
+                    }
+                });
+            },
+            "processing": true
+        }).on('draw.dt', onTableDraw);
+
+        function showAllMore(settings, target) {
+            var table = $(target.data("parent-table")).dataTable();
+            settings._iDisplayLength = -1;
+            target.data("toggle", "Less");
+            target.html("Show Less");
+            table.fnDraw();
+        }
+
+        function hideAllMore(settings, target) {
+            var table = $(target.data("parent-table")).dataTable();
+            settings._iDisplayLength = 2;
+            target.data("toggle", "More");
+            target.html("Show More");
+            table.fnDraw();
+        }
+        $(function () {
+            $('.daterange').daterangepicker({ autoClose: true, "linkedCalendars": false, }, function (start, end) {
+                $('#StartDate').val(start.format('MM/DD/YYYY'));
+                $('#EndDate').val(end.format('MM/DD/YYYY'));
+                $('#btnSearch').click();
+            });
+            $('#btnShowAll').on("click", function (e) {
+                if ($('#btnShowAll').html() == "Show All") {
+                    $('#btnShowAll').html("Show Less");
+                    if ($('#btn_ToDoData').is(":visible"))
+                        showAllMore(oTodoTable.fnSettings(), $('#btn_ToDoData'));
+                    if ($('#btn_LeaveData').is(":visible"))
+                        showAllMore(oLeaveTable.fnSettings(), $('#btn_LeaveData'));
+
+                }
+                else {
+                    $('#btnShowAll').html("Show All");
+                    if ($('#btn_ToDoData').is(":visible"))
+                        hideAllMore(oTodoTable.fnSettings(), $('#btn_ToDoData'));
+                    if ($('#btn_LeaveData').is(":visible"))
+                        hideAllMore(oLeaveTable.fnSettings(), $('#btn_LeaveData'));
+
+                }
+            });
+
+            $("#btnTransferJudge").on("click", function () {
+                document.location.href = '/Inquiry/HearingOfficerTransfer?p=@Request.QueryString["p"]';
+            });
+
+            $('#btnAddLeave').on('click', function (e) {
+                e.preventDefault();
+                @if (Request.QueryString["p"] != null)
+            {<text>document.location.href = '/Inquiry/Leave?p=@Request.QueryString["p"]';</text>
+            }
+    else
+      {<text>document.location.href = '/Inquiry/Leave';</text>
+            }
+
+
+
+            });
+
+            $('#btnSearch').on('click', function (e) {
+                e.preventDefault();
+                $('#mycalendar').submit();
+
+            });
+
+
+
+            $('#mycalendar').on('submit', function (e) {
+                e.preventDefault();
+                IPadKeyboardFix();
+                if ($('#ddlDataView').val() == '1') {
+                    PopulateCalendar();
+                }
+                else {
+                    PopulateTableData();
+                }
+            });
+            $('#ddlDataView').on('change', function () {
+                if ($('#ddlDataView').val() == '1') {
+                    $('#divCalendarView').removeClass('hidden');
+                    $('#divTableView').addClass('hidden');
+                    PopulateCalendar(1);
+                    if ($('#btnShowAll').is(':visible')) {
+                        $('#btnShowAll').hide();
+                    }
+
+                }
+                else {
+                    $('#divTableView').removeClass('hidden');
+                    $('#divCalendarView').addClass('hidden');
+                    PopulateTableData(1);
+                }
+            });
+            $('body').on("click", ".print", function (e) {
+                e.preventDefault();
+
+
+                $.ajax({
+                    type: "POST", url: '/MyCalendar/PrintHearingReport/?hId=' + $(this).data('id'), data: $('#mycalendar').serialize(), dataType: 'json',
+                    success: function (returnValue) {
+                        if (returnValue.FileName != '') {
+                         //   window.location = '/Inquiry/Download?file=' + returnValue.FileName;
+                            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                            $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/Download', 'file=' + returnValue.FileName, 'POST', _target);
+
+                        }
+
+                    },
+                    error: function (returnValue) { }
+                });
+            });
+            $('body').on("click", ".printHearing", function (e) {
+                e.preventDefault();
+                var tableHearing = $('#HearingData').DataTable();
+                if (tableHearing.column(0).data().length == 0) {
+                    Notify('No data to print', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST", url: '/MyCalendar/PrintHearingReport/', data: $('#mycalendar').serialize(), dataType: 'json',
+                    success: function (returnValue) {
+                        if (returnValue.FileName != '') {
+                           // window.location = '/Inquiry/Download?file=' + returnValue.FileName;
+                            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+                            $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/Download', 'file=' + returnValue.FileName, 'POST', _target);
+
+                        }
+
+                    },
+                    error: function (returnValue) { }
+                });
+            });
+            $('#btnPrintableVersion').on("click", function (e) {
+                e.preventDefault();
+                //var tableHearing = $('#HearingData').DataTable();
+                //var tableToDoData = $('#ToDoData').DataTable();
+                //var tableLeaveData = $('#LeaveData').DataTable();
+                //if (tableHearing.column(0).data().length == 0 && tableToDoData.column(0).data().length == 0 && tableLeaveData.column(0).data().length == 0) {
+                //    Notify('No data to print', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                //    return;
+                //}
+
+                var data = {
+                    StartDate: $("#StartDate").val(),
+                    EndDate: $("#EndDate").val(),
+                    HearingTypeId: $("#HearingTypeId").val(),
+                    PendingHearingsOnly: $("#PendingHearingsOnly").val(),
+                    AttorneyPersonId: $("#AttorneyPersonId").val(),
+                }
+          
+                var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+               $.download($('#hdnCurrentSessionGuidPath').val()+'/Inquiry/PrintMyCalendar', data, "POST", _target);
+
+            });
+
+            if ($('#ddlDataView').val() == '1') {
+                $('#divCalendarView').removeClass('hidden');
+                $('#divTableView').addClass('hidden');
+                PopulateCalendar(0);
+                if ($('#btnShowAll').is(':visible')) {
+                    $('#btnShowAll').hide();
+                }
+
+            }
+            else {
+                $('#divTableView').removeClass('hidden');
+                $('#divCalendarView').addClass('hidden');
+                PopulateTableData(0);
+            }
+
+        });
+        /* After Table Draw*/
+        function onTableDraw(e) {
+            var dTable = $(this).dataTable();
+            var settings = dTable.fnSettings();
+        }
+        /* Get Row Count */
+        var getRowCount = function (settings) {
+            return settings.fnRecordsDisplay();
+        };
+        $(document).on("click", "a.toggle-rows", function (e) {
+            var target = $(e.target);
+            target.next('div.fixed-table-pagination').hide();
+            var table = $(target.data("parent-table")).dataTable();
+            var settings = table.fnSettings();
+            if (target.data("toggle") === "More") {
+                settings._iDisplayLength = -1;
+                target.data("toggle", "Less");
+                target.html("Show Less");
+            }
+            else {
+                settings._iDisplayLength = 2;
+                target.data("toggle", "More");
+                target.html("Show More");
+            }
+
+            table.fnDraw();
+        });
+        /* Show Row Count Next to Table Caption */
+        var showRowCount = function (settings) {
+            var rows = getRowCount(settings);
+            $(".row-count[data-parent-table='" + settings.sTableId + "']").html("(" + rows + ")");
+            if (parseInt(rows) > 2) {
+                $("#btn_" + settings.sTableId).show();
+            }
+            else { $("#btn_" + settings.sTableId).hide(); }
+        }
+
+        function setData(data, tbl, index) {
+            tbl.fnClearTable();
+            if (data[index].data.length > 0) {
+                tbl.fnAddData(data[index].data);
+
+
+                showRowCount(tbl.fnSettings());
+            }
+
+
+        }
+        function PopulateCalendar(changeView) {
+
+
+            //var $form = $('#mycalendar');
+            //var URL = '/MyCalendar/GetHearingData';
+            //if (changeView == 1) {
+            //      URL = "/MyCalendar/GetHearingData?changeView=1";
+
+            //}
+            //$.ajax({
+            //    type: "POST", url: URL, data: $('#mycalendar').serialize(), success: function (data) {
+            //        $('#calendar').fullCalendar('destroy');
+
+            //        var gotoFlag = true;
+
+            //        $('#calendar').fullCalendar({
+            //            header: {
+            //                right: 'month,agendaWeek,agendaDay prev,next',
+            //                left: 'title'
+            //            },
+
+            //            buttonText: {
+            //                prev: '<i class="fa fa-chevron-left"></i>',
+            //                next: '<i class="fa fa-chevron-right"></i>',
+            //                today: 'Today',
+            //                month: 'Month',
+            //                week: 'Week',
+            //                day: 'Day'
+            //            },
+
+            //            events: data,
+
+            //            viewRender: function (view, element) {
+            //                if (gotoFlag) {
+            //                    gotoFlag = false;
+            //                    $('#calendar').fullCalendar('gotoDate', moment($('#StarEndtDate').data('daterangepicker').startDate).toDate());
+            //                    $('#calendar').fullCalendar('changeView', 'agendaWeek');
+            //                }
+
+            //            },
+            //            eventRender: function (event, element) {
+            //                if (event.description.length > 0) {
+            //                    $(element).attr('title', event.description);
+            //                    $(element).tooltip({
+            //                        html: true,
+            //                        template: '<div class="tooltip tooltip-info" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+            //                    });
+            //                }
+
+
+            //            }
+            //        });
+
+
+
+
+            //    },
+            //    dataType: 'json'
+            //});
+        }
+        function PopulateTableData(changeView) {
+
+
+            var $form = $('#mycalendar');
+            var URL = '/Inquiry/GetHearingDataForTableView';
+            if (changeView == 1) {
+                URL = "/Inquiry/GetHearingDataForTableView?changeView=1";
+            }
+            $.ajax({
+                type: "POST", url: URL, data: $('#mycalendar').serialize(), success: function (data) {
+
+                    setData(data, oHearingData, 0);
+                    setData(data, oLeaveTable, 1);
+
+
+                    if (data[1].data.length <= 0) {
+                        $('#leaveSection').hide();
+                    } else {
+                        $('#leaveSection').show();
+                    }
+
+                    if ($('.toggle-rows:visible').length == 0) {
+                        $('#btnShowAll').hide();
+                    } else {
+                        $('#btnShowAll').show();
+                    }
+                },
+                dataType: 'json'
+            });
+        }
+
+        function IsDataExists() {
+
+        }
+
+        function fnQHEWizard(th) {
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/CalendarManagement/QHEWizard",
+            //    data: {
+            //        caseID: $(th).attr('data-encryptedcaseID'),
+            //        hearingID: $(th).attr('data-hearingID'),
+            //        pageID: "2", hearingIDList: $(th).attr('data-hearingidlist')
+            //    },
+            //    dataType: 'json',
+            //    success: function (data) {
+            //        if (data.isSuccess) {
+            //        } else {
+            //            if (data.URL != '') {
+            //                document.location.href = data.URL;
+            //            } else
+            //                Notify(data.ErrorMessage, 'bottom-right', '5000', 'danger', 'fa-warning', true);
+
+            //        }
+            //    }
+            //});
+        }
+
+        $(document).ready(function () {
+
+            $(window).on("keydown", handleHotkey);
+
+            function handleHotkey(e) {
+
+                if (!e.ctrlKey) return;
+                switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                    case 'p':
+                        $('#btnPrintableVersion').trigger('click');
+                        e.preventDefault();
+                        break;
+                    case 'a':
+                        $('#btnPrintAgendaFormat').trigger('click');
+                        e.preventDefault();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+    </script>
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom  ">Process</button>
+        <button id="btnAddLeave" type="submit" class="btn v-bottom ">Enter/Update Leave Enteries</button>
+        <button id="btnPrintableVersion" type="submit" class="btn  v-bottom  ">Print</button>
+        <button id="btnTransferJudge" type="submit" class="btn  v-bottom  " data-secure-id="@((int)SecurityToken.TransferHearingOfficer)">Transfer Judge</button>
+    </div>
+}
+<style>
+    #HearingData {
+        width: 100% !important;
+    }
+
+    .fc-sat, .fc-sun {
+        background-color: #aaa !important;
+    }
+
+
+    .tooltip-info .tooltip-inner {
+        background: #fff !important;
+        text-align: left !important;
+        border-color: #ddd !important;
+        width: 200px !important;
+        font-size: 12px !important;
+        color: #222 !important;
+    }
+
+    .tooltip-info .tooltip-arrow {
+        border-top-color: #ddd !important;
+    }
+
+    .tooltip-info .tooltip-inner * {
+        font-size: 12px !important;
+        color: #222 !important;
+    }
+
+    .tooltip-info .tooltip-inner b {
+        display: inline-block;
+        width: 80px !important;
+    }
+</style> 

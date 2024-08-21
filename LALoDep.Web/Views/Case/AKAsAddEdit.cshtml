@@ -1,0 +1,63 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.AKAsAddEditViewModel
+@{
+    ViewBag.Title = ViewBag.DisplayTitle;
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"> @Html.Raw(ViewBag.DisplayTitle)</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AKAsAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(o => o.PersonID)
+                    @Html.HiddenFor(o => o.AgencyID)
+                    @Html.HiddenFor(o => o.PersonNameID)
+                    @Html.HiddenFor(o => o.RecordStateID)
+                    @Html.HiddenFor(o => o.PersonNameTypeCodeID)
+
+                    <input type="hidden" name="hdnPersonID" id="hdnPersonID" value="@LALoDep.Core.Custom.Utility.Utility.Encrypt(Model.PersonID.ToString())" />
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.PersonNameLast, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PersonNameLast, new { @class = "form-control input-sm  required ", autofocus = "autofoucs", tabindex = 1, style = "width:100%" })
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.PersonNameFirst, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PersonNameFirst, new { @class = "form-control input-sm  required ", tabindex = 2, style = "width:100%" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (!Model.PersonNameID.HasValue)
+        {
+            <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="3" data-secure-id="@((int)SecurityToken.AddAKA)">Add</button>
+        }
+        else
+        {
+            <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="3" data-secure-id="@((int)SecurityToken.EditAKA)">Save</button>
+        }
+
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="4" data-secure-id="@((int)SecurityToken.ViewAKA)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+
+
+
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/AkasAddEdit.js?v=" + Guid.NewGuid())"></script>
+
+}
+
+

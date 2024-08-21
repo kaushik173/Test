@@ -1,0 +1,444 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@model Jcats.SD.UI.ViewModels.SupervisingAttorneyViewModel
+@{
+    ViewBag.Title = "MyJCATS -<br/> Supv Atty";
+}
+<style>
+    .page-list {
+        display: none !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-3 col-md-2 no-padding-right">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    Date Range
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(MVC.Inquiry.SupvAtty(), FormMethod.Post, new { id = "case-search-form", @class = "center-block" }))
+                {
+                    @Html.HiddenFor(c => c.StartDate) @Html.HiddenFor(c => c.EndDate)
+                    <input type="hidden" id="Start" name="Start" value="false" />
+
+                    <div class="form-group margin-bottom-5">
+                        <label for="reservation" class="control-label">Start Date - End Date</label>
+                        <input tabindex="1" type="text" id="reservation" value="@Model.StartDate - @Model.EndDate" class="form-control daterangeedit input-sm" />
+                    </div>
+                    <div class="form-group text-align-right no-margin-bottom">
+                        <button tabindex="3" type="submit" value="Search" title="Search" class="btn btn-primary btn-sm ">Search</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    Case Search
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm("", "", FormMethod.Post, new { id = "case-search-open-case-form", @class = "" }))
+                {
+                    <div class="form-group margin-bottom-5">
+                        <label for="ClientNameLast" class="control-label">Last Name </label>
+                        @Html.TextBoxFor(model => model.ClientNameLast, new { @class = "form-control input-sm", @tabindex = "4" })
+                    </div>
+                    <div class="form-group margin-bottom-5">
+                        <label for="ClientNameFirst" class="control-label">First Name </label>
+                        @Html.TextBoxFor(model => model.ClientNameFirst, new { @class = "form-control input-sm", @tabindex = "5" })
+                    </div>
+                    <div class="form-group margin-bottom-5">
+                        <label for="CourtNumber" class="control-label">Case  # </label>
+                        @Html.TextBoxFor(model => model.CaseNumber, new { @class = "form-control input-sm", @tabindex = "6" })
+                    </div>
+                    <div class="form-group text-align-right no-margin-bottom">
+                        <button tabindex="7" title="Go" id="btnGo" type="submit" class="btn btn-sm btn-default"><u>G</u>o</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="divResultSet" class="col-sm-9 col-md-10 no-padding-left">
+        @if (Model.AdvisementList.Count > 0)
+            {
+            <div class="col-xs-12">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Writ/Appeal Notice Due</span>
+
+                    </div>
+                    <div class="widget-body col-xs-12">
+
+
+                        <div class="">
+
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+
+                                <thead>
+                                    <tr>
+
+                                        <th>Attorney</th>
+                                        <th>Total</th>
+                                        <th>
+                                            3-5 Days
+                                        </th>
+                                        <th>1-2 Days</th>
+                                        <th>Today</th>
+                                        <th>Past Due</th>
+
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+                                    @foreach (var item in Model.AdvisementList)
+                                    {
+                                        <tr class="trRecords">
+
+                                            <td>
+                                                <a href="#" data-id="@item.AttorneyPersonID" class="writappealPopup">@item.Attorney</a>
+
+                                            </td>
+                                            <td>
+                                                @item.Total
+
+                                            </td>
+                                            <td>
+                                                @item.Due3To5Days
+                                            </td>
+                                            <td>
+                                                @item.Due1To2Days
+                                            </td>
+                                            <td>
+                                                <span style="color:red">@item.DueToday</span>
+                                            </td>
+                                            <td>
+                                                <span style="color:red">@item.PastDue</span>
+                                            </td>
+                                        </tr>
+
+
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row" id="divSerch">
+          
+
+            <div class="col-xs-12">
+                <div class="widget">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            My Agenda For : @UserEnvironment.UserManager.UserExtended.FullName  @Html.DisplayFor(c => c.StartDate) - @Html.DisplayFor(c => c.EndDate)
+                        </span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body auto-datatable">
+                        @if (Model.MyCalendar.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MyAttyData">
+                                    <thead>
+                                        <tr>
+                                            <th>Attorney</th>
+                                            <th>Pending Hearing Total</th>
+                                            <th>Hearings </th>
+                                            <th>Contested Hearings</th>
+                                            <th>Trials </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MyCalendar)
+                                        {
+
+                                            <tr data-index="0">
+                                                <td style="">
+                                                    <a href="/Inquiry/MyCalendar?p=@item.PersonID.ToEncrypt()">@item.PersonNameLast, @item.PersonNameFirst</a>
+
+                                                </td>
+                                                <td style="">
+                                                    @item.PendingHearingCount
+                                                </td>
+                                                <td style="">
+                                                    @item.HearingCount
+                                                </td>
+                                                <td style="">
+                                                    @item.ContestedHearingCount
+                                                </td>
+                                                <td style="">
+                                                    @item.TrialCount
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>No Records</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-6   col-sm-5">
+                <div class="widget" id="divCaseLoads">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">@Html.ActionLink("My Caseloads", "MyCaseLoad", "Inquiry") </span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body">
+
+                        @if (Model.MyCaseLoads.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MyCaseloads">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MyCaseLoads)
+                                        {
+                                            <tr data-index="0">
+                                                <td style="">
+                                                    <a href="/Inquiry/ToDoList/@item.ActionTypeCodeID.ToEncrypt()">@item.CountType </a>
+                                                </td>
+                                                <td style="">
+                                                    @item.CountValue
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>No Records</span>
+                        }
+
+                    </div>
+                </div>
+                <div class="widget" id="divReports">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">@Html.ActionLink("My Reports", "Index", "MyReport", new { returnURL = ViewContext.RouteData.Values["action"] }, null)</span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        @if (Model.MyReports.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="MyReports">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MyReports)
+                                        {
+                                            <tr data-index="0">
+                                                <td style="">
+                                                    <a href="/Inquiry/ReportParameter/@item.ReportID.ToEncrypt()">@item.JcatsReportName </a>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>No Records</span>
+                        }
+                    </div>
+                </div> </div>
+            <div class="col-xs-12 col-md-6   col-sm-7">
+                <div class="widget" id="divMyDailyTime">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">  My Daily Time</span>
+                        <div class="widget-buttons" style="top: 6px;width:190px !important">
+                            <div class="input-group">
+                                <span class="input-group-addon dateminus" style="width:auto !important;">
+                                    <i class="fa fa-minus"></i>
+                                </span>
+                                @Html.TextBoxFor(m => m.MyDailyTimeDate, new { @class = "form-control input-sm date-picker", maxlength = "10", tabindex = 7 })
+                                <span class="input-group-addon dateplus" style="width:auto !important;">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-body" id="divDailyResult">
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section  Scripts{
+    <script type="text/javascript">
+        
+        $(".dateminus").on("click", function () {
+
+            $('#MyDailyTimeDate').val(moment($('#MyDailyTimeDate').val()).add(-1, 'days').format('MM/DD/YYYY'))
+            $('#MyDailyTimeDate').trigger('blur');
+        });
+        $(".dateplus").on("click", function () {
+
+            $('#MyDailyTimeDate').val(moment($('#MyDailyTimeDate').val()).add(1, 'days').format('MM/DD/YYYY'))
+            $('#MyDailyTimeDate').trigger('blur');
+        });
+        $('#MyDailyTimeDate').blur(function () {
+            MyDailyTimeData();
+        });
+        function MyDailyTimeData() {
+            $('#divCaseLoads .widget-header').height($('#divMyDailyTime .widget-header').height())
+            $.get('/Inquiry/MyJcatsAttyDailyTime?StartDate=' + $('#MyDailyTimeDate').val() + '&page=/Inquiry/SupvAtty', function (result) {
+
+                $('#divDailyResult').html(result);
+                $('#loading').hide();
+
+
+            });
+
+        }
+        $BaseURL = '/';
+        function adjustHightOfResultList() {
+            var calc_height = 0;
+            calc_height = $(window).height();
+            var _offset = 125;
+            $("#divResultSet").parentsUntil("body").each(function () {
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        //console.log(calc_height + " - " + $(this).outerHeight(true));
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            console.log("total: " + calc_height);
+
+            var calendarHeight = (calc_height * 60) / 100;
+            var reportHeight = (calc_height * 40) / 100;
+
+
+            if ($('#divSerch .table-responsive #MyAttyData').length > 0) {
+                $('#divSerch .table-responsive').css('max-height', calendarHeight + 'px');
+            }
+
+            if ($('#divCaseLoads .table-responsive #MyCaseloads').length > 0) {
+                $('#divCaseLoads .table-responsive').css('height', reportHeight + 'px');
+            }
+
+            if ($('#divReports .table-responsive #MyReports').length > 0) {
+                $('#divReports .table-responsive').css('height', reportHeight + 'px');
+            }
+        }
+
+        $('.daterangeedit').daterangepicker({ autoClose: true, "linkedCalendars": false }, function (start, end) {
+            $('#StartDate').val(start.format('MM/DD/YYYY'));
+            $('#EndDate').val(end.format('MM/DD/YYYY'))
+            $('#case-search-form').submit();
+        });
+        
+        $('#btnGo').on("click", function (e) {
+            e.preventDefault();
+            IPadKeyboardFix();
+            var $form = $('#case-search-open-case-form');
+            var formInvalid = $('#ClientNameLast').val() == ""
+                && $('#ClientNameFirst').val() == ""
+                && $('#CaseNumber').val() == "";
+            if (formInvalid) {
+                notifyDanger('At least one search parameter is required.');
+                return false;
+            }
+            else {
+                window.location.href = "/Case/Search?" + $('#case-search-open-case-form').serialize();
+            }
+        });
+
+        $('#case-search-form').on("submit", function () {
+            IPadKeyboardFix();
+        });
+
+        $(document).ready(function () {
+            MyDailyTimeData();
+            $(document).unbind("keypress");
+            $(document).bind("keypress", function (e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    if (!$("#ClientNameLast").is(":focus") && !$("#ClientNameLast").is(":focus") && !$("#ClientNameFirst").is(":focus") && !$("#CourtNumber").is(":focus")) {
+                        var defaultBtn = $(this).find('button[type=submit].default');
+                        if (defaultBtn.length > 0) defaultBtn[0].click();
+                    }
+                }
+            });
+
+            if (!$('#MyCalendar').length && '@Model.Start' == 'False') {
+                notifyBlue('No results found.');
+            }
+
+            adjustHightOfResultList();
+
+            $(window).bind('resize', function () {
+                $('#MyCalendar').css('width', '100%');                
+                adjustHightOfResultList();
+            });
+        });
+        $('.writappealPopup').on("click", function (e) {
+            e.preventDefault();
+            OpenPopup('/Inquiry/WritAppealNoticeDuesByAttorney/' + $(this).attr('data-id'), 'Writ/Appeal Notices Due')
+
+        });
+        
+    </script>
+}

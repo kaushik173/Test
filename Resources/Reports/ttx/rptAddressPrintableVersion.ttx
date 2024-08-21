@@ -1,0 +1,23 @@
+PersonAddressStartDate	DateTime
+PersonAddressEndDate	DateTime
+PersonAddressWorkPhone	String	50
+PersonName	String	100
+RoleType	String	30
+AddressType	String	30
+AddressStreet	String	200
+PlacementAgency	String	100
+AddressCity	String	50
+AddressZipCode	String	20
+AddressHomePhone	String	50
+State	String	10
+Country	String	40
+Client	String	50
+CaseNumber	String	25
+CaseAppointmentDate	DateTime
+Status	String	30
+DocketNumber	String	25
+Attorney	String	100
+SystemValueSequence	Number
+PersonNameLast	String	50
+PersonNameFirst	String	50
+PersonID	Number

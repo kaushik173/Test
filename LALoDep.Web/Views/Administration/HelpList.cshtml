@@ -1,0 +1,388 @@
+﻿@model  LALoDep.Models.HelpListViewModel
+@{
+    ViewBag.Title = "Help Page List";
+}
+<div class="row">
+    <div class="col-sm-3" style="padding-right:0px">
+        <div class="widget" style="overflow-y:auto" id="treeView">
+            <div class="widget-body treeViewContent">
+                <div id="MyTree" class="tree">
+                    <div class="tree-folder" style="display: none;">
+                        <div class="tree-folder-header">
+                            <i class="fa fa-folder palegreen"></i>
+                            <div class="tree-folder-name"></div>
+                        </div>
+                        <div class="tree-folder-content">
+                        </div>
+                        <div class="tree-loader" style="display: none;"></div>
+                    </div>
+                    <div class="tree-item" style="display: none;">
+                        <div class="tree-item-name"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6" style="padding-left:0px;padding-right:0px;">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "HelpList-form", @class = "form-inline  center-block" }))
+        {
+            <div class="row">
+                <div class="col-md-12 col-sm-12 center-block">
+                    <div class="widget row">
+                        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                            <span class="widget-caption">JCATS Help Page</span>
+                            <div class="widget-buttons">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="widget-body col-xs-12">
+                            <div class="form-group  col-xs-3">
+                                @Html.LabelFor(m => m.GroupName, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.GroupName, new { @class = "form-control input-sm", tabindex = 1, style = "width:100%" })
+                            </div>
+                            <div class="form-group  col-xs-3">
+                                @Html.LabelFor(m => m.PageName, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.PageName, new { @class = "form-control input-sm", tabindex = 2, style = "width:100%" })
+                            </div>
+                            <div class="form-group  col-xs-2">
+                                @Html.LabelFor(m => m.Order, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.Order, new { @class = "form-control input-sm", tabindex = 3, style = "width:100%" })
+                            </div>
+                            <div class="form-group  col-xs-4 hide">
+                                @Html.LabelFor(m => m.LinkToPageID, new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.LinkToPageID, new SelectList(Model.LinkPages.Where(o => o.JcatsHelpID.HasValue && o.JcatsHelpID.Value > 0).ToList(), "NavigationID", "PageDisplayName", Model.LinkToPageID), "", new { @class = "form-control input-sm", tabindex = 4, style = "width:100%" })
+                                @Html.HiddenFor(m => m.HelpID)
+                                @Html.HiddenFor(m => m.HelpFileUrl)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 center-block">
+                    <div class="widget row">
+                        <div class="widget-body col-xs-12">
+                            @Html.TextAreaFor(m => m.HelpContent, new { tabindex = 4 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-sm-3" style="padding-left:0px;" id="aspPageListDiv">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Link To Page</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body" id="aspPageList" style="overflow-y:auto">
+                @foreach (var page in Model.LinkPages)
+                {
+                    <div>
+                        <label>
+                            @Html.CheckBox("LinkToASPPage[]", page.SelectedFlag == 1, new { id = "LinkToASPPage-" + page.NavigationID, @class = "linkToAspPage", data_pageid = page.NavigationID,data_checked= page.SelectedFlag })
+                            <span style="top: -5px; position: relative;">@page.PageDisplayName</span>
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Model.HasEditAccess)
+        {
+            <button id="save" type="submit" class="btn btn-primary v-bottom default" tabindex="5">Save</button>
+        }
+        @if (Model.HasAddAccess)
+        {
+            <button id="saveAndAddNew" type="submit" class="btn btn-default" tabindex="6">Save/<u>A</u>dd New</button>
+            <button id="addTemplate" type="submit" class="btn btn-default v-bottom" tabindex="7">Add <u>T</u>emplate</button>
+            <button id="cancel" type="submit" class="btn btn-default v-bottom" tabindex="8"><u>C</u>ancel</button>
+        }
+    </div>
+
+}
+@section Scripts{
+    <script src="~/assets/js/editors/summernote/summernote.min.js"></script>
+    <script type="text/javascript">
+        var origin_wrapper_height = 0
+
+        function fitCalculatedHeight() {
+            var _offset = 200;
+
+
+            $("#aspPageListDiv #aspPageList").css('height', 'calc(100vh - 200px)');
+            $("#treeView").css('maxHeight', 'calc(100vh - 170px)');
+        }
+
+        function removeLastComma(str) {
+            return str.replace(/,\s*$/, "")
+        }
+        function AddTemplate() {
+            var st = '<p style="MARGIN-TOP: 12pt"><b><span style="FONT-SIZE: 12pt; FONT-FAMILY: &quot;Verdana&quot;,&quot;sans-serif&quot;; COLOR: #3366ff">Page Heading</span></b></p><p style="TEXT-ALIGN: center; MARGIN-LEFT: 0.25in; TEXT-INDENT: -0.25in" align="center"><span style="FONT-SIZE: 12pt; FONT-FAMILY: Wingdings"><font style="FONT-SIZE: 12pt">v<span style="font-variant-numeric: normal; font-stretch: normal; font-size: 12pt; line-height: normal; font-family: Verdana;"> <font style="FONT-SIZE: 12pt"></font></span></font></span><b><i><span style="FONT-SIZE: 12pt">NAVIGATION:</span></i></b> </p><p style="TEXT-ALIGN: center; MARGIN-LEFT: 1in; MARGIN-TOP: -8pt" align="center"><b><span style="FONT-SIZE: 12pt; FONT-FAMILY: &quot;Verdana&quot;,&quot;sans-serif&quot;">Navigation Display Name</span></b></p><p></p><p><span style="FONT-SIZE: 12pt; FONT-FAMILY: Verdana">Page Description...</span></p>';
+            $('#HelpContent').code(st);
+        }
+        function displayPage(helpPage) {
+            $.get(helpPage.pageUrl + "&v=" + Math.random(), function (data) {
+                $('#HelpContent').code(data);
+            }, 'text');
+            loadAspPageList(helpPage.id)
+        }
+
+        function setAspPageList(data) {
+            if (data.length > 0) {
+                $("#aspPageList").empty();
+                for (var indx = 0; indx < data.length; indx++) {
+                    var page = data[indx];
+                    var chk = '<div >' +
+                        '<label>' +
+                        '<input name="LinkToASPPage[]" id="LinkToASPPage-' + page.NavigationID + '" data-checked="0" type="checkbox" class="linkToAspPage" value="' + page.NavigationID + '" data-pageid="' + page.NavigationID + '">' +
+                        '<input name="LinkToASPPage[]" type="hidden" value="false">' +
+                        '<span style="top: -5px; position: relative;">' + page.PageDisplayName + '</span>' +
+                        '</label>                    ' +
+                        '</div>';
+                    $("#aspPageList").append(chk);
+
+                    if (page.SelectedFlag == 1) {
+                       
+                        $("#LinkToASPPage-" + page.NavigationID).prop("checked", true);
+                        $("#LinkToASPPage-" + page.NavigationID).attr("data-checked", '1');
+
+                        
+                    }
+
+                }
+            }
+        }
+
+        function loadAspPageList(helpPageID) {
+            data = { helpID: helpPageID };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AspPageList", "Administration")',
+                data: data,
+                success: function (data) {
+                    if (data.URL != undefined) {
+                        window.location.href = '/' + data.URL;
+                    } else {
+                        setAspPageList(data.data);
+                    } $('#GroupName').val(data.helpPageData.JcatsHelpGroupDisplayName);
+                    $('#PageName').val(data.helpPageData.JcatsHelpPageDisplayName);
+                    $('#Order').val(data.helpPageData.JcatsHelpPageDisplayOrder);
+                    $('#HelpID').val(data.helpPageData.JcatsHelpID);
+                    $('#HelpFileUrl').val(data.helpPageData.JcatsHelpPageName);
+
+                },
+                dataType: 'json'
+            });
+        }
+
+
+
+        function getData() {
+            var aspPageIDs = "";
+            var removeAspPageIDs = "";
+            $("input.linkToAspPage:checked").each(function () {
+                if ($(this).data("checked") == 0) {
+                    aspPageIDs = aspPageIDs + $(this).data("pageid") + ",";
+                }
+            });
+            $("input.linkToAspPage:unchecked").each(function () {
+                if ($(this).data("checked") == 1) {
+                    removeAspPageIDs = removeAspPageIDs + $(this).data("pageid") + ",";
+                }
+              
+            });
+            var selectedNode = $('#MyTree').tree("selectedItems")[0];
+            removeAspPageIDs = removeLastComma(removeAspPageIDs);
+            aspPageIDs = removeLastComma(aspPageIDs);
+            var helpModel = {
+                JcatsHelpID: $('#HelpID').val(),
+                ASPPageIDs: aspPageIDs,
+                HelpFileUrl: $('#HelpFileUrl').val(),
+                HelpContent: $('#HelpContent').code(),
+                GroupName: $('#GroupName').val(),
+                PageName: $('#PageName').val(),
+                Order: $('#Order').val(),
+                LinkToPageID: $('#LinkToPageID').val(),
+                RemoveAspPageIDs: removeAspPageIDs
+            };
+            return helpModel;
+        }
+
+        function saveHelp(buttonId) {
+            //if ($('#MyTree').tree("selectedItems").length < 1) {
+            //    Notify('No help file is selected', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+            //    return false;
+            //}
+            if ($("input.linkToAspPage:checked").length == 0) {
+                if ($('#GroupName').val() == '') {
+                    Notify('Help Page Group is required if no Asp page is selected', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    return false;
+                } if ($('#PageName').val() == '') {
+                    Notify('Help Page Name is required if no Asp page is selected', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            } if ($("input.linkToAspPage:checked").length > 1) {
+                if ($('#GroupName').val() == '') {
+                    Notify('Help Page Group is required when more than one Asp page is selected', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    return false;
+                } if ($('#PageName').val() == '') {
+                    Notify('Help Page Name is required  when more than one Asp page is selected', 'bottom-right', '4000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            }
+
+            var data = getData();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveHelp", "Administration")',
+                data: data,
+                success: function (data) {
+                    if (data.URL != undefined) {
+                        window.location.href = '/' + data.URL;
+                    } else {
+                        Notify(data.message, 'bottom-right', '3000', 'success', 'fa-check', true);
+                        if (buttonId == 1 && ($('#HelpID').val() == '0' || $('#HelpID').val() == '')) {
+                            document.location.href = document.location.href;
+                        }
+                        else if (buttonId == 2) {
+                            document.location.href = document.location.href;
+                        }
+                    }
+                },
+                dataType: 'json'
+            });
+
+        }
+
+        var dataSourceDetails = [];
+        var UITree = function () {
+            return {
+                init: function () {
+                    DataSourceTree = function (options) {
+                        this.url = options.url;
+                    }
+                    DataSourceTree.prototype.data = function (options, callback) {
+                        var self = this;
+                        var $data = null;
+
+                        var param = null;
+                        if (!("name" in options) && !("type" in options)) {
+                            param = 0;
+                        } else if ("type" in options && options.type == "folder") {
+                            if ("children" in options)
+                                $data = options.children;
+                            else $data = {}
+                            callback({ data: $data });
+                        }
+                        if (param == 0) {
+                            $.ajax({
+                                url: this.url,
+                                type: 'POST',
+                                dataType: 'json',
+                                success: function (response) {
+                                    var selectedId = response.length > 0 ? response[0].selectedId : 0;
+                                    //console.log(selectedId);
+                                    callback({ data: response.groupedData })
+                                    dataSourceDetails = response.groupedData;
+
+                                    if (response.SelectedTree != -1) {
+                                        selectTreeItem($("#MyTree"), dataSourceDetails[response.SelectedTree]);
+                                        $('#Help_' + response.JcatsHelpID).parent().parent().closest('div').removeClass('tree-item').addClass('tree-item tree-selected');
+                                        //$('#htmlPage').load(response.selectedPageContent);
+                                    }
+                                },
+                                error: function (response) {
+                                    console.log(response);
+                                }
+                            })
+                        }
+                    };
+
+                    var selectTreeFolder = function ($treeEl, folder, $parentEl) {
+                        var $parentEl = $parentEl || $treeEl;
+                        if (folder.type == "folder") {
+                            var $folderEl = $parentEl.find("div.tree-folder-name").filter(function (_, treeFolder) {
+                                return $(treeFolder).text() == folder.name;
+                            }).parent();
+                            $treeEl.one("loaded", function () {
+                                $.each(folder.children, function (i, item) {
+                                    selectTreeFolder($treeEl, item, $folderEl.parent());
+                                });
+                            });
+                            $treeEl.tree("selectFolder", $folderEl);
+                        } else {
+                            selectTreeItem($treeEl, folder, $parentEl);
+                        }
+                    };
+
+                    var selectTreeItem = function ($treeEl, item, $parentEl) {
+                        var $parentEl = $parentEl || $treeEl;
+                        if (item.type == "item") {
+                            var $itemEl = $parentEl.find("div.tree-item-name").filter(function (_, treeItem) {
+                                return $(treeItem).text() == item.name && !$(treeItem).parent().is(".tree-selected");
+                            }).parent();
+                            $treeEl.tree("selectItem", $itemEl);
+                        } else if (item.type == "folder") {
+                            selectTreeFolder($treeEl, item, $parentEl);
+                        }
+                    };
+
+                    $('#MyTree').tree({
+                        dataSource: new DataSourceTree({ url: '/Administration/HelpTree' }),
+                        multiSelect: false,
+                        loadingHTML: '<div class="tree-loading"><i class="fa fa-rotate-right fa-spin"></i></div>'
+                    });
+
+                    $('#MyTree').on('loaded.fu.tree', function () {
+                        //console.log('loaded.fu.tree');
+                    });
+
+                    $('#MyTree').on('selected.fu.tree', function (a, b) {
+                        var data = b.info[0];
+
+                        displayPage(data);
+                    });
+                }
+            };
+        }();
+
+        $("#save").on("click", function () {
+
+            saveHelp(1);
+
+        });
+        $("#saveAndAddNew").on("click", function () {
+            saveHelp(2);
+
+        });
+        $("#addTemplate").on("click", function () {
+            AddTemplate();
+
+        }); $("#cancel").on("click", function () {
+            document.location.href = document.location.href;
+
+        });
+
+        jQuery(document).ready(function () {
+            UITree.init();
+            $("#HelpContent").summernote({ height: "calc(100vh - 300px)" });
+            fitCalculatedHeight();
+        });
+
+        $(document).resize(function () {
+            fitCalculatedHeight();
+        });
+    </script>
+}
+<style>
+    .checkbox input[type=checkbox] {
+        margin-left: -0px;
+        border: 0px !important;
+    }
+</style>

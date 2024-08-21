@@ -1,0 +1,81 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model List<LALoDep.Domain.pd_Work.pd_WorkGetByCaseID_spResult>
+
+<style type="text/css">
+    .grand-total {
+        font-weight: bold;
+        text-shadow: 1px 1px 1px #ccc;
+    }
+</style>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="recordTimeList">
+        <thead>
+            <tr>
+                <th style="width:70px">
+                    <input type="checkbox" id="chkAllPrint" class="chkAllPrint" />
+                    Print
+                </th>
+                <th>Worker</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Phase</th>
+                <th>Description</th>
+                <th style="text-align:right">Hours</th>
+                <th style="text-align:right">Miles</th>
+                <th>Hearing</th>
+                <th style="width:30px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td><input type="checkbox" id="@item.WorkID" tabindex="3" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.WorkID.ToString())" class="chkPrint" /></td>
+                        <td>@item.WorkerLastName, @item.WorkerFirstName</td>
+                        <td>@item.WorkStartDate</td>
+                        <td>@item.WorkEndDate</td>
+                        <td>@item.Phase</td>
+                        <td>
+                            @if (item.DisableFlag.HasValue && item.DisableFlag.Value == 1)
+                            {
+                                <span>@item.WorkDescriptionCodeValue</span>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action(MVC.QHE.QHERecordTimeEdit((string)ViewBag.HearingID, item.WorkID.ToEncrypt()))">@item.WorkDescriptionCodeValue</a>
+
+
+                            }
+                        </td>
+                        <td style="text-align:right">@(item.WorkHours)</td>
+                        <td style="text-align:right">@item.WorkMileage</td>
+                        <td>@item.HearingDisplay</td>
+                        <td>
+                            @if (!(item.DisableFlag.HasValue && item.DisableFlag.Value == 1) && item.CanDeleteFlag.ToInt() == 1)
+                            {
+
+                                <a style="cursor:pointer;" class="btn btn-danger btn-xs deleteRecord" data-secure-id="@((int)SecurityToken.RecordTimeDelete)" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.WorkID.ToString())"><i class="fa fa-trash-o"></i> Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td style="text-align:right" colspan="6" class="grand-total">Grand Total</td>
+                    <td style="text-align:right" class="grand-total">@Model.Sum(x => x.WorkHours)</td>
+                    <td style="text-align:right" class="grand-total">@Model.Sum(x => x.WorkMileage)</td>
+                    <td colspan="2"></td>
+                </tr>
+
+            }
+            else
+            {
+                <tr><td align="center" colspan="9">No data available in table</td></tr>
+            }
+
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,446 @@
+﻿@model LALoDep.Models.Task.MyInvoiceQueueViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = Model.PageTitle;
+}
+<style>
+    .dataTables_info {
+        display: none !important;
+    }
+</style>
+
+@Html.Hidden("EncryptedPersonID", Model.PersonID.ToEncrypt())
+@Html.Hidden("EncryptedInvStatusCodeID", Model.InvoiceStatusCodeID.ToEncrypt())
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "MyInvoiceQueue-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(o => o.PersonID)
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.YearQuarterID, "Yr/Qtr", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.YearQuarterID, Model.YearQuarterList, new { @class = "form-control input-sm", tabindex = 1, style = "width:100% !important;" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceStatusCodeID, "Invoice Status", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.InvoiceStatusCodeID, Model.InvoiceStatusList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:100% !important;" })
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceNumber, "Invoice #", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.InvoiceNumber, new { @class = "form-control input-sm", tabindex = 3, maxlength = 50, style = "width:100% !important;" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SAPNumber, "SAP Doc #", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SAPNumber, new { @class = "form-control input-sm", tabindex = 3,maxlength=50, style = "width:100% !important;" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NotInvoicedFlag, "Not Invoiced", new { @class = "control-label" })
+                            <br />
+                            <input name="chkNotInvoicedFlag" id="chkNotInvoicedFlag" @(Model.NotInvoicedFlag == 1 ? "checked='checked'" : "") type="checkbox" />
+                            <input name="NotInvoicedFlag" id="NotInvoicedFlag" value="@Model.NotInvoicedFlag" type="hidden" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult">Search Result</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <div id="divCompleted">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAttorneyList">
+                            <thead>
+                                <tr>
+                                    <th>Case Name</th>
+                                    <th>JCATS #</th>
+                                    <th>
+                                        Expense $ Total
+                                    </th>
+                                    <th>
+                                        Total # of Hours
+                                    </th>
+                                    <th>
+                                        Hours $ Total
+                                    </th>
+                                    <th>
+                                        Grand Total
+                                    </th>
+                                    <th>
+                                        Invoice Date
+
+                                    </th>
+                                    <th>
+                                        Invoice Status
+                                    </th>
+                                    <th>
+                                        Invoice Status Dt
+                                    </th>
+                                    <th>
+                                        Invoice #
+                                    </th>
+                                    <th>
+                                        Invoice Dialog Note Last Updated
+                                    </th>
+                                </tr>
+
+
+
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResultMyInvoiceQueue">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResultMyInvoiceQueue">Search Result</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <div id="divCompleted">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblMyInvoiceQueue">
+                            <thead>
+                                <tr>
+                                    <th>Case Name</th>
+                                    <th>JCATS #</th>
+                                    <th>
+                                        Expense $ Total
+                                    </th>
+                                    <th>
+                                        Total # of Hours
+                                    </th>
+                                    <th>
+                                        Hours $ Total
+                                    </th>
+                                    <th>
+                                        Grand Total
+                                    </th>
+                                    <th>
+                                        Invoice Date
+
+                                    </th>
+                                    <th>
+                                        Invoice Status
+                                    </th>
+                                    <th>
+                                        Invoice Status Dt
+                                    </th>
+                                    <th>
+                                        Invoice #
+                                    </th>
+                                    <th>
+                                        Invoice Dialog Note Last Updated
+                                    </th>
+                                </tr>
+
+
+
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Search/Process</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+        var page = (function () {
+            return {
+                $form: $('#MyInvoiceQueue-form'),
+                mainKey: 'MyInvoiceQueue-form',
+
+                ttl: 600000 /*In Milli seconds*/
+            };
+        })();
+
+        var ResetPageState = function () {
+            simpleStorage.deleteKey(page.mainKey);
+
+
+        };
+
+        var SaveFormState = function () {
+            var formData = {};
+            page.$form.serializeArray().map(function (item) {
+                formData[item.name] = item.value;
+            });
+            var pageState = { formData: formData };
+            simpleStorage.set(page.mainKey, pageState, { TTL: page.ttl });
+        };
+        var LoadPreviousFormState = function () {
+            var flag = false;
+            var pageState = simpleStorage.get(page.mainKey);
+            if (pageState && pageState.formData) {
+                /*Load Form inputs*/
+                var formData = pageState.formData;
+                page.$form.find('*').filter(':input').each(function () {
+                    var $this = $(this);
+                    if (formData[$this.attr('id')]) {
+                        $this.val(formData[$this.attr('id')]);
+                        flag = true;
+
+                    }
+                });
+                if (!formData["chkNotInvoicedFlag"]) {
+                    $('#chkNotInvoicedFlag').prop('checked', false);
+                }
+                else {
+                    $('#chkNotInvoicedFlag').prop('checked', $('#chkNotInvoicedFlag').val() == 'on');
+                }
+
+            }
+
+            formDataPased = page.$form.serialize();
+            return flag;
+        };
+        $("#btnSearch").on("click", function () {
+
+            Search();
+
+
+
+        });
+        var oTable = $('#tblAttorneyList').dataTable({
+
+            "lengthMenu": [500],
+            "lengthChange": false,
+            "paging": false,
+            "searching": false,
+            "bSort": false,
+
+            "columns": [
+
+
+
+                //{ "data": "CaseName" },
+                { "data": "CaseName" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<a href="/Case/Invoices?caseId=' + full.EncryptedCaseID + '">' + full.CaseNumber + '</a>';
+
+                    }
+                },
+
+                { "data": "ExpenseTotal" },
+                { "data": "TotalNumberOfHours" },
+                { "data": "TotalHoursAmount" },
+                { "data": "GrandTotal" },
+                { "data": "InvoiceDate" },
+                { "data": "InvoiceStatus" },
+                { "data": "InvoiceStatsuDate" },
+
+                {
+                    "render": function (data, type, full, meta) {
+                        if (full.NgInvoiceID > 0) {
+                            if (full.PrintInvoiceLabel.length > 0)
+                                return '<a target="_blank" href="/Case/InvoicePrint/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '">' + full.PrintInvoiceLabel + '</a>';
+                            else
+                                return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '&yQId=' + full.EncryptedYearQuarterID + '&cPId=' + full.EncryptedContractorPersonID + '&PersonID=' + $('#EncryptedPersonID').val() + '&status=' + $('#EncryptedInvStatusCodeID').val() + '">' + full.InvoiceNumber + '</a>';
+
+                            //            return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '">' + full.InvoiceNumber + '</a>';
+                        }
+                        else
+                            return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '&yQId=' + full.EncryptedYearQuarterID + '&cPId=' + full.EncryptedContractorPersonID + '&PersonID=' + $('#EncryptedPersonID').val() + '&status=' + $('#EncryptedInvStatusCodeID').val() + '">' + full.InvoiceNumber + '</a>';
+
+
+                    }
+                },
+                { "data": "InvoiceDialog" },
+
+
+            ],
+
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+        var oTableMyInvoiceQueue = $('#tblMyInvoiceQueue').dataTable({
+
+            "lengthMenu": [500],
+            "lengthChange": false,
+            "paging": false,
+            "searching": false,
+            "bSort": false,
+
+            "columns": [
+
+
+
+                //{ "data": "CaseName" },
+                { "data": "CaseName" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<a href="/Case/Invoices?caseId=' + full.EncryptedCaseID + '">' + full.CaseNumber + '</a>';
+
+                    }
+                },
+
+                { "data": "ExpenseTotal" },
+                { "data": "TotalNumberOfHours" },
+                { "data": "TotalHoursAmount" },
+                { "data": "GrandTotal" },
+                { "data": "InvoiceDate" },
+                { "data": "InvoiceStatus" },
+                { "data": "InvoiceStatsuDate" },
+                {
+                    "render": function (data, type, full, meta) {
+                        if (full.NgInvoiceID > 0) {
+                            if (full.PrintInvoiceLabel.length > 0)
+                                return '<a target="_blank" href="/Case/InvoicePrint/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '">' + full.PrintInvoiceLabel + '</a>';
+                            else
+                                return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '&yQId=' + full.EncryptedYearQuarterID + '&cPId=' + full.EncryptedContractorPersonID + '&PersonID=' + $('#EncryptedPersonID').val() + '&status=' + $('#EncryptedInvStatusCodeID').val() + '">' + full.InvoiceNumber + '</a>';
+
+                            //     return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '">' + full.InvoiceNumber + '</a>';
+                        }
+
+                        else
+                            return '<a href="/Case/InvoiceAddEdit/' + full.EncryptedInvoiceID + '?caseId=' + full.EncryptedCaseID + '&yQId=' + full.EncryptedYearQuarterID + '&cPId=' + full.EncryptedContractorPersonID + '&PersonID=' + $('#EncryptedPersonID').val() + '&status=' + $('#EncryptedInvStatusCodeID').val() + '">' + full.InvoiceNumber + '</a>';
+
+                    }
+                },
+                { "data": "InvoiceDialog" },
+
+
+            ],
+
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+        function setData(data) {
+
+            oTable.fnClearTable();
+            oTableMyInvoiceQueue.fnClearTable();
+            if ($("#InvoiceStatusCodeID").val() != "") {
+                $("#EncryptedInvStatusCodeID").val(data.EncryptedInvStatusCodeID);
+            }
+            else {
+                $("#EncryptedInvStatusCodeID").val("");
+            }
+            if (data.SearchAttorneyApprovalNeededData.data.length > 0) {
+                oTable.fnAddData(data.SearchAttorneyApprovalNeededData.data);
+                $('#countSearchResult').text(data.SearchAttorneyApprovalNeededData.data[0].SectionHeader)
+                $('#divSearchResult').show();
+            } else {
+
+                $('#divSearchResult').hide();
+            }
+
+            if (data.SearchMyInvoiceQueueData.data.length > 0) {
+                oTableMyInvoiceQueue.fnAddData(data.SearchMyInvoiceQueueData.data);
+                $('#countSearchResultMyInvoiceQueue').text(data.SearchMyInvoiceQueueData.data[0].SectionHeader)
+            }
+        }
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            if (oTable != null) {
+                calc_height = $(window).height();
+                var _offset = 25;
+
+                $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                    $(this).siblings().each(function () {
+                        if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                            if ($(this).attr("id") == 'loading')
+                                return;
+                            calc_height = calc_height - $(this).outerHeight(true);
+                        }
+                    });
+                    _offset = _offset + $(this).outerHeight(true) - $(this).height();
+                });
+
+                calc_height = calc_height - _offset;
+                $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+                oTable.fnAdjustColumnSizing();
+            }
+            return calc_height;
+        }
+        function getData() {
+            var fData = $('#MyInvoiceQueue-form').serialize();
+
+
+            return fData;
+        }
+        function Search() {
+            $('#NotInvoicedFlag').val($('#chkNotInvoicedFlag').is(':checked') ? 1 : 0);
+            var $form = $('#MyInvoiceQueue-form');
+            IPadKeyboardFix();
+
+            if ($('#SAPNumber').hasValue() && $('#InvoiceNumber').hasValue()) {
+
+                $('#InvoiceNumber').focus();
+                Notify('Search for either Invoice # or SAP Doc # not both.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                return false;
+            }
+
+            var params = getData();
+
+            ResetPageState();
+            SaveFormState();
+
+            $.ajax({
+                type: "POST", url: '/Task/MyInvoiceQueue', data: params,
+                success: function (data) {
+
+                    if (data.Status == "Done") {
+                        setData(data.SearchData);
+                    } else if (data.Status == "CaseRedirect") {
+                        document.location.href = data.URL;
+
+                    }
+
+
+                }
+            });
+
+        }
+        $(function () {
+           
+            @if (Model.ResetPageCache)
+           {
+                
+               <text>ResetPageState();</text>
+           }
+            LoadPreviousFormState();
+            Search();
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

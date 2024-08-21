@@ -1,0 +1,434 @@
+﻿@model LALoDep.Models.Task.QuickCalCurrentERHViewModel
+@using LALoDep.Custom
+@{
+    ViewBag.Title = " ";
+    var tabindex = 5;
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+
+    <style>
+        body {
+            margin-top: 0px !important;
+            padding: 0px;
+        }
+    </style>
+
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "QuickCalCurrentERH-form", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">New Ed Rights Holder</span>
+                    <div class="widget-buttons">
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+
+                    <div class="form-inline">
+                        <div class="row">
+                            @Html.HiddenFor(m => m.HearingID)
+                            <div class="form-group col-md-2 col-sm-3">
+                                @Html.LabelFor(m => m.ExistingRoleID, "Existing Role", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.ExistingRoleID, Model.ExistingRolesList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })
+                            </div>
+                            <div class="form-group col-lg-1 col-md-2">
+                                @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 2, maxlength = "10" })
+                                    <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-2 ">
+                                @Html.LabelFor(m => m.LastName, "OR New Case Role Last Name", new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", style = "width:100%;", tabindex = 3, maxlength = "50" })
+                            </div>
+                            <div class="form-group  col-md-2">
+                                @Html.LabelFor(m => m.FirstName, "New Case Role First Name", new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 4, @style = "width:100%" })
+                            </div>
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(m => m.CaseRoleTypeID, "New Case Role Type", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.CaseRoleTypeID, Model.CaseRoleTypeList, "", new { @class = "form-control input-sm", tabindex = 5, @style = "width:100%" })
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Child</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+
+                        @if (Model.ERHChildRoles != null && Model.ERHChildRoles.Count > 0)
+                        { <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="workedForList">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="chkAll" tabindex="@(++tabindex)" />
+                                </th>
+                                <th>
+                                    Child
+                                </th>
+                                <th style="text-align:right;">
+                                    Association to Child
+                                </th>
+                                <th style="text-align:right;width:50%;">
+                                    @Html.DropDownListFor(m => m.AssociationToChildID, Model.AssociationToChildList, "", new { @class = "form-control input-sm", tabindex = ++tabindex, @style = "width:100%" })
+
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.ERHChildRoles)
+                            {
+                                <tr>
+                                    <td width="30" style="vertical-align: middle">
+                                        <input type="checkbox" value="@item.ChildPersonID" tabindex="@(++tabindex)" class="chkChild" @(Model.ERHChildRoles.Count == 1 ? "checked" : "" ) />
+                                    </td>
+                                    <td style="vertical-align: middle">@item.ChildDisplay</td>
+                                    <td></td>
+                                    <td style="text-align:right; width:200px">
+
+                                        @Html.DropDownListFor(m => item.AssociationToChildID, Model.AssociationToChildList, "", new { @class = "form-control input-sm AssociationToChildID", tabindex = ++tabindex, @style = "width:100%" })
+
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Ed Rights Holder History</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+
+                        @if (Model.ERHHistory != null && Model.ERHHistory.Count > 0)
+                        { <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="workedForList">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Child
+                                </th>
+                                <th style="width:150px;">
+                                    Start Date
+                                </th>
+                                <th style="width:150px;">
+                                    End Date
+                                </th>
+                                <th>
+                                    ERH Name
+
+
+                                </th>
+                                <th>
+                                    Role
+
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.ERHHistory)
+                            {
+                                <tr class="trHistory" data-id="@item.AssociationID">
+
+                                    <td>
+                                        @item.Child
+                                    </td>
+                                    <td>
+
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => item.StartDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = tabindex = ++tabindex, maxlength = "10" })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => item.EndDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = tabindex = ++tabindex, maxlength = "10" })
+                                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @item.EHRName
+
+
+                                    </td>
+                                    <td>
+                                        @item.Role
+
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+        <button id="btnSave" type="button" tabindex="@(++tabindex)" class="btn btn-primary default v-bottom ">Save</button>
+        <button id="btnSaveAndAdd" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Save/Add More</button>
+        <button id="btnCancel" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Cancel</button>
+
+    </div>
+}
+
+@section scripts
+{
+
+    <script>
+
+        $(function () {
+
+
+            setInitialFormValues('QuickCalCurrentERH-form', true);
+
+
+        });
+
+        $("#AssociationToChildID").on("change", function () {
+            if ($("select#AssociationToChildID").val() > 0) {
+                $('.AssociationToChildID').val('')
+
+            }
+        });
+        $(".AssociationToChildID").on("change", function () {
+            if ($(this).val() > 0) {
+
+                $(this).parent().parent().find('.chkChild').prop('checked', true);
+            }
+        });
+        $("#chkAll").on("change", function () {
+
+
+            $('.chkChild').prop('checked', $(this).is(':checked'));
+
+        });
+        $("#btnSaveAndAdd").on("click", function () {
+            SaveData(2)
+        });
+
+
+
+
+
+        $("#btnSave").on("click", function () {
+            SaveData(1)
+        });
+        $("#btnCancel").on("click", function () {
+            self.parent.ClosePopup();
+        });
+        function GetData() {
+            var data = $('#QuickCalCurrentERH-form').serializeFormObject();
+            data.ERHChildRoles = [];
+            data.ERHHistory = [];
+
+            $('.chkChild:checked').each(function () {
+
+                $this = $(this);
+                var aid = $this.parent().parent().find('.AssociationToChildID').val();
+                if ($this.parent().parent().find('.AssociationToChildID').val() > 0) {
+                    aid = $this.parent().parent().find('.AssociationToChildID').val();
+                }
+                if ($('#AssociationToChildID').val() > 0) {
+                    aid = $('#AssociationToChildID').val();
+                }
+                data.ERHChildRoles.push({
+                    ChildPersonID: $this.attr('value'),
+                    AssociationToChildID: aid,
+                });
+            })
+
+            $('.trHistory').each(function () {
+               
+                $this = $(this);
+
+                if ($this.find('#item_StartDate').IsValueChanged() || $this.find('#item_EndDate').IsValueChanged()) {
+                    data.ERHHistory.push({
+                        AssociationID: $this.data('id'),
+                        StartDate: $this.find('#item_StartDate').val(),
+                        EndDate: $this.find('#item_EndDate').val(),
+                    });
+                }
+
+
+            });
+            return data;
+
+        }
+        function SaveData(buttonId) {
+
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            if (!hasFormChanged("QuickCalCurrentERH-form")) {
+
+                notifyDanger("Nothing was changed");
+                return;
+            }
+            if ($('#StartDate').hasValue() && ($('#ExistingRoleID').hasValue() || $('#FirstName').hasValue() || $('#CaseRoleTypeID').hasValue() || $('#LastName').hasValue())) {
+                if ($('#StartDate').val() == "") {
+                    notifyDanger('Start Date is required.');
+                    $('#StartDate').focus();
+                    return false;
+                }
+                if ($('#ExistingRoleID').hasValue() && ($('#LastName').hasValue() || $('#FirstName').hasValue() || $('#CaseRoleTypeID').hasValue())) {
+                    notifyDanger('Select Existing Role or enter New Case Role Name fields, but not both');
+                    $('#ExistingRoleID').focus();
+                    return false;
+                }
+                if (!$('#ExistingRoleID').hasValue() && !($('#LastName').hasValue() || $('#FirstName').hasValue() || $('#CaseRoleTypeID').hasValue())) {
+                    notifyDanger('Either Existing Role or New Role Last Name, First Name, and Role Type are required.');
+                    $('#ExistingRoleID').focus();
+                    return false;
+                }
+
+                if ($('#LastName').hasValue() || $('#FirstName').hasValue() || $('#CaseRoleTypeID').hasValue()) {
+                    if (!$('#LastName').hasValue()) {
+                        notifyDanger('New Role Last Name is required.');
+                        $('#LastName').focus();
+                        return false;
+                    }
+                    if (!$('#FirstName').hasValue()) {
+                        notifyDanger('New Role First Name is required.');
+                        $('#FirstName').focus();
+                        return false;
+                    }
+                    if (!$('#CaseRoleTypeID').hasValue()) {
+                        notifyDanger('New Role Type is required.');
+                        $('#CaseRoleTypeID').focus();
+                        return false;
+                    }
+                }
+
+                if ($('.chkChild:checked').length == 0) {
+                    notifyDanger('At least one child needs to be checked.');
+                    $('.chkChild:first').focus();
+                    return false;
+                }
+            }
+            var isValid = true;
+            $('.trHistory').each(function () {
+                if (!isValid) {
+                    return false;
+                }
+
+                $this = $(this);
+
+                if (!$this.find('#item_StartDate').hasValue()) {
+                    notifyDanger('Start Date is required.');
+                    $this.find('#item_StartDate').focus();
+                    isValid = false;
+                    return false;
+                }
+
+                if ($this.find('#item_EndDate').hasValue() && moment($this.find('#item_StartDate').val()) > moment($this.find('#item_EndDate').val())) {
+                    notifyDanger('End Date cannot be less than Start Date.');
+                    $this.find('#item_StartDate').focus();
+                    isValid = false;
+                    return false;
+                }
+            });
+            if (!isValid) {
+                return false;
+            }
+
+            var data = GetData();
+            isBottomBarAccessible(false);
+
+
+            $.ajax({
+                type: "POST", dataType: 'json', url: '/Task/QuickCalCurrentERH', data: JSON.stringify(data), contentType: "application/json",
+                success: function (result) {
+                    if (result.Status == "Done") {
+                        RequestSubmitted();
+                        notifySuccess('Data Saved Successfully!');
+
+                        if (buttonId == 2) {
+                            isBottomBarAccessible(false);
+
+                            setTimeout(function () {
+                                isBottomBarAccessible(false);
+
+                                document.location.href = document.location.href;
+
+                            }, 2000);
+                            return false;
+                        }
+
+                        if (buttonId == 1) {
+                            isBottomBarAccessible(false);
+                            setTimeout(function () {
+                                isBottomBarAccessible(false);
+
+                                self.parent.document.location.href = self.parent.document.location.href;
+                                self.parent.ClosePopup();
+
+                            }, 2000);
+                            return false;
+                        }
+
+                    }
+                    else {
+                        notifyDanger('There is something wrong while processing request.');
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+}
+

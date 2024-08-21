@@ -1,0 +1,88 @@
+﻿@using LALoDep.Models
+
+@{
+    Layout = null;
+    var index = 1;
+
+    var items = new List<LALoDep.Models.MenuItem> { new MenuItem() { Action = "EditRFD", Controller = "Task", Title = "Edit AR" }, new MenuItem() { Action = "EditRFDAddress", Controller = "Task", Title = "AR Addresses" }, new MenuItem() { Action = "EditRfdProfile", Controller = "Task", Title = "AR Profile" }, new MenuItem() { Action = "RecordTime", Controller = "Case", Title = "AR Record Time" } };
+}
+
+<div data-id="@ViewBag.Id" id="simplewizard">
+
+</div>
+
+
+<div id="slideout" style="width: 170px;right: -150px;" class="">
+    <div id="slidecontent" class="widget radius-bordered">
+
+        <div class="widget-body" style="padding: 0px;">
+
+            <div class="list-group wizardstep">
+
+                @foreach (var item in items)
+                {
+                    if (item.Action == "RecordTime")
+                    {
+
+                        <a href="@Url.Action(item.Action, item.Controller, new {arId = ViewBag.Id})" class="list-group-item "><span class="label label-blue">@index</span> @item.Title</a>
+
+                    }
+                    else
+                    {
+
+                        <a href="@Url.Action(item.Action, item.Controller, new {id = ViewBag.Id})" class="list-group-item "><span class="label label-blue">@index</span> @item.Title</a>
+                    }
+                    index++;
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="clickme" class="btn-primary  ">
+        <a>
+            <i class="fa   fa-chevron-left "></i>
+        </a>
+
+    </div>
+</div>
+
+
+<script>
+    $exitUrl = "";
+    @if (ViewBag.Id!=null)
+    {
+        if (Session[ViewBag.Id + "_ARExitUrl"] != null)
+        {
+            <text>$exitUrl = '@Session[ViewBag.Id + "_ARExitUrl"].ToString()';</text>
+
+
+        }
+    }
+    $(function () {
+        $("#clickme").click(function () {
+            if ($(this).data('open') == '1') {
+                $(this).data('open', '0');
+                $(this).parent().animate({ right: '-150px' }, { queue: false, duration: 500 });
+                $(this).find('.fa').removeClass('fa-chevron-right').addClass('fa-chevron-left');
+            } else {
+                $(this).data('open', '1');
+                $(this).parent().animate({ right: '0px' }, { queue: false, duration: 500 });
+                $(this).find('.fa').removeClass('fa-chevron-left').addClass('fa-chevron-right');
+            }
+
+        });
+
+        $('#slidecontent a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).addClass('active');
+
+            }
+        });
+
+        $('#clickme').height($('#slidecontent .widget-body').height());
+
+
+    });
+</script>
+
+ 

@@ -1,0 +1,192 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Task.MonthlyInvoiceEditModel
+@{
+    ViewBag.Title = "Monthly Invoice Edit";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@Model.SummaryDisplay</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "MonthlyInvoiceEdit-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(m => m.InvoiceMonthlyID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SubmitDate, "Submit Date", new { @class = "control-label" })
+                        <div>@Model.SubmitDate</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StatusCodeID, "Status", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.StatusCodeID, Model.StatusList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StatusDate, "Status Date", new { @class = "control-label" })
+                        <div>@Model.StatusDate</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PaymentDate, "Payment Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.PaymentDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 2, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PaymentNumber, "Payment #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.PaymentNumber, new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@(string.IsNullOrEmpty(Model.DetailsHeaderDisplay)? "Details": Model.DetailsHeaderDisplay)</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="clientDetails">
+                        <thead>
+                            <tr>              
+                                <th class="">JCATS #</th>
+                                <th class="">Case #</th>
+                                <th class=""> Appt Date  </th>
+                                <th class="">Petition Date</th>
+                                <th class="">Client Name</th>
+                                <th class="">Client Type</th>
+                                <th class=""> Next Hearing</th><th class="">Close Date </th>
+ </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ClientDetails != null && Model.ClientDetails.Count > 0)
+                            {
+                                foreach (var clientDtl in Model.ClientDetails)
+                                {
+                            <tr>
+                                <td><a   href="/Case/Main/@(clientDtl.CaseID.ToEncrypt())">@clientDtl.CaseID</a></td>
+                                <td>@clientDtl.PetitionDocketDisplay</td>
+                                <td>@(clientDtl.CaseAppointmentDate.HasValue?clientDtl.CaseAppointmentDate.Value.ToString("d"):"")</td>
+                                <td>@(clientDtl.PetitionFileDateMIN.HasValue ? clientDtl.PetitionFileDateMIN.Value.ToString("d") : "")</td>
+                                <td>@clientDtl.ClientDIsplay</td>
+                                <td>@clientDtl.ClientRoleType</td>
+                                <td>@clientDtl.NextCourtDisplay</td>
+                                <td>@(clientDtl.PetitionCloseDateMAX.HasValue ? clientDtl.PetitionCloseDateMAX.Value.ToString("d") : "")</td>
+
+                              
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                            <tr>
+                                <td colspan="4" class="text-center">No data available in table</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="4">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="5">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+
+        function saveData() {
+            if (!IsValidFormRequest()) {
+                return;
+            }
+
+            if (!hasFormChanged("MonthlyInvoiceEdit-form")) {
+                notifyDanger("Nothing has been changed.");
+                return;
+            }
+
+            if ($("#PaymentDate").val() == "" && $("#PaymentNumber").val() != "") {
+                $("#PaymentDate").focus()
+                notifyDanger("Payment date is required");
+                return;
+            }
+
+            if ($("#PaymentDate").val() != "" && $("#PaymentNumber").val() == "") {
+                $("#PaymentNumber").focus()
+                notifyDanger("Payment number is required");
+                return;
+            }
+
+            var confirmMsg = "Pursuant to Code of Civil Procedure Section 2015.5 I declare under penalty of perjury and under laws of the state of California,"
+                            + " that I am attorney of record for the dependency client(s) name above and that my client is active in my case."
+                            + " All information contained in this declaration is true abd correct and this calim is being submissted for payment within"
+                            + " thirty (30) days of the date the fee become due. I have not perviously claimed, nor have I been reimbursed for,"
+                            + " any of the cases herein for the same time period in which I am currently requesting payment."
+                            + " On the date the fee became due I had not been relieved as attorney of the record by the court and was actively represting my client(s) in this case."
+                            + " Said case was also active and has not been transferred to another county, cosolidated in yo another case, dismissed or terminated on before the fee became due."
+                            + " I understand that no notice of nay fees due will be made ny the court and that the timelu filing of all initial and subsequent fee declarations is my responibility."
+            bootbox.dialog({
+                message: confirmMsg,
+                title: "<i class='fa fa-warning'></i> Warning",
+                header: "<i class='fa fa-warning'></i>",
+                buttons: {
+                    yes: {
+                        label: "OK",
+                        className: "btn-secondary",
+                        callback: function (result) {
+                            if (result) {
+                                var data = $("#MonthlyInvoiceEdit-form").serialize();
+                                $.ajax({
+                                    type: "POST", url: '/MonthlyInvoiceList/EditInvoice', data: data,
+                                    success: function (result) {
+                                        RequestSubmitted();
+                                        if (result.isSuccess) {
+                                            window.location.href = '@Url.Action(MVC.MonthlyInvoiceList.Search())';
+                                        }
+                                        else {
+                                            notifyDanger("There is some technical error while saving.");
+                                        }
+                                    },
+                                    dataType: 'json'
+                                });
+                            }
+                        }
+                    }
+                    , no: {
+                        label: "Cancel",
+                        className: "btn-secondary",
+                        callback: function () {}
+                    }
+                }
+            });
+
+            
+        }
+
+        $("#btnSave").on("click", function () {
+            saveData();
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action(MVC.MonthlyInvoiceList.Search())';
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("MonthlyInvoiceEdit-form");
+        });
+    </script>
+}

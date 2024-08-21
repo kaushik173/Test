@@ -1,0 +1,3 @@
+AgencyName	String	255	Example
+GroupID	Number	1	
+GroupName	String	100	Roles

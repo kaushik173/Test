@@ -1,0 +1,122 @@
+﻿@model IEnumerable<LALoDep.Domain.pd_Case.qcal_ActivitySheet_spResult>
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Activity Sheet";
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+@if (Model.Count() > 0)
+{
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+
+
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="tableData">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                        @{   var workDate = Model.Select(o => o.WorkDate).Distinct();
+                            foreach (var date in workDate)
+                            {
+                                var records = Model.Where(o => o.WorkDate == date).ToList();
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">@date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in records)
+                                    {
+
+                                        <tr>
+                                            <td width="300px">@item.WorkDescription</td>
+                                            <td>@Html.Raw(item.WorkNote!=null?item.WorkNote.Replace("\r\n", "<br/>"):"")</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            }
+
+                        }
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+                            }
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="1">Return to Calendar</button>
+        <button id="btnAddActivity" type="submit" class="btn btn-default v-bottom " tabindex="2">Add Activty</button>
+    </div>
+}
+@section scripts{
+    <script>
+        setTimeout(function () {
+            fitCalculatedHeightForSearchDataTable();
+
+        }, 500)
+
+        $(window).bind('resize', function () {
+            fitCalculatedHeightForSearchDataTable();
+        });
+        $('#btnBackToCalendar').click(function () {
+
+            window.location.href = '/Task/QuickCalMyCalendar?HearingDate=' + $('.hearingDate').data('date');
+        })
+        $('#btnAddActivity').click(function () {
+            var _offset = 50;
+            var headerHeight = $(".navbar.navbar-fixed-top:first").height();
+            var modelHeight = $(window).height() - headerHeight - _offset;
+
+            OpenCustomPopup($('#hdnCurrentSessionGuidPath').val() + '/Case/RecordTimeAdd?popup=true', 1000, modelHeight, 'Add Activity');
+        })
+
+
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            calc_height = $(window).height();
+            var _offset = 25;
+            origin_wrapper_height = $('body>div.container-fluid').height();
+            origin_content_height = $('#tableData').height();
+
+            $("#tableData").children().first().parentsUntil("body").each(function () {
+
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        //console.log(calc_height + " - " + $(this).outerHeight(true));
+                        if ($(this).attr("id") == 'loading')
+                            return;
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            //console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            //console.log("total: " + calc_height);
+            // calc_height = calc_height < 250 ? 250 : calc_height;
+
+            $('#tableData').css('max-height', calc_height + 'px');
+
+            return calc_height;
+        }
+
+    </script>}
+<style>
+    .modal-dialog {
+        margin-top: 0px !important;
+    }
+
+    .modal-body {
+        padding: 0px !important;
+    }
+</style>

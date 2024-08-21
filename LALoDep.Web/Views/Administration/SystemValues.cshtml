@@ -1,0 +1,54 @@
+﻿@model LALoDep.Models.Administration.AdminSystemValueViewModel
+@{
+    ViewBag.Title = "System Value List";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">
+                    Search Criteria
+                </span>
+
+            </div>
+            <div class="widget-body col-md-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "caseloadManagement", @class = "form-inline  center-block", data_val = "false" }))
+                {
+                    <div class="row">
+
+                        <div class="form-group col-md-4 col-sm-6">
+                            @Html.LabelFor(m => m.SystemValueTypeCodeTypeID, "Code Type Filter", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SystemValueTypeCodeTypeID, new SelectList(Model.CodeTypeFilter, "EncryptedSystemValueTypeCodeTypeID", "CodeTypeValue"), "All", new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" >
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">System Values</span>
+                <div class="widget-buttons ">
+                    
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="systemValueList">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/SystemValueList.js?v=" + Guid.NewGuid())"></script>
+}

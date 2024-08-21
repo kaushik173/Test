@@ -1,0 +1,160 @@
+﻿body {
+    margin-top: 30px;
+}
+
+.page-sidebar {
+    z-index: 1000;
+}
+
+.navbar {
+    height: 40px;
+}
+
+/*move menu left to right*/
+    .navbar .sidebar-collapse.active,
+    .navbar .sidebar-collapse {
+        right: 0;
+        height: 35px;
+        width: 35px;
+    }
+
+    .navbar .sidebar-collapse {
+        left: auto !important;
+    }
+
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area {
+        right: 25px !important;
+    }
+
+    .mobile-page-title{
+        margin-left:0px !important;
+    }
+
+.page-sidebar {
+    right: 5px !important;
+}
+
+    .page-sidebar::before {
+        left: auto !important;
+    }
+
+.navbar .navbar-inner {
+    min-height: 35px;
+}
+
+    .navbar .navbar-inner .navbar-header .navbar-account,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area > li,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area > li > a,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area > li > a .icon,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area > li > a.wave.in,
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area {
+        line-height: 35px;
+    }
+
+        .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section {
+            float: none;
+            display: block;
+            text-align: right;
+        }
+
+        .navbar .navbar-inner .navbar-header .navbar-account .account-area #user-name.login-area {
+            cursor: default;
+        }
+
+        .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section .logout {
+            font-size: 22px;
+        }
+
+.navbar .sidebar-collapse .collapse-icon {
+    padding: 7px 5px;
+}
+
+.navbar .sidebar-collapse.active .collapse-icon {
+    padding: 7px;
+}
+
+.widget-header.mobile-title {
+    text-align: center;
+}
+
+    .widget-header.mobile-title > .widget-caption {
+        float: none;
+        font-weight: bold !important;
+    }
+
+.mobile-page-title {
+    color: #fff;
+    margin-left: 40px;
+    line-height: 35px;
+    font-size: 14px;
+}
+
+.form-inline .form-control.input-sm.time-picker,
+.form-inline .form-control.input-sm.date-picker {
+    max-width: none;
+}
+
+.form-inline .input-group {
+    display: table;
+}
+
+.navbar .navbar-inner .navbar-header .navbar-account .account-area {
+    top: 0px;
+}
+
+@media only screen and (max-width:1280px) {
+    .page-sidebar:before {
+        display: none;
+    }
+
+    .page-sidebar {
+        display: none;
+        float: none;
+    }
+}
+
+@media (max-width: 1280px) {
+    .page-sidebar.hide {
+        display: block !important;
+    }
+
+        .page-sidebar.hide:before {
+            display: block !important;
+        }
+
+        .page-sidebar.hide + .page-content {
+            margin-left: 224px !important;
+        }
+
+            .page-sidebar.hide + .page-content .breadcrumbs-fixed {
+                left: 224px !important;
+            }
+
+            .page-sidebar.hide + .page-content .page-header-fixed {
+                left: 224px !important;
+            }
+}
+
+/* move menu right side*/
+/*.navbar .sidebar-collapse.active {
+    /*height: 35px;
+    right: 0;
+    width: 35px ;
+}
+
+.navbar .navbar-inner .navbar-header .navbar-account .account-area {
+    padding-left: 0;
+}
+
+.navbar .sidebar-collapse {
+    height: 45px;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 35px;
+    z-index: 2;
+}*/
+

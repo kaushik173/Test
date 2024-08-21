@@ -1,0 +1,17 @@
+Attorney	String	100	Abott, Malvina
+CaseNumber	String	20	CJS300062
+Client	String	100	Ako, Emily-marie Napualani
+Petition	String	20	SJ123456
+NextHearingType	String	50	12M
+NextHearingDateTime	DateTime		2002-03-14 08:30:00.000
+NextHearingDepartment	String	20	S11
+Investigator	String	100	De Jesus, Luisa
+LegalAssistant	String	100	
+ParmPetitionStatus	String	20	Open
+ParmStartDate	DateTime		01/01/2001
+ParmEndDate	DateTime		01/31/2001
+ParmAtt	String	100	Malvina Abbott
+ParmINV	String	100	
+ParmLA	String	100	
+ParmBranch	String	50	SB
+ParmAgencyName	String	200	Public Defender

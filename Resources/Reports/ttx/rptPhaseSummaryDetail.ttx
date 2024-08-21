@@ -1,0 +1,6 @@
+GroupName	String	300	Agency - No Phase and Case <= 30 Days (12 cases)
+Case Age	String	50	2 Years
+Case Name	String	150	Smith, Johnny
+Case #	String	50	23423423
+Attorney	String	150	2 Years
+JCATS #	String	50	55555555

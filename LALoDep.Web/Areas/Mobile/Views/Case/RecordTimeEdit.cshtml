@@ -1,0 +1,279 @@
+﻿@model LALoDep.Areas.Mobile.Models.RecordTimeEditViewModel
+@{
+    ViewBag.Title = "Record Time Edit";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+    int tabIndex = 0;
+}
+
+<div class="row">
+    <div class="col-xs-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    <a href="@Url.Action(" CaseInfo", "Case" , new { id=ViewBag.CaseID })">@ViewBag.CaseNumber</a> - @ViewBag.ClinetName
+                </span>
+                <div class="widget-buttons">&nbsp;</div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "RecordTimeEdit-form", @class = "form-inline center-block" }))
+                {
+                    @Html.HiddenFor(x=>x.WorkID)
+                    @Html.HiddenFor(x => x.AgencyID)
+                    @Html.HiddenFor(x => x.PersonID)
+                    @Html.HiddenFor(x => x.WorkHoursOverTime)
+                    @Html.HiddenFor(x => x.RecordStateID)
+                    @Html.HiddenFor(x => x.HearingID)
+
+                    @Html.HiddenFor(m => m.NoteID)
+                    @Html.HiddenFor(m => m.NoteAgencyID)
+                    @Html.HiddenFor(m => m.NoteEntityCodeID)
+                    @Html.HiddenFor(m => m.NoteEntityTypeCodeID)
+                    @Html.HiddenFor(m => m.NoteEntityPrimaryKeyID)
+                    @Html.HiddenFor(m => m.NoteTypeCodeID)
+                    @Html.HiddenFor(m => m.NoteSubject)
+                    @Html.HiddenFor(m => m.NotePetitionID)
+                    @Html.HiddenFor(m => m.NoteHearingID)
+                    @Html.HiddenFor(m => m.NoteRecordStateID)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkerFirstName, "Worker", new { @class = "control-label" })
+                        <label for="HearingDisplay" class="form-control-static input-sm" style="width:100%">@Model.WorkerLastName, @Model.WorkerFirstName</label>
+                    </div>                    
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkHours, "Hours", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.WorkHours, "{0:0.###}", new { @class = "form-control input-sm numeric-val", @type = "number", tabindex = ++tabIndex, autofocus = "autofocus"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkDescriptionCodeID, "Description", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.WorkDescriptionCodeID, Model.WorkDescriptionList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkPhaseCodeID, "Phase", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.WorkPhaseCodeID, Model.WorkPhaseList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkMileage, "Mileage", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.WorkMileage, "{0:0.###}",  new { @class = "form-control input-sm numeric-val", @type = "number", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkStartDate, "Start Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.WorkStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkEndDate, "End Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.WorkEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", tabindex = ++tabIndex })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(m => m.NoteEntry, "Note", new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm", tabindex = ++tabIndex })
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblWorkedFor">
+                            <thead>
+                                <tr>
+                                    <th style="width:10px;"><input type="checkbox" name="selectAll" value="" id="selectAll" tabindex="@(++tabIndex)" /></th>
+                                    <th colspan="2">Worked For</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.WorkedForList != null && Model.WorkedForList.Count > 0)
+                                {
+                                    foreach (var role in Model.WorkedForList)
+                                    {
+                                        <tr data-allmainpetitionsclosedflag="@role.AllMainPetitionsClosedFlag"
+                                            data-roleid="@role.RoleID">
+                                            <td><input type="checkbox" class="chk-work-for" name="role-@role.RoleID" value="@role.WorkRoleID" id="role-@role.RoleID" @(role.Selected ? "checked=\"checked\"" : string.Empty) tabindex="@(++tabIndex)" /></td>
+                                            <td>@role.PersonName</td>
+                                            <td>@role.AllMainPetitionsDisplay</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="3" class="text-align-center">No data available in table</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        
+        <button id="btnSave" type="submit" class="btn btn-sm btn-primary default">Save</button>
+        <button id="btnCancel" type="submit" class="btn btn-sm btn-default default">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        function GetData() {
+            var data = {
+                WorkID: $("#WorkID").val(),                
+                AgencyID: $("#AgencyID").val(),
+                PersonID: $("#PersonID").val(),
+                WorkHoursOverTime: $("#WorkHoursOverTime").val(),
+                RecordStateID: $("#RecordStateID").val(),
+                HearingID: $("#RecordStateID").val(),
+                
+
+                WorkHours: $('#WorkHours').val(),
+                WorkDescriptionCodeID: $('#WorkDescriptionCodeID').val(),
+                WorkPhaseCodeID: $('#WorkPhaseCodeID').val(),
+                WorkMileage: $('#WorkMileage').val(),
+                WorkStartDate: $('#WorkStartDate').val(),
+                WorkEndDate: $('#WorkEndDate').val(),
+
+                IsWorkChanged: ($('#WorkHours').IsValueChanged() || $('#WorkDescriptionCodeID').IsValueChanged()
+                                || $('#WorkPhaseCodeID').IsValueChanged() || $('#WorkMileage').IsValueChanged()
+                                || $('#WorkStartDate').IsValueChanged() || $('#WorkEndDate').IsValueChanged()),
+
+                NoteEntry: $('#NoteEntry').val(),
+                NoteID: $("#NoteID").val(),
+                NoteAgencyID: $("#NoteAgencyID").val(),
+                NoteEntityCodeID: $("#NoteEntityCodeID").val(),
+                NoteEntityTypeCodeID: $("#NoteEntityTypeCodeID").val(),
+                NoteEntityPrimaryKeyID: $("#NoteEntityPrimaryKeyID").val(),
+                NoteTypeCodeID: $("#NoteTypeCodeID").val(),
+                NoteSubject: $("#NoteSubject").val(),
+                NotePetitionID: $("#NotePetitionID").val(),
+                NoteHearingID: $("#NoteHearingID").val(),
+                NoteRecordStateID: $("#NoteRecordStateID").val(),
+                IsNoteChanged: $("#NoteEntry").IsValueChanged(),
+
+                WorkedForList: []
+            };
+
+            var workForTr = $("#tblWorkedFor tbody tr");
+            for (var indx = 0; indx < workForTr.length; indx++) {
+                $tr = workForTr.eq(indx);
+                $personchk = $tr.find(".chk-work-for");
+
+                if ($personchk.is(":checked") != $personchk.data('old-value-on-pageload')) {
+                    var workList = {
+                        RoleID: $tr.data("roleid"),
+                        WorkRoleID: $personchk.val(),
+                        Selected: $personchk.is(":checked")
+                    };
+
+                    data.WorkedForList.push(workList);
+                }
+            }
+            return data;
+        }
+
+
+        function ajaxRequestForSave(data) {
+
+            var ajaxUrl = '@Url.Action("RecordTimeEditSave", "Case")';
+            $.ajax({
+                type: "POST", dataType: 'json', url: ajaxUrl, data: JSON.stringify(data), contentType: "application/json",
+                success: function (result) {
+                    RequestSubmitted();
+                    if (result.isSuccess) {
+                        if (result.URL != undefined && result.URL != '') {
+                            window.location.href = result.URL;
+                        }
+                    }
+                    else {
+                        notifyDanger('There is something wrong while processing request.');
+                    }
+                }
+            });
+        }
+
+        function SaveData() {
+            IPadKeyboardFix();
+            if (!IsValidFormRequest()) {
+                return;
+            }
+
+            if (!hasFormChanged('RecordTimeEdit-form')) {
+                notifyDanger('Nothing has been changed.');
+                return false;
+            }
+
+
+            if ($("#WorkHours").val() == "") {
+                notifyDanger('Hours is required.');
+                $("#WorkHours").focus();
+                return false;
+            }
+            if ($("#WorkDescriptionCodeID").val() == "") {
+                notifyDanger('Description is required.');
+                $("#WorkDescriptionCodeID").focus();
+                return false;
+            }
+            if ($("#WorkPhaseCodeID").val() == "") {
+                notifyDanger('Phase is required.');
+                $("#WorkPhaseCodeID").focus();
+                return false;
+            }
+            if ($("#WorkStartDate").val() == "") {
+                notifyDanger('Start date is required.');
+                $("#WorkStartDate").focus();
+                return false;
+            }
+
+            if ($("#WorkEndDate").val() == "") {
+                notifyDanger('End date is required.');
+                $("#WorkEndDate").focus();
+                return false;
+            }
+
+            if (new Date($("#WorkStartDate").val()) > new Date($("#WorkEndDate").val())) {
+                $("#WorkEndDate").focus();
+                notifyDanger("End date can not be earlier than start date.");
+                return false;
+            }
+
+            if ($("#tblWorkedFor .chk-work-for:checked").length <= 0) {
+                notifyDanger('At least one Worked For Person is required.');
+                return false;
+            }
+
+            var data = GetData();
+            ajaxRequestForSave(data);
+        }
+
+        $("#selectAll").on("click", function () {
+            var checked = $(this).is(":checked");
+            $("#tblWorkedFor .chk-work-for").each(function (i, e) {
+                $(this).prop("checked", checked);
+            });
+        });
+
+        $("#tblWorkedFor").on("click", ".chk-work-for", function () {
+            var allSelected = $("#tblWorkedFor .chk-work-for").length == $("#tblWorkedFor .chk-work-for:checked").length;
+            $("#selectAll").prop("checked", allSelected);
+        });
+
+        $("#btnSave").on("click", function () {
+            SaveData();
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = "@(Request.UrlReferrer != null ? Request.UrlReferrer.PathAndQuery: Url.Action(MVC.Mobile.Case.RecordTime()))";
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues('RecordTimeEdit-form');            
+        });
+    </script>
+}

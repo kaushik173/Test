@@ -1,0 +1,228 @@
+﻿@model LALoDep.Models.Administration.PredeterminedAnswersAddEditModel
+@{
+    ViewBag.Title = "Predetermined Answers Add";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "PredeterminedAnswerAddEditform", @class = "form-inline  center-block" }))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Search</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @Html.HiddenFor(m => m.QuickNoteID)
+
+
+                    <div class="form-group col-xs-12 col-md-8">
+                        @Html.LabelFor(m => m.ShortValue, "Short Value", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ShortValue, new { @class = "form-control input-sm", style = "width:100% !important;", autofocus = "autofocus", tabindex = 1 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Seq, "Sequence", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Seq, new { @class = "form-control input-sm number", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ChildClients, "Child Clients", new { @class = "control-label" })<br />
+                        @Html.CheckBoxFor(m => m.ChildClients, new { tabindex = 3 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AdultClients, "Adult Clients	", new { @class = "control-label" })<br />
+                        @Html.CheckBoxFor(m => m.AdultClients, new { tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.InactiveFlag, "Inactive", new { @class = "control-label" })<br />
+                        @Html.CheckBoxFor(m => m.InactiveFlag, new { tabindex = 5 })
+                    </div>
+                    <div class="form-group col-xs-12 col-md-12 col-sm-12">
+
+                        @Html.LabelFor(m => m.PredeterminedAnswer, "Predetermined Answer", new { @class = "control-label" })<br />
+                        @Html.TextAreaFor(m => m.PredeterminedAnswer, new { @class = "form-control input-sm", style = "width:100% !important;height:200px;", tabindex = 6 })
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row ">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Note Type</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body  panelRow">
+                    <div class="row">
+                        @if (Model.NoteTypeList != null && Model.NoteTypeList.Count() > 0)
+                        {
+                            <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5 ckePanel">
+
+                                <div class="form-label bg-label">
+                                    <input type="checkbox" tabindex="7" id="chkAllNoteType">
+
+                                    <label for="chkAllNoteType" style="margin-top: -6px">
+                                        All
+                                    </label>
+                                </div>
+
+
+
+                            </div>
+                            foreach (var item in Model.NoteTypeList)
+                            {
+                                <div class="form-group col-md-2 col-sm-3  col-xs-6 margin-bottom-5 ckePanel">
+                                    <div class="form-label bg-label">
+                                        <input type="checkbox" class="chkNoteType" @(item.QuickNoteCodeID.HasValue && item.QuickNoteCodeID.Value > 0 ? "checked='checked'" : "") id="chkNoteType@(item.CodeID)" tabindex="7" data-id="@item.CodeID" data-noterecordid="@(item.QuickNoteCodeID.HasValue?item.QuickNoteCodeID.Value:0)" />
+
+                                        <label for="chkNoteType@(item.CodeID)" style="margin-top: -6px">
+                                            @item.CodeDisplay
+                                        </label>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row ">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Agency </span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body  panelRow">
+                    <div class="row">
+                        @if (Model.Agencies != null && Model.Agencies.Count() > 0)
+                        {
+                            <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5 ckePanel">
+
+                                <div class="form-label bg-label">
+                                    <input type="checkbox" tabindex="7" id="chkAllAgency">
+
+                                    <label for="chkAllAgency" style="margin-top: -6px">
+                                        All
+                                    </label>
+                                </div>
+
+
+
+                            </div>
+                            foreach (var item in Model.Agencies)
+                            {
+                                <div class="form-group col-md-2 col-sm-3  col-xs-6 margin-bottom-5 ckePanel">
+                                    <div class="form-label bg-label">
+                                        <input type="checkbox" class="chkAgency" @(item.QuickNoteAgencyID.HasValue && item.QuickNoteAgencyID.Value > 0 ? "checked='checked'" : "") id="chkAgency@(item.AgencyID)" tabindex="7" data-id="@item.AgencyID" data-noterecordid="@(item.QuickNoteAgencyID.HasValue?item.QuickNoteAgencyID.Value:0)" />
+
+                                        <label for="chkAgency@(item.AgencyID)" style="margin-top: -6px">
+                                            @item.AgencyDisplay
+                                        </label>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row ">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">  Hearing Type</span>
+                    <div class="widget-buttons">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="widget-body  panelRow">
+                    <div class="row">
+                        @if (Model.HearingTypeList != null && Model.HearingTypeList.Count() > 0)
+                        {
+                            var hearingTypeGroups = Model.HearingTypeList.GroupBy(x => new { x.GroupID, x.GroupDisplay, x.GroupDisplayOrder }).OrderBy(x => x.Key.GroupDisplayOrder);
+
+                            <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5 ckePanel">
+                                <div class="form-label bg-label">
+                                    <input type="checkbox" tabindex="7" id="chkAllHearingType">
+                                    <label for="chkAllHearingType" style="margin-top: -6px">All</label>
+                                </div>
+                            </div>
+
+                            foreach (var group in hearingTypeGroups)
+                            {
+                                <div class="form-group col-md-12 col-sm-12  col-xs-12 margin-bottom-5 ckePanel">
+                                    <div class="form-label">
+                                        <input type="checkbox" tabindex="7" id="chkAll-@group.Key.GroupID" data-groupid="@group.Key.GroupID" class="group-chk chkHearingType">
+                                        <label for="chkAll-@group.Key.GroupID" style="margin-top: -6px"><strong>All @group.Key.GroupDisplay</strong></label>
+                                    </div>
+                                </div>
+
+                                foreach (var item in group)
+                                {
+                                    <div class="form-group col-md-2 col-sm-3 col-xs-6 margin-bottom-5 ckePanel">
+                                        <div class="form-label bg-label">
+
+                                            <input type="checkbox" @(item.QuickNoteCodeID.HasValue && item.QuickNoteCodeID.Value > 0 ? "checked='checked'" : "") class="chkHearingType group-@group.Key.GroupID" id="chkHearingType@(item.CodeID)" tabindex="7" data-groupid="@group.Key.GroupID" data-id="@item.CodeID" data-noterecordid="@(item.QuickNoteCodeID.HasValue ? item.QuickNoteCodeID.Value : 0)" />
+                                            <label for="chkHearingType@(item.CodeID)" style="margin-top: -6px">@item.CodeDisplay</label>
+
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+}
+
+<style>
+    .panelRow .ckePanel {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+</style>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="4">Cancel</button>
+    </div>
+}
+
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/PredeterminedAnswersAddEdit.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+<style>
+    .col-xs-12 .col-sm-12 {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+</style>

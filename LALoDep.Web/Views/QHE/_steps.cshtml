@@ -1,0 +1,54 @@
+﻿@model object
+<style>
+    #slideout {
+        width:225px;
+        right:-205px;
+    }
+</style>
+<div id="slideout">
+    <div id="slidecontent" class="widget radius-bordered">
+        <div class="widget-body" style="padding: 0px;">
+            <div class="list-group wizardstep">                
+                <a href="@Url.Action("QHEHearing", "QHE", Model)" class="list-group-item "><span class="label label-blue">1</span> QHE Hearing Edit</a>
+                <a href="@Url.Action("QHEAttendance", "QHE", Model)" class="list-group-item"><span class="label label-blue">2</span> QHE Attendance</a>
+                <a href="@Url.Action("QHEPlea", "QHE", Model)" class="list-group-item"><span class="label label-blue">3</span> QHE Pleas</a>
+                <a href="@Url.Action("QHEPos", "QHE", Model)" class="list-group-item"> <span class="label label-blue">4</span> QHE Court Position</a>
+                <a href="@Url.Action("QHEFindingsAndOrders", "QHE", Model)" class="list-group-item"><span class="label label-blue">5</span> QHE Findings & Orders</a>
+                <a href="@Url.Action("QHEAllegations", "QHE", Model)" class="list-group-item"><span class="label label-blue">6</span> QHE Allegations</a>
+                <a href="@Url.Action("QHENextHearing", "QHE", Model)" class="list-group-item"><span class="label label-blue">7</span> QHE Next Hearings</a>
+                <a href="@Url.Action("QHERecordTime", "QHE", Model)" class="list-group-item"><span class="label label-blue">8</span> QHE Record Time</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="clickme" class="btn-primary">
+        <a><i class="fa fa-chevron-left "></i></a>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#clickme").click(function () {
+            if ($(this).data('open') == '1') {
+                $(this).data('open', '0');
+                $(this).parent().animate({ right: '-205px' }, { queue: false, duration: 500 });
+                $(this).find('.fa').removeClass('fa-chevron-right').addClass('fa-chevron-left');
+            } else {
+                $(this).data('open', '1');
+                $(this).parent().animate({ right: '0px' }, { queue: false, duration: 500 });
+                $(this).find('.fa').removeClass('fa-chevron-left').addClass('fa-chevron-right');
+            }
+
+        });
+
+        $('#slidecontent a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).addClass('active');
+            }
+        });
+
+        // $('#clickme .label').text($('#slidecontent  a.active').find('.label').text());
+        $('#clickme').height($('#slidecontent .widget-body').height());
+    });
+</script>

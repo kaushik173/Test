@@ -1,0 +1,365 @@
+﻿@using System.Data
+@using LALoDep.Custom
+@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Task.EditRfdViewModel
+@{
+    ViewBag.Title = "Edit AR ";
+    var userManager = DependencyResolver.Current.GetService<UserManager>();
+
+    var hasDueDateChangeAccess = userManager.LastViewTokens.Any(x => x.SecurityItemID == LALoDep.Custom.Security.SecurityToken.EditDueDate);
+    var hasAssignInvestigatorAccess = userManager.LastViewTokens.Any(x => x.SecurityItemID == LALoDep.Custom.Security.SecurityToken.AssignInvestigator);
+    var hasARDeleteAccess = userManager.LastViewTokens.Any(x => x.SecurityItemID == LALoDep.Custom.Security.SecurityToken.DeleteActionRequest);
+    var pageReadOnly = (!string.IsNullOrEmpty(Model.CompletedDate) && !hasARDeleteAccess);
+}
+
+@{
+    Html.RenderPartial("~/Views/Task/AR/_tabs.cshtml");
+}
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AREdit", @class = "form-inline  center-block", data_val = "false" }))
+        {
+
+
+            var roleList = Model.ClientRoleList.ToList();
+            @Html.Hidden("RoleCount", roleList.Count)
+            @Html.Hidden("HearingReportFilingDueID", Model.HearingReportFilingDueID)
+            @Html.Hidden("EncryptHearingReportFilingDueID", Model.HearingReportFilingDueID.ToEncrypt())
+            @Html.Hidden("RequestForPersonID", Model.RequestForID.ToEncrypt())
+            @Html.Hidden("RequestDate", Model.RequestDate)
+
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Edit Action Request
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+                    <div class="row">
+                        <div class="form-group  col-md-4 col-sm-4  col-xs-4">
+                            @Html.LabelFor(m => m.RequestDate, "Request Date", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.RequestDate</span>
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4  col-xs-3">
+                            @Html.LabelFor(m => m.RequestType, "Request Type", new { @class = "control-label " })
+                            <br />
+                            <span>@Model.RequestType</span>
+                        </div>
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+                            @Html.LabelFor(m => m.Hearing, "Hearing", new { @class = "control-label" })
+                            <br />
+                            <span>@(Model.Hearing ?? " ") </span>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+                            @Html.LabelFor(m => m.RequestBy, "Request By", new { @class = "control-label" })
+                            <br />
+                            <span>@Model.RequestBy</span>
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-3  col-xs-4">
+                            @Html.LabelFor(m => m.RequestForID, "Request For (current month_previous month)", new { @class = "control-label" })
+                            @if (hasAssignInvestigatorAccess)
+                            {
+                                @Html.DropDownListFor(m => m.RequestForID, Model.RequestForList, "", new { @class = "form-control input-sm newroleinput", tabindex = 1, autofocus = "autofocus", style = "width:100%" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(m => m.RequestForID, Model.RequestForList, "", new { @class = "form-control input-sm newroleinput", tabindex = 1, autofocus = "autofocus", style = "width:100%", @disabled = "disabled" })
+                            }
+                        </div>
+                        <div class="form-group  col-md-2 col-sm-3  col-xs-3">
+                            @Html.LabelFor(m => m.DueDate, "Due Date", new { @class = "control-label" })
+                            @if (Model.Completed)
+                            {
+                                <br />
+                                @Model.DueDate
+                                @Html.HiddenFor(model => model.DueDate)
+                            }
+                            else
+                            {
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control input-sm date-picker-control WeekendValidation", tabindex = 2, style = "width: 100% !important;", maxlength = "10", data_secure_disabled_id = ((int)LALoDep.Custom.Security.SecurityToken.EditARDueDate), data_label = "Due Date" })
+                                    <span class="input-group-addon datepicker-control-trigger">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+
+                            }
+
+                        </div>
+                        <div class="form-group  col-md-3 col-sm-3  col-xs-3  @(!Model.Completed?"hidden":"")">
+                            @Html.LabelFor(m => m.CompletedDate, "Completion Date", new { @class = "control-label" })
+
+                            @if (hasDueDateChangeAccess)
+                            {
+                                //if (!Model.Completed)
+                                //{
+                                //    Model.CompletedDate = DateTime.Now.ToString("d");
+                                //}
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.CompletedDate, new { @class = "form-control input-sm date-picker-control", tabindex = 3, style = "width: 100% !important;", maxlength = "10" })
+                                    <span class="input-group-addon datepicker-control-trigger">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <br />
+                                <span>@Model.CompletedDate</span>
+                                @Html.HiddenFor(m => m.CompletedDate)
+                            }
+
+                        </div>
+                        @if (!Model.Completed)
+                        {
+                            <div class="form-group col-md-3 col-sm-3  col-xs-4  ">
+
+                                @Html.LabelFor(m => m.Completed, "Completed", new { @class = "control-label" })
+                                <br />
+                                <input type="checkbox" id="chkCompleted" name="chkCompleted" tabindex="4" onclick="$('#Completed').val($(this).is(':checked'))" @(Model.Completed ? "checked=checked" : "") />
+                                <input type="hidden" name="Completed" id="Completed" tabindex="4" value="@(Model.Completed ? "true" : "false")" />
+
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="Completed" id="Completed" tabindex="4" value="true" />
+                        }
+
+                        <div class="form-group col-md-3 col-sm-3  col-xs-4">
+                            @Html.LabelFor(m => m.LegalResearchType, "Legal Research Type", new { @class = "control-label " })
+                            <br />
+                            <span>@Model.LegalResearchType</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            if (roleList.Count > 0)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary">
+                        <span class="widget-caption">
+                            Clients
+                        </span>
+
+                    </div>
+                    <div class="widget-body">
+
+
+
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            <tr>
+                                <th>Clients</th>
+                                <th>Request</th>
+                                <th>Date Completed</th>
+                                <th></th>
+                            </tr>
+                            <tbody>
+                                @for (var i = 0; i < roleList.Count; i++)
+                                {
+                                    <tr>
+                                        <td class="highLightBlue">@roleList[i].ClientDisplay</td>
+                                        <td>@roleList[i].ContactType</td>
+                                        <td>
+                                            <div class="input-group">
+
+                                                <input name="ContactDate@(i)" id="ContactDate@(i)" value="@roleList[i].ContactDate" type="text" class="ContactDate form-control input-sm date-picker-control" tabindex="5" style="width: 100% !important;" maxlength="10" />
+
+                                                <span class="input-group-addon datepicker-control-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                            <input name="ContactID@(i)" id="ContactID@(i)" value="@roleList[i].ContactID" data-value="@roleList[i].ContactID" type="hidden" class="form-control input-sm " tabindex="5" style="width: 100% !important;" maxlength="10" />
+                                            <input name="ContactTypeID@(i)" id="ContactTypeID@(i)" value="@roleList[i].ContactTypeID" type="hidden" class="form-control input-sm" tabindex="5" style="width: 100% !important;" maxlength="10" />
+                                            <input name="RFDRoleID@(i)" id="RFDRoleID@(i)" value="@roleList[i].RFDRoleID" type="hidden" class="form-control input-sm" tabindex="5" style="width: 100% !important;" maxlength="10" />
+                                            <input name="ContactOldDate@(i)" id="ContactOldDate@(i)" value="@roleList[i].ContactDate" type="hidden" class="form-control input-sm " tabindex="5" style="width: 100% !important;" maxlength="10" />
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            }
+            @*<div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Request Note
+                    </span>
+                </div>
+                <div class="widget-body">
+                    @Html.TextAreaFor(model => model.RequestNote, new { @class = "form-control input-sm " + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 6, style = "width: 100% !important;", disabled = "disabled" })
+                </div>
+
+            </div>*@
+
+        if (Model.NoteBoxList.Any())
+        {
+            foreach (var note in Model.NoteBoxList)
+            {
+                
+                    <div class="widget row noteBoxList">
+                        <div class="widget-header bordered-bottom bordered-themeprimary">
+                            <span class="widget-caption">
+                                @note.NoteTypeCodeValue
+                            </span>
+
+                        </div>
+                        <div class="widget-body @(note.NoteTypeCodeValue=="Investigator Recommendation/Evaluation"?" InvestigatorNote":"")">
+                            @if (note.DisabledFlag.ToInt()==1)
+                            {
+                                @Html.TextArea("NoteCode" + note.CodeID.ToString(), note.NoteEntry, new { @class = "form-control input-sm NoteEntry" + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 7, style = "width: 100% !important;", disabled = "disabled", data_title = note.NoteTypeCodeValue })
+                            }
+                            else
+                            {
+                                 @Html.TextArea("NoteCode" + note.CodeID.ToString(), note.NoteEntry, new { @class = "form-control input-sm NoteEntry" + ((note.RequiredFlag.ToInt() == 1) ? " required " : "") + ((Model.ControlType == "RTF") ? " summernote" : ""), tabindex = 7, style = "width: 100% !important;" ,data_title= note.NoteTypeCodeValue })
+                            }
+                            @Html.Hidden("NoteCodeHiddenNoteId", note.NoteID, new { @class = "NoteCodeHiddenNoteId",  style = "width: 100% !important;" })
+                            @Html.Hidden("NoteCodeId", note.CodeID, new { @class = "NoteCodeId", tabindex = 7, style = "width: 100% !important;" })
+                            @Html.Hidden("NoteEntityCodeID", note.NoteEntityCodeID, new { @class = "NoteEntityCodeID",   style = "width: 100% !important;" })
+                            @Html.Hidden("NoteEntityTypeCodeID", note.NoteEntityTypeCodeID, new { @class = "NoteEntityTypeCodeID",   style = "width: 100% !important;" })
+                            @Html.Hidden("EntityPrimaryKeyID", note.NoteEntityTypeCodeID, new { @class = "NoteEntityTypeCodeID",  style = "width: 100% !important;" })
+                            @Html.Hidden("NoteTypeCodeID", note.NoteTypeCodeID, new { @class = "NoteTypeCodeID", style = "width: 100% !important;" })
+                        </div>
+                    </div>
+                }
+            }
+
+            @*<div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Investigator Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+                    @if (Model.Completed)
+                    {
+                        @Html.TextAreaFor(model => model.InvestigatorEvaluationNote, new { @class = "form-control input-sm " + ((Model.InvestigatorEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 7, style = "width: 100% !important;", disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(model => model.InvestigatorEvaluationNote, new { @class = "form-control input-sm " + ((Model.InvestigatorEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 7, style = "width: 100% !important;" })
+                    }
+                    @Html.HiddenFor(model => model.InvestigatorEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 7, style = "width: 100% !important;" })
+                </div>
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Caretaker Recommendation/Evaluation
+                    </span>
+                </div>
+                <div class="widget-body">
+                    @if (Model.Completed)
+                    {@Html.TextAreaFor(model => model.CaretakerEvaluationNote, new { @class = "form-control input-sm " + ((Model.CaretakerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 8, style = "width: 100% !important;", disabled = "disabled" })
+
+                }
+                else
+                {
+                    @Html.TextAreaFor(model => model.CaretakerEvaluationNote, new { @class = "form-control input-sm " + ((Model.CaretakerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 8, style = "width: 100% !important;" })
+
+                }
+                    @Html.HiddenFor(model => model.CaretakerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 8, style = "width: 100% !important;" })
+                </div>
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Social Worker Recommendation/Evaluation
+                    </span>
+
+                </div>
+                <div class="widget-body">
+                    @if (Model.Completed)
+                    {@Html.TextAreaFor(model => model.SocialWorkerEvaluationNote, new { @class = "form-control input-sm " + ((Model.SocialWorkerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 9, style = "width: 100% !important;", disabled = "disabled" })
+
+                }
+                else
+                {
+                    @Html.TextAreaFor(model => model.SocialWorkerEvaluationNote, new { @class = "form-control input-sm " + ((Model.SocialWorkerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 9, style = "width: 100% !important;" })
+
+                }   @Html.HiddenFor(model => model.SocialWorkerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 9, style = "width: 100% !important;" })
+            </div>
+        </div>
+            <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary">
+                <span class="widget-caption">
+                    Therapist Recommendation/Evaluation
+                </span>
+            </div>
+            <div class="widget-body">
+                @if (Model.Completed)
+                {@Html.TextAreaFor(model => model.TherapistEvaluationNote, new { @class = "form-control input-sm " + ((Model.TherapistEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 10, style = "width: 100% !important;", disabled = "disabled" })
+
+            }
+            else
+            {
+                @Html.TextAreaFor(model => model.TherapistEvaluationNote, new { @class = "form-control input-sm " + ((Model.TherapistEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 10, style = "width: 100% !important;" })
+
+            }   @Html.HiddenFor(model => model.TherapistEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 10, style = "width: 100% !important;" })
+        </div>
+    </div>
+            <div class="widget row">
+        <div class="widget-header bordered-bottom bordered-themeprimary">
+            <span class="widget-caption">
+                Probation Officer's Recommendation/Evaluation
+            </span>
+        </div>
+        <div class="widget-body">
+            @if (Model.Completed)
+            {
+                @Html.TextAreaFor(model => model.ProbationOfficerEvaluationNote, new { @class = "form-control input-sm " + ((Model.ProbationOfficerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 11, style = "width: 100% !important;", disabled = "disabled" })
+
+            }
+            else
+            { @Html.TextAreaFor(model => model.ProbationOfficerEvaluationNote, new { @class = "form-control input-sm " + ((Model.ProbationOfficerEvaluationNoteControlType == "RTF") ? " summernote" : ""), tabindex = 11, style = "width: 100% !important;" })
+
+
+        }   @Html.HiddenFor(model => model.ProbationOfficerEvaluationNoteID, new { @class = "form-control input-sm ", tabindex = 11, style = "width: 100% !important;" })
+    </div>
+</div>*@
+
+}
+    </div>
+</div>
+
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+
+
+
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="12">Save/Continue</button>
+        <button id="btnSaveExit" type="submit" class="btn btn-default  " tabindex="13">Save/Exit AR</button>
+        <button id="btnSaveAndPrint" type="submit" class="btn btn-default  " tabindex="14">Save/Print</button>
+        <button id="btnSaveAndMain" type="submit" class="btn btn-default v-bottom " tabindex="14">Save/Main</button>
+
+    </div>
+
+}
+
+@section scripts{
+    <script>
+        var pageReadOnly = @(pageReadOnly.ToString().ToLower());
+    </script>
+
+    <script>
+        ApplySummernote();
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/AR/EditRFD.js?v=" + Guid.NewGuid())"></script>
+}

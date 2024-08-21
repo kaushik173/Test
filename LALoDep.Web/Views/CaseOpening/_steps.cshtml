@@ -1,0 +1,64 @@
+﻿ 
+
+
+<script>
+    $(function () {
+        $("#clickme").click(function () {
+           if ($(this).data('open') == '1') {
+                $(this).data('open', '0');
+                $(this).parent().animate({ right: '-180px' }, { queue: false, duration: 500 });
+                $(this).find('.fa').removeClass('fa-chevron-right').addClass('fa-chevron-left');
+            } else {
+                $(this).data('open', '1');
+                $(this).parent().animate({ right: '0px' }, { queue: false, duration: 500 });
+               $(this).find('.fa').removeClass('fa-chevron-left').addClass('fa-chevron-right');
+           }
+           
+        });
+
+        $('#slidecontent a').each(function () {
+            if (Contains(document.location.href, $(this).attr('href'))) {
+                $(this).addClass('active');
+             
+           }
+        });
+
+       // $('#clickme .label').text($('#slidecontent  a.active').find('.label').text());
+        $('#clickme').height($('#slidecontent .widget-body').height());
+
+
+    });
+</script>
+
+
+<div id="slideout" class="">
+    <div id="slidecontent" class="widget radius-bordered">
+        
+        <div class="widget-body" style="padding: 0px;">
+
+            <div class="list-group wizardstep">
+
+
+                <a href="/CaseOpening/AddCaseRespondents" class="list-group-item "><span class="label label-blue">1</span> Add Child/Parents</a>
+                <a href="/CaseOpening/LegalParties" class="list-group-item"><span class="label label-blue">2</span>  Add Legal Parties</a>
+                <a href="/CaseOpening/PetitionList" class="list-group-item"><span class="label label-blue">3</span> Petition List </a>
+                <a href="/CaseOpening/Associations" class="list-group-item"> <span class="label label-blue">4</span>      Associations</a>
+                @*<a href="javascript:void()" class="list-group-item"><span class="label label-blue">5</span>  AKAs</a>*@
+                <a href="/CaseOpening/LegalNumbers" class="list-group-item"><span class="label label-blue">6</span>  Legal Numbers</a>
+                <a href="/CaseOpening/CaseAddresses" class="list-group-item"><span class="label label-blue">7</span>  Address/Placements</a>
+                <a href="/CaseOpening/Hearing" class="list-group-item"><span class="label label-blue">8</span>  Hearings </a>
+                <a href="/CaseOpening/ActionRequest" class="list-group-item"><span class="label label-blue">9</span>  AR </a>
+                <a href="/CaseOpening/Notes" class="list-group-item"><span class="label label-blue">10</span>   Notes</a>
+            </div>
+        </div>
+    </div>
+ 
+    <div id="clickme" class="btn-primary  ">
+        <a >
+            <i class="fa   fa-chevron-left "></i>
+        </a>
+
+    </div>
+</div>
+
+ 

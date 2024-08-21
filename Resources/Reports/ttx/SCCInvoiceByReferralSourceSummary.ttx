@@ -1,0 +1,4 @@
+InvoiceGroup	String	100	Number of Initial Appointments at $460
+Attorney	String	100	Bob Johnson
+InvoiceCount	Number		200
+InvoiceAmount	Currency		14000.0000

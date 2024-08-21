@@ -1,0 +1,1323 @@
+﻿@model  LALoDep.Models.Task.IVEProfessionalServicesViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Professional Services <br>Expense";
+    var rowCount = 1;
+    var tabCount = 1;
+}
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+
+    .modal-header button {
+        display: none;
+    }
+</style>
+<style>
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    table#activity-head {
+        width: 100%;
+        border: 0;
+        font-size: 115%;
+    }
+
+    table th.activity-header {
+        padding: 3px !important;
+        text-align: center !important;
+    }
+
+
+
+
+    .activity-sheet > tbody > tr > td {
+        padding: 0;
+    }
+
+        .activity-sheet > tbody > tr > td input {
+        }
+
+
+    .activity-sheet > tbody > tr > td, .footer-row > td {
+        padding: 0 !important;
+    }
+
+    .form-inline input {
+        min-width: 80px;
+    }
+
+    .footer-row th {
+        font-weight: bold !important;
+        text-align: center;
+        padding: 3px !important;
+    }
+
+    .footer-row td, .footer-row td input {
+        font-weight: bold;
+    }
+</style>
+<div class="widget margin-left-10 margin-right-10">
+    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+        <span class="widget-caption">
+
+            Professional Services Expense
+        </span>
+        <div class="widget-buttons">
+            &nbsp;
+        </div>
+    </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVEProfessionalServices-form", @class = "form-inline  center-block" }))
+        {
+
+
+
+            <div class="form-group">
+                <label class="control-label" for="CourtSystem">  Court System:</label>
+
+                @Html.TextBoxFor(m => m.CourtSystem, new { @class = "form-control input-sm  ", tabindex = 1, style = "width:100%;", disabled = "disabled" })
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="InvoicePeriod">   Invoice Period:</label>
+
+                @Html.TextBoxFor(m => m.InvoicePeriod, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="InvoiceDate">  Invoice Date:</label>
+
+                @Html.TextBoxFor(m => m.InvoiceDate, "{0:d}", new { @class = "form-control input-sm  ", tabindex = 3, style = "width:100%;", disabled = "disabled" })
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="InvoiceDate">   Invoice ID:</label>
+                @Html.HiddenFor(m => m.InvoiceID)
+
+
+                @Html.TextBoxFor(m => m.HeaderInvoiceID, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+            </div>
+            <div class="clearfix"></div>
+            <p style="font-size:11pt"> Please provide the following as supporting documentation: activity logs, invoices with proof of payment. </p>
+
+            <br />
+            <div class="table-responsive">
+                <table id="tblIVEProfessionalServices" class="activity-sheet table">
+                    <thead>
+                        <tr>
+                            <td colspan="7" class="text-right">
+                                <strong style="font-size:12pt;">Provider Overhead Rate:</strong>
+                            </td>
+                            <td colspan="17">
+                                <div class="input-group">
+                                    @Html.TextBox("ProviderOverheadRate", Model.ProviderOverheadRate, new { @class = "form-control input-sm     ", style = "width:80px;", disabled = "disabled" })
+
+                                    <span class="input-group-addon"><b>%</b></span>
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <th class="activity-header" rowspan="2" style="width: 20px;">Row</th>
+                            <th class="activity-header" rowspan="2" style="width: 120px;">Date</th>
+                            <th class="activity-header" rowspan="2" style="width: 60px;">Invoice<br />Reference<br />Number</th>
+                            <th class="activity-header" rowspan="2" style="min-width: 180px;width: 180px;">Type of Service</th>
+                            <th class="activity-header" rowspan="2" style="width: 150px;">Subcontractor Business<br />Name</th>
+                            <th class="activity-header" rowspan="2" style="width: 60px;"> No. of Hours or Other Unit</th>
+                            <th class="activity-header" rowspan="2" style="width: 60px;">Specify Unit</th>
+                            <th class="activity-header" rowspan="2" style="width: 150px;"> Hourly Rate,<br /> Monthly Contract Rate<br /> or Per Case Rate</th>
+                            <th class="activity-header" rowspan="2" style="width: 100px;">Total Amount<br /> Paid</th>
+                            <th class="activity-header" colspan="4" style="width: 80px;">
+                                % OF TIME SPENT ON FFDRP ELIGIBLE ACTIVITIES
+
+
+                            </th>
+                            <th class="activity-header" colspan="2" style="width: 80px;">
+                                IDENTIFY FUNDING %
+                            </th>
+                            <th class="activity-header" colspan="2" style="width: 80px;">
+                                EXPENDITURES
+                            </th>
+                            <th class="activity-header" colspan="4" style="width: 80px;">
+                                FFDRP ELIGIBLE AMOUNT
+                            </th>
+
+
+                            <th class="activity-header" rowspan="2" style="width:200px;">
+                                Notes/Comments:
+                            </th>
+
+                            <th class="activity-header" rowspan="2" style="width:100px;">
+
+                            </th>
+
+                        </tr>
+                        <tr>
+
+                            <th class="activity-header" style="width: 40px;">
+
+
+                                Case<br />Specific
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                Admin-<br />istrative
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                Attorney<br />Traininig
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                Non-<br />Attorney<br />Traininig
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                CAC<br />Base
+
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                FFDRP <br />Enhancement
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                CAC<br />Base<br /> Amount
+
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                FFDRP<br />Enhancement Amount
+
+
+                            </th>
+
+                            <th class="activity-header" rowspan="2" style="width: 80px;"> Case<br />Specific</th>
+
+                            <th class="activity-header" style="width: 40px;">
+
+                                Administrative
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                Attorney<br />Traininig
+
+                            </th>
+                            <th class="activity-header" style="width: 40px;">
+
+                                Non-<br />Attorney<br />Traininig
+
+                            </th>
+
+
+                        </tr>
+
+
+
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.TitleIVeProfessionalServiceList)
+                        {
+                            if (!item.RecordStateID.HasValue)
+                            {
+                                item.RecordStateID = 1;
+                            }
+
+                            <tr class="@(item.ReadOnly.ToInt()==1?"readonly":"")">
+                                <td>
+                                    @Html.HiddenFor(o => item.TitleIVeProfessionalServiceID)
+                                    @Html.HiddenFor(o => item.TitleIVeInvoiceID)
+
+                                    @Html.HiddenFor(o => item.InsertedByUserID)
+                                    @Html.HiddenFor(o => item.InsertedOnDateTime)
+                                    @Html.HiddenFor(o => item.UpdatedByUserID)
+                                    @Html.HiddenFor(o => item.UpdatedOnDateTime)
+                                    @Html.HiddenFor(o => item.RecordStateID)
+                                    @Html.HiddenFor(o => item.RecordTimeStamp)
+
+                                    <input class="form-control input-sm valid" id="item_rowCount" name="item.rowCount" style="width:100%;" type="text" value="@rowCount" autocomplete="off" aria-invalid="false" readonly="readonly">
+
+                                </td>
+                                <td>
+
+                                    <div class="input-group">
+
+                                        @Html.TextBoxFor(o => item.ServiceDate, "{0:d}", new { @class = "form-control input-sm date-picker  ", tabindex = ++tabCount, style = "width:80px" })
+                                        <span class="input-group-addon datepicker-trigger">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => item.InvoiceReferenceNbr, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;" })
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => item.TypeOfServiceID, Model.TypeOfServiceList, "", new { @class = "form-control input-sm", tabindex = ++tabCount, style = "width:100%;", data_selected = item.TypeOfServiceID })
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => item.SubcontractorBusinessName, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;", maxlength = "200" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => item.NumberOfUnits, new { @class = "form-control input-sm number NumberOfUnits", tabindex = ++tabCount, style = "width:100%;" })
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => item.SpecifyUnitID, Model.SpecifyUnitList, "", new { @class = "form-control input-sm", tabindex = ++tabCount, style = "width:100%;", data_selected = item.SpecifyUnitID })
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => item.UnitRate, new { @class = "form-control input-sm number UnitRate", tabindex = ++tabCount, style = "width:100%;" })
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBox("TotalAmountPaid", (item.NumberOfUnits * item.UnitRate), new { @class = "form-control input-sm  TotalAmountPaid CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.EligibleCaseSpecific, new { @class = "form-control input-sm  EligibleCaseSpecific editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.EligibleAdmin, new { @class = "form-control input-sm  EligibleAdmin editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.EligibleAttorneyTraining, new { @class = "form-control input-sm  EligibleAttorneyTraining editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.EligibleNonAttorneyTraining, new { @class = "form-control input-sm  EligibleNonAttorneyTraining editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                @*<td>
+                                    @Html.TextBoxFor(o => item.PercentDependency, new { @class = "form-control input-sm  PercentDependency", tabindex = ++tabCount, style = "width:100%;" })
+                                </td>*@
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.PercentCACFunds, new { @class = "form-control input-sm  PercentCACFunds editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(o => item.PercentFFDRPFunds, new { @class = "form-control input-sm  PercentFFDRPFunds editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                                        <span class="input-group-addon"><b>%</b></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.CACFundAmount, new { @class = "form-control input-sm  CACFundAmount CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.EligibleCost, new { @class = "form-control input-sm EligibleCost CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.EligibleAmountCaseSpecific, new { @class = "form-control input-sm  EligibleAmountCaseSpecific CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.EligibleAmountAdmin, new { @class = "form-control input-sm  EligibleAmountAdmin CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.EligibleAmountAttorneyTraining, new { @class = "form-control input-sm  EligibleAmountAttorneyTraining CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><b>$</b></span>
+                                        @Html.TextBoxFor(o => item.EligibleAmountNonAttorneyTraining, new { @class = "form-control input-sm  EligibleAmountNonAttorneyTraining CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => item.Note, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;" })
+                                </td>
+                                <td style="min-width:140px">
+                                    @if (item.TitleIVeProfessionalServiceID.HasValue && item.TitleIVeProfessionalServiceID.Value > 0)
+                                    {
+                                        if (item.UploadButton.IsNullOrEmpty())
+                                        {
+                                            item.UploadButton = "Upload Doc";
+                                        }
+
+                                        @*<a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=ProfService&TitleIVeItemID=@(item.TitleIVeProfessionalServiceID.Value.ToEncrypt())&TitleIVeInvoiceID=@(item.TitleIVeInvoiceID.Value.ToEncrypt())', '@item.UploadButton')">@item.UploadButton</a>*@
+
+                                        <a class="btn btn-danger btn-xs btndelete" data-id="@item.TitleIVeProfessionalServiceID.Value">Delete </a>
+
+                                    }
+                                    else
+                                    {
+                                        item.UploadButton = "Upload Doc";
+                                        @*<a class="btn btn-info btn-xs btnUpload" data-rowno="@(rowCount-1)" data-url="/Task/IVEAttachments?docType=ProfService&TitleIVeInvoiceID=@(item.TitleIVeInvoiceID.Value.ToEncrypt())&TitleIVeItemID=">@item.UploadButton</a>*@
+
+                                    }
+                                </td>
+                            </tr>
+                            rowCount++;
+                        }
+                    </tbody>
+
+                    <tfoot>
+                        <tr class="footer-row">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @Html.TextBox("TotalAmountPaidTotal", "", new { @class = "form-control input-sm  TotalAmountPaidTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                            <td colspan="2" style="text-align:right !important;vertical-align:middle !important;"></td>
+
+                            <td>
+                                @Html.TextBox("CACFundAmountTotal", "", new { @class = "form-control input-sm  CACFundAmountTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+                            </td>
+                            <td>
+                                @Html.TextBox("EligibleCostTotal", "", new { @class = "form-control input-sm  EligibleCostTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBox("EligibleAmountCaseSpecificTotal", "", new { @class = "form-control input-sm  EligibleAmountCaseSpecificTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBox("EligibleAmountAdminTotal", "", new { @class = "form-control input-sm  EligibleAmountAdminTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBox("EligibleAmountAttorneyTrainingTotal", "", new { @class = "form-control input-sm  EligibleAmountAttorneyTrainingTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBox("EligibleAmountNonAttorneyTrainingTotal", "", new { @class = "form-control input-sm  EligibleAmountNonAttorneyTrainingTotal CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        <tr class="footer-row">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <th>
+                                Total Professional Services
+                            </th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                            <td colspan="2"></td>
+
+                            <th>
+                                CAC Base Amount
+
+                            </th>
+                            <th>
+                                FFDRP Enhancement  Amount
+
+                            </th>
+                            <th>
+                                FFDRP Eligible Amount
+                                [Case Specific]
+
+                            </th>
+                            <th>
+                                FFDRP Eligible Amount
+                                [Administrative]
+
+                            </th>
+                            <th>
+                                FFDRP Eligible Amount
+                                [Attorney Training]
+
+                            </th>
+                            <th>
+                                FFDRP Eligible Amount
+                                [Non-Attorney Training]
+
+                            </th>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                    </tfoot>
+
+                </table>
+                <br /><br />
+            </div>
+        }
+    </div>
+
+    <br /><br />
+    <div class="well bordered-top bordered-bottom bordered-themeprimary">
+        <p style="line-height:21px;">
+            Except for review by the California Department of Social Services or an audit of the program by state or federal officials, the information contained in these documents is confidential, privileged and only for the intended recipient. The information may not be used, published or redistributed without the prior written consent of the Judicial Council of California.
+        </p>
+    </div>
+</div>
+<table style="display:none" id="ExtraRows">
+
+
+    @foreach (var item in Model.TitleIVeProfessionalServiceList.Where(o => o.TitleIVeProfessionalServiceID == 0).ToList())
+    {
+        if (!item.RecordStateID.HasValue)
+        {
+            item.RecordStateID = 1;
+        }
+
+    <tr class="@(item.ReadOnly.ToInt()==1?"readonly":"")">
+        <td>
+            @Html.HiddenFor(o => item.TitleIVeProfessionalServiceID)
+            @Html.HiddenFor(o => item.TitleIVeInvoiceID)
+
+            @Html.HiddenFor(o => item.InsertedByUserID)
+            @Html.HiddenFor(o => item.InsertedOnDateTime)
+            @Html.HiddenFor(o => item.UpdatedByUserID)
+            @Html.HiddenFor(o => item.UpdatedOnDateTime)
+            @Html.HiddenFor(o => item.RecordStateID)
+            @Html.HiddenFor(o => item.RecordTimeStamp)
+
+            <input class="form-control input-sm valid" id="item_rowCount" name="item.rowCount" style="width:100%;" type="text" value="@rowCount" autocomplete="off" aria-invalid="false" readonly="readonly">
+
+        </td>
+        <td>
+
+            <div class="input-group">
+
+                @Html.TextBoxFor(o => item.ServiceDate, "{0:d}", new { @class = "form-control input-sm date-picker  ", tabindex = ++tabCount, style = "width:80px" })
+                <span class="input-group-addon datepicker-trigger">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </td>
+        <td>
+            @Html.TextBoxFor(o => item.InvoiceReferenceNbr, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;" })
+        </td>
+        <td>
+            @Html.DropDownListFor(m => item.TypeOfServiceID, Model.TypeOfServiceList, "", new { @class = "form-control input-sm", tabindex = ++tabCount, style = "width:100%;", data_selected = item.TypeOfServiceID })
+
+        </td>
+        <td>
+            @Html.TextBoxFor(o => item.SubcontractorBusinessName, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;", maxlength = "200" })
+        </td>
+        <td>
+            @Html.TextBoxFor(o => item.NumberOfUnits, new { @class = "form-control input-sm number NumberOfUnits", tabindex = ++tabCount, style = "width:100%;" })
+        </td>
+        <td>
+            @Html.DropDownListFor(m => item.SpecifyUnitID, Model.SpecifyUnitList, "", new { @class = "form-control input-sm", tabindex = ++tabCount, style = "width:100%;", data_selected = item.SpecifyUnitID })
+
+        </td>
+        <td>
+            @Html.TextBoxFor(o => item.UnitRate, new { @class = "form-control input-sm number UnitRate", tabindex = ++tabCount, style = "width:100%;" })
+        </td>
+        <td>
+            <div class="input-group">
+
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBox("TotalAmountPaid", (item.NumberOfUnits * item.UnitRate), new { @class = "form-control input-sm  TotalAmountPaid CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.EligibleCaseSpecific, new { @class = "form-control input-sm  EligibleCaseSpecific editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.EligibleAdmin, new { @class = "form-control input-sm  EligibleAdmin editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.EligibleAttorneyTraining, new { @class = "form-control input-sm  EligibleAttorneyTraining editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.EligibleNonAttorneyTraining, new { @class = "form-control input-sm  EligibleNonAttorneyTraining editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        @*<td>
+            @Html.TextBoxFor(o => item.PercentDependency, new { @class = "form-control input-sm  PercentDependency", tabindex = ++tabCount, style = "width:100%;" })
+        </td>*@
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.PercentCACFunds, new { @class = "form-control input-sm  PercentCACFunds editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                @Html.TextBoxFor(o => item.PercentFFDRPFunds, new { @class = "form-control input-sm  PercentFFDRPFunds editable", tabindex = ++tabCount, style = "width:100%;" })
+
+                <span class="input-group-addon"><b>%</b></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.CACFundAmount, new { @class = "form-control input-sm  CACFundAmount CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.EligibleCost, new { @class = "form-control input-sm EligibleCost CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.EligibleAmountCaseSpecific, new { @class = "form-control input-sm  EligibleAmountCaseSpecific CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.EligibleAmountAdmin, new { @class = "form-control input-sm  EligibleAmountAdmin CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.EligibleAmountAttorneyTraining, new { @class = "form-control input-sm  EligibleAmountAttorneyTraining CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            <div class="input-group">
+                <span class="input-group-addon"><b>$</b></span>
+                @Html.TextBoxFor(o => item.EligibleAmountNonAttorneyTraining, new { @class = "form-control input-sm  EligibleAmountNonAttorneyTraining CurrencyFormat", tabindex = ++tabCount, style = "width:100%;", disabled = "disabled" })
+
+            </div>
+        </td>
+        <td>
+            @Html.TextBoxFor(o => item.Note, new { @class = "form-control input-sm  ", tabindex = ++tabCount, style = "width:100%;" })
+        </td>
+        <td style="min-width:140px">
+            @if (item.TitleIVeProfessionalServiceID.HasValue && item.TitleIVeProfessionalServiceID.Value > 0)
+            {
+                if (item.UploadButton.IsNullOrEmpty())
+                {
+                    item.UploadButton = "Upload Doc";
+                }
+
+                @*<a class="btn btn-info btn-xs" onclick="OpenPopup('/Task/IVEAttachments?docType=ProfService&TitleIVeItemID=@(item.TitleIVeProfessionalServiceID.Value.ToEncrypt())&TitleIVeInvoiceID=@(item.TitleIVeInvoiceID.Value.ToEncrypt())', '@item.UploadButton')">@item.UploadButton</a>*@
+
+                <a class="btn btn-danger btn-xs btndelete" data-id="@item.TitleIVeProfessionalServiceID.Value">Delete </a>
+
+            }
+            else
+            {
+                item.UploadButton = "Upload Doc";
+                @*<a class="btn btn-info btn-xs btnUpload" data-rowno="@(rowCount-1)" data-url="/Task/IVEAttachments?docType=ProfService&TitleIVeInvoiceID=@(item.TitleIVeInvoiceID.Value.ToEncrypt())&TitleIVeItemID=">@item.UploadButton</a>*@
+
+            }
+        </td>
+    </tr>
+        rowCount++;
+    }
+
+
+</table>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default btnSave" data-id="-1">Save</button>
+        <button id="btnSaveAndGoProfessional" type="button" class="btn btn-default v-bottom  btnSave" data-id="-2" data-href="/Task/IVEPersonnel/@Model.InvoiceID.ToEncrypt()?backtoinvoice=@Request.QueryString["backtoinvoice"]">Save and Go To Personnel</button>
+        <button id="btnSaveAndGoTravel" type="button" class="btn btn-default v-bottom btnSave " data-id="-3" data-href="/Task/IVETravelExpenses/@Model.InvoiceID.ToEncrypt()?backtoinvoice=@Request.QueryString["backtoinvoice"]">Save and Go To Travel</button>
+        <button id="btnSaveAndGoOperating" type="button" class="btn btn-default v-bottom  btnSave" data-id="-4" data-href="/Task/IVEOperatingExpenses/@Model.InvoiceID.ToEncrypt()?backtoinvoice=@Request.QueryString["backtoinvoice"]">Save and Go To Operating</button>
+
+        @if (Request.QueryString["backtoinvoice"] != null)
+        {
+            <button id="btnBack" type="button" onclick="document.location.href='@Request.QueryString["backtoinvoice"].ToDecrypt()'" class="btn btn-default v-bottom  ">Cancel</button>
+
+        }
+        <button id="btnExtraRows" type="button" class="btn btn-default v-bottom  ">Add More Rows</button>
+
+    </div>
+}
+
+@section scripts{
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+    <script>
+        $(function () {
+            $('#btnExtraRows').click(function () {
+                $tr = $('#ExtraRows tr').clone();
+
+                $('#tblIVEProfessionalServices tbody').append($tr);
+                $('*[tabindex]').each(function (index) {
+                    $(this).attr('tabindex', index + 1);
+                })
+            })
+            $('select').each(function () {
+                $(this).val($(this).attr('data-selected'))
+            })
+            $('.NumberOfUnits').each(function () {
+                if ($(this).val() > 0) {
+
+                    CalculateRowFields($(this).closest('tr'));
+                }
+            })
+            $('body').on('change', '.NumberOfUnits', function () {
+
+
+                CalculateRowFields($(this).closest('tr'));
+            })
+            $('body').on('change', '.editable', function () {
+
+
+
+                CalculateRowFields($(this).closest('tr'));
+            })
+            $('body').on('change', '.UnitRate', function () {
+
+
+                CalculateRowFields($(this).closest('tr'));
+            })
+
+            $('body').on('change', '.PercentDependency', function () {
+
+                var tr = $(this).closest('tr');
+                CalculateRowFields(tr);
+                if (!(tr.find('#item_PercentDependency').val() >= "1" && tr.find('#item_PercentDependency').val() <= 100)) {
+                    notifyDanger('Percent FFDRP Eligible Activities must be between 0 and 100.');
+                    tr.find('#item_PercentDependency').focus();
+                    flag = false;
+                    return false;
+                }
+            })
+            $('body').on('change', '.PercentCACFunds', function () {
+
+
+                var tr = $(this).closest('tr');
+                CalculateRowFields(tr);
+                var total = (parseFloat(tr.find('#item_PercentCACFunds').val() != '' ? tr.find('#item_PercentCACFunds').val() : 0) + parseFloat((tr.find('#item_PercentFFDRPFunds').val() != '' ? tr.find('#item_PercentFFDRPFunds').val() : 0)));
+                if ((total > 100)) {
+                    notifyDanger('CAC Base and FFDRP Enhancement % must be under 100%.');
+                    tr.find('#item_PercentCACFunds').focus();
+                    flag = false;
+                    return false;
+                }
+            })
+            $('body').on('change', '.PercentFFDRPFunds', function () {
+
+                var tr = $(this).closest('tr');
+                CalculateRowFields(tr);
+                var total = (parseFloat(tr.find('#item_PercentCACFunds').val() != '' ? tr.find('#item_PercentCACFunds').val() : 0) + parseFloat((tr.find('#item_PercentFFDRPFunds').val() != '' ? tr.find('#item_PercentFFDRPFunds').val() : 0)));
+                if ((total > 100)) {
+                    notifyDanger('CAC Base and FFDRP Enhancement % must be under 100%.');
+                    tr.find('#item_PercentFFDRPFunds').focus();
+                    flag = false;
+                    return false;
+                }
+            })
+
+            $('.btnSave').click(function (e) {
+                e.preventDefault();
+                SaveIVEProfessionalServices($(this).data('id'))
+            });
+            $('.btnUpload').click(function (e) {
+                e.preventDefault();
+
+                SaveIVEProfessionalServices($(this).attr('data-rowno'));
+            });
+            $('.btndelete').click(function (e) {
+                e.preventDefault();
+
+                var id = $(this).attr('data-id');
+                var tr = $(this).parent().parent();
+
+                confirmBox("Are you sure you want to remove this records?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '/Task/IVEProfessionalServicesDelete/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+
+                                    notifySuccess('Record delete successfully.');
+                                    document.location.href = document.location.href;
+                                }
+
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+            });
+
+            $('.CurrencyFormat').formatCurrency();
+            setInitialFormValues("IVEProfessionalServices-form");
+            $('.readonly input,.readonly select').attr('disabled', 'disabled')
+
+            CalculateSumFields();
+        });
+
+        function CalculateRowFields($tr) {
+            if ($tr.find('#item_EligibleCaseSpecific').val() == "0") {
+                $tr.find('#item_EligibleCaseSpecific').val('');
+            }
+            if ($tr.find('#item_EligibleAdmin').val() == "0") {
+                $tr.find('#item_EligibleAdmin').val('');
+            }
+            if ($tr.find('#item_EligibleAttorneyTraining').val() == "0") {
+                $tr.find('#item_EligibleAttorneyTraining').val('');
+            }
+            if ($tr.find('#item_EligibleNonAttorneyTraining').val() == "0") {
+                $tr.find('#item_EligibleNonAttorneyTraining').val('');
+            }
+
+            if ($tr.find('#item_PercentCACFunds').val() == '0')
+                $tr.find('#item_PercentCACFunds').val('');
+
+            if ($tr.find('#item_PercentFFDRPFunds').val() == '0')
+                $tr.find('#item_PercentFFDRPFunds').val('');
+
+
+
+            $('.CurrencyFormat').toNumber();
+            var NumberOfUnits = $tr.find('#item_NumberOfUnits').val();
+            var UnitRate = $tr.find('#item_UnitRate').val();
+            var TotalAmountPaid = NumberOfUnits * UnitRate;
+
+            $tr.find('#TotalAmountPaid').val(TotalAmountPaid);
+            //var PercentDependency = $tr.find('#item_PercentDependency').val();
+
+            //var PercentCACFunds = $tr.find('#item_PercentCACFunds').val();
+
+            //var PercentFFDRPFunds = $tr.find('#item_PercentFFDRPFunds').val();
+
+            //var CACFundAmount = TotalAmountPaid * PercentCACFunds / 100;
+            //$tr.find('#item_CACFundAmount').val(CACFundAmount);
+
+            //var FFDRPFundAmount = TotalAmountPaid * PercentFFDRPFunds / 100;
+            //$tr.find('#item_FFDRPFundAmount').val(FFDRPFundAmount);
+
+            //var EligibleCost = PercentDependency * (CACFundAmount + FFDRPFundAmount) / 100;
+            //$tr.find('#item_EligibleCost').val(EligibleCost);
+
+            //$('.CurrencyFormat').formatCurrency();
+            //CalculateSumFields();
+            //    var TotalAmountPaid = $tr.find('#item_TotalAmountPaid').val();
+
+
+            var PercentDependency = $tr.find('#item_CountyProgramPercent').val();
+
+            var PercentCACFunds = $tr.find('#item_PercentCACFunds').val();
+
+            var PercentFFDRPFunds = $tr.find('#item_PercentFFDRPFunds').val();
+
+            var PercentEligibleCaseSpecific = $tr.find('#item_EligibleCaseSpecific').val();
+
+            var PercentEligibleAdmin = $tr.find('#item_EligibleAdmin').val();
+
+            var PercentEligibleAttorneyTraining = $tr.find('#item_EligibleAttorneyTraining').val();
+
+
+            var PercentEligibleNonAttorneyTraining = $tr.find('#item_EligibleNonAttorneyTraining').val();
+
+            var CACFundAmount = TotalAmountPaid * (PercentCACFunds / 100);
+            $tr.find('#item_CACFundAmount').val(CACFundAmount);
+
+            var FFDRPFundAmount = TotalAmountPaid * (PercentFFDRPFunds / 100);
+            $tr.find('#item_EligibleCost').val(FFDRPFundAmount);
+
+            var EligibleAmountCaseSpecificCost = ((CACFundAmount + FFDRPFundAmount) * (PercentEligibleCaseSpecific / 100));
+            $tr.find('#item_EligibleAmountCaseSpecific').val(EligibleAmountCaseSpecificCost);
+
+            var EligibleAmountAdminCost = ((CACFundAmount + FFDRPFundAmount) * ((PercentEligibleAdmin / 100)));
+            $tr.find('#item_EligibleAmountAdmin').val(EligibleAmountAdminCost);
+
+
+            console.log(CACFundAmount + ' ' + FFDRPFundAmount + ' ' + PercentEligibleAttorneyTraining + ' ' + $tr.find('#item_EligibleNonAttorneyTraining').val());
+            var EligibleAmountAttorneyTrainingAmount = ((CACFundAmount + FFDRPFundAmount) * (PercentEligibleAttorneyTraining / 100));
+            $tr.find('#item_EligibleAmountAttorneyTraining').val(EligibleAmountAttorneyTrainingAmount);
+
+            var EligibleAmountNonAttorneyTrainingAmount = ((CACFundAmount + FFDRPFundAmount) * (PercentEligibleNonAttorneyTraining / 100));
+            $tr.find('#item_EligibleAmountNonAttorneyTraining').val(EligibleAmountNonAttorneyTrainingAmount);
+
+
+
+            var totalsa = 0;
+            $('.TotalAmountPaid').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.TotalAmountPaidTotal').val(totalsa)
+            totalsa = 0;
+            $('.CACFundAmount').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.CACFundAmountTotal').val(totalsa)
+            totalsa = 0;
+            $('.EligibleCost').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.EligibleCostTotal').val(totalsa)
+
+            totalsa = 0;
+            $('.EligibleAmountCaseSpecific').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.EligibleAmountCaseSpecificTotal').val(totalsa)
+            totalsa = 0;
+            $('.EligibleAmountAdmin').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.EligibleAmountAdminTotal').val(totalsa)
+            totalsa = 0;
+            $('.EligibleAmountAttorneyTraining').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.EligibleAmountAttorneyTrainingTotal').val(totalsa)
+            totalsa = 0;
+            $('.EligibleAmountNonAttorneyTraining').each(function () {
+
+                $this = $(this);
+
+                if ($this.val().length > 0) {
+
+                    totalsa += parseFloat($this.val());
+
+                }
+            })
+
+            $('.EligibleAmountNonAttorneyTrainingTotal').val(totalsa)
+
+            $('.CurrencyFormat').formatCurrency();
+
+
+        }
+
+        function CalculateSumFields() {
+
+            $('.CurrencyFormat').toNumber();
+            var sumCAC = 0, sumFFDRP = 0, sumEligibleCost = 0;
+            $('.CACFundAmount').each(function () {
+                if (parseFloat(this.value) >= 0)
+                    sumCAC += parseFloat(this.value);
+            });
+
+            $('.FFDRPFundAmount').each(function () {
+                if (parseFloat(this.value) >= 0)
+                    sumFFDRP += parseFloat(this.value);
+            });
+
+            $('.EligibleCost').each(function () {
+                if (parseFloat(this.value) >= 0)
+                    sumEligibleCost += parseFloat(this.value);
+            });
+            $("#SumCACFundAmount").text("$" + sumCAC.toFixed(2));
+            $("#SumFFDRPFundAmount").text("$" + sumFFDRP.toFixed(2));
+            $("#SumEligibleCostt").text("$" + sumEligibleCost.toFixed(2));
+            $('.CurrencyFormat').formatCurrency();
+        }
+        function Validation(buttonId) {
+            var flag = true;
+            $("#tblIVEProfessionalServices tbody tr").each(function (index) {
+
+                var tr = $(this);
+                var bflag = true;
+
+                if (!(buttonId <= -1)) {
+                    bflag = false;
+                    if (buttonId == index) {
+                        bflag = true;
+                    }
+                }
+                if (bflag) {
+                    if (!(buttonId <= -1) || tr.find('#item_NumberOfUnits').hasValue() || tr.find('#item_UnitRate').hasValue() || tr.find('#item_PercentDependency').hasValue() || tr.find('#item_CACFundAmount').hasValue() || tr.find('#item_PercentFFDRPFunds').hasValue() || tr.find('#item_Note').hasValue()
+                        || tr.find('#item_SubcontractorBusinessName').hasValue() || tr.find('#item_InvoiceReferenceNbr').hasValue() || tr.find('#item_TypeOfServiceID').hasValue() || tr.find('#item_SpecifyUnitID').hasValue() || tr.find('#item_ServiceDate').hasValue()) {
+                      
+                        if (tr.find('#item_ServiceDate').val() == "") {
+                            notifyDanger('Service Date is required.');
+                            tr.find('#item_ServiceDate').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_ServiceDate').hasValue() && moment(tr.find('#item_ServiceDate').val()) > moment()) {
+                            notifyDanger('Service Date cannot be a future date.');
+                            tr.find('#item_ServiceDate').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_NumberOfUnits').val() == "") {
+                            notifyDanger('Number Of Units is required.');
+                            tr.find('#item_NumberOfUnits').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_NumberOfUnits').val() <= 0) {
+                            notifyDanger('Number of units must be a positive number.');
+                            tr.find('#item_NumberOfUnits').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_UnitRate').val() == "") {
+                            notifyDanger('Unit Rate is required.');
+                            tr.find('#item_UnitRate').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_UnitRate').val() <= 0) {
+                            notifyDanger('Unit Rate must be a positive number.');
+                            tr.find('#item_UnitRate').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (tr.find('#item_PercentFFDRPFunds').val() == "0") {
+                            tr.find('#item_PercentFFDRPFunds').val('');
+                          
+                        }
+                        if (tr.find('#item_PercentCACFunds').val() == "0") {
+                            tr.find('#item_PercentCACFunds').val('');                            
+                        }
+
+
+
+                        //if (!(tr.find('#item_PercentFFDRPFunds').val() >= "0" && tr.find('#item_PercentFFDRPFunds').val() <= 100)) {
+                        //    notifyDanger('FFDRP Enhancement Amount must be between 0 and 100.');
+                        //    tr.find('#item_PercentFFDRPFunds').focus();
+                        //    flag = false;
+                        //    return false;
+                        //}
+                        //if (tr.find('#item_PercentCACFunds').val() == "" && tr.find('#item_PercentFFDRPFunds').val() == "") {
+                        //    notifyDanger('Must enter at least one value in the % CAC Base or %FFDRP Enhancement.');
+                        //    tr.find('#item_PercentCACFunds').focus();
+                        //    flag = false;
+                        //    return false;
+                        //}
+                        //if (tr.find('#item_PercentCACFunds').val() == "" && tr.find('#item_PercentCACFunds').val() == "") {
+                        //    notifyDanger('Must enter at least one value in the % CAC Base or %FFDRP Enhancement.');
+                        //    tr.find('#item_PercentCACFunds').focus();
+                        //    flag = false;
+                        //    return false;
+                        //}
+                        if (tr.find('#item_EligibleCaseSpecific').val() == "0") {
+                            tr.find('#item_EligibleCaseSpecific').val('');
+                        }
+                        if (tr.find('#item_EligibleAdmin').val() == "0") {
+                            tr.find('#item_EligibleAdmin').val('');
+                        }
+                        if (tr.find('#item_EligibleAttorneyTraining').val() == "0") {
+                            tr.find('#item_EligibleAttorneyTraining').val('');
+                        }
+                        if (tr.find('#item_EligibleNonAttorneyTraining').val() == "0") {
+                            tr.find('#item_EligibleNonAttorneyTraining').val('');
+                        }
+
+                        var totalTimeSpent = (ConvertToFloat(tr.find('#item_EligibleCaseSpecific').val())
+                            + ConvertToFloat(tr.find('#item_EligibleAdmin').val() )
+                            + ConvertToFloat(tr.find('#item_EligibleAttorneyTraining').val())
+                            + ConvertToFloat(tr.find('#item_EligibleNonAttorneyTraining').val()))
+
+                        
+                        if ((totalTimeSpent > 100)) {
+                            notifyDanger('The sum of the percent entered for "Time Spent on FFDRP" cannnot exceed 100%.');
+                            tr.find('#item_EligibleCaseSpecific').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (totalTimeSpent == 0) {
+                            IsValid = false;
+                            tr.find('#item_EligibleCaseSpecific').focus();
+                            notifyDanger('Please enter a value in the "Time Spent on FFDRP"');
+                            flag = false;
+                            return false;
+                        }
+
+
+                        var total = (ConvertToFloat(tr.find('#item_PercentCACFunds').val()) + ConvertToFloat(tr.find('#item_PercentFFDRPFunds').val()) );
+                        if ((total > 100)) {
+                            notifyDanger('The sum of the percent entered for "Identify Funding %" cannnot exceed 100%.');
+                            tr.find('#item_PercentCACFunds').focus();
+                            flag = false;
+                            return false;
+                        }
+                        if (total == 0) {
+                            IsValid = false;
+                            tr.find('#item_PercentCACFunds').focus();
+                            notifyDanger('Please enter a value in the Identify Funding % ');
+                            flag = false;
+                            return false;
+                        }
+                     
+                        if (tr.find('#item_TypeOfServiceID').val() == '25424' && tr.find('#item_Note').val() == '') {
+                            notifyDanger('Note/Comments is required for Other Type of Service.');
+                            tr.find('#item_Note').focus();
+                            flag = false;
+                            return false;
+                        }
+                        
+                        
+                    }
+
+                }
+
+            });
+
+
+
+            return flag;
+        }
+        function GetFormData(buttonId) {
+            var data = [];
+            $("#tblIVEProfessionalServices tbody tr").each(function (index) {
+
+                var tr = $(this);
+                var flag = true;
+
+                if (!(buttonId <= -1)) {
+                    flag = false;
+                    if (buttonId == index) {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+
+
+                    if (!(buttonId <= -1) || tr.find('#item_NumberOfUnits').hasValue() || tr.find('#item_UnitRate').hasValue() || tr.find('#item_PercentDependency').hasValue() || tr.find('#item_CACFundAmount').hasValue() || tr.find('#item_PercentFFDRPFunds').hasValue() || tr.find('#item_Note').hasValue()
+                        || tr.find('#item_SubcontractorBusinessName').hasValue() || tr.find('#item_InvoiceReferenceNbr').hasValue() || tr.find('#item_TypeOfServiceID').hasValue() || tr.find('#item_SpecifyUnitID').hasValue() || tr.find('#item_ServiceDate').hasValue()) {
+
+
+
+
+                        data.push({
+                            TitleIVeProfessionalServiceID: tr.find('#item_TitleIVeProfessionalServiceID').val(),
+                            TitleIVeInvoiceID: tr.find('#item_TitleIVeInvoiceID').val(),
+                            ServiceDate: tr.find('#item_ServiceDate').val(),
+                            InvoiceReferenceNbr: tr.find('#item_InvoiceReferenceNbr').val(),
+                            TypeOfServiceID: tr.find('#item_TypeOfServiceID').val(),
+                            SubcontractorBusinessName: tr.find('#item_SubcontractorBusinessName').val(),
+                            NumberOfUnits: tr.find('#item_NumberOfUnits').val(),
+                            SpecifyUnitID: tr.find('#item_SpecifyUnitID').val(),
+                            UnitRate: tr.find('#item_UnitRate').val(),
+                            PercentDependency: tr.find('#item_PercentDependency').val(),
+                            PercentCACFunds: tr.find('#item_PercentCACFunds').val(),
+                            PercentFFDRPFunds: tr.find('#item_PercentFFDRPFunds').val(),
+                            CACFundAmount: tr.find('#item_CACFundAmount').val(),
+                            FFDRPFundAmount: tr.find('#item_EligibleCost').val(),
+                            EligibleCost: tr.find('#item_EligibleCost').val(),
+                            Note: tr.find('#item_Note').val(),
+                            InsertedByUserID: tr.find('#item_InsertedByUserID').val(),
+                            InsertedOnDateTime: tr.find('#item_InsertedOnDateTime').val(),
+                            UpdatedByUserID: tr.find('#item_UpdatedByUserID').val(),
+                            UpdatedOnDateTime: tr.find('#item_UpdatedOnDateTime').val(),
+                            RecordStateID: tr.find('#item_RecordStateID').val(),
+                            RecordTimeStamp: tr.find('#item_RecordTimeStamp').val(),
+                            EligibleCaseSpecific: tr.find('#item_EligibleCaseSpecific').val(),
+                            EligibleAdmin: tr.find('#item_EligibleAdmin').val(),
+                            EligibleAttorneyTraining: tr.find('#item_EligibleAttorneyTraining').val(),
+                            EligibleNonAttorneyTraining: tr.find('#item_EligibleNonAttorneyTraining').val(),
+                            EligibleAmountCaseSpecific: tr.find('#item_EligibleAmountCaseSpecific').val(),
+                            EligibleAmountAdmin: tr.find('#item_EligibleAmountAdmin').val(),
+                            EligibleAmountAttorneyTraining: tr.find('#item_EligibleAmountAttorneyTraining').val(),
+                            EligibleAmountNonAttorneyTraining: tr.find('#item_EligibleAmountNonAttorneyTraining').val(),
+                            // InvoiceID: $('#InvoiceID').val(),
+                        });
+                    }
+                }
+            });
+
+            return data;
+        }
+        function ValidateDocumentUpload(buttonId) {
+
+            var flag = true;
+            if (!(buttonId <= -1)) {
+                return true;
+
+            }
+            $("#tblIVEProfessionalServices tbody tr").each(function (index) {
+                if (flag) {
+                    var tr = $(this);
+
+                    if (!(buttonId <= -1) || tr.find('#item_NumberOfUnits').hasValue() || tr.find('#item_UnitRate').hasValue() || tr.find('#item_PercentDependency').hasValue() || tr.find('#item_CACFundAmount').hasValue() || tr.find('#item_PercentFFDRPFunds').hasValue() || tr.find('#item_Note').hasValue()
+                        || tr.find('#item_SubcontractorBusinessName').hasValue() || tr.find('#item_InvoiceReferenceNbr').hasValue() || tr.find('#item_TypeOfServiceID').hasValue() || tr.find('#item_SpecifyUnitID').hasValue() || tr.find('#item_ServiceDate').hasValue()) {
+
+                        if (tr.find('.btnUpload').text() == 'Upload Doc') {
+                            // flag = false;
+                            //  notifyDanger('Upload document is required.');
+
+                        }
+
+
+                    }
+                }
+
+            });
+
+            return flag;
+        }
+        function SaveIVEProfessionalServices(buttonId) {
+
+
+            if (buttonId == -1) {
+                if (!hasFormChanged("IVEProfessionalServices-form")) {
+
+                    notifyDanger("Nothing was changed");
+                    return;
+                }
+            }
+
+            if (!Validation(buttonId))
+                return;
+            if (!ValidateDocumentUpload(buttonId))
+                return;
+
+            $('.CurrencyFormat').toNumber();
+            var formData = GetFormData(buttonId);
+            $.ajax({
+                type: "POST", url: '/Task/IVEProfessionalServices', data: JSON.stringify(formData), contentType: 'application/json', cache: false,
+                success: function (result) {
+                    if (buttonId == -1) {
+                        if (result.isSuccess) {
+                            notifySuccess("Data saved successfully.");
+                            document.location.href = document.location.href;
+                        }
+                        else {
+                            notifyDanger(result.message);
+                        }
+                    } else if (buttonId < -1) {
+                        if (result.isSuccess) {
+                            notifySuccess("Data saved successfully.");
+                            document.location.href = $('.btnSave[data-id="' + buttonId + '"]').data('href');
+                        }
+                        else {
+                            notifyDanger(result.message);
+                        }
+                    }
+                    else if (result.LastTitleIVEProfessionalServiceID !== "") {
+                        var btn = $('.btnUpload[data-rowno="' + buttonId + '"]');
+                        OpenPopup(btn.data('url') + result.LastTitleIVEProfessionalServiceID, btn.html());
+                    }
+                }
+            });
+
+        }
+    </script>
+
+}

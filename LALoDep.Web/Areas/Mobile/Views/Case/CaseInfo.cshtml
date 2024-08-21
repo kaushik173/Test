@@ -1,0 +1,57 @@
+﻿@model  LALoDep.Areas.Mobile.Models.CaseInfoMobileViewModel
+@{
+    ViewBag.Title = "Case Info";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">@Model.CaseNumber - @Model.ClientName</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+                @if (Model.Hearings.Count > 0)
+                {
+                    <div class="form-title">Future Hrg:</div>
+                    <div>
+                        @foreach (var item in Model.Hearings)
+                        {
+                        <a href="/Mobile/Case/HearingEdit/@(CodeComet.Crypto.Encryption.Encrypt(item.HearingID.ToString()))">@item.HearingInfo</a><br />
+                        }
+                    </div>
+                }
+
+                @if (Model.Roles.Count > 0)
+                {
+                    <div class="form-title">Roles:</div>
+                    <div class="table-responsive" id="myCalanderListDiv">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            <thead>
+                                <tr>
+                                    <th width="180">Person</th>
+                                    <th>Address</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>@item.PersonDisplay</td>
+                                        <td>@item.AddressDisplay1 @item.AddressDisplay2 <br />@item.AddressDisplay3 @item.AddressDisplay4</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

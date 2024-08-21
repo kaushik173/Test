@@ -1,0 +1,13 @@
+EventDate	String	150	1/1/1990
+EventTime	String	150	7:00am
+EventType	String	150	21
+AgencyAttorney	String	150	Bob Smith
+HearingType	String	150	Detention Hearing
+Department	String	150	Dep 1
+Petitions	String	150	A00001 Joe Black
+Clients	String	150	Jack Blue
+HearingChangeFlag	Number		1
+Result	String	150	Yes
+PetitionFileName	String	150	Petition File Name Goes Here
+
+

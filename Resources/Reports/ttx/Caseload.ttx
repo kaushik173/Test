@@ -1,0 +1,12 @@
+ID	Number		1
+FileDate	Date		1/1/1999
+DocketNumber	String	15	11-N -12345/99X
+TypeID	Number		1
+AgencyID	Number		1
+CaseID	Number		1
+Type	String	50	Neglect
+Agency	String	50	San Diego Public Defender
+LastName	String	50	Jones
+FirstName	String	30	Theodore
+HearingDateTime	Date		1/1/1999 10:00 AM
+HearingType	String	50	Initial Hearing

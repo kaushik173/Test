@@ -1,0 +1,77 @@
+﻿input.disabledInput {
+    width: 47%;
+    margin: 7px 20px;
+}
+
+.tab_content_Button {
+    min-height: 23.5px;
+}
+
+.Mental_Health_Button {
+    min-height: 23.5px;
+}
+
+.Counseling_Button {   
+    min-height: 23.5px;
+}
+
+.Mental_Health_Table {
+    position: absolute;
+    top: 2%;
+    background: #EEEEEE;
+    border: 2px groove;
+    padding: 0px;
+    left: 4%;
+}
+
+.row.Mental_Health {
+    margin: 20px;
+    padding: 20px 0px;
+    border: 2px groove;
+}
+
+.Counseling_Table {
+    position: absolute;
+    top: 27%;
+    background: #EEEEEE;
+    border: 2px groove;
+    padding: 0px;
+    left: 4%;
+}
+
+.row.Counseling {
+    margin: 20px;
+    padding: 20px 0px;
+    border: 2px groove;
+}
+
+.row.navbarbottom {
+    margin: 20px;
+}
+
+.wellMental.well {
+    background: transparent;
+    box-shadow: 0px 0px;
+}
+
+.nav-tabs.nav-justified.nav-mental {
+    width: 50%;
+    border-bottom: 0;
+}
+
+.mental.tab-content {
+    height: 0px;
+    padding: 0px;
+    box-shadow: 0px 0px 0px;
+}
+
+.field_navbar_mental {
+    padding: 20px;
+    border: 2px groove;
+}
+
+.Mental_Health_Text {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 10px 15px;
+}

@@ -1,0 +1,131 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.ContactInformationViewModel
+@{
+    ViewBag.Title = "Contacts";
+    var tabIndex = 1;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contactInfo-form", @class = "form-inline  center-block" }))
+{
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Edit Contact Information</span>
+                    <div class="widget-buttons">
+
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="contactInfoList">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Person</th>
+                                    <th>Type</th>
+                                    <th>Number/Address</th>
+                                    <th width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ContactInfoList != null && Model.ContactInfoList.Count() > 0)
+                                {
+                                    foreach (var item in Model.ContactInfoList)
+                                    {
+                                        <tr data-personcontacttypecodeid="@item.PersonContactTypeCodeID"
+                                            data-personcontactinfo="@item.PersonContactInfo"
+                                            data-personcontactid="@item.PersonContactID"
+                                            data-agencyid="@item.AgencyID"
+                                            data-personid="@item.PersonID"
+                                            data-recordstateid="@item.RecordStateID"  data-roleclient="@((item.RoleClient.HasValue && item.RoleClient.Value==1)?"1":"0")">
+                                            <td>@item.RoleTypeCodeValue</td>
+                                            <td>@(item.PersonNameLast + ", " + item.PersonNameFirst)</td>
+                                            @if (Model.CanEditAccess && item.Editable == 1)
+                                            {
+                                                <td>@Html.DropDownListFor(m => item.PersonContactTypeCodeID, new SelectList(Model.ContactTypeList, "Value", "Text", item.PersonContactTypeCodeID), "", new { @class = "form-control input-sm ContactTypeListEdit ddlType", tabindex = ++tabIndex, style = "width:100%" })</td>
+                                                <td>@Html.TextBoxFor(m => item.PersonContactInfo, new { @class = "form-control input-sm PersonAddressEdit phone_global ", style = "width:100%", tabindex = ++tabIndex })</td>
+                                            }
+                                            else
+                                            {   
+                                                <td>@Html.DropDownListFor(m => item.PersonContactTypeCodeID, new SelectList(Model.ContactTypeList, "Value", "Text", item.PersonContactTypeCodeID), new { @class = "form-control input-sm ContactTypeListEdit ddlType", tabindex = ++tabIndex, style = "width:100%", disabled = "disabled" })</td>
+                                                <td>@Html.TextBoxFor(m => item.PersonContactInfo, new { @class = "form-control input-sm PersonAddressEdit phone_global", style = "width:100%", tabindex = ++tabIndex, disabled = "disabled" })</td>
+                                            }
+                                            <td>
+                                                @if (item.Editable == 1)
+                                                {
+                                                    <a class="btn btn-danger btn-xs delete" href="#" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.PersonContactID.ToString())" data-secure-id="@((int)SecurityToken.DeleteContactInformation)"><i class="fa fa-trash-o"></i> Delete</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (Model.CanAddAccess)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary ">
+                        <span class="widget-caption">Add Contact Information</span>
+                        <div class="widget-buttons">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div id="all-names">
+                            @for (int indx = 0; indx < Model.ContactInfoAddList.Count; indx++)
+                            {
+                                <div id="name-@indx" class="row name margin-bottom-10">
+                                    <div class="form-group col-md-4">
+                                        @if (indx == 0)
+                                        {@Html.Label("Person", new { @class = "control-label" })}
+                                        @Html.DropDownListFor(m => m.ContactInfoAddList[indx].PersonID, new SelectList(Model.PersonList, "PersonID", "PersonNameDisplay"), "", new { @class = "form-control input-sm PersonID", style = "width:100%", tabindex = ++tabIndex })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @if (indx == 0)
+                                        {@Html.Label("Type", new { @class = "control-label" })}
+                                        @Html.DropDownListFor(m => m.ContactInfoAddList[indx].PersonContactTypeCodeID, Model.ContactTypeList, "", new { @class = "form-control input-sm PersonContactTypeCodeID ddlType", style = "width:100%", tabindex = ++tabIndex })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @if (indx == 0)
+                                        {@Html.Label("Number/Address", new { @class = "control-label" })}
+                                        @Html.TextBoxFor(m => m.ContactInfoAddList[indx].PersonContactInfo, new { @class = "form-control input-sm PersonContactInfo phone_global", style = "width:100%", tabindex = ++tabIndex })
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12 text-align-right padding-top-10">
+                                <button id="btnAddNewContactInfo" type="button" class="btn btn-default btn-sm" title="Add more"><i class="fa fa-plus"></i></button>
+                                <button id="btnRemoveContactInfo" type="button" class="btn btn-danger btn-sm" title="Remove last" disabled="disabled"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" data-secure-id="@((int)SecurityToken.ViewContactInformation)" tabindex=@(++tabIndex)>Process</button>
+    </div>
+}
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/ContactInformation.js?v=" + Guid.NewGuid())"></script>
+
+}
+
+

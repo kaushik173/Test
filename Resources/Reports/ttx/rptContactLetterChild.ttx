@@ -1,0 +1,11 @@
+Parent	String	100	Jason Balk
+Street	String	100	12 Bank One Park Drive
+City	String	50	Phoenix
+State	String	50	Arizona
+ZipCode	String	15	12345-7000
+Client	String	100	Client
+Petition	String	100	Petition
+AttorneyFirstName	String	50	First
+AttorneyLastName	String	50	Last
+AttorneyInitials	String	10	AI
+UserInitials	String	10	UI

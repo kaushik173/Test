@@ -1,0 +1,7 @@
+ClientLastName	String	50	Barrett
+ClientFirstName	String	30	Charlie
+PetitionNumber	String	15	12345A
+CaseNumber	String	25	2001J3P0018
+AttorneyLastName	String	50	Fanning
+InvestigatorLastName	String	50	Abbot
+LegalAssistantLastName	String	50	Barrett

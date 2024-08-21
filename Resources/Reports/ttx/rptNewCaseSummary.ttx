@@ -1,0 +1,25 @@
+AgencyName	String	200	Public Defender
+TotalNew	Number		20
+TotalNewPanel	Number		20
+TotalClosed	Number		30
+TotalOpen	Number		24
+TotalTransferIn	Number		10
+TotalTransferOut	Number		12
+AvgNew	Number		20.000
+AvgNewPanel	Number		20.000
+AvgClosed	Number		30.000
+AvgOpen	Number		24.000
+AvgTransferIn	Number		10.000
+AvgTransferOut	Number		12.000
+MinNew	Number		20
+MinNewPanel	Number		20
+MinClosed	Number		30
+MinOpen	Number		24
+MinTransferIn	Number		10
+MinTransferOut	Number		12
+MaxNew	Number		20
+MaxNewPanel	Number		20
+MaxClosed	Number		30
+MaxOpen	Number		24
+MaxTransferIn	Number		10
+MaxTransferOut	Number		12

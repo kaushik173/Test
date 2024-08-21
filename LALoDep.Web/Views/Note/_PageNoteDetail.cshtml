@@ -1,0 +1,47 @@
+﻿
+@model List<LALoDep.Domain.pd_Note.NG_pd_NoteGetByCaseIDASPPageName_spResult>
+@{
+    Layout = null;
+}
+@if (Model.Count > 0)
+{
+    int noteId = 0;
+    var currentNote = Model.FirstOrDefault(o => o.NoteID.ToString() == Request.QueryString["NoteId"]);
+    <div class="note-detail">
+        @if (currentNote != null)
+        {
+            noteId = currentNote.NoteID.Value;
+            @Html.Raw(currentNote.NoteEntry.Replace("\n", "<br/>"))
+        }
+    </div>
+    <div class="note-list">
+        <h4>Broadcast Notes in Case</h4>
+        <div class="note-table">
+            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="Notes">
+                <thead>
+                    <tr>
+
+                        <th>Note Date</th>
+                        <th>Created By</th>
+                        <th>Type</th>
+                        <th>Subject</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(noteId == item.NoteID? "highLightBlue":"")">
+                            <td>@item.NoteCreationDate</td>
+                            <td>@item.CreatedBy</td>
+                            <td><a href="#" class="note-link" data-detail-url="/Note/PageNoteDetail?noteId=@(item.NoteID)&actionRoute=@(ViewBag.ActionRoute)">@item.NoteType</a></td>
+                            <td>@item.NoteSubject</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}
+

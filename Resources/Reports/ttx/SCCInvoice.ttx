@@ -1,0 +1,17 @@
+AttorneyName	String	100	Bobby Barrett
+AttorneyPhoneNumber	String	50	444-3567
+AttorneySSNTaxID	String	50	45-8888888
+AttorneyBarNumber	String	50	34535AABB
+InvoiceDate	String	50	01/01/1999
+InvoiceNumber	String	50	1
+NextHearingDate	String	50	01/01/1999
+DeptNumber	String	50	400
+CaseNumber	String	50	234235424
+Client	String	1000	Joey Barrett, Bobby Wilson
+ClientType	String	1000	Minor 
+PetitionFileDate	String	50	01/01/1999
+AppointmentDate	String	50	01/01/1999
+ServiceHearingDate	String	50	01/01/1999
+FirstRPPDate	String	50	01/01/1999
+ReliefDate	String	50	01/01/1999
+InvoiceRateType	String	100	A1 $460.00

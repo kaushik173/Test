@@ -1,0 +1,4 @@
+ClientRoleID	Number		1
+Associate	String	100	Last, First
+Association	String	50	Brother
+AssociateOf	String	100	Last, First

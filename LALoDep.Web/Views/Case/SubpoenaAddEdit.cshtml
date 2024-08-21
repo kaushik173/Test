@@ -1,0 +1,179 @@
+﻿@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.SubpoenaAddEditViewModel
+@{
+    ViewBag.Title = "Subpoena Add";
+    var tabIndex = 1;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "subpoena-AddEdit-form", @class = "form-inline  center-block" }))
+{
+    @Html.HiddenFor(x => x.HearingID)
+    @Html.HiddenFor(x => x.AgencyID)
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.HearingType, "Hearing Type", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", @style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.HearingDateTime, "Date/Time", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", @style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.HearingDept, "Department", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", @style = "width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="subpoenaAddEditList">
+                            <thead>
+                                <tr>
+                                    <th style="width:55px">
+                                        <input type="checkbox" id="chkAllPerson" class="chkAllPerson" tabindex="@(++tabIndex)" />
+                                        All
+                                    </th>
+                                    <th>Person</th>
+                                    <th style="width:200px">Role</th>
+                                    <th>
+                                        <input type="checkbox" id="chkAllAddress" class="chkAllAddress" tabindex="@(++tabIndex)" />
+                                        All Address
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.SubpoenaList != null && Model.SubpoenaList.Count > 0)
+                                {
+                                    foreach (var item in Model.SubpoenaList)
+                                    {
+                                        <tr data-roleid="@item.RoleID">
+                                            <td>
+                                                <input type="checkbox" name="personChk" id="personChk" class="personChk" tabindex="@(++tabIndex)" value="@item.PersonID" />
+                                            </td>
+                                            <td>@item.PersonNameLast, @item.PersonNameFirst</td>
+                                            <td>@item.RoleTypeCodeValue</td>
+                                            <td>
+                                                @if (item.PersonAddressID != null)
+                                                {
+                                                    <input type="checkbox" id="addressChk" class="addressChk" tabindex="@(++tabIndex)" value="@item.PersonAddressID" />
+                                                    @item.AddressLine1 @item.AddressLine2 @item.AddressCity<text>, </text> @item.AddressZipCode
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom  default" tabindex="@(++tabIndex)"><u>S</u>ave/Continue</button>
+        <button id="btnCancel" type="button" class="btn v-bottom " tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+
+}@section Scripts {
+
+     <script>
+
+
+         function GetData() {
+             var data = {
+                 'HearingID': $('#HearingID').val(),
+                 'AgencyID': $('#AgencyID').val(),
+                 SubpoenaList: []
+             };
+
+             var subpoenaTr = $("#subpoenaAddEditList tbody tr");
+             for (var indx = 0; indx < subpoenaTr.length; indx++) {
+                 $tr = subpoenaTr.eq(indx);
+                 $person = $tr.find(".personChk");
+                 $address = $tr.find(".addressChk");
+
+                 var personID = 0, addressID = 0;
+                 if ($person.is(':checked'))
+                     personID = $person.val();
+                 if ($address.is(':checked'))
+                     addressID = $address.val();
+
+                 var subpoenaList = {
+                     RoleID: $tr.data("roleid"),
+                     PersonID: personID,
+                     PersonAddressID: addressID,
+                 };
+                 data.SubpoenaList.push(subpoenaList);
+
+             }
+             return data;
+         }
+
+         function SaveData() {
+             IPadKeyboardFix();
+             if (!IsValidFormRequest()) {
+                 return false;
+             }
+
+             if ($('.personChk:checked').length == 0) {
+                 notifyDangerDanger('At least one person is required.');
+                 return false;
+             }
+
+
+             var data = JSON.stringify(GetData());
+             $.ajax({
+                 type: "POST",
+                 dataType: 'json',
+                 url: '/Case/SubpoenaAddEditSave',
+                 data: data,
+                 contentType: "application/json",
+                 success: function(result) {
+                     RequestSubmitted();
+
+                     if (result.isSuccess) {
+                         window.location.href = '/Case/SubpoenaList';
+                     } else {
+                         notifyDanger('There is something wrong while processing request.');
+                     }
+                 }
+             });
+
+         }
+
+         $('.chkAllPerson').click(function() {
+             $('.personChk').prop('checked', $(this).is(':checked'));
+         });
+
+         $('.chkAllAddress').click(function() {
+             $('.addressChk').prop('checked', $(this).is(':checked'));
+         });
+
+         $('.personChk').click(function() {
+             $(this).parent().parent().find('.addressChk').prop('checked', $(this).prop('checked')); //auto select address if select person;
+         });
+
+         $('#btnSave').on("click", function() {
+             SaveData();
+         });
+
+         $('#btnCancel').on("click", function() {
+             window.location.href = '@Url.Action("SubpoenaList", "Case")';
+         });
+
+     </script>
+
+ }

@@ -1,0 +1,106 @@
+﻿@model LALoDep.Models.Task.CSECSummaryViewModel
+@{
+    ViewBag.Title = "CSE-IT Summary";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CSECSummary-form", @class = "form-inline center-block" }))
+                {
+                    <div class="row">
+
+                        <div class="form-group" style="width:180px">
+                            @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 1, autofocus = "autofocus" })
+                        </div>
+                        <div class="form-group" style="width:180px">
+                            @Html.LabelFor(m => m.StaffTypeID, "Staff Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.StaffTypeID, Model.StaffTypeList, "", new { @class = "form-control input-sm", tabindex = 2 })
+                        </div>
+                        <div class="form-group" style="width:180px">
+                            @Html.LabelFor(m => m.CompletedStartDate, "Completed Start Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.CompletedStartDate, new { @class = "form-control input-sm date-picker datefullwidth", maxlength = "10", tabindex = 3 })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="width:180px">
+                            @Html.LabelFor(m => m.CompletedEndDate, "Completed End Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.CompletedEndDate, new { @class = "form-control input-sm date-picker datefullwidth", maxlength = "10", tabindex = 4 })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="8">Search</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+
+        $("#btnSearch").on("click", function () {
+            Search();
+
+
+
+        });
+
+        function getData() {
+            var fData = $('#CSECSummary-form').serialize();
+            return fData;
+        }
+        function Search() {
+            var $form = $('#CSECSummary-form');
+            IPadKeyboardFix();
+
+
+
+            var params = getData();
+            $.ajax({
+                type: "POST", url: '/Task/CSECSummary', data: params,
+                success: function (data) {
+                    
+                    $('#divSearchResult').html(data)
+
+
+                } 
+            });
+
+
+
+
+        }
+        $(function () {
+            Search();
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

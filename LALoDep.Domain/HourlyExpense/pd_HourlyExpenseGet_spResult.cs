@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LALoDep.Domain.HourlyExpense
+{
+    public class pd_HourlyExpenseGet_spResult
+    {
+        public int? HourlyExpenseID { get; set; }
+        public int? AgencyID { get; set; }
+        public int? CaseID { get; set; }
+        public int? PersonID { get; set; }
+        public string HourlyExpenseDate { get; set; }
+        public int? HourlyExpenseTypeCodeID { get; set; }
+        public decimal? HourlyExpenseAmount { get; set; }
+        public int? HourlyExpenseProviderCodeID { get; set; }
+        public string HourlyExpenseDescription { get; set; }
+        public Int16? RecordStateID { get; set; }
+        public int? HourlyInvoiceFlag { get; set; }
+    }
+}

@@ -1,0 +1,11 @@
+EventDate	DateTime		
+EventTime	DateTime		
+AgencyAttorneyFirstName	String	50	
+AgencyAttorneyLastName	String	70	
+HearingType	String	30	
+Department	String	20	
+Petitions	String	200	
+Clients	String	100	
+HearingChangeFlag	Number		
+AgencyName	String	100	
+CaseNumber	String	100	

@@ -1,0 +1,535 @@
+﻿@using System.Web.Script.Serialization
+@using LALoDep.Custom
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic -->
+    <meta charset="UTF-8">
+    <title>
+
+        @{ var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+        }
+
+        @if (routeValues != null && routeValues.ContainsKey("action") && routeValues.ContainsKey("controller") && routeValues["action"].ToString() == "QuickCalMyCalendar")
+        {<text> Quick Calendar</text>
+    }
+    else if (routeValues["action"].ToString().StartsWith("Calendar"))
+    { <text> QCAL - @UserEnvironment.UserManager.UserExtended.Client </text>
+}
+else if (UserEnvironment.UserManager.UserExtended.CaseID > 0)
+{
+    <text> @UserEnvironment.UserManager.UserExtended.Client</text>
+}
+else
+{
+    if (routeValues != null && routeValues.ContainsKey("action") && routeValues.ContainsKey("controller"))
+    {
+        var actionRoute = string.Format("{0}/{1}", routeValues["controller"], routeValues["action"]);
+        <text>  @actionRoute</text>
+    }
+}
+
+    </title>
+    <meta name="keywords" content="Jcats Louisiana Dependency" />
+    <meta name="description" content="Jcats Louisiana Dependency">
+    <meta name="author" content="Canyon Solutions Inc.">
+
+    <!-- Mobile Metas -->
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="/assets/fonts/Open-Sans/css/fonts.css" rel="stylesheet" />
+    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">*@
+
+    @Styles.Render("~/assets/css/styles")
+    @Styles.Render("~/Content/css")
+    @*@Scripts.Render("~/DeviceDetector/js")*@
+
+    @Scripts.Render("~/assets/js/jquery")
+    @{
+        var themeUrl = UserEnvironment.UserManager.UserExtended.ThemeUrl;
+        if (!string.IsNullOrEmpty(themeUrl))
+        {
+            if (themeUrl.Contains("/assets/css/skins/"))
+            {
+                <link id="skin-link" rel="stylesheet" type="text/css" href="@themeUrl" />
+
+            }
+            else
+            {
+                try
+                {
+
+
+                    var customTheme = new JavaScriptSerializer().Deserialize<Jcats.SD.UI.ViewModels.CustomThemeModel>(themeUrl);
+                    if (customTheme != null)
+                    {
+                        <style>
+
+                        .navbar .navbar-inner {
+                            background: @customTheme.PrimaryColor !important;
+                        }  .navbar a.dropdown-toggle, .navbar a.dropdown-toggle span{
+                               color: @(customTheme.PrimaryFontColor) !important;
+                           }
+    .navbar .navbar-inner .navbar-header .navbar-account .account-area>li.open>a {
+    background-color:  @customTheme.PrimaryColor !important;
+    }
+
+
+
+                        .btn-primary, .btn-primary:focus, .btn-primary:hover  {
+    background-color:  @(customTheme.PrimaryColor) !important;
+    border-color: @(customTheme.PrimaryColor) !important;
+    color:  @(customTheme.PrimaryFontColor) !important;
+}
+                  .bordered-themeprimary {
+    border-color:@customTheme.PrimaryColor !important;
+}
+      .bootbox  .modal-header {
+    color:@customTheme.PrimaryColor !important;
+}
+    .modal-primary .modal-header {
+   color:@customTheme.PrimaryColor !important;
+    border-bottom: 3px solid @customTheme.PrimaryColor  !important;
+}
+    .modal-primary .modal-header  .themeprimary {
+    color: @customTheme.PrimaryColor !important;
+}
+
+
+       #bottom-navigation {
+    background-color: @(customTheme.SecondaryColor) !important;
+}
+      #bottom-navigation *{
+    color: @(customTheme.SecondaryFontColor) !important;
+}
+.widget-header {
+     background-color:  @(customTheme.SecondaryColor) !important;
+}     .widget-header .widget-caption a, .widget-header .widget-caption{
+      color: @(customTheme.SecondaryFontColor) !important;
+}
+
+                       .widget-header    .widget-buttons span{
+                       color: @(customTheme.SecondaryFontColor) !important;
+                    }
+                        </style>
+
+
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
+    }
+    @if (UserEnvironment.UserManager.UserExtended.PageLayout == "Compact")
+    {
+        <link href="/assets/css/desktop.css" rel="stylesheet" />
+    }
+    <!-- RUM Code
+       @*<script>(function (n, i, v, r, s, c, x, z) { x = window.AwsRumClient = { q: [], n: n, i: i, v: v, r: r, c: c }; window[n] = function (c, p) { x.q.push({ c: c, p: p }); }; z = document.createElement('script'); z.async = true; z.src = s; document.head.insertBefore(z, document.head.getElementsByTagName('script')[0]); })('cwr', 'ada671fe-a26d-4cbb-96e4-d2d69b90a71b', '1.0.0', 'us-west-2', 'https://client.rum.us-east-1.amazonaws.com/1.2.1/cwr.js', { sessionSampleRate: 1, guestRoleArn: "arn:aws:iam::286799285509:role/RUM-Monitor-us-west-2-286799285509-4947736549461-Unauth", identityPoolId: "us-west-2:242d3967-2d85-4367-afb1-9100bce87325", endpoint: "https://dataplane.rum.us-west-2.amazonaws.com", telemetries: ["performance", "errors", "http"], allowCookies: true, enableXRay: false });</script>*@
+    -->
+</head>
+<body class="@(UserEnvironment.UserManager.UserExtended.PageLayout) @(UserEnvironment.UserManager.UserExtended.HyperlinkUnderline?"enableHyperlinkUnderline":"")" data-print-document-on="@UserEnvironment.UserManager.UserExtended.PrintDocumentOn">
+    <input type="hidden" id="hdnCurrentSessionGuidPath" value="/g/@(UserEnvironment.UserManager.CurrentSessionGuid)" />
+    <input type="hidden" id="hdnCurrentSessionGuid" value="@(UserEnvironment.UserManager.CurrentSessionGuid)" />
+    @Html.Hidden("hidServerEnvironment", System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"])
+
+
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="navbar-container">
+
+                <div class="top-left-home pull-left">
+                    <span class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none;color:#ffffff;font-size: 14pt">
+                            <i class="fa fa-list"></i>
+                            <span class="caret"></span>
+                        </a>
+                        <ul id="top-left-dropdown-menu" class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="home" href="/g/@(UserEnvironment.UserManager.CurrentSessionGuid)/@(UserEnvironment.UserManager.UserExtended.DefaultLandingPage)" title="Home" id="HomeUrl">
+                                    <i class="fa fa-home"></i>
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Home/Preference" title="Refresh">
+                                    <i class="fa fa-eye"></i>
+                                    Preferences
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:window.location.reload(window.location.href);" title="Refresh">
+                                    <i class="fa fa-refresh"></i>
+                                    Refresh
+                                </a>
+                            </li>
+
+                            <li>
+                                @{
+
+
+                                    var helpPageNavPath = ViewContext.RouteData.Values["controller"].ToString() + "/" + ViewContext.RouteData.Values["action"].ToString();
+                                }
+                                <a href="@Url.Action("Index", "Help")?nav=@helpPageNavPath" title="Help" target="_blank">
+                                    <i class="fa fa-question-circle"></i>
+                                    Help
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Tutorials", "Help")" title="Tutorials" target="_blank">
+                                    <i class="fa fa-book"></i>
+                                    Tutorials
+                                </a>
+                            </li>
+                            <li>
+                                <a title="New Session" href="/?newSession=true" target="_blank">
+                                    <i class="glyphicon glyphicon-new-window"></i>
+                                    New Session
+                                </a>
+                            </li>
+
+                        </ul>
+                    </span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12 col-lg-offset-3 col-md-offset-3 col-sm-offset-2" style="margin-top: -10px;">
+                    @Html.Action("Render", "Menu")
+                </div>
+                <!-- start: search & user box -->
+                <div class="navbar-header pull-right">
+                    <div class="collapse navbar-collapse navbar-account">
+                        <ul class="account-area">
+                            <li><span class="separator"></span></li>
+                            <li>
+                                @Html.Action("Render", "Note")
+                            </li>
+                            <li><span class="separator"></span></li>
+                            <li>
+                                @Html.Partial("_LoginPartial")
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+
+
+            </div>
+        </div>
+        <!-- Page Header -->
+        <div class="page-header position-relative">
+            @Html.Action("Menu", "Case", new { viewTitle = ViewBag.Title })
+
+        </div>
+    </div>
+    <!-- Main Container -->
+    <div class="main-container container-fluid">
+        <!-- Page Content -->
+        <div class="page-container" style="margin-left: 0px">
+
+
+            <div id="loading" style="display: none; position: fixed; ">
+                <i class="fa fa-spinner fa-spin fa-3x"></i>
+            </div>
+            @RenderBody()
+
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+        @*@if (System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] != null
+                  && System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] == "Dev")
+            {
+                <div class="tutorial-container tutorial-aspect-hidden">
+                    <div class="widget row">
+                        <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                            <span class="widget-caption">
+                                <span class="tutorial-list-caption">Tutorial List</span>
+                                <span class="tutorial-selected-caption tutorial-aspect-hidden"></span>
+                            </span>
+                            <div class="widget-buttons">
+                                <i class="fa fa-bars tutorial-button tutorial-show-list" title="show tutorial list"></i>
+                                <i class="fa fa-play-circle tutorial-button tutorial-play-pause" title="auto play"></i>
+                                <i class="fa fa-step-backward tutorial-button tutorial-prev" title="previous step"></i>
+                                <i class="fa fa-step-forward tutorial-button tutorial-next" title="next step"></i>
+                                <i class="fa fa-arrows-v tutorial-button tutorial-scroll-lock tutorial-aspect-hidden" title="scroll disabled while masked, steps will move for you"></i>
+                                <i class="fa fa-close tutorial-button tutorial-close available"></i>
+                            </div>
+                        </div>
+                        <div class="widget-body col-xs-12">
+                            <div class="tutorial-content tutorial-aspect-hidden">
+                                <div class="tutorial-title"></div>
+                                <div class="tutorial-subtitle">>No Tutorial Selected</div>
+                                <div class="tutorial-body"></div>
+                                <div class="tutorial-note tutorial-aspect-hidden"></div>
+                                <ul class="tutorial-errors tutorial-aspect-hidden"></ul>
+                                <div class="tutorial-navigate tutorial-aspect-hidden"></div>
+                                <div class="tutorial-related tutorial-aspect-hidden">
+                                    <p><u>Related Tutorials:</u></p>
+                                </div>
+                            </div>
+                            <div class="tutorial-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <svg class="tutorial-mask tutorial-mask-primary">
+                    <path d="M0 0" stroke="white" stroke-width="3px" stroke-linejoin="round"></path>
+                </svg>
+                <svg class="tutorial-mask tutorial-mask-holes">
+                    <path d="M0 0" fill="none" stroke="yellow" stroke-width="5px" stroke-linejoin="round"></path>
+                </svg>
+            }*@
+    </div>
+
+
+
+    <div id="fixed-button-bar" class="fixedbar">
+        @RenderSection("fixedfooter", required: false)
+    </div>
+
+    @Scripts.Render("~/assets/js/scripts")
+
+
+
+    @Scripts.Render("~/scripts/js")
+
+
+    @RenderSection("scripts", required: false)
+    @Html.Partial("_Tracking")
+    @Html.Partial("_PushNotification")
+
+    <script>
+        var secureIds =  @if (!UserEnvironment.UserManager.JsonTokens().Any())
+                         {
+                             @:[]
+
+                         }
+                         else
+                         {
+                             @Html.Raw(UserEnvironment.UserManager.JsonTokens())
+                         };
+        $count = 1;
+        $(document).ajaxComplete(function (event, xhr, settings) {
+            hideAllUnAuthorizedInputElements(secureIds);
+            removeLinkFromUnAuthorizedAnchorElements(secureIds);
+        });
+        hideAllUnAuthorizedInputElements(secureIds);
+        removeLinkFromUnAuthorizedAnchorElements(secureIds);
+
+        if ($('body').hasClass('zoom')) {
+            $('#zoom-in').css('opacity', '0.5');
+            $('#zoom-in').css('cursor', 'not-allowed');
+            $('#zoom-out').css('cursor', 'pointer');
+            $('#zoom-out').css('opacity', '1.0');
+        } else {
+            $('#zoom-out').css('cursor', 'not-allowed');
+            $('#zoom-out').css('opacity', '0.5');
+            $('#zoom-in').css('cursor', 'pointer');
+            $('#zoom-in').css('opacity', '1.0');
+        }
+
+        $(function () {
+            if (device.mobile() || device.tablet()) //if mobile or tablet
+            {
+                $('.zoom-option').removeClass('hidden');
+            }
+
+
+            $('#menuAction a:contains("*")').addClass('disabled').on('click', function (e) {
+                e.preventDefault();
+            });
+            $('#menuAction a[href="/CaseOpening/CaseAddresses"]').attr('href', '/CaseOpening/CaseAddresses?dataentry=true');
+            if ($('#menuAction a[href*="%3f"]').length > 0) {
+                $('#menuAction a[href*="%3f"]').attr('href', $('#menuAction a[href*="%3f"]').attr('href').replace('%3f', '?').replace('%3d', '='));
+            }
+
+            $(".copy-info").on("click", function () {
+                var textToCopy = $(this).parent().find(".copy-case-info")[0];
+                doCopy(textToCopy);
+            });
+        });
+    </script>
+
+    <script>
+
+        $(window).on("keydown", handleHotkeyForLayout);
+
+        function handleHotkeyForLayout(e) {
+            if (!e.ctrlKey) return;
+            switch (String.fromCharCode(e.keyCode).toLowerCase()) {
+                case 'h':
+                    var href = $('#HomeUrl').attr('href');
+                    window.location.href = href;
+                    e.preventDefault();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        jQuery(document).ready(function ($) {
+            'use strict';
+
+            // CENTERED MODALS
+            // phase one - store every dialog's height
+            $('.modal').each(function () {
+                var t = $(this),
+                    d = t.find('.modal-dialog'),
+                    fadeClass = (t.is('.fade') ? 'fade' : '');
+                // render dialog
+                t.removeClass('fade')
+                    .addClass('invisible')
+                    .css('display', 'block');
+                // read and store dialog height
+                d.data('height', d.height());
+                // hide dialog again
+                t.css('display', '')
+                    .removeClass('invisible')
+                    .addClass(fadeClass);
+            });
+            // phase two - set margin-top on every dialog show
+            $('.modal').on('show.bs.modal', function () {
+                var t = $(this),
+                    d = t.find('.modal-dialog'),
+                    dh = d.data('height'),
+                    w = $(window).width(),
+                    h = $(window).height();
+                // if it is desktop & dialog is lower than viewport
+                // (set your own values)
+                if (w > 380 && (dh + 60) < h) {
+                    d.css('margin-top', Math.round(0.96 * (h - dh) / 2));
+                } else {
+                    d.css('margin-top', '');
+                }
+            });
+
+            fitCalculatedHeightForMenuItems();
+
+        });
+
+        $(window).bind('resize', function () {
+            fitCalculatedHeightForMenuItems();
+        });
+
+        $('li.dropdown').on('click', function () {
+            setTimeout(function () {
+                addPaddingForScroll();
+            }, 0);
+        });
+
+        function fitCalculatedHeightForMenuItems() {
+            var calc_height = $(window).height();
+            var _offset = 80;
+            origin_wrapper_height = $('body>div.container-fluid').height();
+            origin_content_height = $('#menuAction ul.dropdown-menu').height();
+
+            //console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            //console.log("total: " + calc_height);
+
+            $('#menuAction ul.dropdown-menu').css({
+                'max-height': calc_height + 'px'
+                , 'overflow-y': 'auto'
+                , 'overflow-x': 'hidden'
+            })
+
+            addPaddingForScroll();
+        }
+
+        function addPaddingForScroll() {
+
+            //Exclude IE, it adds scroll outside anyway.
+            var ua = window.navigator.userAgent;
+            if (ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident/') > -1) {
+                return;
+
+            } else {
+                //if a dropdown is open, proceed.
+                if ($('#menuAction .open ul.dropdown-menu').length) { //if a dropdown is open proceed
+                    var _offset = 80;
+                    var calc_height = $(window).height() - _offset;
+                    var wholeHeight = $('#menuAction .open ul.dropdown-menu')[0].scrollHeight;
+                    var hasPadding = ($('#menuAction .open ul.dropdown-menu').css('padding-right') != '0px');
+
+                    if (calc_height <= (wholeHeight + 1) && !hasPadding) {
+                        $('#menuAction .open ul.dropdown-menu').css('padding-right', '20px');
+                    } else if (calc_height > (wholeHeight + 1) && hasPadding) {
+                        $('#menuAction .open ul.dropdown-menu').css('padding-right', '0px');
+                    }
+                }
+            }
+        }
+    </script>
+
+    @*@if (System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] != null && System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] == "Dev")
+        {
+            @Scripts.Render("~/Scripts/tutorial")
+            @Styles.Render("~/Scripts/tutorial/css")
+        }*@
+
+    @*<style>
+            #top-left-dropdown-menu li {
+                line-height: 30px;
+            }
+        </style>*@
+    <div class="modal fade modal-primary" id="pageModal" role="dialog" aria-labelledby="pageModalLabel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:auto !important;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title" id="pageModalLabel">Notes</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="ModelContent">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade modal-primary" id="PagePopup" tabindex="-1" role="dialog" aria-labelledby="PagePopupLabel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right: 10px;"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title" id="PagePopupLabel"></h5>
+                </div>
+                <div class="modal-body" style="padding: 0px 10px;">
+                    <iframe frameborder="0" width="100%" height="300" scrolling="yes"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @{
+        string url = HttpContext.Current.Request.Url.Host;
+        if (url.Contains("traincaaocng"))
+        {
+            <div class="text-danger" style="position:fixed;bottom:60px;right:10px;height:30px;background:#fff;border:1px solid #ccc;box-shadow: #ccc 3px;padding:5px">
+                <label class="control-label">TRAINING Environment</label>
+            </div>
+            <div class="text-danger" style="position:fixed;top:3px;left:105px;height:30px;background:#fff;border:1px solid #ccc;box-shadow: #ccc 3px;padding:5px;z-index:9999;">
+                <label class="control-label">TRAINING Environment</label>
+            </div>
+        }
+        if (System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"] != null && System.Web.Configuration.WebConfigurationManager.AppSettings["ServerEnvironment"].ToLower() != "prod")
+        {
+            <div class="text-danger" style="position:fixed;bottom:60px;right:10px;height:30px;background:#fff;border:1px solid #ccc;box-shadow: #ccc 3px;padding:5px">
+                <label class="control-label"> DEVELOPMENT ENVIRONMENT</label>
+            </div>
+            <div class="text-danger" style="position:fixed;top:3px;left:105px;height:30px;background:#fff;border:1px solid #ccc;box-shadow: #ccc 3px;padding:5px;z-index:9999;">
+                <label class="control-label"> DEVELOPMENT ENVIRONMENT</label>
+            </div>
+        }
+    }
+
+    @Html.Hidden("hidBackButtonButtonValue", "")
+    @Html.Hidden("hidResultCache", "no")
+
+
+
+
+</body>
+</html>

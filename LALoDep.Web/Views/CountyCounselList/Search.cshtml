@@ -1,0 +1,87 @@
+﻿@model LALoDep.Models.Administration.CountyCounselListViewModel
+@{
+    ViewBag.Title = "Search";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CountyCounselView-search-form", @class = "form-inline  center-block" }))
+                {
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-sm", tabindex = 1,autofocus="autofocus" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-sm", tabindex = 2 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 3, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.BarNumber, "Bar Number", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.BarNumber, new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                }
+                <p></p>
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons pull-right">
+                    <input type="button" name="btnAddNew" class="btn btn-default"  id="btnAddNew" value="Add County Counsel" />
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="CountyCounselView">
+                        <thead>
+                            <tr>
+                                <th class="">Last Name</th>
+                                <th class="">First Name</th>
+                                <th class="">Start Date</th>
+                                <th class="">End Date</th>
+                                <th class="">Bar Number</th>
+                                <th class="" style="width: 50px;"></th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="5">Search</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+<script src="@Url.Content("~/Scripts/Application-Script/Administration/CountyCounsel.js?v=" + Guid.NewGuid())"></script>
+}

@@ -1,0 +1,12 @@
+HearingExpenseRequestDate	DateTime		01/01/2000
+RequestAmount	String	50	$100.00
+AuthorizeAmount	String	50	$100.00
+PaymentAmount	String	50	$100.00
+Provider	String	100	Smith, John
+ExpenseType	String	50	Home
+HearingExpenseAuthorizeDate	DateTime		01/01/2000
+HearingExpensePaymentDate	DateTime		01/01/2000
+RequestStatus	String	50	111222333
+HearingExpenseDateForwardedToAccounting	DateTime		01/01/2000
+HearingExpenseClaimNumber	String	50	111-222-333
+GroupID	Number	1

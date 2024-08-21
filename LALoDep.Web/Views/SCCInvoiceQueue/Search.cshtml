@@ -1,0 +1,137 @@
+﻿@model LALoDep.Models.SCCInvoiceQueueSearchViewModel
+@{
+    ViewBag.Title = "SCC Invoice<br /> Queue";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "invoiceQueue-search-form", @class = "form-inline center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AttorneyId, "Attorney", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AttorneyId, Model.AttorneyList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SourceId, "Source", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.SourceId, Model.SourceList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.InvoiceStatusId, "Invoice Status", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.InvoiceStatusId, Model.InvoiceStatusList, "", new { @class = "form-control input-sm", tabindex = 3, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientLastName, "Last Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ClientLastName, new { @class = "form-control input-sm", tabindex = 4 })
+                        @Html.ValidationMessageFor(m => m.ClientLastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ClientFirstName, "First Name", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.ClientFirstName, new { @class = "form-control input-sm", tabindex = 5 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CourtNumber, "Case #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CourtNumber, new { @class = "form-control input-sm", tabindex = 6 })
+                    </div>
+                    <div class="form-group">                        
+                        @Html.LabelFor(m => m.CaseID, "JCATS #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CaseID, new { @class = "form-control input-sm numeric-val", tabindex = 7,type= "number" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.InvoiceNumber, "Invoice #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.InvoiceNumber, new { @class = "form-control input-sm numeric-val", tabindex = 8, type = "number" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SCCInvoicePaidDateStart, "To Be Paid From", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.SCCInvoicePaidDateStart, new { @class = "form-control input-sm date-picker", tabindex = 9, maxlength = 9 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SCCInvoicePaidDateEnd, "To Be Paid To", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.SCCInvoicePaidDateEnd, new { @class = "form-control input-sm date-picker", tabindex = 10, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                     
+                }
+                <p></p>
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchInvoiceQueue">
+                        <thead>
+                            <tr>
+                                <th style="max-width:330px">Attorney</th>
+                                <th style="max-width:400px">Client(s)</th>
+                                <th style="max-width:60px">Source</th>
+                                <th style="max-width:100px">Case #</th>
+                                <th style="max-width:100px">Next Date</th>
+                                <th style="max-width:100px">JCATS #</th>
+                                <th style="max-width:30px" >Type</th>
+                                <th style="max-width:60px">Amount</th>
+                                <th style="max-width:60px">Status</th>
+                                <th style="max-width:100px">Date To Be Paid</th>
+                                <th style="max-width:100px">Invoice Dt</th>
+                                <th style="max-width:80px">Invoice #</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="11" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.SCCInvoiceQueue)">Search</button>
+        <button id="btnPrint" type="button" class="btn btn-default v-bottom hidden" tabindex="12">Print</button>
+        <button id="add" type="button" class="btn btn-default v-bottom hidden" tabindex="13" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.AddSCCInvoiceQueue)">Add New Invoice For JCATS # @ViewBag.JCATSNumber</button>
+        <button id="btnReset" type="button" class="btn btn-default v-bottom" tabindex="14">Reset</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $canEditAccess = '@Model.CanEditAccess' == 'True';
+        var $IsAdd = '@ViewBag.JCATSNumber';
+        var $loadFromCache = '@ViewBag.LoadFromCache';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/SCCInvoiceQueueSearch.js?v=" + Guid.NewGuid())"></script>
+}

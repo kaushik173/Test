@@ -1,0 +1,74 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.HearingOpinionViewModel
+
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Opinion</span>
+
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label class="control-label">Note</label><br />
+                        <form id="formData">
+                            @Html.HiddenFor(m => m.RoleID)
+                            @Html.HiddenFor(m => m.HearingOpinionID)
+                            @Html.HiddenFor(m => m.HearingID)
+                            <input type="hidden" name="hdnHearingID" id="hdnHearingID" value="@Model.HearingID.ToEncrypt()" />
+                            @Html.HiddenFor(m => m.NoteID)
+                            @Html.TextAreaFor(m => m.OpinionNote, new { @class = "form-control input-sm" })
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSubmit" type="submit" class="btn btn-primary default" tabindex="2">Save</button>
+    </div>
+}
+<style>
+    body {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>
+@section Scripts {
+    <script type="text/javascript">
+
+        function SaveData(buttonId) {
+            IPadKeyboardFix();
+            $.ajax({
+                type: "POST",
+                url: "/Case/HearingOpinionSave",
+                data: $('#formData').serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.isSuccess) {
+                        self.parent.RefreshGrid();
+                    }
+                }
+            });
+        }
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            SaveData();
+        });
+    </script>
+}
+
+
+
+
+

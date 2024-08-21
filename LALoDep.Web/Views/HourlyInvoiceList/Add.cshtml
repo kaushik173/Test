@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Hourly Invoice Add";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "HourlyInvoiceAdd-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.Hidden("htn_BackButtonButtonValue")
+                    <div class="form-group">
+                        @Html.Label("Attorney", new { @class = "control-label" })
+                        @Html.DropDownList("AttorneyID", (List<SelectListItem>)ViewBag.AttorneyList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+                    </div>                    
+                }
+                <p></p>
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="invoiceList">
+                        <thead>
+                            <tr>
+                                <th style="width:40px;"><input id="chkAll" type="checkbox" name="name" value="" /><label for="chkAll" style="font-weight:600;">All</label> </th>
+                                <th>Date</th>
+                                <th>Case Name</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Hours</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @*<button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Search</button>*@
+        <button id="btnAdd" type="button" class="btn btn-primary v-bottom default" tabindex="4">Create Invoice</button>
+    </div>
+}
+
+@section scripts
+{   
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/HourlyInvoiceAdd.js?v=" + Guid.NewGuid())"></script>
+}
+
+
+
+

@@ -1,0 +1,31 @@
+ClientRoleID	Number		1
+AgencyName	String	100	Public Defender
+AppointmentDate	DateTime		01/01/2000
+CaseNumber	String	50	2001J3P1234
+AttorneyFullName	String	100	Last, First
+PanelCase	String	50	Yes
+HHSANumber	String	50	HHSA123456789
+CCNumber	String	50	CC123456789
+PetitionNumber	String	50	CSI123
+PetitionType	String	50	300 Original
+PetitionDate	DateTime		01/01/2000
+ClientFullName	String	100	LastName, FirstName
+ClientCaseRole	String	50	Child
+ClientDOB	DateTime		06/30/1974
+AKA	String	250	Alias Alias, Alias Alias
+ClientPhone	String	50	(999) 555-7777
+Language	String	50	English, French, Spanish
+ClientStreet	String	100	100 Main Street
+ClientCity	String	50	Mesa
+ClientState	String	50	AZ
+ClientZip	String	20	1000-9876
+ClientAddressType	String	50	Home
+PlacementAgencyName	String	100	Public Defender
+CaretakerStreet	String	200	6565 Riding Road
+CaretakerCity	String	50	Tempe
+CaretakerState	String	50	AZ
+CaretakerZip	String	20	12345-7899
+CaretakerPhone	String	50	(123) 456-7899
+CaretakerStartDate	DateTime		01/01/2000
+Parent	Number		1
+CaretakerName	String	100	Last, First

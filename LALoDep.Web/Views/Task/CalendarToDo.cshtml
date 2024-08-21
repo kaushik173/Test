@@ -1,0 +1,120 @@
+﻿@model LALoDep.Models.Task.CalendarToDoViewModel
+@{
+    ViewBag.Title = "Calendar To Do";
+}
+
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+@Html.Hidden("HearingID", Model.HearingID)
+<div class="row">
+   <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"> @Model.Heading</span>
+                <div class="widget-buttons">
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "calendartodo-form", @class = "form-inline  center-block" }))
+{
+
+                    <div class="row">
+                        <div class="form-group col-sm-3">
+                            @Html.LabelFor(m => m.ActionTypeID, "Action Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ActionTypeID, Model.ActionTypeList, "", new { @class = "form-control input-sm TypeID", tabindex = 1, autofocus = "autofocus", style = "width:100%;" })
+
+                        </div>
+                        <div class="form-group col-sm-9">
+                            @Html.LabelFor(m => m.ActionNote, "Action Note", new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.ActionNote, new { @class = "form-control input-sm  ", tabindex = 2, style = "width:100%;" })
+
+                        </div>
+                        <div class="form-group  pull-left">
+                            @Html.LabelFor(m => m.DueDate, "Due Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.DueDate, new { @class = "form-control input-sm date-picker  ", tabindex = 3 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div><div class="form-group pull-left ">
+                            @Html.LabelFor(m => m.ReminderDate, "Reminder Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.ReminderDate, new { @class = "form-control input-sm date-picker  ", tabindex = 4 })
+                                <span class="input-group-addon datepicker-trigger">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            @Html.LabelFor(m => m.AssignToStaffID, "Assign To Staff", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.AssignToStaffID, Model.AssignToStaffList, "", new { @class = "form-control input-sm  ", tabindex = 5, style = "width:100%;" })
+
+                        </div>
+                    </div>
+
+}
+
+
+
+            </div>
+        </div>
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">To Do History</span>
+                <div class="widget-buttons">
+                    <input type="button" id="btnShowAll" class="btn btn-labeled btn-default btn" value="Show All">
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchToDoList">
+                        <thead>
+                            <tr>
+                                <th style="max-width:120px">Action Type</th>
+
+                                <th style="max-width:200px">Note</th>
+
+                                <th style="max-width:90px">Reminder Date</th>
+                                <th style="max-width:90px">Due Date</th>
+                                <th style="width:90px;">   Assign To</th>
+                                <th style="width:60px;">Completed </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@{ 
+
+    if (Model.PdActionOldModel != null)
+    {
+        @Html.Raw(LALoDep.Core.Custom.Utility.Utility.GetHiddenFieldsByModel(Model.PdActionOldModel, "PdAction_"));
+    }
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn default btn-primary v-bottom " tabindex="6">Save </button>
+        <button id="btnSaveBackToCalendar" type="submit" class="btn   btn-default v-bottom " tabindex="7">Save/Return to Calendar</button>
+        @if (Model.PDActionID > 0)
+        {
+            <button id="btnCancel" type="submit" class="btn   btn-default v-bottom " tabindex="8">Cancel </button>
+        }
+ </div>
+}
+@section scripts
+{
+   <script>
+       var pdActionModel=@Html.Raw(LALoDep.Core.Custom.Utility.Utility.GetJavascriptClassModel(Model.PdActionOldModel, "PdAction_"));
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/CalendarToDo.js?v=" + Guid.NewGuid())"></script>
+}

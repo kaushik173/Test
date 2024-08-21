@@ -1,0 +1,8 @@
+Department	String	50	Department 1
+OpenCases	Number		20
+AppointedCases	Number		5
+AppointedPercentage	String	10	25%
+NonAppointmentCases	Number		15
+NonAppointedPercentage	String	10	75%
+AsOfDateParameter	DateTime		01/01/2000
+AgencyName	String	200	Public Defender

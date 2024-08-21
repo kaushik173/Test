@@ -1,0 +1,298 @@
+﻿@model LALoDep.Models.Case.RecordTimeAddViewModel
+@using LALoDep.Core.Custom.Utility
+@using LALoDep.Domain.pd_Hearing
+@using LALoDep.Custom.Security
+@using LALoDep.Custom
+@{
+    ViewBag.Title = "Record Time";
+    var tabindex = 9;
+    if (Request.QueryString["popup"] != null)
+    {
+        Layout = "~/Views/Shared/_Popup.cshtml";
+
+        if (Model.StaffOnCaseList.Any(x => x.PersonID == UserEnvironment.UserManager.UserExtended.PersonID))
+        {
+            Model.StaffOnPersonID = UserEnvironment.UserManager.UserExtended.PersonID;
+        }
+
+        <style>
+            body {
+                margin-top: 0px !important;
+                padding: 0px;
+            }
+        </style>
+    }
+}
+<style>
+    /*.form-inline .input-group {
+        display: table;
+    }*/
+</style>
+<form id="frmRecordAddEdit">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Record Time</span>
+                    <div class="widget-buttons">
+                        @if (ViewBag.HearingReportFilingDue != null)
+                        {
+                            var arequest = ViewBag.HearingReportFilingDue as pd_HearingReportFilingDueGet_spResult;
+                            @arequest.RFDHeader
+                        }
+                    </div>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "recordTimeAdd-form", @class = "form-inline  center-block" }))
+                    {
+                        <div class="form-inline">
+                            <div class="row">
+                                <div class="form-group col-md-3 col-sm-3">
+                                    @Html.LabelFor(m => m.StaffOnPersonID, "Staff On Case", new { @class = "control-label" })
+                                    @*@Html.DropDownListFor(m => m.StaffOnPersonID, new SelectList(Model.StaffOnCaseList, "PersonID", "DisplayName"), "", new { @class = "form-control input-sm ", autofocus = "autofocus", tabindex = 1, @style = "width:100%" })*@
+                                    <select id="StaffOnPersonID" class="form-control input-sm ddlStaff" tabindex="1" autofocus="autofocus" style="width:100%">
+                                        <option value=""></option>
+                                        @foreach (var item in Model.StaffOnCaseList)
+                                        {
+
+                                            <option @(Model.StaffOnPersonID == item.PersonID ? "selected" : "") value="@item.PersonID" data-roletypeid="@item.RoleTypeCodeID" data-isattorneyflag="@item.IsAttorneyFlag.Value" data-issupervisorflag="@item.IsSupervisorFlag.Value">@item.DisplayName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3 col-sm-3">
+                                    @Html.LabelFor(m => m.StaffNotOnPersonID, "Staff Not On Case", new { @class = "control-label" })
+                                    <select id="StaffNotOnPersonID" class="form-control input-sm ddlStaff" tabindex=2, style="width:100%">
+                                        <option value=""></option>
+                                        @foreach (var item in Model.StaffNotOnCaseList)
+                                        {
+                                            <option value="@item.PersonID" data-roletypeid="@item.RoleTypeCodeID" data-isattorneyflag="@item.IsAttorneyFlag.Value" data-issupervisorflag="@item.IsSupervisorFlag.Value">@item.DisplayName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3 col-sm-3">
+                                    @Html.LabelFor(m => m.WorkDescriptionCodeID, "Description", new { @class = "control-label" })
+
+                                    <select class="form-control input-sm" data-val="true" data-val-number="The field WorkDescriptionCodeID must be a number." data-val-required="The WorkDescriptionCodeID field is required." id="WorkDescriptionCodeID" name="WorkDescriptionCodeID" style="width:100%" tabindex="3">
+                                        <option value=""></option>
+                                        @foreach (var item in Model.Descriptions)
+                                        {
+                                            var value = item.Value.Split('|')[0];
+                                            <option value="@value" data-default-ive="@item.Value.Split('|')[1]" data-default-ive-can-change="@item.Value.Split('|')[2]" data-attorny-default-ive="@item.Value.Split('|')[3]" data-attorny-default-ive-can-change="@item.Value.Split('|')[4]" data-supervisor-default-ive="@item.Value.Split('|')[5]" data-supervisor-default-ive-can-change="@item.Value.Split('|')[6]" data-useworktimeflag="@item.Value.Split('|')[7]" data-ZipCodeRequiredFlag="@item.Value.Split('|')[8]">@item.Text </option>
+                                        }
+
+
+                                    </select>
+
+                                </div>
+                                <div class="form-group col-md-3 col-sm-3">
+                                    @Html.LabelFor(m => m.WorkPhaseCodeID, "Phase", new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.WorkPhaseCodeID, new SelectList(Model.Phases, "Value", "Text"), "", new { @class = "form-control input-sm", tabindex = 4, @style = "width:100%" })
+                                </div>
+                                <div class="form-group pull-left useWorkTime" style="display:none;">
+                                    @Html.LabelFor(m => m.WorkStartTime, "Start Time", new { @class = "control-label" })
+                                    @Html.HiddenFor(m => m.WorkStartTime)
+                                    <br />
+
+                                    @{
+                                        var time = DateTime.Parse(Model.WorkStartTime);
+
+                                        var hours = int.Parse(time.ToString("hh")).ToString();
+                                        var minutes = time.ToString("mm");
+                                        var am = time.ToString("tt").Replace(".", "");
+
+
+                                    }
+                                    @Html.DropDownList("WorkPhaseStartTimeHours", Utility.GetHoursList(hours), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = hours, tabindex = 4 })  :   @Html.DropDownList("WorkPhaseStartTimeMinutes", Utility.GetMinutesListIncrementOne(minutes), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = minutes, tabindex = 4 })   @Html.DropDownList("WorkPhaseStartTimeAmPm", Utility.GetTimeAmPm(am), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = am, tabindex = 4 })
+
+
+                                </div>
+                                <div class="form-group  pull-left  useWorkTime" style="display:none;">
+                                    @Html.LabelFor(m => m.WorkEndTime, "End Time", new { @class = "control-label" })
+
+                                    @Html.HiddenFor(m => m.WorkEndTime)
+                                    <br />
+
+                                    @{
+                                        time = DateTime.Parse(Model.WorkEndTime);
+
+                                        hours = int.Parse(time.ToString("hh")).ToString();
+                                        minutes = time.ToString("mm");
+                                        am = time.ToString("tt").Replace(".", "");
+
+
+                                    }
+
+                                    @Html.DropDownList("WorkPhaseEndTimeHours", Utility.GetHoursList(hours), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = hours, tabindex = 4 })  :   @Html.DropDownList("WorkPhaseEndTimeMinutes", Utility.GetMinutesListIncrementOne(minutes), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = minutes, tabindex = 4 })   @Html.DropDownList("WorkPhaseEndTimeAmPm", Utility.GetTimeAmPm(am), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = am, tabindex = 4 })
+
+
+                                </div>
+
+                                <div class="form-group  col-lg-3 col-md-4 WorkHours" data-label="@Model.HoursLabel">
+
+                                    @Html.LabelFor(m => m.WorkHours, Model.HoursLabel, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.WorkHours, new { @class = "form-control input-sm", tabindex = 5, @style = "width:100%", type = "number", data_secure_disablediffound_id = ((int)LALoDep.Custom.Security.SecurityToken.RecordTime_Hours) })
+                                </div>
+                                @if (Model.IVeEligibleList.Count() > 0)
+                                {<div class="form-group col-md-2 col-sm-2">
+                                        @Html.LabelFor(m => m.WorkIVeEligibleCodeID, "IV-E Eligible", new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.WorkIVeEligibleCodeID, new SelectList(Model.IVeEligibleList, "Value", "Text"), "", new { @class = "form-control input-sm", tabindex = 5, @style = "width:100%" })
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    @Html.HiddenFor(m => m.WorkIVeEligibleCodeID)
+
+                                }
+
+                                <div class="form-group col-lg-1 col-md-2  col-sm-2">
+                                    @Html.LabelFor(m => m.WorkMileage, "Mileage", new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.WorkMileage, new { @class = "form-control input-sm", tabindex = 6, @style = "width:100%", type = "number" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2 FromAndToZipCode" style="display:none;">
+                                    @Html.LabelFor(m => m.FromZipCode, "From Zip Code", new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.FromZipCode, new { @class = "form-control input-sm number", style = "width:100%;", tabindex = 9, maxlength = "5" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2 FromAndToZipCode" style="display:none;">
+                                    @Html.LabelFor(m => m.ToZipCode, "To Zip Code", new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.ToZipCode, new { @class = "form-control input-sm number", style = "width:100%;", tabindex = 9, maxlength = "5" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2">
+                                    @Html.LabelFor(m => m.StartDate, "Start Date", new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 7, maxlength = "10" })
+                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group  col-lg-1 col-md-2">
+                                    @Html.LabelFor(m => m.EndDate, "End Date", new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 8, maxlength = "10" })
+                                        <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12 @(Model.RecordTimeNoteSubjectFlag == 0?"hidden":"") ">
+                                    @Html.LabelFor(m => m.NoteSubject, "Note Subject", new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.NoteSubject, new { @class = "form-control input-sm", style = "width:100%;", tabindex = 9, maxlength = "50" })
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12">
+                                @Html.LabelFor(m => m.NoteEntry, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control " + ((Model.ControlType == "RTF") ? " summernote" : ""), style = "width:100%;", tabindex = 9 })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Worked For</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="workedForList">
+                            <tbody>
+                                @if (Model.WorkForList != null && Model.WorkForList.Count > 0)
+                                {
+                                    foreach (var item in Model.WorkForList)
+                                    {
+                                        <tr data-allmainpetitionsclosedflag="@(item.AllMainPetitionsClosedFlag??0)"
+                                            data-roleid="@item.RoleID"
+                                            data-roletypecodeid="@item.RoleTypeCodeID">
+                                            <td width="30" class="highLightBlue" style="vertical-align: middle">
+                                                <input type="checkbox" value="@item.PersonID" tabindex="@(++tabindex)" class="chkWork" @(Model.WorkForList.Count == 1 ? "checked" : "") />
+                                            </td>
+                                            <td width="200" class="highLightBlue" style="vertical-align: middle">@item.PersonNameLast, @item.PersonNameFirst</td>
+                                            <td class="highLightBlue" style="vertical-align: middle">@item.AllMainPetitionsDisplay</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row @if (Request.QueryString["popup"] != null)
+    {<text>hidden</text>}">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-body col-xs-12">
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.NextCaseID, "Next Case ", new { @class = "control-label " })
+                        @Html.DropDownListFor(m => m.NextCaseID, new SelectList(Model.CaseList, "CaseID", "CaseDisplay"), "", new { @class = "form-control input-sm", autofocus = "autofocus", @style = "width:100%", tabindex = ++tabindex })
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.NextCase, "OR Next Case #", new { @class = "control-label  " })
+                        @Html.TextBoxFor(m => m.NextCase, new { @class = "form-control input-sm", @style = "width:100%", tabindex = ++tabindex })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Request.QueryString["popup"] != null)
+        {<button id="btnSaveAndClosePopup" type="button" class="btn btn-primary  v-bottom default" tabindex="@(++tabindex)">Save/Close</button>
+            <button id="btnSaveandAddPopup" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Save/Add More</button>
+
+        }
+        else
+        {
+            if (Request.QueryString["addNote"] != null)
+            {
+                <button id="btnSaveAndGoToNotes" type="submit" tabindex="@(++tabindex)" class="btn btn-primary v-bottom default">Save/Go To Notes</button>
+                <button id="btnSaveAndMain" type="submit" tabindex="@(++tabindex)" class="btn btn-default v-bottom ">Save/Go To Main Page</button>
+            }
+            else
+            {
+                <button id="btnSaveAndMain" type="submit" tabindex="@(++tabindex)" class="btn btn-primary v-bottom default">Save/Go To Main Page</button>
+            }
+            <button id="btnSaveandList" type="button" tabindex="@(++tabindex)" data-secure-id="@((int)SecurityToken.RecordTimeview)" class="btn  v-bottom ">Save/Go To List</button>
+            <button id="btnSaveandAdd" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Save/Add More</button>
+            <button id="btnCancel" type="button" class="btn  v-bottom " tabindex="@(++tabindex)">Cancel</button>
+        }
+    </div>
+}
+
+@section scripts
+{
+
+    <script>
+
+        var $referralId = '@Html.Raw(Request.QueryString["ReferralID"]!=null? "&ReferralID="+ Request.QueryString["ReferralID"] : "")'
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/RecordTimeAdd.js?v=" + Guid.NewGuid())"></script>
+
+    <script>
+        ApplySummernote();
+
+
+    </script>
+
+}
+@if (ViewBag.HearingReportFilingDue != null)
+{
+    Html.RenderPartial("~/Views/Task/AR/_tabs.cshtml");
+}
+@Html.Hidden("WorkPhaseRequiredFlag", Model.WorkPhaseRequiredFlag)
+@Html.Hidden("WorkHoursRequiredFlag", Model.WorkHoursRequiredFlag)
+@Html.Hidden("UseWorkHoursForActivityLog", Model.UseWorkHoursForActivityLog)
+@Html.HiddenFor(m=> m.WorkTimeVisibleFlag)
+

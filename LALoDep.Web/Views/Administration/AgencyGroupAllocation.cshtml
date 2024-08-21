@@ -1,0 +1,278 @@
+﻿@model  LALoDep.Models.Administration.AgencyGroupAllocationViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Agency Group Allocation";
+    var rowCount = 1;
+    var tabCount = 1;
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+ 
+    .tblForm td {
+        padding: 3px;
+    }
+
+    .modal-header button {
+        display: none;
+    }
+</style>
+<style>
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    table#activity-head {
+        width: 100%;
+        border: 0;
+        font-size: 115%;
+    }
+
+    table th.activity-header {
+        padding: 3px !important;
+        text-align: center !important;
+    }
+
+    .activity-sheet > tbody > tr > td {
+        padding: 0;
+    }
+
+        .activity-sheet > tbody > tr > td input[type=checkbox] {
+            margin-left: 33px;
+        }
+</style>
+<div class="widget margin-left-10 margin-right-10">
+    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+        <span class="widget-caption">
+        </span>
+        <div class="widget-buttons">
+            &nbsp;
+        </div>
+    </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "AgencyGroupAllocation-form", @class = "form-inline  center-block" }))
+        {
+
+
+            <table id="tblAgencyGroupAllocation" class="activity-sheet table">
+                <thead>
+                    <tr>
+                        <th class="activity-header">County Name</th>
+                        <th class="activity-header">CAC Allocation </th>
+                        <th class="activity-header">County % </th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TitleIVeAgencyGroupCountyAllocationList)
+                    {
+
+                        <tr class="trOperatingExpList">
+                            <td>
+                                @Html.HiddenFor(o => item.TitleIVeAgencyGroupCountyAllocationID)
+                                @Html.HiddenFor(o => item.AgencyGroupID)
+                                @Html.HiddenFor(o => item.InsertedByUserID)
+                                @Html.HiddenFor(o => item.InsertedOnDateTime)
+                                @Html.HiddenFor(o => item.UpdatedByUserID)
+                                @Html.HiddenFor(o => item.UpdatedOnDateTime)
+                                @Html.HiddenFor(o => item.RecordStateID)
+                                @Html.TextBoxFor(o => item.CountyName, new { @class = "form-control input-sm  activity-day  ignore-enterkey", tabindex = ++tabCount, style = "width:100%;" })
+
+
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(o => item.CACAllocation, new { @class = "form-control input-sm  CurrencyFormat activity-day  ignore-enterkey numeric-val", tabindex = ++tabCount, style = "width:100%;" })
+
+
+
+                            </td>
+                            <td>
+
+                                @Html.TextBoxFor(o => item.CountyPercent, new { @class = "form-control input-sm   activity-day  ignore-enterkey", tabindex = ++tabCount, style = "width:100%;" ,disabled= "disabled" })
+
+
+
+                            </td>
+                        </tr>
+
+                        rowCount++;
+                    }
+
+                </tbody>
+
+            </table>
+        }
+
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnClose" type="submit" class="btn btn-default v-bottom " onclick="self.parent.ClosePopup()">Close</button>
+  </div>
+}
+@section scripts{
+<script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+<script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+
+    <script>
+
+
+
+        function Validation(buttonId) {
+            var IsValid = true;
+       
+            $("#tblAgencyGroupAllocation tbody tr.trOperatingExpList").each(function (index) {
+                var tr = $(this);
+                var flag = true;
+
+                if (buttonId !== -1) {
+                    flag = false;
+                    if (buttonId == index) {
+                        flag = true;
+                    }
+                }
+
+                if (tr.find('#item_CountyName').hasValue() || tr.find('#item_CACAllocation').hasValue()) {
+
+
+                    if (!tr.find('#item_CountyName').hasValue()) {
+                        IsValid = false;
+                        tr.find('#item_CountyName').focus();
+                        notifyDanger('County Name is required.');
+                        return false;
+
+                    }
+                    else if (!tr.find('#item_CACAllocation').hasValue()) {
+                        IsValid = false;
+                        tr.find('#item_CACAllocation').focus();
+                        notifyDanger('CAC Allocation is required.');
+                        return false;
+
+                    } else if (parseFloat(tr.find('#item_CACAllocation').val()) <= 0) {
+                        IsValid = false;
+                        tr.find('#item_CACAllocation').focus();
+                        notifyDanger('CAC Allocation must be greater than 0.');
+                        return false;
+
+                    }
+
+                }
+            })
+
+            return IsValid;
+        }
+        function GetFormData(buttonId) {
+            var data = [];
+            $("#tblAgencyGroupAllocation tbody tr.trOperatingExpList").each(function (index) {
+                var tr = $(this);
+                var flag = true;
+
+                if (buttonId !== -1) {
+                    flag = false;
+                    if (buttonId == index) {
+                        flag = true;
+                    }
+                }
+
+                if (tr.find('#item_CountyName').hasValue() || tr.find('#item_CACAllocation').hasValue()) {
+                    data.push({
+                        TitleIVeAgencyGroupCountyAllocationID: tr.find('#item_TitleIVeAgencyGroupCountyAllocationID').val(),
+                        AgencyGroupID: tr.find('#item_AgencyGroupID').val(),
+                        CountyName: tr.find('#item_CountyName').val(),
+                        CACAllocation: tr.find('#item_CACAllocation').val(),
+                        InsertedByUserID: tr.find('#item_InsertedByUserID').val(),
+                        InsertedOnDateTime: tr.find('#item_InsertedOnDateTime').val(),
+                        UpdatedByUserID: tr.find('#item_UpdatedByUserID').val(),
+                        UpdatedOnDateTime: tr.find('#item_UpdatedOnDateTime').val(),
+                        RecordStateID: tr.find('#item_RecordStateID').val()
+
+                    });
+                }
+
+            });
+
+            return data;
+        }
+
+        function SaveAgencyGroupAllocation(buttonId) {
+            if (!hasFormChanged("AgencyGroupAllocation-form")) {
+                notifyDanger("Nothing was changed");
+                return false;
+            }
+            $('.CurrencyFormat').toNumber();
+            if (Validation(buttonId)) {
+                var formData = GetFormData(buttonId);
+                $.ajax({
+                    type: "POST", url: '/Administration/AgencyGroupAllocation', data: JSON.stringify(formData), contentType: 'application/json', cache: false,
+                    success: function (result) {
+                        if (buttonId == -1) {
+                            if (result.isSuccess) {
+                                notifySuccess("Data saved successfully.");
+                                document.location.href = document.location.href;
+                            }
+                            else {
+                                notifyDanger(result.message);
+                            }
+                        }
+                       
+
+                    }
+                });
+            }
+            $('.CurrencyFormat').formatCurrency();
+        }
+
+        $("#tblAgencyGroupAllocation").on("keyup", ".activity-day", function (e) {
+            e = e || window.event;
+            if (e.which == 39 || e.which == 13) { // right arrow
+
+
+                if ($(this).closest('td').index() == 11) {
+
+                    $(this).closest('tr').next().find('td:eq(1)').find('input').focus();
+                    $(this).closest('tr').next().find('td:eq(1)').find('select').focus();
+                } else {
+                    $(this).closest('td').next().find('input').focus();
+                    $(this).closest('td').next().find('select').focus();
+                }
+            } else if (e.which == 37) { // left arrow
+                $(this).closest('td').prev().find('input').focus();
+                $(this).closest('td').prev().find('select').focus();
+
+            } else if (e.which == 40) { // down arrow OR Enter
+                $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('select').focus();
+
+            } else if (e.which == 38) { // up arrow
+                $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('select').focus();
+            }
+        });
+
+     
+
+        $('#btnSave').click(function (e) {
+            e.preventDefault();
+            SaveAgencyGroupAllocation(-1);
+        });
+       
+
+        $(document).ready(function () {
+          
+            $('.CurrencyFormat').formatCurrency();
+            setInitialFormValues("AgencyGroupAllocation-form");
+        });
+
+
+    </script>
+
+}

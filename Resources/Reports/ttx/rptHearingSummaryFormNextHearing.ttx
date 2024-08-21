@@ -1,0 +1,5 @@
+HearingID	Number		1
+DateTime	String	50	01/23/2001 8:30 AM
+Type	String	50	Jurisdictional
+Officer	String	100	Bubis, Gary
+Department	String	50	E 18

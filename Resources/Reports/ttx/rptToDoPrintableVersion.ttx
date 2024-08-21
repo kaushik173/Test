@@ -1,0 +1,7 @@
+ReminderDate	DateTime		08/29/02
+DueDate	DateTime		08/30/02
+Client	String	100	Gold, Andrew
+PDAPDNumber	String	50	P01VAF0022
+ActionType	String	200	File Motion
+Action	Memo		Can Grow Text
+AgencyName	String	200	Public Defender

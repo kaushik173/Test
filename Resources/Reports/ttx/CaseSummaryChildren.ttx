@@ -1,0 +1,11 @@
+ClientRoleID	Number		1
+PersonID	Number		111
+FullName	String	100	Smith, Amy
+DOB	DateTime		05/05/1989
+Association	String	50	Step Sister
+PetitionNumber	String	20	CSI123A
+PetitionType	String	50	300 Original
+PetitionFileDate	DateTime		01/01/2001
+CaseID	Number	11111
+CloseDate	DateTime	01/01/2001
+Indicator	String	10	A

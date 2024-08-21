@@ -1,0 +1,114 @@
+﻿@model IEnumerable<LALoDep.Domain.qcal.qcal_AS_HearingCaseFileGetList_spResult>
+@using LALoDep.Core.Custom.Extensions
+@{
+    var firstFile = Model.FirstOrDefault();
+    int counter = 0;
+}
+@if (Model.Any())
+{
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-themeprimary">
+            <span class="widget-caption">Hearing Information</span>
+        </div>
+        <div class="widget-body">
+            @firstFile.HearingInfo
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-themeprimary">
+            <span class="widget-caption">Attached Files</span>
+            <div class="widget-buttons">
+                <button id="btnShowAll" type="button" class="btn btn-labeled btn-default btn">Show All</button>
+                <button id="btnShowTop5" type="button" class="btn btn-labeled btn-default btn" style="display:none;">Show Top 5</button>
+            </div>
+        </div>
+        <div id="fileResult" class="widget-body">
+            <div class="table-responsive" style="max-height:inherit;">
+                <table id="tblHearingCaseFileList" class="table table-bordered table-condensed table-hover table-padding table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width:10px;"></th>
+                            <th>Category</th>
+                            <th>File</th>
+                            @if (Model.FirstOrDefault().SharePoint_UseFlag > 0)
+                            {
+                                <th style="width:80px">SharePoint</th>
+                            }
+                            <th>Description</th>
+                            <th>Uploaded By</th>
+                            <th>Uploaded On</th>@if (Model.FirstOrDefault().UseGoogleDocsFlag > 0)
+                            {
+                                <th width="120">View/Annotate</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var fileInfo in Model)
+                        {
+                            
+                            counter++;
+                            var filePath = fileInfo.FilePath;
+                            <tr class="@(counter > 5? "hideme hide" : "")">
+                                <td><input type="checkbox" name="name" value="true" class="on-hearing" data-casefileid="@fileInfo.CaseFileID" data-hearingid="@fileInfo.HearingID" data-hearing-case-file-id="@fileInfo.HearingCaseFileID" @(fileInfo.OnHearingFlag == 1 ? "checked=\"checked\"" : "") data-old-value-on-pageload="@(fileInfo.OnHearingFlag == 1 ? "true" : "false")" /></td>
+                                <td>@fileInfo.Category</td>
+                                <td>
+
+
+                                    @if (string.IsNullOrEmpty(fileInfo.SharePoint_FilePath))
+                                    {
+
+                                        <a href="@fileInfo.DownloadPath" class="auto-download">@fileInfo.FileDisplay</a>
+
+                                    }
+                                    else if (fileInfo.SharePointFile_AllowDownloadLink.Value == 1)
+                                    {
+                                        <a href="javascript:;" data-url="@fileInfo.SharePoint_FilePath" class="sfile-download" data-id="@fileInfo.CaseFileID" data-caseid="@fileInfo.CaseID.Value.ToEncrypt()">@fileInfo.FileDisplay</a> ;
+
+                                    }
+                                    else
+                                    {
+                                        <text>@fileInfo.FileDisplay</text>
+                                    }
+                                </td>
+                                @if (fileInfo.SharePoint_UseFlag > 0)
+                                {
+                                    <td>
+                                        @if (fileInfo.SharePoint_FilePath != "")
+                                        {
+                                            <a href="@fileInfo.SharePoint_FilePath" target="_blank" class="lnkViewSharePoint btn btn-info btn-xs" data-id="@fileInfo.SharePoint_FilePath">View</a>
+
+                                        }
+
+                                    </td>
+                                }
+
+                                <td>@fileInfo.Description</td>
+                                <td>@fileInfo.UploadedBy</td>
+                                <td>@fileInfo.UploadedOn</td>
+                                @if (Model.FirstOrDefault().UseGoogleDocsFlag > 0)
+                                {
+                                    <td width="120">
+
+
+                                        <a class="btn btn-info btn-xs" href="https://drive.google.com/file/d/@fileInfo.GoogleFileID/edit?usp=sharing" target="_blank" data-id="@fileInfo.CaseFileID" style="margin-right:5px;">View</a>
+
+                                        <a class="btn btn-info btn-xs    " href="@fileInfo.KamiUrl" target="_blank" data-id="full.CaseFileID">Annotate</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+
+    <div class="text-center" style="position: fixed;bottom: -30px;margin-left: auto;margin-right: auto;width: 100%;">
+        <button onclick="saveHearingCaseFiles()" class="btn btn-primary v-bottom ">Save</button>
+        <button id="btnPopupClose" onclick="CloseModal()" class="btn btn-default v-bottom ">Close</button>
+    </div>
+}
+
+

@@ -1,0 +1,280 @@
+﻿@model LALoDep.Areas.Mobile.Models.HearingAddEditViewModel
+@{
+    ViewBag.Title = "Hearing Update";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "HearingAdd", @class = "form-inline center-block" }))
+{
+<div class="row">
+    <div class="col-xs-12 center-block">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    <a href="@Url.Action("CaseInfo", "Case", new { id = ViewBag.CaseID })">@ViewBag.CaseNumber</a> - @ViewBag.ClinetName
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="widget-body col-xs-12">
+              
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTypeCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingTypeCodeID, new SelectList(Model.HearingTypeList, "CodeID", "CodeValue", Model.HearingTypeCodeID), "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = 1 })
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingDate, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingDate, new { @class = "form-control input-sm date-picker", tabindex = 2, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingTime, new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.HearingTime, new { @class = "form-control input-sm time-picker", tabindex = 3 })
+                            <span class="input-group-addon">
+                                <span class="fa fa-clock-o"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DepartmentID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DepartmentID, new SelectList(Model.DepartmentList, "CodeID", "CodeValue", Model.DepartmentID), "", new { @class = "form-control input-sm", tabindex = 4 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingOfficerStaffID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HearingOfficerStaffID, new SelectList(Model.JudicialOfficerList, "CodeID", "CodeValue", Model.HearingOfficerStaffID), "", new { @class = "form-control input-sm", tabindex = 5 })
+                    </div>                <div class="form-group">
+                    @Html.LabelFor(m => m.AppearingAttyID, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.AppearingAttyID, new SelectList(Model.AppearingAttyList, "CodeID", "CodeValue", Model.AppearingAttyID), "", new { @class = "form-control input-sm", tabindex = 5 })
+                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkDetailHour, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.WorkDetailHour, new { @class = "form-control input-sm number", tabindex = 6 })
+                    </div>                <div class="form-group">
+                        @Html.LabelFor(m => m.HoursTypeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.HoursTypeID, new SelectList(Model.HourTypeList, "CodeID", "CodeValue", Model.HoursTypeID), "", new { @class = "form-control input-sm", tabindex = 7 })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PhaseID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.PhaseID, new SelectList(Model.PhaseList, "CodeID", "CodeValue", Model.PhaseID), "", new { @class = "form-control input-sm", tabindex = 8 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MediaPresent, new { @class = "control-label" })
+                        @Html.CheckBoxFor(m => m.MediaPresent, new { @class = "form-control input-sm", tabindex = 9 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HearingNoteEntry, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.HearingNoteEntry, new { @class = "form-control input-sm", tabindex = 10, style = "width:100%;" })
+                        @Html.HiddenFor(m => m.HearingID)
+                        @Html.HiddenFor(m => m.NoteID)
+                        @Html.HiddenFor(m => m.WorkID) 
+                        @Html.HiddenFor(m => m.HearingResultCodeID)
+
+                        @Html.HiddenFor(m => m.PetitionID)
+
+
+
+
+                        
+                    
+                     </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    Petitions
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive" id="caseloadListDiv">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="caseloadList">
+                        <thead>
+                            <tr>
+                                <th>Child </th>
+                                <th> </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SelectedPetitions.Any())
+                            {
+                                foreach (var item in Model.SelectedPetitions)
+                                {
+                                    <tr>
+                                        <td style="width:150px">@item.Child</td>
+                                        <td data-id="@item.PetitionID">
+                                           
+
+                                            @Html.DropDownListFor(m => item.PetitionResultID, new SelectList(Model.ResultCodeList, "CodeID", "CodeValue", item.PetitionResultID), "", new { @class = "PetitionResultID form-control input-sm", tabindex = 8 })
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-align-center">No data available in table</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnAddHearing" type="submit" class="btn btn-sm btn-primary default" tabindex="12">Save</button>
+        <button id="btnCancel" type="submit" class="btn btn-sm btn-default " tabindex="13">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action("CaseInfo","Case")';
+        });
+        $(document).ready(function () {
+            setInitialFormValues('HearingAdd')
+        });
+        $("#btnAddHearing").on("click", function () {
+            Save();
+        });
+
+
+        function Validation() {
+            var isValid = true;
+            associations = [];
+
+            if (!hasFormChanged('HearingAdd')) {
+
+                notifyDanger('Nothing was changed.');
+                isValid = false;
+                return false;
+            }
+
+
+
+            if ($('#HearingTypeCodeID').val() == '') {
+                isValid = false;
+                $('#HearingTypeCodeID').focus();
+                notifyDanger('Hearing Type  is required.');
+                return false;
+            }
+            if ($('#HearingDate').val() == '') {
+                isValid = false;
+                $('#HearingDate').focus();
+                notifyDanger('Hearing Date is required.');
+                return false;
+            }
+            if ($('#DepartmentID').val() == '') {
+                isValid = false;
+                $('#DepartmentID').focus();
+                notifyDanger('Department is required.');
+                return false;
+            } if ($('#HearingOfficerStaffID').val() == '') {
+                isValid = false;
+                $('#HearingOfficerStaffID').focus();
+                notifyDanger('Judge is required.');
+                return false;
+            }
+
+            if ($('#WorkDetailHour').val() != '' || $('#HoursTypeID').val() != '' || $('#PhaseID').val() != '') {
+                if ($('#AppearingAttyID').val() == '') {
+                    isValid = false;
+                    $('#AppearingAttyID').focus();
+                    notifyDanger('Appearing Attorney is required if hours worked, type and phrase is entered');
+                    return false;
+                }
+                if ($('#WorkDetailHour').val() == '') {
+                    isValid = false;
+                    $('#WorkDetailHour').focus();
+                    notifyDanger('Work Hour is required if hours worked, type and phrase is entered');
+                    return false;
+                }
+                if ($('#HoursTypeID').val() == '') {
+                    isValid = false;
+                    $('#HoursTypeID').focus();
+                    notifyDanger('Hours Type is required if hours worked, type and phrase is entered');
+                    return false;
+                } if ($('#PhaseID').val() == '') {
+                    isValid = false;
+                    $('#PhaseID').focus();
+                    notifyDanger('Phase is required if hours worked, type and phrase is entered');
+                    return false;
+                }
+            }
+        //    pd_WorkInsertByHearingID_sp
+          
+            return isValid;
+        }
+        function Save() {
+
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            var ids = '';
+            $('.PetitionResultID').each(function () {
+                if ($(this).val() != '') {
+                    if (ids != '')
+                        ids += ',';
+                    ids += $(this).parent().attr('data-id') + '|' + $(this).val();
+                }
+             
+            })
+
+            var isvalid = Validation();
+
+            if (isvalid) {
+                
+              
+
+                var params = $('#HearingAdd').serialize() + "&petitionIds=" + ids;
+                $.ajax({
+                    type: "POST", url: '/Mobile/Case/HearingEdit', data: params,
+                    success: function (result) {
+
+                        if (result.Status == "Done") {
+
+                            notifySuccess('Data Saved Successfully!.');
+
+                            RequestSubmitted();
+                            document.location.href = '/Mobile/Case/CaseInfo';
+
+
+                        } else {
+                            document.location.href = result.URL;
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+
+        }
+    </script>
+}

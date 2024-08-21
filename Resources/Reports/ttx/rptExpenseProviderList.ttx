@@ -1,0 +1,4 @@
+Provider Name	String	100	John Doe
+Address	String	250	855 N Dobson, Chandler, AZ 85224
+Phone #	String	25	480-888-5544
+AgencyName	String	100	Agency

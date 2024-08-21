@@ -1,0 +1,6 @@
+Agency	String	100	PD
+Attorney	String	100	Lastname, FirstName
+Outcome	String	100	Closed/JurisTerminated/Guardianship at .26
+Total	Number		987
+StartDate	DateTime		01/01/1998
+EndDate	DateTime		01/01/2001

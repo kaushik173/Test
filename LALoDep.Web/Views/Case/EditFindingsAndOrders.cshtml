@@ -1,0 +1,236 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Case.FindingsAndOrdersEditViewModel
+@{
+    ViewBag.Title = "Edit Findings And Orders";
+    int tabIndex = 0;
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = Model.HearingID })
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditFindingsAndOrders-form", @class = "form-inline  center-block" }))
+{
+    @Html.HiddenFor(m => m.HearingID)
+
+    @Html.HiddenFor(m => m.NoteID)
+    @Html.HiddenFor(m => m.NoteSubject)
+    @Html.HiddenFor(m => m.NoteEntityCodeID)
+    @Html.HiddenFor(m => m.NoteEntityTypeCodeID)
+
+    @Html.HiddenFor(m => m.HearingFindingOrderID)
+    @Html.HiddenFor(m => m.AgencyID)
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Hearing</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingType, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingType, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDateTime, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDateTime, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingJudge, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingJudge, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.HearingDept, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.HearingDept, new { @class = "form-control input-sm", disabled = "disabled", style = "width:100%" })
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(m => m.NoteEntry, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.NoteEntry, new { @class = "form-control input-sm", style = "width:100%", tabindex = ++tabIndex, disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Findings And Orders</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="row">
+                        <div class="margin-bottom-5">
+                            <div class="form-group pull-left">
+                                <label><strong>Finding Or Order:</strong></label>
+                                @Html.DropDownListFor(m => m.HearingFindingOrderCodeID, Model.FindingOrderTypeList, "", new { @class = "forrm-control input-sm", tabindex = ++tabIndex })
+                            </div>
+                            <div class="col-sm-6">
+                                <label><strong>Comment:</strong></label>
+                                @Html.TextBoxFor(m => m.HearingFindingOrderComment, new { @class = "forrm-control input-sm",style="width:80%", tabindex = ++tabIndex, maxlength = "100" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 no-padding">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">Person</label>
+                                </div>
+                            </div>
+                            @foreach (var person in Model.FindingOrderPersonList)
+                            {
+                                <div class="row @(person.IsRoleClient ? "highLightBlue" : "")">
+                                    <div class="col-md-12">
+                                        <label>
+                                            @Html.CheckBox("Person", person.Selected, new { @class = "finding-person", tabindex = ++tabIndex, data_roleid = person.RoleID, data_findingpersonid = person.HearingFindingOrderPersonID })
+                                            <span>@person.PersonDisplayName (@person.RoleTypeCodeValue)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-sm-8 no-padding">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">Notices</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @foreach (var notice in Model.FindingOrderNoticeList)
+                                {
+                                    <div class="col-md-6">
+                                        <label>
+                                            @Html.CheckBox("Notice", notice.Selected, new { @class = "finding-notice", tabindex = ++tabIndex, data_noticeid = notice.NoticeID, data_findingnoticeid = notice.HearingFindingOrderNoticeID })
+                                            <span>@notice.Notice</span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default " tabindex="@(++tabIndex)">Save</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom " tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+        function validate() {
+            if ($("#HearingFindingOrderCodeID").val() != '' && $(".finding-person:checked").length <= 0) {
+                notifyDanger("Atleast one person is required when any Finding Or Order is selected.");
+                $(".finding-person:first").focus();
+                return false;
+            }
+
+            if ($("#HearingFindingOrderCodeID").val() == '' && $(".finding-person:checked").length > 0) {
+                notifyDanger("Finding Or Order is required when any person is selected.");
+                $("#HearingFindingOrderCodeID").focus();
+                return false;
+            }
+            return true;
+        }
+        function getData() {
+            var data = {
+                HearingID: $("#HearingID").val(),
+                NoteID: "",
+                NoteSubject: "",
+                NoteEntityCodeID: "",
+                NoteEntityTypeCodeID: "",
+                NoteEntry: "",
+
+
+                HearingFindingOrderID: $("#HearingFindingOrderID").val(),
+                AgencyID: $("#AgencyID").val(),
+                HearingFindingOrderCodeID: $("#HearingFindingOrderCodeID").val(),
+                HearingFindingOrderComment: $("#HearingFindingOrderComment").val(),
+                RecordStateID: $("#RecordStateID").val(),
+
+                FindingOrderPersonList: [],
+                FindingOrderNoticeList: [],
+
+                IsFindingUpdate: ($("#HearingFindingOrderCodeID").IsValueChanged() || $("#HearingFindingOrderComment").IsValueChanged())
+            }
+
+            if ($("#NoteEntry").IsValueChanged()) {
+                data.NoteID = $("#NoteID").val();
+                data.NoteSubject = $("#NoteSubject").val();
+                data.NoteEntityCodeID = $("#NoteEntityCodeID").val();
+                data.NoteEntityTypeCodeID = $("#NoteEntityTypeCodeID").val();
+                data.NoteEntry = $("#NoteEntry").val();
+            }
+
+            var selectedPerson = $(".finding-person");
+            var selectedNotices = $(".finding-notice");
+
+            for (var indx = 0; indx < selectedPerson.length; indx++) {
+                var chkPerson = selectedPerson.eq(indx);
+
+                if (chkPerson.data("old-value-on-pageload") != chkPerson.is(":checked")) {
+                    var person = {
+                        HearingFindingOrderPersonID: chkPerson.data("findingpersonid"),
+                        RoleID: chkPerson.data("roleid"),
+                        Selected: chkPerson.is(":checked")
+                    };
+
+                    data.FindingOrderPersonList.push(person);
+                }
+            }
+
+            for (var indx = 0; indx < selectedNotices.length; indx++) {
+                var chkNotice = selectedNotices.eq(indx);
+                if (chkNotice.data("old-value-on-pageload") != chkNotice.is(":checked")) {
+                    var notice = {
+                        HearingFindingOrderNoticeID: chkNotice.data("findingnoticeid"),
+                        NoticeID: chkNotice.data("noticeid"),
+                        Selected: chkNotice.is(":checked")
+                    };
+
+                    data.FindingOrderNoticeList.push(notice);
+                }
+            }
+
+            return data;
+        }
+
+        function saveData() {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if (hasFormChanged("EditFindingsAndOrders-form")) {
+                if (validate()) {
+                    var data = getData();
+                    $.ajax({
+                        type: "POST", url: '/Case/EditFindingsAndOrders/', data: data,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                window.location.href = "@Url.Action(MVC.Case.FindingsAndOrders(Model.HearingID.ToEncrypt()))?caseId=@Model.CaseID.ToEncrypt()";
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                notifyDanger("Nothing has been changed.");
+            }
+        }
+
+        $("#btnSave").on("click", function () {
+            saveData();
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = "@Url.Action(MVC.Case.FindingsAndOrders(Model.HearingID.ToEncrypt()))?caseId=@Model.CaseID.ToEncrypt()";
+        });
+
+        $(document).ready(function () {
+            setInitialFormValues("EditFindingsAndOrders-form");
+        });
+    </script>
+}

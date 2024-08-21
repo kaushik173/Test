@@ -1,0 +1,129 @@
+﻿@model  IEnumerable<LALoDep.Domain.TitleIVe.TitleIVeActivityLogListAgencyEmployees_Result>
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "Code Type";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+
+<style>
+    .widget-buttons label {
+        width: 100%;
+        display: block;
+    }
+
+    .widget-buttons .form-control {
+        height: 25px;
+        width: 200px;
+        display: inline;
+        margin-left: 8px;
+    }
+
+    .Standard .widget-buttons label {
+        padding-top: 5px;
+    }
+</style>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption"></span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="CodeTableView">
+                        <thead>
+                            <tr>
+                                <th > Employees Name</th>    
+                                <th style="width:100px">  </th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                          @foreach (var item in Model)
+                          {
+                            <tr>
+                                <td>@item.EmployeeName</td>
+                                <td><a target="_parent" href="/Task/@Request.QueryString["page"]?personId=@item.PersonID.ToEncrypt()">Select</a></td>
+                            </tr>
+                          }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+   
+
+  <script>
+     
+
+      oTable=   $('#CodeTableView').dataTable({
+          "searching": true,
+          "bSort": false,
+          "scrollY": "auto",
+          "scrollCollapse": true,
+          "paging": false,
+         
+      });
+
+     
+
+       
+       fitCalculatedHeightForSearchDataTable()
+      
+     
+
+      $('.widget-buttons').html($('#CodeTableView_filter'));
+      
+
+      $(window).bind('resize', function () {
+          fitCalculatedHeightForSearchDataTable();
+      });
+
+      page.$table.on('page.dt', function () {
+          var table = page.$table.dataTable();
+          var pageInfo = table.fnPagingInfo();
+          var pageNumber = pageInfo.iPage;
+          simpleStorage.set(page.resultPageIdKey, pageNumber, { TTL: page.ttl });
+      });
+
+      function fitCalculatedHeightForSearchDataTable() {
+          var calc_height = 0;
+          if (oTable != null) {
+              calc_height = $(window).height();
+              var _offset = 0;
+              $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                  $(this).siblings().each(function () {
+                      if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                          if ($(this).attr("id") == 'loading')
+                              return;
+                          //console.log(calc_height + " - " + $(this).outerHeight(true));
+                          calc_height = calc_height - $(this).outerHeight(true);
+                      }
+                  });
+                  _offset = _offset + $(this).outerHeight(true) - $(this).height();
+              });
+
+              calc_height = calc_height - _offset;
+              // console.log("total: " + calc_height);
+              $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+              oTable.fnAdjustColumnSizing();
+          }
+          return calc_height;
+      }
+    </script>
+      
+}

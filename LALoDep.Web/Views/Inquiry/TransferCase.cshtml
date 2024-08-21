@@ -1,0 +1,263 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Inquiry.TransferCaseViewModel
+@{
+    ViewBag.Title = "Transfer Case From <br/>" + ViewBag.PersonName;
+    int tabIndex = 0;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "TransferCase-form", @class = "form-inline", data_val = "false" }))
+{
+    @Html.HiddenFor(m => m.PersonID)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Transfer Case</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TransferToPersonID, "Transfer To", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.TransferToPersonID, Model.TransferToPersonList, "", new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TransferDate, "Transfer Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.TransferDate, new { @class = "form-control input-sm date-picker", tabindex = 4, maxlength = 10 })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="divSearchResult">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Cases In Caseload (@Model.TotalCases)</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblCaseList">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;"><input type="checkbox" id="chkIsAllOn" name="chkIsAllOn" value="" tabindex="@(++tabIndex)" /> On</th>
+                                    <th style="width:75px;">Case #</th>
+                                    <th style="width:140px;">Attorney Start Date</th>
+                                    <th style="width:200px;">Case Name</th>
+                                    <th>Department</th>
+                                    <th>Clients</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.CaseList != null && Model.CaseList.Count > 0)
+                                {
+                                    foreach (var item in Model.CaseList)
+                                    {
+                                <tr>
+                                    <td><input type="checkbox" id="chk-@item.CaseID" name="IsOn" class="chk-case" data-roletypecodeid="@item.RoleTypeCodeID" value="@item.CaseID" @(item.IsOn ? "checked=\"checked\"":"") tabindex="@(++tabIndex)" /></td>
+                                    <td>@item.PetitionNumber</td>
+                                    <td>@item.AttorneyRoleStartDate</td>
+                                    <td>@item.CaseName</td>
+                                    <td>@item.Department</td>
+                                    <td class="highLightBlue">@item.Clients</td>
+                                </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnTransfer" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)">Transfer</button>
+        <button id="btnCancel" type="button" class="btn v-bottom btn-default" tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        //jQuery.fn.dataTableExt.oSort['uk_date-pre'] = function (a) {
+        //    a = a.slice(0, -2) + ' ' + a.slice(-2);
+        //    var date = Date.parse(a);
+        //    return typeof date === 'number' ? date : -1;
+        //}
+        //jQuery.fn.dataTableExt.oSort['uk_date-asc'] = function (a, b) {
+        //    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        //}
+        //jQuery.fn.dataTableExt.oSort['uk_date-desc'] = function (a, b) {
+        //    return ((a < b) ? -1 : ((a > b) ? -1 : 0));
+        //}
+
+        var oTable = $("#tblCaseList").dataTable({
+            "scrollY": "auto",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            //"order": [[1, "desc"]],
+            "order": [],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false
+            },
+            {
+                "targets": 5,
+                "orderable": false
+            }],
+            "loadingRecords": "Loading...",
+            "processing": "Processing...",
+            "deferRender": true
+        });
+
+        function fitCalculatedHeightForSearchDataTable() {
+            var calc_height = 0;
+            calc_height = $(window).height();
+            var _offset = 25;
+            origin_wrapper_height = $('body>div.container-fluid').height();
+            origin_content_height = $('#divSearchResult .dataTables_scrollBody').height();
+
+            $("#divSearchResult .dataTables_scrollBody").children().first().parentsUntil("body").each(function () {
+                $(this).siblings().each(function () {
+                    if (calc_height > $(this).outerHeight(true) && $(this).css('display') != 'none') {
+                        //console.log(calc_height + " - " + $(this).outerHeight(true));
+                        if ($(this).attr("id") == 'loading')
+                            return;
+                        calc_height = calc_height - $(this).outerHeight(true);
+                    }
+                });
+                _offset = _offset + $(this).outerHeight(true) - $(this).height();
+            });
+
+            //console.log("calc :" + calc_height + " offset: " + _offset);
+            calc_height = calc_height - _offset;
+            calc_height = calc_height < 250 ? 250 : calc_height;
+            //console.log("total: " + calc_height);
+            $('#divSearchResult .dataTables_scrollBody').css('max-height', calc_height + 'px');
+            oTable.fnAdjustColumnSizing();
+            //new $.fn.dataTable.FixedHeader(oTable);
+            return calc_height;
+        }
+
+        function getData() {
+            var data = {
+                PersonID: $("#PersonID").val(),
+                TransferToPersonID: $("#TransferToPersonID").val(),
+                TransferDate: $("#TransferDate").val(),
+                CaseList: []
+            };
+            if (!Contains($("#TransferToPersonID").val(), '_0') && $(".chk-case:checked").length > 20) {
+
+                $(".chk-case:checked").each(function (i, e) {
+                    if (i < 20) {
+                        var chk = $(this);
+                        var caseInfo = {
+                            CaseID: chk.val(),
+                            RoleTypeCodeID: chk.attr("data-roletypecodeid")
+                        };
+
+                        data.CaseList.push(caseInfo);
+                    }
+                });
+
+
+            } else {
+                $(".chk-case:checked").each(function (i, e) {
+
+                    var chk = $(this);
+                    var caseInfo = {
+                        CaseID: chk.val(),
+                        RoleTypeCodeID: chk.attr("data-roletypecodeid")
+                    };
+
+                    data.CaseList.push(caseInfo);
+                });
+
+            }
+
+            return data;
+        }
+
+        $("#chkIsAllOn").on("click", function () {
+            var checked = $(this).is(":checked");
+            $("#tblCaseList .chk-case").each(function () {
+                $(this).prop("checked", checked);
+            });
+        });
+
+        $("#tblCaseList").on("click", ".chk-case", function () {
+            $("#chkIsAllOn").prop("checked", $("#tblCaseList .chk-case").length == $("#tblCaseList .chk-case:checked").length);
+        });
+
+        $("#btnTransfer").on("click", function () {
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+
+            if ($("#TransferToPersonID").val() == "") {
+                $("#TransferToPersonID").focus();
+                notifyDanger("Transfer to is required");
+                return false;
+            }
+            if ($("#TransferDate").val() == "") {
+                $("#TransferDate").focus();
+                notifyDanger("Transfer date is required");
+                return false;
+            }
+            if ($(".chk-case:checked").length == 0) {
+                $(".chk-case:first").focus();
+                notifyDanger("No case have been selected for transfer");
+                return false;
+            }
+            var confirmMessage = $(".chk-case:checked").length + " cases selected. Are you sure you want to transfer these cases?";
+
+            if (!Contains($("#TransferToPersonID").val(), '_0') && $(".chk-case:checked").length > 20) {
+
+                confirmMessage = $(".chk-case:checked").length + " cases were selected. Only the first 20 cases will be processed. Are you sure you want to transfer these 20 cases?";
+            }
+            confirmBox(confirmMessage, function (result) {
+                if (result) {
+                    var data = getData();
+                    $.ajax({
+                        type: "POST", url: '@Url.Action(MVC.Inquiry.TransferCase())', data: data,
+                        success: function (result) {
+                            RequestSubmitted();
+                            if (result.isSuccess) {
+                                window.location.href = window.location.href;
+                            }
+                            else {
+                                notifyDanger("There is something wrong while processing your request.");
+                            }
+                        },
+                        dataType: 'json'
+                    });
+                }
+            });
+
+        });
+
+        $("#btnCancel").on("click", function () {
+            window.location.href = '@Url.Action(MVC.Inquiry.MyCaseLoad(Model.PersonID.ToEncrypt()))'
+        });
+
+        $(document).ready(function () {
+            fitCalculatedHeightForSearchDataTable();
+
+            $(window).bind('resize', function () {
+                fitCalculatedHeightForSearchDataTable();
+            });
+        });
+
+
+
+    </script>
+
+}

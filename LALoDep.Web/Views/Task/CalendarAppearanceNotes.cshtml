@@ -1,0 +1,83 @@
+﻿@model List<LALoDep.Domain.qcal.qcal_AppearanceNotes_spResult>
+
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Appearance Notes";
+
+    var result = Model.GroupBy(x => new { x.HearingID, x.HearingDisplay }).ToList();
+}
+@Html.Action("CalendarSummaryBar", "Task", new { id = ViewBag.HearingID })
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnBackToCalendar" type="submit" class="btn default btn-primary v-bottom " tabindex="1">Return to Calendar</button>
+    </div>
+}
+
+@if (result.Any())
+{
+    foreach (var hearing in result)
+    {
+        var currentObj = Model.FirstOrDefault(o => o.HearingID == hearing.Key.HearingID);
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">@hearing.Key.HearingDisplay</span>
+
+                    <div class="widget-buttons">
+                        <input type="button" class="btn btn-labeled btn-primary btnPrint" data-reportid="@currentObj.ReportID" data-hearingId="@currentObj.HearingID" value="Print Appearance Sheet" title="Print Appearance Sheet" />
+                    </div>
+                </div>
+                <div class="widget-body form-horizontal">
+                    @foreach (var note in hearing)
+                    {
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label no-padding-right">@note.NoteType</label>
+                            <div class="col-sm-10">
+                                <div class="form-control-static">@Html.Raw(note.NoteDisplay.Replace("\n", "<br/>"))</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-body col-md-12 text-center">
+                No data found
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script>
+        $('#btnBackToCalendar').click(function () {
+            window.location.href = '/Task/QuickCalMyCalendar?HearingDate=' + $('.hearingDate').data('date');
+        });
+        $('.btnPrint').on('click', function (e) {
+            var _target = $("body").data("print-document-on") == "NewWindow" ? 'target="_blank"' : '';
+            var hearingid = $(this).data('hearingid')
+          
+            var data = {
+                hearingId: hearingid,
+                reportId: $(this).data('reportid')
+            };
+            console.log(data)
+           $.download($('#hdnCurrentSessionGuidPath').val() + '/Task/PrintCalendarAppearanceNotes/', data, "POST", _target);
+        });
+    </script>
+     
+   
+}
+
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>

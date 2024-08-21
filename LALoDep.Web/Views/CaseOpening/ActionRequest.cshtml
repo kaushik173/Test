@@ -1,0 +1,193 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.CaseOpening.ActionRequestModel
+@{   bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+   ViewBag.Title = "Action Request";
+}
+<style>
+    .widget-buttons .btn {
+        padding: 2px 15px !important;
+    }
+</style>
+
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Action Requests</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAssociates">
+                        <thead>
+                            <tr>
+                                <th width="80">Print </th>
+                                <th>Type </th>
+                                <th>Request For </th>
+                                <th>Request Date </th>
+                                <th>Due Date </th>
+                                <th> Completed Date</th>
+                                <th> Quick AR </th>
+                                <th width="80">   </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isDataEntry)
+                            {
+                                foreach (var item in Model.ActionRequestList)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a class="btn btn-info btn-xs    printAR" data-id="@item.HearingReportFilingDueID.ToEncrypt()"><i class="fa fa-print"></i> Print</a>
+
+
+                                        </td>
+                                        <td>
+                                            <a href="/Task/EditRFD/@item.HearingReportFilingDueID.ToEncrypt()?caseId=@UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt()&dataentry=true">@item.Type</a>
+
+
+                                        </td>
+                                        <td>
+                                            <a href="/Task/EditRFD/@item.HearingReportFilingDueID.ToEncrypt()?caseId=@UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt()&dataentry=true">@item.RequestedFor</a>
+                                        </td>
+                                        <td>
+                                            <a href="/Task/EditRFD/@item.HearingReportFilingDueID.ToEncrypt()?caseId=@UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt()&dataentry=true">@item.HearingReportFilingDueOrderDate.ToDefaultFormat()</a>
+
+
+
+                                        </td>
+                                        <td>
+                                            <a href="/Task/EditRFD/@item.HearingReportFilingDueID.ToEncrypt()?caseId=@UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt()&dataentry=true">@item.HearingReportFilingDueDate.ToDefaultFormat()</a>
+
+
+                                        </td>
+                                        <td>
+                                            <a href="/Task/EditRFD/@item.HearingReportFilingDueID.ToEncrypt()?caseId=@UserEnvironment.UserManager.UserExtended.CaseID.ToEncrypt()&dataentry=true">@item.HearingReportFilingDueEndDate.ToDefaultFormat()</a>
+
+
+                                        </td>
+                                        <td>
+                                            @if (!item.HearingReportFilingDueEndDate.HasValue)
+                                            {        <a href="/Case/QuickAR/@item.HearingReportFilingDueID.ToEncrypt()?page=/CaseOpening/ActionRequest?dataentry=true">Quick AR</a>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger btn-xs    deleteAR" data-secure-id="@((int)SecurityToken.DeleteActionRequest)" data-id="@item.HearingReportFilingDueID"><i class="fa fa-trash-o"></i> Delete</a>
+
+
+                                        </td>
+
+
+
+                                    </tr>
+                                            var profileList = Model.ProfileList.Where(o => o.HearingReportFilingDueID == item.HearingReportFilingDueID.Value).ToList();
+                                            foreach (var profile in profileList)
+                                            {
+                                                <tr>
+                                                    <td></td>
+                                                    <td>@profile.ProfileDisplay On @profile.ProfilePersonDisplay</td>
+                                                    <td> </td>
+                                                    <td>
+                                                        <a class="btn btn-default  btn-xs" href="/Task/EditRfdProfile/@profile.HearingReportFilingDueID.ToEncrypt()?roleId=@profile.RoleID.ToEncrypt()&profileTypeId=@profile.ProfileTypeCodeID.ToEncrypt()">View</a>
+
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-info btn-xs    printProfile" data-roleid="@profile.RoleID" data-rfdid="@profile.HearingReportFilingDueID" data-profiletypecodeid="@profile.ProfileTypeCodeID.Value"><i class="fa fa-print"></i> Print</a>
+
+
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+
+
+
+                                                </tr>
+                                            }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var item in Model.ActionRequestList)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a class="btn btn-info btn-xs    printAR" data-id="@item.HearingReportFilingDueID.ToEncrypt()"><i class="fa fa-print"></i> Print</a>
+
+
+                                        </td>
+                                        <td>@item.Type</td>
+                                        <td>@item.RequestedFor</td>
+                                        <td>
+                                            @item.HearingReportFilingDueOrderDate.ToDefaultFormat()
+
+                                        </td>
+                                        <td>
+                                            @item.HearingReportFilingDueDate.ToDefaultFormat()
+                                        </td>
+                                        <td>
+                                            @item.HearingReportFilingDueEndDate.ToDefaultFormat()
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <a class="btn btn-danger btn-xs    deleteAR" data-secure-id="@((int)SecurityToken.DeleteActionRequest)" data-id="@item.HearingReportFilingDueID"><i class="fa fa-trash-o"></i> Delete</a>
+
+
+                                        </td>
+
+
+
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!isDataEntry)
+{ @Html.Partial("_steps")}
+
+
+
+@section scripts
+{
+    <script>
+        var isCaseClosed = '@(LALoDep.Custom.UserEnvironment.UserManager.UserExtended.Status == "Closed" ? 1 :0)';    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/CaseOpening/ActionRequest.js?v=" + Guid.NewGuid())"></script>
+    @if (Request.QueryString["insertedId"] != null && Session["PrintAR"] == null)
+    {
+        Session["PrintAR"] = true;
+        <script>
+            setTimeout(function () {
+                PrintAR('@Request.QueryString["insertedId"]');
+            }, 500)
+        </script>
+    }
+
+}
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (!isDataEntry)
+        {   <button id="saveAndContinue" onclick="document.location.href='/CaseOpening/Notes'" type="submit" class="btn btn-primary v-bottom default" tabindex="5">  Continue</button>
+        }
+        <a id="saveAndAdd" href="/CaseOpening/ActionRequestAdd@(isDataEntry?"?dataentry=true":"")" class="btn btn-default v-bottom addActionRequest" tabindex="6" data-secure-id="@((int)SecurityToken.AddActionRequest)">Add Action Request </a>
+        <a id="saveAndAddStandard" href="/CaseOpening/ActionRequestAdd@(isDataEntry?"?dataentry=true":"")" class="btn btn-default v-bottom addActionRequest" tabindex="6" data-secure-id="@((int)SecurityToken.AddActionRequest)">Add Standard Action Request</a>
+
+    </div>
+
+}

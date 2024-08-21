@@ -1,0 +1,1059 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.InvoiceAddEditViewModel
+@{
+    ViewBag.Title = "Invoice Add/Edit";
+    var tabindex = 1;
+    var showSaveButtons = true;
+    if (Model == null)
+    {
+        return;
+    }
+}
+<style>
+    .dataTables_info {
+        display: none !important;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "InvoiceAddEdit-form", @class = "form-inline center-block" }))
+{
+    @Html.HiddenFor(o => o.ReturnPageUrl)
+    @Html.HiddenFor(o => o.SaveAction)
+    @Html.HiddenFor(o => o.NgInvoiceID)
+    @Html.HiddenFor(o => o.YearQuarterID)
+    @Html.HiddenFor(o => o.ContractorPersonID)
+    @Html.HiddenFor(o => o.AgencyID)
+    @Html.HiddenFor(o => o.CaseID)
+    @Html.HiddenFor(o => o.ButtonID)
+
+    @Html.HiddenFor(o => o.AdminApprovedNotAllowedAlert)
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">General Information</span>
+                </div>
+                <div class="widget-body">
+
+                    <div class="table-responsive">
+                        <div id="divCompleted">
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>   @Html.LabelFor(m => m.YearQuarterID, "Yr/Qtr", new { @class = "control-label" })</th>
+                                        <th> @Html.LabelFor(m => m.ContractorPersonID, "Contractor", new { @class = "control-label" })</th>
+
+                                        <th>
+                                            @Html.LabelFor(m => m.InvoiceNumber, "Invoice #", new { @class = "control-label" })<br />
+
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(m => m.InvoiceDate, "Invoice Date", new { @class = "control-label" })<br />
+
+                                        </th>
+                                        @if (Model.NgInvoiceID.ToInt() > 0)
+                                        {
+                                            <th>
+                                                @Html.LabelFor(m => m.InvoiceStatusCodeID, "Invoice Status", new { @class = "control-label" })
+
+                                                <a class="showHistory" style="cursor:pointer" data-id="@Model.NgInvoiceID">
+                                                    (View History)
+
+                                                </a>
+
+
+
+                                            </th>
+                                        }
+                                        <th>
+                                            @Html.LabelFor(m => m.InvoiceDate, "Status Date", new { @class = "control-label" })<br />
+
+                                        </th>
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>  @Html.DisplayFor(m => m.YearQuarter)</td>
+                                        <td>      @Html.DisplayFor(m => m.Contractor)</td>
+                                        <td>   @Html.DisplayFor(m => m.InvoiceNumber)</td>
+                                        <td>     @Html.DisplayFor(m => m.InvoiceDate)</td>
+                                        @if (Model.NgInvoiceID.ToInt() > 0)
+                                        {
+                                            <td>
+                                                @Html.DropDownListFor(m => m.InvoiceStatusCodeID, Model.InvoiceStatusList, new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100% !important;", data_default = Model.InvoiceStatusCodeID })
+                                            </td>
+                                        }
+                                        <td> @Html.DisplayFor(m => m.InvoiceStatusDate)</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            @if (Model.PartyTypeList.Any())
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">All Attorneys on Case</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblAttorneys" style="width:600px !important">
+                                <thead>
+                                    <tr>
+                                        <th>Party Type</th>
+                                        <th>Counsel</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="trAddAttorneyRow">
+
+                                        <td>
+                                            @Html.Hidden("NgInvoiceCounselID", "0", new { @class = "NgInvoiceCounselID" })
+                                            @Html.DropDownList("NgInvoiceCounselTypeCodeID", Model.PartyTypeList, "", new { @class = "form-control input-sm NgInvoiceCounselTypeCodeID", tabindex = tabindex++, style = "width:100% !important;" })
+
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("NgInvoiceCounselPersonID", Model.CounselList, "", new { @class = "form-control input-sm NgInvoiceCounselPersonID", tabindex = tabindex++, style = "width:100% !important;" })
+
+                                        </td>
+                                        <td style="width:100px">
+                                            <a class="addAnotherRow btn btn-sm btn-default">Show Another New Row</a>
+                                        </td>
+                                    </tr>
+                                    @foreach (var item in Model.CounselHistoryList)
+                                    {
+                                        <tr class="trAttorneyRow">
+
+                                            <td>
+                                                @Html.HiddenFor(m => item.NgInvoiceCounselID, new { @class = "NgInvoiceCounselID" })
+                                                @Html.DropDownListFor(m => item.NgInvoiceCounselTypeCodeID, Model.PartyTypeList, "", new { @class = "form-control input-sm NgInvoiceCounselTypeCodeID", tabindex = tabindex++, style = "width:100% !important;", data_default = item.NgInvoiceCounselTypeCodeID })
+
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.NgInvoiceCounselPersonID, Model.CounselList, "", new { @class = "form-control input-sm NgInvoiceCounselPersonID", tabindex = tabindex++, style = "width:100% !important;", data_default = item.NgInvoiceCounselPersonID })
+
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.ChildNMDCurrentPlacmentList.Any())
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Child/NMD Current Placment</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblChild">
+                                <thead>
+
+
+                                    <tr>
+                                        <th>Child/NMD</th>
+                                        <th style="width:130px">DOB (Age)</th>
+                                        <th>Child Type</th>
+                                        <th>
+                                            State
+                                        </th>
+                                        <th>
+                                            CA County
+                                        </th>
+
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.ChildNMDCurrentPlacmentList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.HiddenFor(m => item.RoleID)
+                                                @Html.HiddenFor(m => item.NgInvoiceMinorID)
+
+                                                @item.MinorName
+                                            </td>
+                                            <td>
+                                                @item.DOBAge
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.TypeCodeID, Model.ChildTypeList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100% !important;", data_default = item.TypeCodeID })
+
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.StateCodeID, Model.StateList, "", new { @class = "form-control input-sm StateCodeID", tabindex = tabindex++, style = "width:100% !important;", data_default = item.StateCodeID })
+
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.AgencyCountyID, Model.CACountyList, "", new { @class = "form-control input-sm AgencyCountyID", tabindex = tabindex++, style = "width:100% !important;", data_default = item.AgencyCountyID })
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            @if (Model.ExpenseDetailsList.Any())
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Expense Details </span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblExpense">
+                                <thead>
+
+
+                                    <tr>
+
+
+                                        <th>Date</th>
+                                        <th>Type (# files attached)</th>
+                                        <th>
+                                            Amount
+                                        </th>
+                                        <th>IV-E</th>
+                                        <th>
+                                            Previous Amount
+                                        </th>
+                                        <th>
+                                            Expense Status
+                                        </th>
+                                        <th>
+                                            Status Date
+                                        </th>
+                                        <th>
+                                            Admin Note
+                                        </th>
+
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.ExpenseDetailsList)
+                                    {
+
+                                        //if (item.CanNotProceedFlag.ToInt() == 1)
+                                        //{
+                                        //    showSaveButtons = false;
+                                        //}
+                                        <tr>
+                                            <td>
+                                                @Html.HiddenFor(m => item.ExpenseStatusID)
+
+                                                @Html.HiddenFor(m => item.ExpenseID)
+                                                @Html.HiddenFor(m => item.NgInvoiceDetailID)
+
+                                                @item.Date
+                                            </td>
+                                            <td>
+                                                <a href="/Case/ExpenseNG/@item.ExpenseID.ToEncrypt()">  @item.Type</a>
+
+                                            </td>
+                                            <td class="text-right">@item.Amount.ToCurrency()</td>
+                                            <td>@item.IVe</td>
+                                            <td class="text-right">@item.PreviousAmount.ToCurrency()</td>
+                                            <td>
+                                                @Html.DropDownListFor(m => item.ExpenseStatusCodeID, Model.ExpenseStatusList, "", new { @class = "form-control input-sm", tabindex = tabindex++, style = "width:100% !important;", data_secure_disabled_id = ((int)SecurityToken.AdminInvoice), data_default = item.ExpenseStatusCodeID })
+
+                                            </td>
+                                            <td>
+                                                @item.StatusDate
+                                            </td>
+                                            <td>
+                                                @item.AdminNote
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.RecordTimeDetailsList.Any())
+            {
+                <style>
+                    .Compact .widget-buttons label {
+                        margin-top: -10px;
+                    }
+                </style>
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Record Time Details  </span>
+                        <div class="widget-buttons">
+                            @if (Model.RecordTimeDetailsList.Any(o => string.IsNullOrEmpty(o.AdminNote)))
+                            {
+                                <label style="cursor:pointer">
+                                    @Html.CheckBox("chkShowEmptyAdminNotes", new { data_secure_disabled_id = ((int)SecurityToken.AdminInvoice) })
+                                    <span style="top: -5px; position: relative;">Show Empty Admin Notes</span>
+                                </label>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRecordTime">
+                                <thead>
+
+
+                                    <tr>
+
+
+
+                                        <th style="width:150px;">Date</th>
+                                        <th>Phase</th>
+                                        <th>Type (# files attached)	</th>
+                                        <th>In Ctr Time</th>
+                                        <th style="width:80px" class="text-right">
+                                            Orig Hours
+                                        </th>
+                                        <th style="width:80px" class="text-right">
+                                            Hours
+                                        </th>
+                                        <th class="text-align-right" style="width:100px">
+                                            Hourly  Rate
+                                        </th>
+                                        <th class="text-align-right" style="width:80px">
+                                            Amount
+                                        </th>
+                                        <th>IV-E</th>
+
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.RecordTimeDetailsList)
+                                    {
+                                        var rowId = Guid.NewGuid().ToString();
+                                        <tr class="data" data-id="@rowId">
+                                            <td>
+                                                @Html.HiddenFor(m => item.NgInvoiceDetailID)
+
+                                                @Html.HiddenFor(m => item.WorkID)
+
+
+                                                @item.Date
+                                            </td>
+                                            <td>@item.Phase</td>
+                                            <td>
+
+                                                <a href="/Case/RecordTimeEdit/@item.WorkID.ToEncrypt()">  @item.Type</a>
+
+
+                                            </td>
+                                            <td>@item.InCourtTime</td>
+                                            <td>
+                                                @Html.TextBoxFor(m => item.OrigHours, new { @class = "form-control input-sm number   text-align-right", tabindex = tabindex++, style = "width:100% !important;", disabled = "disabled" })
+
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => item.Hours, new { @class = "form-control input-sm number Hours text-align-right", tabindex = tabindex++, style = "width:100% !important;", data_secure_disabled_id = ((int)SecurityToken.AdminInvoice) })
+
+                                            </td>
+                                            <td class="text-align-right">
+                                                @if (item.CanEditHourlyRate.ToInt() == 1)
+                                                {
+                                                    @Html.TextBoxFor(m => item.HourlyRate, "{0:0.00}", new { @class = "form-control input-sm number HourlyRate text-align-right", tabindex = tabindex++, style = "width:100% !important;", data_secure_disabled_id = ((int)SecurityToken.AdminInvoice) })
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => item.HourlyRate, "{0:0.00}", new { @class = "form-control input-sm number HourlyRate text-align-right", tabindex = tabindex++, style = "width:100% !important;", disabled = "disabled" })
+
+                                                }
+
+
+                                            </td>
+
+                                            <td class="text-align-right">
+                                                @item.Amount.ToCurrency()
+                                            </td>
+                                            <td>@item.IVe</td>
+
+                                        </tr>
+
+                                        <tr data-id="@rowId" class="trAdminNote" @(item.AdminNote.IsNullOrEmpty() ? "style=display:none" : "")>
+                                            <td class="text-right"><strong>Admin Note:</strong> </td>
+
+                                            <td colspan="8">
+                                                @Html.TextAreaFor(m => item.AdminNote, new { @class = "form-control input-sm  ", maxlength = 500, rows = 1, tabindex = tabindex++, style = "width:100% !important;height:32.7778px", data_secure_disabled_id = ((int)SecurityToken.AdminInvoice) })
+
+                                            </td>
+                                        </tr>
+
+                                        if (!item.Note.IsNullOrEmpty())
+                                        {
+                                            <tr>
+                                                <td class="text-right"><strong>Note:</strong> </td>
+
+                                                <td colspan="8">
+                                                    @Html.Raw(item.Note)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    <tr>
+                                        <td colspan="7" class="bold text-align-right">
+                                            Total:
+                                        </td>
+                                        <td class="bold text-align-right totalAmountRecordTime">@Model.RecordTimeDetailsList.Sum(o => o.Amount).ToCurrency()</td>
+                                        <td colspan="1"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.InvoiceGetTotals.Any())
+            {<div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Invoice Totals  </span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                                <thead>
+
+
+                                    <tr>
+
+
+
+
+                                        <th class=" text-align-right">Record Time $</th>
+                                        <th class=" text-align-right">Expense $</th>
+                                        <th class=" text-align-right">
+                                            Total Miles
+                                        </th>
+                                        <th class=" text-align-right">
+                                            Mileage $
+                                        </th>
+                                        <th class=" text-align-right">
+                                            Total Billed
+                                        </th>
+                                        <th class=" text-align-right">
+                                            Admin Fee $
+                                        </th>
+                                        <th class=" text-align-right">
+                                            Total Due
+                                        </th>
+
+
+                                    </tr>
+
+
+
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.InvoiceGetTotals)
+                                    {
+
+
+                                        <tr class="data">
+                                            <td class=" text-align-right">
+
+
+                                                @item.RecordTimeAmount
+                                            </td>
+                                            <td class=" text-align-right">
+
+                                                @item.ExpenseAmount
+
+
+                                            </td>
+                                            <td class=" text-align-right">
+                                                @item.TotalMiles
+                                            </td>
+                                            <td class=" text-align-right">
+                                                @item.MileageAmount
+                                            </td>
+
+                                            <td class=" text-align-right">
+                                                @item.TotalBilled
+                                            </td>
+                                            <td class=" text-align-right">
+                                                @item.BarFeeAmount
+                                            </td>
+                                            <td class=" text-align-right">
+                                                @item.TotalDue
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Description of the Legal and Factual Issues During the Billing Period</span>
+                </div>
+                <div class="widget-body col-xs-12">
+
+                    @Html.TextAreaFor(m => m.InvoiceNote, new { @class = "form-control input-sm  ", tabindex = tabindex++, style = "width:100% !important;" })
+
+
+
+                </div>
+            </div>
+            @if (Model.InvoiceAdminNote_DisplayFlag.ToInt() == 1)
+            {
+                <div class="widget row">
+                    <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                        <span class="widget-caption">Admin Note</span>
+                    </div>
+                    <div class="widget-body col-xs-12">
+                        @if (Model.InvoiceAdminNote_CanEditFlag.ToInt() == 1)
+                        {
+                            @Html.TextAreaFor(m => m.InvoiceAdminNote, new { @class = "form-control input-sm  ", maxlength = 500, tabindex = tabindex++, style = "width:100% !important;" })
+
+                        }
+                        else
+                        {
+                            @Html.TextAreaFor(m => m.InvoiceAdminNote, new { @class = "form-control input-sm  ", maxlength = 500, tabindex = tabindex++, @readonly = "readonly", style = "width:100% !important;" })
+
+                        }
+
+                    </div>
+                </div>
+            }
+
+
+            <div class="widget row" @(Model.CertificationMessage.Length == 0 ? "style=display:none;" : "")>
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Certification</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="padding-30">
+                        <p class="text-center"> @Model.CertificationMessage</p>
+                        <div class="padding-30" style="width:75%;margin:0px auto;">
+                            <table style="width:100%;" class="tblForm">
+
+                                <tr>
+                                    <td style="width:50%">
+
+
+                                        <span class="signature-text">
+                                            @if (!Model.SignatureName.IsNullOrEmpty())
+                                            {
+                                                @Model.SignatureName
+                                            }
+                                        </span>
+
+
+                                    </td>
+                                    <td style="width:50px"></td>
+
+                                    <td style="width:150px">
+                                        @if (!Model.SignatureDate.IsNullOrEmpty())
+                                        {
+                                            <span>@Model.SignatureDate</span>
+                                        }
+
+                                    </td>
+                                    <td>
+
+                                        @if (Model.SignatureDate.IsNullOrEmpty())
+                                        {
+
+                                            if (Model.AllowSaveFlag == 1 && showSaveButtons && !Model.SignatureButtonLabel.IsNullOrEmpty())
+                                            {
+                                                <button id="btnSaveJCCSignature" type="button" class="btn btn-default v-bottom " tabindex="@(tabindex++)">@Model.SignatureButtonLabel  </button>
+
+                                            }
+
+                                        }
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-top:2px solid  #000 !important;" class="bold">
+                                        SIGNATURE
+
+                                    </td>
+
+
+                                    <td></td>
+                                    <td style="border-top:2px solid  #000 !important;" class="bold">
+                                        DATE
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        @if (Model.ReturnPageUrl.IsNullOrEmpty())
+        {
+            if (Model.AllowSaveFlag == 1 && showSaveButtons)
+            {
+                <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">@Model.SaveAction</button>
+
+                <button id="btnBackToInvoiceList" type="submit" class="btn btn-default v-bottom  " tabindex="@(tabindex++)">Back To Case Invoice List</button>
+            }
+            else
+            {
+                <button id="btnBackToInvoiceList" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Back To Case Invoice List</button>
+
+            }
+        }
+        else
+        {
+            if (Model.AllowSaveFlag == 1 && showSaveButtons)
+            {
+                <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Save/Case Invoice List</button>
+                <button id="btnSaveMyInvoiceQueue" type="submit" class="btn btn-default v-bottom  " tabindex="@(tabindex++)">Save/My Invoice Queue for @Model.MyInvoiceQueuePersonName</button>
+                <button id="btnBackToMyInvoiceQueue" type="submit" class="btn btn-default v-bottom  " tabindex="@(tabindex++)">Back</button>
+            }
+            else
+            {
+                <button id="btnBackToMyInvoiceQueue" type="submit" class="btn btn-primary v-bottom default" tabindex="@(tabindex++)">Back</button>
+
+            }
+        }
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+
+        $('.showHistory').on('click', function () {
+            OpenCustomPopup('/Case/NGInvoiceStatusHistory/' + $(this).data('id'), 500, 300, 'Invoice Status History');
+
+        });
+        $('.StateCodeID').change(function () {
+            $row = $(this).closest('tr');
+
+            if ($(this).val() !== '841') {
+                $row.find('#item_AgencyCountyID').val('')
+                $row.find('#item_AgencyCountyID').prop('disabled', true)
+            } else {
+                $row.find('#item_AgencyCountyID').removeAttr('disabled')
+            }
+
+        });
+        $('.Hours,.HourlyRate').change(function () {
+            $row = $(this).closest('tr');
+            console.log(parseFloat($row.find('#item_HourlyRate').val()) * parseFloat($row.find('#item_Hours').val()))
+            $row.find('td:eq(7)').text('$' + parseFloat($row.find('#item_HourlyRate').val()) * parseFloat($row.find('#item_Hours').val()))
+            var totalAmount = 0;
+            $('#tblRecordTime  tbody tr.data').each(function () {
+                totalAmount = totalAmount + parseFloat($(this).find('td:eq(7)').text().replace('$', ''));
+            });
+            $('.totalAmountRecordTime').text('$' + totalAmount);
+
+        });
+        $('#btnBackToInvoiceList').click(function () {
+            document.location.href = '/Case/Invoices';
+
+        });
+
+        $('#btnBackToMyInvoiceQueue').click(function () {
+            document.location.href = $("#ReturnPageUrl").val();
+
+        });
+        $("*").dblclick(function (e) {
+            e.preventDefault();
+        });
+        $('#btnSave').click(function (e) {
+            e.preventDefault();
+             
+             SaveData(1)
+
+        });
+        $('#btnSaveJCCSignature').click(function (e) {
+            e.preventDefault();
+            SaveData(2)
+
+        });
+        $('#btnSaveMyInvoiceQueue').click(function (e) {
+            e.preventDefault();
+            SaveData(3)
+
+        });
+        function Validations(buttonId) {
+            var isValid = true;
+            if ($('#InvoiceStatusCodeID').length > 0 && !$('#InvoiceStatusCodeID').hasValue()) {
+                isValid = false;
+                $('#InvoiceStatusCodeID').focus();
+                Notify('Invoice Status is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                return false;
+
+            }
+            if ($('#AdminApprovedNotAllowedAlert').val().length > 0 && $('#InvoiceStatusCodeID').hasValue() && $('#InvoiceStatusCodeID').val() =='26033') {
+                isValid = false;
+                $('#InvoiceStatusCodeID').focus();
+                Notify($('#AdminApprovedNotAllowedAlert').val(), 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                return false;
+
+            }
+
+            $('#tblAttorneys  tbody  tr').each(function () {
+                if (!isValid)
+                    return isValid;
+                if ($(this).find('.NgInvoiceCounselPersonID').hasValue() || $(this).find('.NgInvoiceCounselTypeCodeID').hasValue()) {
+                    if (!$(this).find('.NgInvoiceCounselTypeCodeID').hasValue()) {
+                        isValid = false;
+                        $(this).find('.NgInvoiceCounselTypeCodeID').focus();
+                        Notify('Party Type is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                        return false;
+
+                    }
+                    if (!$(this).find('.NgInvoiceCounselPersonID').hasValue()) {
+                        isValid = false;
+                        $(this).find('.NgInvoiceCounselPersonID').focus();
+                        Notify('Counsel is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                        return false;
+                    }
+                }
+
+
+            });
+            $('#tblChild  tbody  tr').each(function () {
+                if (!isValid)
+                    return isValid;
+                if (!$(this).find('#item_TypeCodeID').hasValue()) {
+                    isValid = false;
+                    $(this).find('#item_TypeCodeID').focus();
+                    Notify('Child Type is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                } if (!$(this).find('#item_StateCodeID').hasValue()) {
+                    isValid = false;
+                    $(this).find('#item_StateCodeID').focus();
+                    Notify('State is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+                if (!$(this).find('#item_AgencyCountyID').hasValue() && $(this).find('#item_StateCodeID').val() == 841) {
+                    isValid = false;
+                    $(this).find('#item_AgencyCountyID').focus();
+                    Notify('CA County is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+            });
+            $('#tblExpense  tbody tr').each(function () {
+                if (!isValid)
+                    return isValid;
+                if (!$(this).find('#item_ExpenseStatusCodeID').hasValue() && !$(this).find('#item_ExpenseStatusCodeID').is(':disabled')) {
+                    isValid = false;
+                    $(this).find('#item_ExpenseStatusCodeID').focus();
+                    Notify('Expense Status is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+            });
+            $('#tblRecordTime  tbody tr.data').each(function () {
+                if (!isValid)
+                    return isValid;
+                if (!$(this).find('#item_Hours').hasValue()) {
+                    isValid = false;
+                    $(this).find('#item_Hours').focus();
+                    Notify('Hours is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+                if ($(this).find('#item_Hours').val().replace(/[^\d].+/, "") == '') {
+                    isValid = false;
+                    $(this).find('#item_Hours').val('')
+                    $(this).find('#item_Hours').focus();
+                    Notify('Hours is invalid.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+                if ($(this).find('#item_Hours').val() < 0) {
+                    isValid = false;
+                    $(this).find('#item_Hours').focus();
+                    Notify('Hourly Rate must be greater than or equal 0.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+
+                if (!$(this).find('#item_HourlyRate').hasValue()) {
+                    isValid = false;
+                    $(this).find('#item_HourlyRate').focus();
+                    Notify('Hourly Rate is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+                if ($(this).find('#item_HourlyRate').val().replace(/[^\d].+/, "") == '') {
+                    isValid = false;
+                    $(this).find('#item_HourlyRate').val('')
+                    $(this).find('#item_HourlyRate').focus();
+                    Notify('Hourly Rate is invalid.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+                }
+                if ($(this).find('#item_HourlyRate').val() <= 0) {
+                    isValid = false;
+                    $(this).find('#item_HourlyRate').focus();
+                    Notify('Hourly Rate must be greater than 0', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+            });
+
+            if (buttonId == 2) {
+                if ($('#InvoiceNote').length > 0 && !$('#InvoiceNote').hasValue()) {
+                    isValid = false;
+                    $('#InvoiceNote').focus();
+                    Notify('Description is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                    return false;
+
+                }
+            }
+
+            return isValid;
+        }
+        function getData(buttonId) {
+            $('#ButtonID').val(buttonId);
+            var fData = $('#InvoiceAddEdit-form').serializeFormObject();
+
+            fData.ChildSaveParamList = [];
+            fData.ExpenseSaveParamList = [];
+            fData.RecordTimeSaveParamList = [];
+            fData.NgInvoiceCounselIUDList = [];
+            $('#tblChild tbody tr').each(function () {
+
+                fData.ChildSaveParamList.push({
+                    IUD: $(this).find('#item_NgInvoiceMinorID').val() == "0" ? "INSERT" : "UPDATE",
+                    NgInvoiceMinorID: $(this).find('#item_NgInvoiceMinorID').val(),
+                    NgInvoiceID: $('#NgInvoiceID').val(),
+                    RoleID: $(this).find('#item_RoleID').val(),
+                    NgInvoiceMinorTypeCodeID: $(this).find('#item_TypeCodeID').val(),
+                    NgInvoiceMinorPlacementStateCodeID: $(this).find('#item_StateCodeID').val(),
+                    NgInvoiceMinorPlacementAgencyCountyID: $(this).find('#item_AgencyCountyID').val(),
+
+                });
+
+            });
+            $('#tblExpense  tbody tr').each(function () {
+                //  if ($(this).find('#item_ExpenseStatusCodeID').hasValue()) {
+
+                fData.ExpenseSaveParamList.push({
+                    IUD: $(this).find('#item_NgInvoiceDetailID').val() == "0" ? "INSERT" : "UPDATE",
+                    NgInvoiceMinorID: $(this).find('#item_NgInvoiceDetailID').val(),
+                    NgInvoiceID: $('#NgInvoiceID').val(),
+                    ExpenseID: $(this).find('#item_ExpenseID').val(),
+                    ExpenseStatusID: $(this).find('#item_ExpenseStatusID').val(),
+                    ExpenseStatusCodeID: $(this).find('#item_ExpenseStatusCodeID').val(),
+
+                });
+                //}
+            });
+            $('#tblRecordTime  tbody tr.data').each(function () {
+                rowId = $(this).data('id');
+
+                fData.RecordTimeSaveParamList.push({
+                    IUD: $(this).find('#item_NgInvoiceDetailID').val() == "0" ? "INSERT" : "UPDATE",
+                    NgInvoiceDetailID: $(this).find('#item_NgInvoiceDetailID').val(),
+                    NgInvoiceID: $('#NgInvoiceID').val(),
+                    WorkID: $(this).find('#item_WorkID').val(),
+                    NgInvoiceDetailWorkHours: $(this).find('#item_Hours').val(),
+                    NgInvoiceDetailWorkHourlyRate: $(this).find('#item_HourlyRate').val(),
+                    NgInvoiceDetailWorkAdminComment: $('.trAdminNote[data-id="' + rowId + '"]').find('#item_AdminNote').val(),
+
+                    NgInvoiceDetailWorkAmount: parseFloat($(this).find('#item_HourlyRate').val()) * parseFloat($(this).find('#item_Hours').val()),
+
+                });
+            });
+
+            $('#tblAttorneys  tbody  tr').each(function () {
+                if ($(this).find('.NgInvoiceCounselPersonID').IsValueChanged() || $(this).find('.NgInvoiceCounselTypeCodeID').IsValueChanged()) {
+                    if (($(this).find('.NgInvoiceCounselPersonID').hasValue() && $(this).find('.NgInvoiceCounselTypeCodeID').hasValue()) || $(this).find('.NgInvoiceCounselID').val() > 0) {
+
+                        fData.NgInvoiceCounselIUDList.push({
+                            IUD: $(this).find('.NgInvoiceCounselID').val() == "0" ? "INSERT" : (($(this).find('.NgInvoiceCounselPersonID').hasValue() && $(this).find('.NgInvoiceCounselTypeCodeID').hasValue()) ? "UPDATE" : "DELETE"),
+                            NgInvoiceCounselID: $(this).find('.NgInvoiceCounselID').val(),
+                            NgInvoiceID: $('#NgInvoiceID').val(),
+                            NgInvoiceCounselTypeCodeID: $(this).find('.NgInvoiceCounselTypeCodeID').val(),
+                            NgInvoiceCounselPersonID: $(this).find('.NgInvoiceCounselPersonID').val(),
+
+                        });
+                    }
+                }
+
+
+
+            });
+            return fData;
+        }
+
+        function SaveData(buttonId) {
+
+            if (!IsValidFormRequest()) {
+                return false;
+            }
+            if (hasFormChanged('InvoiceAddEdit-form') || $('#NgInvoiceID').val() == 0 || buttonId == 2) {
+                if (!Validations(buttonId))
+                    return false;
+             
+
+                var params = getData(buttonId);
+                if ($('#InvoiceStatusCodeID').val() == '26035') {
+                    confirmBox("Are you sure you want to void this invoice?", function (result) {
+                        if (result) {
+                            RequestSubmitted();
+                            $.ajax({
+                                type: "POST", url: '/Case/InvoiceAddEdit', data: params,
+                                success: function (data) {
+
+                                    if (data.Status == "Done") {
+                                        if (buttonId == 1) {
+                                            document.location.href = '/Case/Invoices';
+                                        } else if (buttonId == 2) {
+                                            document.location.href = '@Model.ReturnPageUrl'.length > 0 ? $("#ReturnPageUrl").val() : "/Case/Invoices";
+                                        } else if (buttonId == 3) {
+                                            document.location.href = $("#ReturnPageUrl").val();
+                                        }
+                                    }
+
+
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    RequestSubmitted();
+                       $.ajax({
+                            type: "POST", url: '/Case/InvoiceAddEdit', data: params,
+                            success: function (data) {
+
+                                if (data.Status == "Done") {                                   
+
+                                   if (buttonId == 1) {
+                                        document.location.href = '/Case/Invoices';
+                                    } else if (buttonId == 2) {
+                                        document.location.href = '@Model.ReturnPageUrl'.length > 0 ? $("#ReturnPageUrl").val() :"/Case/Invoices";
+                                    } else if (buttonId == 3) {
+                                        document.location.href = $("#ReturnPageUrl").val();
+                                    } 
+                                }  
+
+
+                            }
+                });
+                }
+
+
+            }
+            else {
+
+                notifyDanger("Nothing has been changed");
+
+            }
+        }
+        $(document).ready(function () {
+            $('select').each(function () {
+                $(this).val($(this).data('default'))
+            })
+            $('.StateCodeID').change();
+            setInitialFormValues("InvoiceAddEdit-form");
+        });
+
+        $('body').on("click", '.addAnotherRow', function (e) {
+
+            tr = $(this).closest('tr').clone();
+            // $(this).hide();
+            var $str = $(tr).insertAfter($(this).closest('tr'));
+            $str.find('.NgInvoiceCounselTypeCodeID').val('');
+            $str.find('.NgInvoiceCounselPersonID').val('');
+
+
+        });
+
+        $('#chkShowEmptyAdminNotes').click(function () {
+            $chk = $(this);
+            $('.trAdminNote').each(function () {
+                if ($(this).find('#item_AdminNote').val().length == 0) {
+
+                    if ($chk.is(':checked')){
+                     //   $chk.parent().find('span').text('Hide Empty Admin Notes')
+                        $(this).removeAttr('style');
+                    } else {
+                    //    $chk.parent().find('span').text('Show Empty Admin Notes')
+                        $(this).hide();
+                    }
+
+
+                }
+
+            });
+
+
+        })
+    </script>
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>

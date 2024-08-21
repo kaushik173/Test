@@ -1,0 +1,192 @@
+﻿@model LALoDep.Models.Administration.HearingRatesAddEditViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Add/Edit";
+}
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="AddEditHearingRates">
+                        <thead>
+                            <tr>
+                                <th style="width: 300px !important;">Rate</th>
+                                <th style="width: 200px !important;">Start Date</th>
+                                <th style="width: 200px !important;">End Date</th>
+                                <th style="width:30px !important;">Del</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="name" id="newRate" class="form-control input-sm" style="width:100%;" /></td>
+                                <td style="padding:2px;">
+                                    <div class="input-group">
+                                        <input type="text" name="name"  id="newStartDate" class="form-control input-sm date-picker" style="width:100%;" maxlength="10" />
+                                        <span class="input-group-addon  datepicker-trigger ">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </td>
+                                <td style="padding:2px;">
+                                    <div class="input-group">
+                                        <input type="text" name="name" id="newEndDate" class="form-control input-sm date-picker" style="width:100%;" maxlength="10" />
+                                        <span class="input-group-addon  datepicker-trigger ">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            @if (Model.HearingRatesList != null && Model.HearingRatesList.Count > 0)
+                            {
+                                foreach (var item in Model.HearingRatesList)
+                                {
+                                    <tr data-hearingrateid="@item.HearingRateID"
+                                        data-recordstateid="@item.RecordStateID"
+                                        data-hearingtypecodeid="@item.HearingTypeCodeID "
+                                        data-agencyid="@item.AgencyID"
+                                        data-hearingrate="@item.HearingRate"
+                                        data-hearingratestartdate="@item.HearingRateStartDate"
+                                        data-hearingrateenddate="@item.HearingRateEndDate"
+                                        id="existingHearingTr">
+                                        <td>
+                                            @Html.TextBoxFor(m => item.HearingRate, new { @class = "form-control input-sm HearingRate", style = "width:100%;" })
+                                        </td>
+                                        <td style="padding:2px;">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.HearingRateStartDate, new { @class = "form-control input-sm date-picker HearingRateStartDate", style = "width:100%;", maxlength = "10", tabindex = 4 })
+                                                <span class="input-group-addon  datepicker-trigger ">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </td>
+                                        <td style="padding:2px;">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.HearingRateEndDate, new { @class = "form-control input-sm date-picker HearingRateEndDate", style = "width:100%;", maxlength = "10", tabindex = 4 })
+                                                <span class="input-group-addon  datepicker-trigger ">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @Html.CheckBoxFor(m => item.Deleted, new { @class = "form-control input-sm isDelete" })
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="SaveExit" type="submit" class="btn btn-primary v-bottom default" tabindex="11">Save/Exit</button>
+        <button id="SaveAdd" type="button" class="btn btn-default v-bottom" tabindex="13">Save/Add More</button>
+        <button id="btnCancel" type="button" class="btn btn-default v-bottom" tabindex="13">Cancel</button>
+    </div>
+}
+<style>
+    .full-wdth {
+        width: 100% !important;
+    }
+</style>
+@section scripts
+{
+    <script type="text/javascript">
+
+        var $onViewLoad = '@Model.OnViewLoad';
+        var $agencyID = '@Model.AgencyID';
+        var $hearingTypeID = '@Model.HearingTypeID';
+
+        function GetData(buttonId) {
+           
+            var data = {
+                'HearingTypeID': $hearingTypeID,
+                'AgencyID': $agencyID,
+                'StartDate': $('#newStartDate').val(),
+                'EndDate': $('#newEndDate').val(),
+                'HearingRate': $('#newRate').val(),
+                'ButtonID': buttonId,
+                HearingRatesList: [],
+            };
+
+            var $hearingTr = $("#AddEditHearingRates tbody #existingHearingTr");
+
+            for (var indx = 0; indx < $hearingTr.length; indx++) {
+                $tr = $hearingTr.eq(indx);
+                $IsDelete = $tr.find(".isDelete");
+                $startDate = $tr.find('.HearingRateStartDate');
+                $endDate = $tr.find('.HearingRateEndDate');
+                $rate = $tr.find('.HearingRate');
+
+                if ($IsDelete.is(':checked') || $tr.data("hearingrate") != $rate.val() || $tr.data("hearingratestartdate") != $startDate.val() ||
+                    $tr.data("hearingrateenddate") != $endDate.val()) {
+                    var hearingList = {
+                        HearingRateID: $tr.data("hearingrateid"),
+                        RecordStateID: $tr.data("recordstateid"),
+                        HearingRate: $rate.val(),
+                        HearingTypeCodeID: $tr.data('hearingtypecodeid'),
+                        AgencyID: $tr.data('agencyid'),
+                        HearingRateStartDate: $startDate.val(),
+                        HearingRateEndDate: $endDate.val(),
+                        Deleted: $IsDelete.is(':checked')
+                    };
+                    data.HearingRatesList.push(hearingList);
+                }
+
+            }
+            return data;
+        }
+
+        function SaveData(buttonId) {
+
+            var data = JSON.stringify(GetData(buttonId));
+
+            $.ajax({
+                type: "POST", dataType: 'json', url: '/HearingRates/SaveDeleteHearingRates', data: data, contentType: "application/json",
+                success: function (result) {
+                    if (result.isSuccess) {
+                        if (result.URL != '') {
+                            window.location.href = result.URL;
+                        }
+                    }
+                    else {
+                        Notify('There is something wrong while processing request.', 'bottom-right', '4000', 'danger', 'fa-info', true);
+                    }
+                }
+            });
+        }
+
+        $('#SaveExit').on('click', function () {
+            SaveData(1);
+        });
+
+        $('#SaveAdd').on('click', function () {
+            SaveData(2);
+        });
+
+        $('#btnCancel').on('click', function () {
+            window.location.href = "/HearingRates";
+        });
+
+
+    </script>
+    
+
+}

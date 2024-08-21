@@ -1,0 +1,86 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.MenuCaseModelView
+@if (Model.CaseID == 0)
+{
+
+    <div class="form-inline" style="margin-left: 15px;">
+
+
+        <div class="form-group col-md-2 col-sm-2 col-xs-2">
+            @Html.LabelFor(m => m.Client, "Case Name", new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2">
+            @Html.LabelFor(m => m.PDAPDNumber, "Case #", new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-1 col-sm-1 col-xs-1">
+            @Html.LabelFor(m => m.ApptDate, "Appt. Date", new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2">
+            @Html.LabelFor(m => m.Status, new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 ">
+            @Html.LabelFor(m => m.Attorney, new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-1  col-sm-1 col-xs-1">
+            @Html.LabelFor(m => m.CaseJcatsNumber, "JCATS #", new { @class = "control-label" })
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 pull-right text-right">
+            <label class="" style="padding-right:16px;">@Html.Raw(Model.ViewTitle)</label>
+        </div>
+
+    </div>
+
+}
+else
+{
+    <style>
+        .case-summary .form-label, .case-summary .control-label {
+            white-space: nowrap !important;
+        }
+     
+    </style>
+    <div class="form-inline case-summary" style="margin-left: 15px;">
+
+
+        <div class="form-group col-md-3 col-sm-3 col-xs-2 form-groupmargin">
+            @Html.LabelFor(m => m.Client, "Case Name", new { @class = "control-label" })
+            <div class="form-label">
+                @Html.DisplayFor(m => m.Client)
+            </div>
+        </div>
+        <div class="form-group col-md-1 col-sm-1 col-xs-2 form-groupmargin">
+            @Html.LabelFor(m => m.PDAPDNumber, "Case #", new { @class = "control-label copy-info" })
+            <div class="form-label copy-case-info">
+                @Html.DisplayFor(m => m.PDAPDNumber)
+            </div>
+        </div>
+        <div class="form-group col-md-1 col-sm-1 col-xs-2 form-groupmargin">
+            @Html.LabelFor(m => m.ApptDate, "Appt. Date", new { @class = "control-label" })
+            <div class="form-label">
+                @Html.DisplayFor(m => m.ApptDate)
+            </div>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-1 form-groupmargin">
+            @Html.LabelFor(m => m.Status, new { @class = "control-label" })
+            <div class="form-label">
+                @Html.DisplayFor(m => m.Status)
+            </div>
+        </div>
+        <div class="form-group col-md-2  col-sm-2 col-xs-2 form-groupmargin">
+            @Html.LabelFor(m => m.Attorney, new { @class = "control-label" })
+            <div class="form-label">
+                @Html.DisplayFor(m => m.Attorney)
+            </div>
+        </div>
+        <div class="form-group col-md-1  col-sm-1 col-xs-1">
+            @Html.LabelFor(m => m.CaseJcatsNumber, "JCATS #", new { @class = "control-label copy-info" })
+            <div class="form-label">
+                <a class="copy-case-info" href="/Case/Main/@Model.CaseID.ToEncrypt()">@Model.CaseJcatsNumber</a>
+            </div>
+        </div>
+        <div class="form-group col-md-2  col-sm-2 col-xs-2 pull-right text-right">
+            <label class="" style="padding-right:16px;">@Html.Raw(Model.ViewTitle)</label>
+        </div>
+
+    </div>
+}

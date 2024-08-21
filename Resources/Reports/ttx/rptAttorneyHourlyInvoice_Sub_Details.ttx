@@ -1,0 +1,9 @@
+GroupName	String	100	Expense Detail:
+DetailInvoiceDate	DateTime		05/07/2005
+DetailInvoiceType	String	100	SD999587A
+CaseNumber	String	100	1234567
+HourlyRate	Number		100.5
+Hours	String	50	5.5
+Amount	Number		552.755
+Description	String	8000	This is the expense decriptin or work note.		
+GroupSort	Number		1

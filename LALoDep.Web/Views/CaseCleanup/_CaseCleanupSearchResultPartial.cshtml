@@ -1,0 +1,59 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model List<LALoDep.Models.Administration.CaseCleanupResultViewModel>
+@{
+    int intCounter = 0;
+}
+<div class="panel-group accordion no-margin">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#search-type-@intCounter">
+                            @item.SearchType
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" id="search-type-@(intCounter++)">
+                    <div class="panel-body border-palegreen no-padding">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Case Name</th>
+                                    <th>Case#</th>
+                                    <th>JCATS#</th>
+                                    <th>Go To</th>
+                                    <th>Attorney</th>
+                                    <th>Inserted On</th>
+                                    <th>Inserted By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var caseInfo in item.CaseList)
+                                {
+                                    <tr>
+                                        <td>@caseInfo.Client</td>
+                                        <td>@caseInfo.CaseName</td>
+                                        <td>@caseInfo.PetitionNumber</td>
+                                        <td><a href="@Url.Action(MVC.Case.Main(caseInfo.CaseID.ToEncrypt()))">@caseInfo.CaseNumber</a></td>
+                                        <td><a class="goto-action" href="@caseInfo.NG_NavigationURL" data-caseid="@caseInfo.CaseID.ToEncrypt()">@Html.Raw(caseInfo.ASPActionDisplay)</a></td>
+                                        <td>@caseInfo.Attorney</td>
+                                        <td>@caseInfo.InsertedOn</td>
+                                        <td>@caseInfo.InsertedBy</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center padding-5">No Cases found</div>
+    }
+</div>

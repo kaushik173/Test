@@ -1,0 +1,115 @@
+﻿@model LALoDep.Models.Administration.UploadSignatureViewModel
+@using LALoDep.Core.Custom.Extensions
+ @{ 
+     var tabIndex = 0;
+     
+     Layout = "~/Views/Shared/_Popup.cshtml";
+ }
+ 
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "merge-doclocation-upload-form", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    @Html.Hidden("JcatsUserID", Model.JcatsUserID)
+    
+
+
+    <div class="card">
+        <div class="card-block">
+            @Html.LabelFor(m => m.UploadFileName, "Select File To Upload", new { @class = "control-label" })
+            @Html.TextBoxFor(m => m.UploadFileName, new { @class = "form-control form-control-sm validate required", @type = "file", data_validationmessage = "No files are selected for upload.", tabindex = ++tabIndex })
+        </div>
+    </div>
+}
+<link href="~/assets/pages/jquery.filer/css/jquery.filer.css" rel="stylesheet" />
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+        background-color: #fff !important;
+    }
+
+        body:before {
+            background-color: #fff !important;
+        }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+
+@section fixedfooter{
+    <div class="text-center">
+        <button id="btnStartUploading" type="button" class="btn btn-primary btn-sm default" tabindex=@(++tabIndex)> Upload  </button>
+    </div>
+}
+@section scripts{
+    <script src="~/assets/pages/jquery.filer/js/jquery.filer.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        function validation() {
+          
+            var FilePath = "@Request.QueryString["filepath"]";
+            if (FilePath != "") {
+                if (FilePath != $("#UploadFileName").val().split("\\")[$("#UploadFileName").val().split("\\").length - 1]) {
+                    notifyDanger("File must be named " + FilePath);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        $("#btnStartUploading").on("click", function () {
+            IPadKeyboardFix();
+            if (hasFormChanged('merge-doclocation-upload-form')) {
+                
+                if (validation()) {
+                    
+                        var formData = new FormData($("#merge-doclocation-upload-form")[0]);
+                        $.ajax({
+                            url: '/Users/SaveSignatureImage',
+                            data: formData,
+                            type: 'POST',
+                            enctype: 'multipart/form-data',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (result) {
+                                if (result.IsSuccess) {
+                                    //parent.location.reload();
+                                    parent.ClosePopup();
+                                    
+                                }
+                            }
+                        });
+                   
+                }
+            }
+            else {
+                parent.notifyNoChanges(false);
+            }
+        });
+
+        $(document).ready(function () {
+            $('input:file#UploadFileName').filer({
+                extensions: ['png','jpg','jpeg','gif'],
+                changeInput: true,
+                limit: 1,
+                showThumbs: true,
+                addMore: false,
+                captions: {
+                    errors: {
+                        filesType: "File not supported.",
+                    }
+                }
+            });
+
+            setInitialFormValues('merge-doclocation-upload-form');
+        });
+    </script>
+}

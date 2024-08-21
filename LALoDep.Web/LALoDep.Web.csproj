@@ -1,0 +1,1966 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{99EEC06F-EC12-4AF1-9E53-531586F46ADA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LALoDep</RootNamespace>
+    <AssemblyName>LALoDep</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseGlobalApplicationHostFile />
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ActionMailer.Net">
+      <HintPath>..\packages\ActionMailer.0.7.4\lib\Net40\ActionMailer.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ActionMailer.Net.Mvc">
+      <HintPath>..\packages\ActionMailer.0.7.4\lib\Net40\ActionMailer.Net.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Words, Version=14.12.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Aspose.Words.14.12.0\lib\net3.5-client\Aspose.Words.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Bugsnag, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bugsnag.2.2.1\lib\net45\Bugsnag.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bugsnag.AspNet, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bugsnag.AspNet.2.2.1\lib\net45\Bugsnag.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bugsnag.AspNet.Mvc, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bugsnag.AspNet.Mvc.2.2.1\lib\net45\Bugsnag.AspNet.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bugsnag.ConfigurationSection, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bugsnag.ConfigurationSection.2.2.1\lib\net45\Bugsnag.ConfigurationSection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\third-party-dll\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeComet.Crypto">
+      <HintPath>..\third-party-dll\CodeComet.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\CrystalDecisions.CrystalReports.Engine.1.0.0\lib\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\CrystalDecisions.ReportSource.1.0.0\lib\CrystalDecisions.ReportSource.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\CrystalDecisions.Shared.1.0.0\lib\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="DataTables.Mvc">
+      <HintPath>..\third-party-dll\DataTables.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Mvc">
+      <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.36.1\lib\net45\Google.Apis.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v2, Version=1.29.1.995, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Drive.v2.1.29.1.995\lib\net45\Google.Apis.Drive.v2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v3, Version=1.36.1.1400, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Drive.v3.1.36.1.1400\lib\net45\Google.Apis.Drive.v3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.4\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.7.16602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.7\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.7.16602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.7\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.5.7.0\lib\net451\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.7.0\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.7.0\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.5.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.6\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.5.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.6\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.5.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.6\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.5.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.6\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\ValueInjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Web">
+      <HintPath>..\packages\structuremap.web.3.1.6.186\lib\net40\StructureMap.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.7.0\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="T4MVCExtensions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\T4MVCExtensions.3.17.2\lib\net40\T4MVCExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Twilio, Version=5.28.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.5.28.0\lib\net451\Twilio.dll</HintPath>
+    </Reference>
+    <Reference Include="Twilio.AspNet.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.AspNet.Common.5.20.1\lib\net45\Twilio.AspNet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Twilio.AspNet.Mvc, Version=5.20.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.AspNet.Mvc.5.20.1\lib\net451\Twilio.AspNet.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AdministrationController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\SwaggerAccessMessageHandler.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="App_Start\StructuremapWebApi.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Mobile\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\CaseController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\MenuController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\MyCalendarController.cs" />
+    <Compile Include="Areas\Mobile\Models\CaseAddViewModel.cs" />
+    <Compile Include="Areas\Mobile\Models\CaseInfoMobileViewModel.cs" />
+    <Compile Include="Areas\Mobile\Models\ChangePasswordViewModel.cs" />
+    <Compile Include="Areas\Mobile\Custom\MobileClaimsAuthorizeAttribute.cs" />
+    <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
+    <Compile Include="Areas\Mobile\Models\HearingAddEditViewModel.cs" />
+    <Compile Include="Areas\Mobile\Models\MyCalendarViewModel.cs" />
+    <Compile Include="Areas\Mobile\Models\RecordTimeAddEditViewModel.cs" />
+    <Compile Include="ARSummaryController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BatchHearingController.generated.cs" />
+    <Compile Include="CalendarManagementController.generated.cs" />
+    <Compile Include="CaseCleanupController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CaseController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CaseOpeningController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeTablesController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Administration\ImportPaidInvoicesController.cs" />
+    <Compile Include="Controllers\Administration\JudgeDeptTransferController.cs" />
+    <Compile Include="Controllers\Administration\AgencyGroupController.cs" />
+    <Compile Include="Controllers\Administration\MergeTemplateController.cs" />
+    <Compile Include="Controllers\Administration\InvoiceSummaryController.cs" />
+    <Compile Include="Controllers\Administration\PredeterminedAnswersController.cs" />
+    <Compile Include="Controllers\Administration\CaseCleanupController.cs" />
+    <Compile Include="Controllers\Administration\HelpListController.cs" />
+    <Compile Include="Controllers\Administration\JudicialOfficerController.cs" />
+    <Compile Include="Controllers\Administration\MyTrainingController.cs" />
+    <Compile Include="Controllers\Administration\CodeTablesController.cs" />
+    <Compile Include="Controllers\Administration\CountyCounselListController.cs" />
+    <Compile Include="Controllers\Administration\HearingRatesController.cs" />
+    <Compile Include="Controllers\Administration\SystemValueController.cs" />
+    <Compile Include="Controllers\Administration\TrainingSummaryController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
+    <Compile Include="Controllers\Administration\UsersController.cs" />
+    <Compile Include="Controllers\Api\TextMessagesController.cs" />
+    <Compile Include="Controllers\Api\CaseController.cs" />
+    <Compile Include="Controllers\Api\ApiBaseController.cs" />
+    <Compile Include="Controllers\Api\AgencyController.cs" />
+    <Compile Include="Controllers\Api\AccountController.cs" />
+    <Compile Include="Controllers\CaseOpening\ActionRequestController.cs" />
+    <Compile Include="Controllers\CaseOpening\NotesController.cs" />
+    <Compile Include="Controllers\CaseOpening\HearingController.cs" />
+    <Compile Include="Controllers\CaseOpening\LegalNumberController.cs" />
+    <Compile Include="Controllers\CaseOpening\CaseAddressesController.cs" />
+    <Compile Include="Controllers\CaseOpening\AssociationsController.cs" />
+    <Compile Include="Controllers\Case\ExpenseNGController.cs" />
+    <Compile Include="Controllers\Case\CopyCaseTransferController.cs" />
+    <Compile Include="Controllers\Case\AdvisementController.cs" />
+    <Compile Include="Controllers\Case\AttachFileContoller.cs" />
+    <Compile Include="Controllers\Case\CreateOtherAgencyCaseController.cs" />
+    <Compile Include="Controllers\Case\InvoiceController.cs" />
+    <Compile Include="Controllers\Case\ReferralContoller.cs" />
+    <Compile Include="Controllers\Case\TextMessageContoller.cs" />
+    <Compile Include="Controllers\Case\FindingsAndOrdersContoller.cs" />
+    <Compile Include="Controllers\Case\ARContoller.cs" />
+    <Compile Include="Controllers\Case\ExpenseContoller.cs" />
+    <Compile Include="Controllers\Case\ConflictContoller.cs" />
+    <Compile Include="Controllers\Case\AKAsContoller.cs" />
+    <Compile Include="Controllers\Case\PersonController.cs" />
+    <Compile Include="Controllers\Case\RecordTimeController.cs" />
+    <Compile Include="Controllers\Case\SubpoenaController.cs" />
+    <Compile Include="Controllers\Case\ContactController.cs" />
+    <Compile Include="Controllers\Case\LegalNumbersController.cs" />
+    <Compile Include="Controllers\Case\MotionsController.cs" />
+    <Compile Include="Controllers\Case\CSECController.cs" />
+    <Compile Include="Controllers\Case\WritsAppealsController.cs" />
+    <Compile Include="Controllers\Inquiry\InvoiceController.cs" />
+    <Compile Include="Controllers\Inquiry\ReferralEventCalendarController.cs" />
+    <Compile Include="Controllers\Inquiry\TransferCaseController.cs" />
+    <Compile Include="Controllers\Inquiry\MyJCATSMgmtContoller.cs" />
+    <Compile Include="Controllers\Inquiry\MyInvlController.cs" />
+    <Compile Include="Controllers\Inquiry\MyAttyContoller.cs" />
+    <Compile Include="Controllers\Inquiry\MyCaseLoadController.cs" />
+    <Compile Include="Controllers\MyReportController.cs" />
+    <Compile Include="Controllers\NoteController.cs" />
+    <Compile Include="Controllers\Administration\UserGroupsController.cs" />
+    <Compile Include="Controllers\ARSummaryController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CaseController.cs" />
+    <Compile Include="Controllers\CaseOpening\AddCaseRespondentsController.cs" />
+    <Compile Include="Controllers\CaseOpening\CaseOpeningController.cs" />
+    <Compile Include="Controllers\CaseOpening\LegalPartiesController.cs" />
+    <Compile Include="Controllers\CaseOpening\PetitionListController.cs" />
+    <Compile Include="Controllers\Case\MainController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HourlyInvoiceListController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\InquiryController.cs" />
+    <Compile Include="Controllers\Inquiry\CaseloadManagementController.cs" />
+    <Compile Include="Controllers\Inquiry\CalendarManagementController.cs" />
+    <Compile Include="Controllers\Inquiry\SupvAttyController.cs" />
+    <Compile Include="Controllers\Inquiry\InvoiceQueueController.cs" />
+    <Compile Include="Controllers\Inquiry\MasterCalendarController.cs" />
+    <Compile Include="Controllers\Inquiry\ToDoListController.cs" />
+    <Compile Include="Controllers\Inquiry\EmployeeRosterController.cs" />
+    <Compile Include="Controllers\MailController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\MonthlyInvoiceListController.cs" />
+    <Compile Include="Controllers\Inquiry\MyCalendarController.cs" />
+    <Compile Include="Controllers\QHEController.cs" />
+    <Compile Include="Controllers\SCCInvoiceQueueController.cs" />
+    <Compile Include="Controllers\SearchByPhysicalFileController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="Controllers\Task\AR\EditRFDProfileController.cs" />
+    <Compile Include="Controllers\Task\AR\EditRFDAddressController.cs" />
+    <Compile Include="Controllers\Task\AR\EditRFDController.cs" />
+    <Compile Include="Controllers\Task\BatchHearingController.cs" />
+    <Compile Include="Controllers\Task\CalendarNumberingController.cs" />
+    <Compile Include="Controllers\Task\MyInvoiceQueueController.cs" />
+    <Compile Include="Controllers\Task\CSECSummaryController.cs" />
+    <Compile Include="Controllers\Task\FillinByAttorneyBatchController.cs" />
+    <Compile Include="Controllers\Task\IVEAttachmentsController.cs" />
+    <Compile Include="Controllers\Task\IVEActivityLogExecController.cs" />
+    <Compile Include="Controllers\Task\IVEPersonnelController.cs" />
+    <Compile Include="Controllers\Task\IVEInvoiceController.cs" />
+    <Compile Include="Controllers\Task\RecordTimeNonCaseController.cs" />
+    <Compile Include="Controllers\Task\IVEActvityLogController.cs" />
+    <Compile Include="Controllers\Task\TrainingUploadController.cs" />
+    <Compile Include="Controllers\Task\ReferralQueueController.cs" />
+    <Compile Include="Controllers\Task\ReferralSummaryController.cs" />
+    <Compile Include="Controllers\Task\QuickCalMyCalendarController.cs" />
+    <Compile Include="Controllers\Task\QuickAddCaseController.cs" />
+    <Compile Include="Controllers\Task\MyARQueueController.cs" />
+    <Compile Include="Controllers\TwilioWebhookController.cs" />
+    <Compile Include="CountyCounselListController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Custom\Actions\DownloadActionResult.cs" />
+    <Compile Include="Custom\Attributes\ClaimsAuthorizeAttribute.cs" />
+    <Compile Include="Custom\ErrorLog\ElmahSqlErrorLog.cs" />
+    <Compile Include="Custom\FCMHelper.cs" />
+    <Compile Include="Custom\JcatsGoogleDrive.cs" />
+    <Compile Include="Custom\Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Custom\Route\GuidRoute.cs" />
+    <Compile Include="Custom\Security\SecurityToken.cs" />
+    <Compile Include="Custom\Security\NG_com_SecurityGetByASPPageNameUserIDAgencyID_spResult.cs" />
+    <Compile Include="Custom\Sharepoint.cs" />
+    <Compile Include="Custom\Twillio\SMSHelper.cs" />
+    <Compile Include="Custom\UserEnvironment.cs" />
+    <Compile Include="Custom\UserExtended.cs" />
+    <Compile Include="Custom\UserManager.cs" />
+    <Compile Include="Custom\Utility.cs" />
+    <Compile Include="DependencyResolution\ControllerConvention.cs" />
+    <Compile Include="DependencyResolution\DefaultRegistry.cs" />
+    <Compile Include="DependencyResolution\IoC.cs" />
+    <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
+    <Compile Include="DependencyResolution\StructureMapScopeModule.cs" />
+    <Compile Include="DependencyResolution\StructureMapWebApiDependencyResolver.cs" />
+    <Compile Include="DependencyResolution\StructureMapWebApiDependencyScope.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="HearingRatesController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HelpController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HomeController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HourlyInvoiceListController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InquiryController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceQueueController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JudicialOfficerController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MailController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MenuController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.AccountController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.CaseController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.MenuController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.MyCalendarController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.SharedController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountFirstLoginViewModel.cs" />
+    <Compile Include="Models\AccountForgotPasswordViewModel.cs" />
+    <Compile Include="Models\Administration\AddCodeViewModel.cs" />
+    <Compile Include="Models\Administration\AddEditCountyCounselViewModel.cs" />
+    <Compile Include="Models\Administration\AdminChangePasswordViewModel.cs" />
+    <Compile Include="Models\Administration\AdminSystemValueViewModel.cs" />
+    <Compile Include="Models\Administration\AgencyGroupViewModel.cs" />
+    <Compile Include="Models\Administration\CaseCleanupViewModel.cs" />
+    <Compile Include="Models\Administration\CodeTableViewModel.cs" />
+    <Compile Include="Models\Administration\AdminSystemValueUpdateViewModel.cs" />
+    <Compile Include="Models\Administration\HelpAddEditViewModel.cs" />
+    <Compile Include="Models\Administration\HelpListViewModel.cs" />
+    <Compile Include="Models\Administration\ImportPaidInvoicesViewModel.cs" />
+    <Compile Include="Models\Administration\InvoiceSummaryViewModel.cs" />
+    <Compile Include="Models\Administration\JudgeDeptTransferViewModel.cs" />
+    <Compile Include="Models\Administration\JudicialOfficerListViewModel.cs" />
+    <Compile Include="Models\Administration\MyTrainingViewModel.cs" />
+    <Compile Include="Models\Administration\SystemValueListViewModel.cs" />
+    <Compile Include="Models\Administration\SystemValueViewModel.cs" />
+    <Compile Include="Models\Administration\CountyCounselListViewModel.cs" />
+    <Compile Include="Models\Administration\HearingRatesAddEditViewModel.cs" />
+    <Compile Include="Models\Administration\HearingRatesViewModel.cs" />
+    <Compile Include="Models\Administration\SecurityListViewModel.cs" />
+    <Compile Include="Models\Administration\GroupSecurityViewModel.cs" />
+    <Compile Include="Models\Administration\CheckboxViewModel.cs" />
+    <Compile Include="Models\Administration\EditUserGroupViewModel.cs" />
+    <Compile Include="Models\Administration\TrainingEditViewModel.cs" />
+    <Compile Include="Models\Administration\TrainingSummaryViewModel.cs" />
+    <Compile Include="Models\Administration\TrainingViewModel.cs" />
+    <Compile Include="Models\Administration\UserAddEditViewModel.cs" />
+    <Compile Include="Models\Administration\UserDepartmentViewModel.cs" />
+    <Compile Include="Models\Administration\UserGroupsViewModel.cs" />
+    <Compile Include="Models\Administration\UsersViewModel.cs" />
+    <Compile Include="Models\AgencyCountyModel.cs" />
+    <Compile Include="Models\AgencyGroupModel.cs" />
+    <Compile Include="Models\AgencyModel.cs" />
+    <Compile Include="Models\AgencyRegionModel.cs" />
+    <Compile Include="Models\Api\AccountModels.cs" />
+    <Compile Include="Models\Api\ApiResult.cs" />
+    <Compile Include="Models\Api\CaseModels.cs" />
+    <Compile Include="Models\Api\TextMessageModels.cs" />
+    <Compile Include="Models\ARSummarySearchViewModel.cs" />
+    <Compile Include="Models\CaseOpening\ActionRequestModel.cs" />
+    <Compile Include="Models\CaseOpening\AddAppointmentCaseSearchViewModel.cs" />
+    <Compile Include="Models\CaseOpening\AddChildOrParentsViewModel.cs" />
+    <Compile Include="Models\CaseOpening\CaseAddressesViewModel.cs" />
+    <Compile Include="Models\CaseOpening\EditAllegationFindingViewModel.cs" />
+    <Compile Include="Models\CaseOpening\HearingModel.cs" />
+    <Compile Include="Models\CaseOpening\LegalNumberModel.cs" />
+    <Compile Include="Models\CaseOpening\LegalPartiesModel.cs" />
+    <Compile Include="Models\CaseOpening\AssociationsModel .cs" />
+    <Compile Include="Models\CaseOpening\NotesModel.cs" />
+    <Compile Include="Models\CaseOpening\PeopleInCaseAddressesViewModel.cs" />
+    <Compile Include="Models\CaseOpening\PetitionAddEditModel.cs" />
+    <Compile Include="Models\CaseSearchExtendedViewModel.cs" />
+    <Compile Include="Models\Case\CopyCaseTransferViewModel.cs" />
+    <Compile Include="Models\Case\AdvisementViewModel.cs" />
+    <Compile Include="Models\Case\CSECEditViewModel.cs" />
+    <Compile Include="Models\Case\AKAsAddEditViewModel.cs" />
+    <Compile Include="Models\Case\AppealDecisionAddEditViewModel.cs" />
+    <Compile Include="Models\Case\AddAppealViewModel.cs" />
+    <Compile Include="Models\Case\AttachPathViewModel.cs" />
+    <Compile Include="Models\Case\CaseEditViewModel.cs" />
+    <Compile Include="Models\Case\EditPersonViewModel.cs" />
+    <Compile Include="Models\Case\ExpenseNGViewModel.cs" />
+    <Compile Include="Models\Case\ExpenseViewModel.cs" />
+    <Compile Include="Models\Case\ConflictViewModel.cs" />
+    <Compile Include="Models\Case\FindingsAndOrdersEditViewModel.cs" />
+    <Compile Include="Models\Case\FindingsAndOrdersAddViewModel.cs" />
+    <Compile Include="Models\Case\FindingsAndOrdersListViewModel.cs" />
+    <Compile Include="Models\Case\HearingAttendanceListViewModel.cs" />
+    <Compile Include="Models\Case\HearingOpinionViewModel.cs" />
+    <Compile Include="Models\Case\MoreInfoOnPersonViewModel.cs" />
+    <Compile Include="Models\Case\MoreInfoOnPetitionViewModel.cs" />
+    <Compile Include="Models\Case\MotionAddEditViewModel.cs" />
+    <Compile Include="Models\Case\NoteAddEditViewModel.cs" />
+    <Compile Include="Models\Case\AttendanceViewModel.cs" />
+    <Compile Include="Models\Case\PetitionCalendarListViewModel.cs" />
+    <Compile Include="Models\Case\PleaViewModel.cs" />
+    <Compile Include="Models\Case\PosViewModel.cs" />
+    <Compile Include="Models\Case\QuickARModel.cs" />
+    <Compile Include="Models\Case\RecordTimeEditViewModel.cs" />
+    <Compile Include="Models\Case\RecordTimeAddViewModel.cs" />
+    <Compile Include="Models\Case\RecordTimeViewModel.cs" />
+    <Compile Include="Models\Case\SubpoenaAddEditViewModel.cs" />
+    <Compile Include="Models\Case\SubpoenaListViewModel.cs" />
+    <Compile Include="Models\Case\ContactInformationViewModel.cs" />
+    <Compile Include="Models\Case\LegalNumberAddEditViewModel.cs" />
+    <Compile Include="Models\Case\MotionViewModel.cs" />
+    <Compile Include="Models\Case\PetitionaAndRolePopUpVewModel.cs" />
+    <Compile Include="Models\Case\CaseMainViewModel.cs" />
+    <Compile Include="Models\Case\ReferralViewModel.cs" />
+    <Compile Include="Models\Case\TextMessagesViewModel.cs" />
+    <Compile Include="Models\CodeSelectedViewModel.cs" />
+    <Compile Include="Models\CodeTypeViewModel.cs" />
+    <Compile Include="Models\CreateFileModel.cs" />
+    <Compile Include="Models\CreateFolderModel.cs" />
+    <Compile Include="Models\CustomThemeModel.cs" />
+    <Compile Include="Models\DataTablePerameters.cs" />
+    <Compile Include="Models\EditHearingAmountViewModel.cs" />
+    <Compile Include="Models\FCMResponse.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Inquiry\HearingListViewModel.cs" />
+    <Compile Include="Models\Inquiry\InvoiceListViewModel.cs" />
+    <Compile Include="Models\Inquiry\InvoiceVerifyViewModel.cs" />
+    <Compile Include="Models\Inquiry\JudgeTransferViewModel.cs" />
+    <Compile Include="Models\Inquiry\LeaveViewModel.cs" />
+    <Compile Include="Models\Inquiry\MyInvViewModel.cs" />
+    <Compile Include="Models\Inquiry\MyCaseLoadIndexViewModel.cs" />
+    <Compile Include="Models\Inquiry\MyReportIndexViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReferralEventCalendarViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportCaseloadSummaryViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportHearingSummaryViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportParameterAttorneyListViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportParameterDefinition.cs" />
+    <Compile Include="Models\Inquiry\ReportParameterInvestigatorListViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportParametersViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportRFDCaseloadSummaryViewModel.cs" />
+    <Compile Include="Models\Inquiry\ReportSourceList.cs" />
+    <Compile Include="Models\Inquiry\SearchByPhysicalFileViewModel.cs" />
+    <Compile Include="Models\Inquiry\MyAttyViewModel.cs" />
+    <Compile Include="Models\Inquiry\TransferCaseViewModel.cs" />
+    <Compile Include="Models\IVEActvityLog\IVeActivityLogDetailModels.cs" />
+    <Compile Include="Models\IVEActvityLog\IVEActvityLogViewModel.cs" />
+    <Compile Include="Models\SharePointFilesModel.cs" />
+    <Compile Include="Models\Task\IVEOperatingExpensesViewModel.cs" />
+    <Compile Include="Models\Task\IVETravelExpensesViewModel.cs" />
+    <Compile Include="Models\ManageNoteViewModel.cs" />
+    <Compile Include="Models\MyJCATSMgmtViewModel.cs" />
+    <Compile Include="Models\QHEHearingViewModel.cs" />
+    <Compile Include="Models\Task\IVEInvoiceViewModel.cs" />
+    <Compile Include="Models\Task\AppearanceSheetViewModel.cs" />
+    <Compile Include="Models\Task\CalendarToDoViewModel.cs" />
+    <Compile Include="Models\Task\RecordTimeViewModel.cs" />
+    <Compile Include="Models\Task\EditRfdProfileQuestionViewModel.cs" />
+    <Compile Include="Models\Task\EditRfdProfileViewModel.cs" />
+    <Compile Include="Models\QHEAllegationViewModel.cs" />
+    <Compile Include="Models\Task\MonthlyInvoiceEditModel.cs" />
+    <Compile Include="Models\Task\QuickAddCaseViewModels.cs" />
+    <Compile Include="Models\Task\BatchHearingViewModel.cs" />
+    <Compile Include="Models\Task\EditRfdViewModel.cs" />
+    <Compile Include="Models\Task\MyARTransferViewModel.cs" />
+    <Compile Include="Models\Task\MyARQueueViewModel.cs" />
+    <Compile Include="Models\Task\QuickCalAddNewHearingCaseViewModels.cs" />
+    <Compile Include="Models\Task\QuickCalDCCAndNewPrivateCounselViewModel.cs" />
+    <Compile Include="Models\Task\ReferralQueueViewModel.cs" />
+    <Compile Include="Models\Task\ReferralSummaryViewModel.cs" />
+    <Compile Include="Models\Task\SCCInvoiceAddEditViewModel.cs" />
+    <Compile Include="Models\Task\TitleIVEOperatingExpensesAddEditModel.cs" />
+    <Compile Include="Models\TreeViewModel.cs" />
+    <Compile Include="Models\EmailRecipient.cs" />
+    <Compile Include="Models\Inquiry\CaseLoadManagementViewModel.cs" />
+    <Compile Include="Models\Inquiry\CalendarManagementViewModel.cs" />
+    <Compile Include="Models\Inquiry\MyCaseLoadsViewModel.cs" />
+    <Compile Include="Models\Inquiry\SupervisingAttorneyViewModel.cs" />
+    <Compile Include="Models\Inquiry\InvoiceQueueViewModel.cs" />
+    <Compile Include="Models\Inquiry\ToDoAddEditViewModel.cs" />
+    <Compile Include="Models\HourlyInvoiceListViewModel.cs" />
+    <Compile Include="Models\Inquiry\MasterCalendarViewModel.cs" />
+    <Compile Include="Models\Inquiry\ToDoListViewModel.cs" />
+    <Compile Include="Models\Inquiry\EmployeeRosterViewModel.cs" />
+    <Compile Include="Models\LabelsAndLettersQueueViewModel.cs" />
+    <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\MonthlyInvoiceListViewModel.cs" />
+    <Compile Include="Models\PersonViewModel.cs" />
+    <Compile Include="Models\CodeViewModel.cs" />
+    <Compile Include="Models\MenuCaseModelView.cs" />
+    <Compile Include="Models\CaseSearchViewModel.cs" />
+    <Compile Include="Models\AccountLoginViewModel.cs" />
+    <Compile Include="Models\AccountResetPasswordViewModel.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\MenuSCCInvoiceQueueModelView.cs" />
+    <Compile Include="Models\SCCInvoiceAttorneyViewModel.cs" />
+    <Compile Include="Models\SCCInvoiceQueueSearchViewModel.cs" />
+    <Compile Include="Models\Twillio\TwillioSmsStatus.cs" />
+    <Compile Include="MonthlyInvoiceListController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MotionsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MyReportController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NoteController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QHEController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCCInvoiceQueueController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchByPhysicalFileController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SharedController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Startup.cs" />
+    <Compile Include="SupvAttyController.generated.cs" />
+    <Compile Include="T4MVC.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TrainingSummaryController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TwilioWebhookController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserGroupsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UsersController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WritsAppealsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\ElmahErrorFilter.txt" />
+    <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="assets\css\4095-rtl.css" />
+    <Content Include="assets\css\4095-rtl.min.css" />
+    <Content Include="assets\css\4095.css" />
+    <Content Include="assets\css\4095.min.css" />
+    <Content Include="assets\css\animate.css" />
+    <Content Include="assets\css\animate.min.css" />
+    <Content Include="assets\css\auto-Complete.css" />
+    <Content Include="assets\css\beyond-rtl.css" />
+    <Content Include="assets\css\beyond-rtl.min.css" />
+    <Content Include="assets\css\beyond.css" />
+    <Content Include="assets\css\beyond.min.css" />
+    <Content Include="assets\css\bootstrap-rtl-less\bootstrap-rtl.css" />
+    <Content Include="assets\css\bootstrap-rtl-less\bootstrap-rtl.min.css" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins-rtl.css" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins-rtl.min.css" />
+    <Content Include="assets\css\bootstrap-rtl.css" />
+    <Content Include="assets\css\bootstrap-rtl.min.css" />
+    <Content Include="assets\css\bootstrap-table.css" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\custom-mobile.css" />
+    <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\dataTables.bootstrap.css" />
+    <Content Include="assets\css\demo.css" />
+    <Content Include="assets\css\demo.min.css" />
+    <Content Include="assets\css\desktop.css" />
+    <Content Include="assets\css\font-awesome.css" />
+    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\mentalhealth.css" />
+    <Content Include="assets\css\other-less\LessHat.css" />
+    <Content Include="assets\css\other-less\lesshat.min.css" />
+    <Content Include="assets\css\skins\azure.css" />
+    <Content Include="assets\css\skins\azure.min.css" />
+    <Content Include="assets\css\skins\black.css" />
+    <Content Include="assets\css\skins\black.min.css" />
+    <Content Include="assets\css\skins\blue.css" />
+    <Content Include="assets\css\skins\blue.min.css" />
+    <Content Include="assets\css\skins\darkblue.css" />
+    <Content Include="assets\css\skins\darkblue.min.css" />
+    <Content Include="assets\css\skins\darkred.css" />
+    <Content Include="assets\css\skins\darkred.min.css" />
+    <Content Include="assets\css\skins\deepblue.css" />
+    <Content Include="assets\css\skins\deepblue.min.css" />
+    <Content Include="assets\css\skins\gray.css" />
+    <Content Include="assets\css\skins\gray.min.css" />
+    <Content Include="assets\css\skins\green.css" />
+    <Content Include="assets\css\skins\green.min.css" />
+    <Content Include="assets\css\skins\orange.css" />
+    <Content Include="assets\css\skins\orange.min.css" />
+    <Content Include="assets\css\skins\pink.css" />
+    <Content Include="assets\css\skins\pink.min.css" />
+    <Content Include="assets\css\skins\purple.css" />
+    <Content Include="assets\css\skins\purple.min.css" />
+    <Content Include="assets\css\skins\skins-mixins.css" />
+    <Content Include="assets\css\skins\skins-mixins.min.css" />
+    <Content Include="assets\css\skins\teal.css" />
+    <Content Include="assets\css\skins\teal.min.css" />
+    <Content Include="assets\css\typicons.css" />
+    <Content Include="assets\css\typicons.min.css" />
+    <Content Include="assets\css\weather-icons.css" />
+    <Content Include="assets\css\weather-icons.min.css" />
+    <Content Include="assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\fonts\Homemade_Apple\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\css\fonts.css" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\Open-Sans-300italic.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\Open-Sans-300.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\Open-Sans-600italic.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\Open-Sans-600.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\Open-Sans-700italic.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\Open-Sans-700.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\Open-Sans-800italic.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\Open-Sans-800.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\Open-Sans-italic.svg" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\LICENSE.txt" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\Open-Sans-regular.svg" />
+    <Content Include="assets\fonts\typicons.svg" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="assets\img\angle-down.png" />
+    <Content Include="assets\img\app-45616.png" />
+    <Content Include="assets\img\app.png" />
+    <Content Include="assets\img\attach-blue.png" />
+    <Content Include="assets\img\attach-green.png" />
+    <Content Include="assets\img\attach-red.png" />
+    <Content Include="assets\img\attach-yellow.png" />
+    <Content Include="assets\img\avatars\adam-jansen.jpg" />
+    <Content Include="assets\img\avatars\bing.png" />
+    <Content Include="assets\img\avatars\divyia.jpg" />
+    <Content Include="assets\img\avatars\Javi-Jimenez.jpg" />
+    <Content Include="assets\img\avatars\John-Smith.jpg" />
+    <Content Include="assets\img\avatars\Lee-Munroe.jpg" />
+    <Content Include="assets\img\avatars\Matt-Cheuvront.jpg" />
+    <Content Include="assets\img\avatars\Nicolai-Larson.jpg" />
+    <Content Include="assets\img\avatars\Osvaldus-Valutis.jpg" />
+    <Content Include="assets\img\avatars\Sergey-Azovskiy.jpg" />
+    <Content Include="assets\img\avatars\Stephanie-Walter.jpg" />
+    <Content Include="assets\img\favicon.png" />
+    <Content Include="assets\img\jquery.minicolors.png" />
+    <Content Include="assets\img\logo-inverted.png" />
+    <Content Include="assets\img\logo-rtl.png" />
+    <Content Include="assets\img\logo-solo.png" />
+    <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\Logo_canyon.png" />
+    <Content Include="assets\img\sort_asc.png" />
+    <Content Include="assets\img\sort_asc_disabled.png" />
+    <Content Include="assets\img\sort_both.png" />
+    <Content Include="assets\img\sort_desc.png" />
+    <Content Include="assets\img\sort_desc_disabled.png" />
+    <Content Include="assets\img\temp1.png" />
+    <Content Include="assets\img\tree-icons.png" />
+    <Content Include="assets\js\beyond.js" />
+    <Content Include="assets\js\beyond.min.js" />
+    <Content Include="assets\js\bootbox\bootbox.js" />
+    <Content Include="assets\js\bootbox\bootbox.min.js" />
+    <Content Include="assets\js\bootstrap.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.min.js" />
+    <Content Include="assets\js\charts\chartjs\chartjs-init.js" />
+    <Content Include="assets\js\charts\easypiechart\easypiechart-init.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js" />
+    <Content Include="assets\js\charts\flot\flot-init.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.axislabels.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="assets\js\charts\morris\morris-init.js" />
+    <Content Include="assets\js\charts\morris\morris.js" />
+    <Content Include="assets\js\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="assets\js\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="assets\js\charts\sparkline\sparkline-init.js" />
+    <Content Include="assets\js\colorpicker\css\colorpicker.css" />
+    <Content Include="assets\js\colorpicker\css\layout.css" />
+    <Content Include="assets\js\colorpicker\images\blank.gif" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_background.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_hex.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_hsb_b.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_hsb_h.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_hsb_s.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_indic.gif" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_overlay.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_rgb_b.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_rgb_g.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_rgb_r.png" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_select.gif" />
+    <Content Include="assets\js\colorpicker\images\colorpicker_submit.png" />
+    <Content Include="assets\js\colorpicker\images\custom_background.png" />
+    <Content Include="assets\js\colorpicker\images\custom_hex.png" />
+    <Content Include="assets\js\colorpicker\images\custom_hsb_b.png" />
+    <Content Include="assets\js\colorpicker\images\custom_hsb_h.png" />
+    <Content Include="assets\js\colorpicker\images\custom_hsb_s.png" />
+    <Content Include="assets\js\colorpicker\images\custom_indic.gif" />
+    <Content Include="assets\js\colorpicker\images\custom_rgb_b.png" />
+    <Content Include="assets\js\colorpicker\images\custom_rgb_g.png" />
+    <Content Include="assets\js\colorpicker\images\custom_rgb_r.png" />
+    <Content Include="assets\js\colorpicker\images\custom_submit.png" />
+    <Content Include="assets\js\colorpicker\images\select.png" />
+    <Content Include="assets\js\colorpicker\images\select2.png" />
+    <Content Include="assets\js\colorpicker\images\slider.png" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.js" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.min.js" />
+    <Content Include="assets\js\colorpicker\js\colorpicker.js" />
+    <Content Include="assets\js\colorpicker\js\eye.js" />
+    <Content Include="assets\js\colorpicker\js\jquery.js" />
+    <Content Include="assets\js\colorpicker\js\layout.js" />
+    <Content Include="assets\js\colorpicker\js\utils.js" />
+    <Content Include="assets\js\colorpicker\spectrum.css" />
+    <Content Include="assets\js\colorpicker\spectrum.js" />
+    <Content Include="assets\js\datatable\datatables-init.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js" />
+    <Content Include="assets\js\datatable\ZeroClipboard.js" />
+    <Content Include="assets\js\datetime\bootstrap-datepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js" />
+    <Content Include="assets\js\datetime\daterangepicker.js" />
+    <Content Include="assets\js\datetime\moment.js" />
+    <Content Include="assets\js\datetime\moment.min.js" />
+    <Content Include="assets\js\dropzone\dropzone.js" />
+    <Content Include="assets\js\dropzone\dropzone.min.js" />
+    <Content Include="assets\js\editors\summernote\summernote.css" />
+    <Content Include="assets\js\editors\summernote\summernote.js" />
+    <Content Include="assets\js\editors\summernote\summernote.min.js" />
+    <Content Include="assets\js\editors\wysiwyg\bootstrap-wysiwyg.js" />
+    <Content Include="assets\js\editors\wysiwyg\jquery.hotkeys.js" />
+    <Content Include="assets\js\editors\wysiwyg\prettify.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js" />
+    <Content Include="assets\js\fuelux\treeview\treeview-init.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.js" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.min.js" />
+    <Content Include="assets\js\fullcalendar\jquery-ui.custom.min.js" />
+    <Content Include="assets\js\fullcalendar\moment.min.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.min.js" />
+    <Content Include="assets\js\jfu\cors\postmessage.html" />
+    <Content Include="assets\js\jfu\cors\result.html" />
+    <Content Include="assets\js\jfu\css\demo-ie8.css" />
+    <Content Include="assets\js\jfu\css\demo.css" />
+    <Content Include="assets\js\jfu\css\jquery.fileupload-noscript.css" />
+    <Content Include="assets\js\jfu\css\jquery.fileupload-ui-noscript.css" />
+    <Content Include="assets\js\jfu\css\jquery.fileupload-ui.css" />
+    <Content Include="assets\js\jfu\css\jquery.fileupload.css" />
+    <Content Include="assets\js\jfu\css\style.css" />
+    <Content Include="assets\js\jfu\img\loading.gif" />
+    <Content Include="assets\js\jfu\img\progressbar.gif" />
+    <Content Include="assets\js\jfu\js\app.js" />
+    <Content Include="assets\js\jfu\js\cors\jquery.postmessage-transport.js" />
+    <Content Include="assets\js\jfu\js\cors\jquery.xdr-transport.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-angular.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-audio.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-image.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-jquery-ui.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-process.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-ui.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-validate.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload-video.js" />
+    <Content Include="assets\js\jfu\js\jquery.fileupload.js" />
+    <Content Include="assets\js\jfu\js\jquery.iframe-transport.js" />
+    <Content Include="assets\js\jfu\js\main.js" />
+    <Content Include="assets\js\jfu\js\tmpl.min.js" />
+    <Content Include="assets\js\jfu\js\vendor\jquery.ui.widget.js" />
+    <Content Include="assets\js\jquery-2.0.3.min.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\CHANGELOG.txt" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\jquery.formatCurrency.all.js" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\jquery.formatCurrency-1.4.0.js" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\jquery.formatCurrency-1.4.0.min.js" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\jquery.formatCurrency-1.4.0.pack.js" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\LICENSE.txt" />
+    <Content Include="assets\js\jquery.formatCurrency-1.4.0\README.txt" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="assets\js\colorpicker\images\Thumbs.db" />
+    <Content Include="Areas\Mobile\Views\web.config" />
+    <Content Include="Areas\Mobile\Views\MyCalendar\Index.cshtml" />
+    <Content Include="Areas\Mobile\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Mobile\Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Areas\Mobile\Views\Shared\_Menu.cshtml" />
+    <Content Include="Areas\Mobile\Views\Shared\_MenuCase.cshtml" />
+    <Content Include="Areas\Mobile\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\CaseInfo.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\Search.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\RecordTime.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\RecordTimeAdd.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\HearingAdd.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\RecordTimeEdit.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\HearingEdit.cshtml" />
+    <Content Include="Areas\Mobile\Views\Case\CaseAdd.cshtml" />
+    <Content Include="assets\fonts\Homemade_Apple\HomemadeApple-Regular.ttf" />
+    <None Include="assets\js\jqueryval\jquery.validate-vsdoc.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.min.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.min.js" />
+    <Content Include="assets\js\knob\jquery.knob.js" />
+    <Content Include="assets\js\nestable\jquery.nestable.min.js" />
+    <Content Include="assets\js\select2\select2.full.js" />
+    <Content Include="assets\js\select2\select2.full.min.js" />
+    <Content Include="assets\js\select2\select2.js" />
+    <Content Include="assets\js\select2\select2.min.js" />
+    <Content Include="assets\js\skins.js" />
+    <Content Include="assets\js\skins.min.js" />
+    <Content Include="assets\js\slider\jQRangeSlider\jQAllRangeSliders-withRuler-min.js" />
+    <Content Include="assets\js\slider\jQRangeSlider\jquery.mousewheel.min.js" />
+    <Content Include="assets\js\slider\jquery.nouislider.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js" />
+    <Content Include="assets\js\textarea\jquery.autosize.js" />
+    <Content Include="assets\js\textarea\jquery.autosize.min.js" />
+    <Content Include="assets\js\toastr\toastr.js" />
+    <Content Include="assets\js\toastr\toastr.min.js" />
+    <Content Include="assets\js\validation\bootstrapValidator.js" />
+    <Content Include="assets\js\validation\bootstrapValidator.min.js" />
+    <Content Include="assets\other\address-auto-complete.js" />
+    <Content Include="assets\other\bootstrap-table.js" />
+    <Content Include="assets\other\custom.js" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.bootstrap.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.bootstrap.min.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.foundation.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.foundation.min.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.jqueryui.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\dataTables.jqueryui.min.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\jquery.dataTables.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\jquery.dataTables.min.css" />
+    <Content Include="assets\other\DataTable-1.10.10\css\jquery.dataTables_themeroller.css" />
+    <Content Include="assets\other\DataTable-1.10.10\images\favicon.ico" />
+    <Content Include="assets\other\DataTable-1.10.10\images\sort_asc.png" />
+    <Content Include="assets\other\DataTable-1.10.10\images\sort_asc_disabled.png" />
+    <Content Include="assets\other\DataTable-1.10.10\images\sort_both.png" />
+    <Content Include="assets\other\DataTable-1.10.10\images\sort_desc.png" />
+    <Content Include="assets\other\DataTable-1.10.10\images\sort_desc_disabled.png" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.bootstrap.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.bootstrap.min.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.foundation.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.foundation.min.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.jqueryui.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.jqueryui.min.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\dataTables.scroller.min.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\jquery.dataTables.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\jquery.dataTables.min.js" />
+    <Content Include="assets\other\DataTable-1.10.10\js\jquery.js" />
+    <Content Include="assets\other\DataTables-1.10.1\jquery.dataTables.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.autoFill.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.autoFill.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.bootstrap.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.colReorder.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.colReorder.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.colVis.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.colVis.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.fixedColumns.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.fixedColumns.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.fixedHeader.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.fixedHeader.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.foundation.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.jqueryui.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.keyTable.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.keyTable.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.responsive.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.responsive.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.scroller.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.scroller.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.tableTools.js" />
+    <Content Include="assets\other\DataTables-1.10.3\dataTables.tableTools.min.js" />
+    <Content Include="assets\other\DataTables-1.10.3\jquery.dataTables.js" />
+    <Content Include="assets\other\DataTables-1.10.3\jquery.dataTables.min.js" />
+    <Content Include="assets\other\dataTables.bootstrap.js" />
+    <Content Include="assets\other\device.min.js" />
+    <Content Include="assets\other\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="assets\other\jquery-ui.min.js" />
+    <Content Include="assets\other\jquery.dataTables.js" />
+    <Content Include="assets\other\jquery.dataTables.min.js" />
+    <Content Include="assets\other\jquery.mask.js" />
+    <Content Include="assets\other\jquery.maskedinput-1.3.1.js" />
+    <Content Include="assets\other\jquery.maskedinput-1.3.1.min.js" />
+    <Content Include="assets\other\jquery.unobtrusive-ajax.js" />
+    <Content Include="assets\other\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="assets\other\mousetrap.js" />
+    <Content Include="assets\other\mousetrap.min.js" />
+    <Content Include="assets\other\simpleStorage.js" />
+    <Content Include="assets\pages\Encryption\aes.js" />
+    <Content Include="assets\pages\jquery.filer\css\jquery.filer.css" />
+    <Content Include="assets\pages\jquery.filer\css\themes\jquery.filer-dragdropbox-theme.css" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer-preview.html" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer.css" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer.svg" />
+    <Content Include="assets\pages\jquery.filer\js\jquery.filer.min.js" />
+    <Content Include="assets\sound\alert.mp3" />
+    <Content Include="assets\swf\copy_csv_xls.swf" />
+    <Content Include="assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\login.css" />
+    <Content Include="firebase-messaging-sw.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\Application-Script\Administration\GroupSecurityBySI.js" />
+    <Content Include="Scripts\Application-Script\Administration\JudicialOfficerAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\CodeTable.js" />
+    <Content Include="Scripts\Application-Script\Administration\CodeTableValues.js" />
+    <Content Include="Scripts\Application-Script\Administration\PredeterminedAnswersAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\UsersAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\SystemValueList.js" />
+    <Content Include="Scripts\Application-Script\Case\ExpenseNG.js" />
+    <Content Include="Scripts\Application-Script\Case\CopyCaseTransfer.js" />
+    <Content Include="Scripts\Application-Script\Case\Advisements.js" />
+    <Content Include="Scripts\Application-Script\Case\CreateOtherAgencyCase.js" />
+    <Content Include="Scripts\Application-Script\FCMNotification\init-notification.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\MyCaseLoadV2.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\ReferralEventCalendar.js" />
+    <Content Include="Scripts\Application-Script\Tasks\CalendarAppearanceSheetForParent.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\ActionRequest.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\ActionRequestAdd.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\HearingEdit.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\Hearing.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\LegalParties.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\LegalNumbers.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\CaseAddressEdit.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\CaseAddresses.js" />
+    <Content Include="Scripts\Application-Script\Administration\Users.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\Notes.js" />
+    <Content Include="Scripts\Application-Script\Case\ActionRequestEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\AkasAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\AppealsDecisionAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\Appeals.js" />
+    <Content Include="Scripts\Application-Script\Case\EditPerson.js" />
+    <Content Include="Scripts\Application-Script\Case\Expense.js" />
+    <Content Include="Scripts\Application-Script\Case\Conflict.js" />
+    <Content Include="Scripts\Application-Script\Case\ContactInformation.js" />
+    <Content Include="Scripts\Application-Script\Case\AkasList.js" />
+    <Content Include="Scripts\Application-Script\Case\LegalNumberAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\MotionAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\Motions.js" />
+    <Content Include="Scripts\Application-Script\Case\NoteAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\QHE\NextHearing.js" />
+    <Content Include="Scripts\Application-Script\Case\QHE\RecordTime.js" />
+    <Content Include="Scripts\Application-Script\Case\QHE\RecordTimeAdd.js" />
+    <Content Include="Scripts\Application-Script\Case\QHE\RecordTimeEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\RecordTime.js" />
+    <Content Include="Scripts\Application-Script\Case\RecordTimeEdit.js" />
+    <Content Include="Scripts\Application-Script\Case\RecordTimeAdd.js" />
+    <Content Include="Scripts\Application-Script\Case\SubpoenaList.js" />
+    <Content Include="Scripts\Application-Script\Case\QHE\HearingEdit.js" />
+    <Content Include="Scripts\Application-Script\Tasks\ARTransfer.js" />
+    <Content Include="Scripts\Application-Script\Tasks\AR\ARAddressEdit.js" />
+    <Content Include="Scripts\Application-Script\Tasks\AR\ARAddresses.js" />
+    <Content Include="Scripts\Application-Script\Tasks\AR\EditRFDProfileQuestion.js" />
+    <Content Include="Scripts\Application-Script\Tasks\AR\EditRfdProfile.js" />
+    <Content Include="Scripts\Application-Script\Tasks\AR\EditRFD.js" />
+    <Content Include="Scripts\Application-Script\Tasks\CalendarAppearanceSheet.js" />
+    <Content Include="Scripts\Application-Script\Tasks\QuickCalNextHearing.js" />
+    <Content Include="Scripts\Application-Script\Tasks\HourlyInvoiceAdd.js" />
+    <Content Include="Scripts\Application-Script\Tasks\CalendarNumbering.js" />
+    <Content Include="Scripts\Application-Script\Tasks\MyARQueue.js" />
+    <Content Include="Scripts\Application-Script\Tasks\QuickAddCase.js" />
+    <Content Include="Scripts\Application-Script\Tasks\QuickAR.js" />
+    <Content Include="Scripts\Application-Script\Tasks\RecordTimeNonCaseAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Tasks\RecordTimeNonCase.js" />
+    <Content Include="Scripts\Application-Script\Tasks\SCCInvoiceAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Tasks\BatchHearing.js" />
+    <Content Include="Scripts\Application-Script\Tasks\CalendarToDo.js" />
+    <Content Include="Scripts\Application-Script\tutorial\jtutorial.css" />
+    <Content Include="Scripts\Application-Script\tutorial\jtutorial.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\device.min.js" />
+    <Content Include="Scripts\favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="assets\css\4095-rtl.css.map" />
+    <Content Include="assets\css\4095.css.map" />
+    <Content Include="assets\css\4095.less" />
+    <Content Include="assets\css\beyond-less\400-500.less" />
+    <Content Include="assets\css\beyond-less\accordions.less" />
+    <Content Include="assets\css\beyond-less\alerts.less" />
+    <Content Include="assets\css\beyond-less\animations.less" />
+    <Content Include="assets\css\beyond-less\body.less" />
+    <Content Include="assets\css\beyond-less\breadcrumbs.less" />
+    <Content Include="assets\css\beyond-less\buttons.less" />
+    <Content Include="assets\css\beyond-less\charts.less" />
+    <Content Include="assets\css\beyond-less\chat.less" />
+    <Content Include="assets\css\beyond-less\checkbox-radiobox.less" />
+    <Content Include="assets\css\beyond-less\colorpicker.less" />
+    <Content Include="assets\css\beyond-less\colors.less" />
+    <Content Include="assets\css\beyond-less\comment.less" />
+    <Content Include="assets\css\beyond-less\dashboard.less" />
+    <Content Include="assets\css\beyond-less\databoxes.less" />
+    <Content Include="assets\css\beyond-less\datepicker.less" />
+    <Content Include="assets\css\beyond-less\daterangepicker.less" />
+    <Content Include="assets\css\beyond-less\dropdowns.less" />
+    <Content Include="assets\css\beyond-less\dropzone.less" />
+    <Content Include="assets\css\beyond-less\editors.less" />
+    <Content Include="assets\css\beyond-less\fonts.less" />
+    <Content Include="assets\css\beyond-less\forms-inputs.less" />
+    <Content Include="assets\css\beyond-less\fullcalendar.less" />
+    <Content Include="assets\css\beyond-less\helpers.less" />
+    <Content Include="assets\css\beyond-less\invoice.less" />
+    <Content Include="assets\css\beyond-less\labels-badges.less" />
+    <Content Include="assets\css\beyond-less\loading.less" />
+    <Content Include="assets\css\beyond-less\lockscreen.less" />
+    <Content Include="assets\css\beyond-less\login.less" />
+    <Content Include="assets\css\beyond-less\mail.less" />
+    <Content Include="assets\css\beyond-less\main-container.less" />
+    <Content Include="assets\css\beyond-less\modals.less" />
+    <Content Include="assets\css\beyond-less\navbar.less" />
+    <Content Include="assets\css\beyond-less\nestable-lists.less" />
+    <Content Include="assets\css\beyond-less\notifications.less" />
+    <Content Include="assets\css\beyond-less\orders.less" />
+    <Content Include="assets\css\beyond-less\page-content.less" />
+    <Content Include="assets\css\beyond-less\page-header-body.less" />
+    <Content Include="assets\css\beyond-less\pagination.less" />
+    <Content Include="assets\css\beyond-less\popovers.less" />
+    <Content Include="assets\css\beyond-less\pricing.less" />
+    <Content Include="assets\css\beyond-less\profile.less" />
+    <Content Include="assets\css\beyond-less\progressbars.less" />
+    <Content Include="assets\css\beyond-less\register.less" />
+    <Content Include="assets\css\beyond-less\search-help-bar.less" />
+    <Content Include="assets\css\beyond-less\select2.less" />
+    <Content Include="assets\css\beyond-less\sidebar.less" />
+    <Content Include="assets\css\beyond-less\sliders.less" />
+    <Content Include="assets\css\beyond-less\spaces.less" />
+    <Content Include="assets\css\beyond-less\spinners.less" />
+    <Content Include="assets\css\beyond-less\switches.less" />
+    <Content Include="assets\css\beyond-less\tables.less" />
+    <Content Include="assets\css\beyond-less\tabs.less" />
+    <Content Include="assets\css\beyond-less\tagsinput.less" />
+    <Content Include="assets\css\beyond-less\tasks.less" />
+    <Content Include="assets\css\beyond-less\tickets.less" />
+    <Content Include="assets\css\beyond-less\timeline.less" />
+    <Content Include="assets\css\beyond-less\timepicker.less" />
+    <Content Include="assets\css\beyond-less\tooltips.less" />
+    <Content Include="assets\css\beyond-less\treeview.less" />
+    <Content Include="assets\css\beyond-less\typography.less" />
+    <Content Include="assets\css\beyond-less\validator.less" />
+    <Content Include="assets\css\beyond-less\variables.less" />
+    <Content Include="assets\css\beyond-less\wells.less" />
+    <Content Include="assets\css\beyond-less\widget.less" />
+    <Content Include="assets\css\beyond-less\wizards.less" />
+    <Content Include="assets\css\beyond-rtl.css.map" />
+    <Content Include="assets\css\beyond.css.map" />
+    <Content Include="assets\css\beyond.less" />
+    <Content Include="assets\css\bootstrap-less\.csscomb.json" />
+    <Content Include="assets\css\bootstrap-less\.csslintrc" />
+    <Content Include="assets\css\bootstrap-less\alerts.less" />
+    <Content Include="assets\css\bootstrap-less\badges.less" />
+    <Content Include="assets\css\bootstrap-less\bootstrap.less" />
+    <Content Include="assets\css\bootstrap-less\breadcrumbs.less" />
+    <Content Include="assets\css\bootstrap-less\button-groups.less" />
+    <Content Include="assets\css\bootstrap-less\buttons.less" />
+    <Content Include="assets\css\bootstrap-less\carousel.less" />
+    <Content Include="assets\css\bootstrap-less\close.less" />
+    <Content Include="assets\css\bootstrap-less\code.less" />
+    <Content Include="assets\css\bootstrap-less\component-animations.less" />
+    <Content Include="assets\css\bootstrap-less\dropdowns.less" />
+    <Content Include="assets\css\bootstrap-less\forms.less" />
+    <Content Include="assets\css\bootstrap-less\glyphicons.less" />
+    <Content Include="assets\css\bootstrap-less\grid.less" />
+    <Content Include="assets\css\bootstrap-less\input-groups.less" />
+    <Content Include="assets\css\bootstrap-less\jumbotron.less" />
+    <Content Include="assets\css\bootstrap-less\labels.less" />
+    <Content Include="assets\css\bootstrap-less\list-group.less" />
+    <Content Include="assets\css\bootstrap-less\media.less" />
+    <Content Include="assets\css\bootstrap-less\mixins.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\alerts.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\background-variant.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\border-radius.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\buttons.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\center-block.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\clearfix.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\forms.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\gradients.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\grid-framework.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\grid.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\hide-text.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\image.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\labels.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\list-group.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\nav-divider.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\nav-vertical-align.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\opacity.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\pagination.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\panels.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\progress-bar.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\reset-filter.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\reset-text.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\resize.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\responsive-visibility.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\size.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\tab-focus.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\table-row.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\text-emphasis.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\text-overflow.less" />
+    <Content Include="assets\css\bootstrap-less\mixins\vendor-prefixes.less" />
+    <Content Include="assets\css\bootstrap-less\modals.less" />
+    <Content Include="assets\css\bootstrap-less\navbar.less" />
+    <Content Include="assets\css\bootstrap-less\navs.less" />
+    <Content Include="assets\css\bootstrap-less\normalize.less" />
+    <Content Include="assets\css\bootstrap-less\pager.less" />
+    <Content Include="assets\css\bootstrap-less\pagination.less" />
+    <Content Include="assets\css\bootstrap-less\panels.less" />
+    <Content Include="assets\css\bootstrap-less\popovers.less" />
+    <Content Include="assets\css\bootstrap-less\print.less" />
+    <Content Include="assets\css\bootstrap-less\progress-bars.less" />
+    <Content Include="assets\css\bootstrap-less\responsive-embed.less" />
+    <Content Include="assets\css\bootstrap-less\responsive-utilities.less" />
+    <Content Include="assets\css\bootstrap-less\scaffolding.less" />
+    <Content Include="assets\css\bootstrap-less\tables.less" />
+    <Content Include="assets\css\bootstrap-less\theme.less" />
+    <Content Include="assets\css\bootstrap-less\thumbnails.less" />
+    <Content Include="assets\css\bootstrap-less\tooltip.less" />
+    <Content Include="assets\css\bootstrap-less\type.less" />
+    <Content Include="assets\css\bootstrap-less\utilities.less" />
+    <Content Include="assets\css\bootstrap-less\variables.less" />
+    <Content Include="assets\css\bootstrap-less\wells.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\alerts-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\badges-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\bootstrap-rtl.css.map" />
+    <Content Include="assets\css\bootstrap-rtl-less\bootstrap-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\button-groups-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\carousel-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\close-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\dropdowns-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\forms-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\grid-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\input-groups-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\list-group-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\media-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\merged-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins\gradients-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins\grid-framework-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins\grid-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\mixins\pagination-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\modals-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\navbar-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\navs-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\normalize-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\pager-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\pagination-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\panels-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\popovers-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\progress-bars-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\responsive-embed-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\tables-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\type-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\utilities-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl-less\variables-rtl.less" />
+    <Content Include="assets\css\bootstrap-rtl.css.map" />
+    <Content Include="assets\css\bootstrap.css.map" />
+    <Content Include="assets\css\bootstrap.min.css.map" />
+    <Content Include="assets\css\demo.css.map" />
+    <Content Include="assets\css\demo.less" />
+    <Content Include="assets\css\other-less\lesshat.less" />
+    <Content Include="assets\css\skins\azure.css.map" />
+    <Content Include="assets\css\skins\azure.less" />
+    <Content Include="assets\css\skins\black.css.map" />
+    <Content Include="assets\css\skins\black.less" />
+    <Content Include="assets\css\skins\Blue.css.map" />
+    <Content Include="assets\css\skins\Blue.less" />
+    <Content Include="assets\css\skins\darkblue.css.map" />
+    <Content Include="assets\css\skins\darkblue.less" />
+    <Content Include="assets\css\skins\darkred.css.map" />
+    <Content Include="assets\css\skins\darkred.less" />
+    <Content Include="assets\css\skins\deepblue.css.map" />
+    <Content Include="assets\css\skins\deepblue.less" />
+    <Content Include="assets\css\skins\gray.css.map" />
+    <Content Include="assets\css\skins\gray.less" />
+    <Content Include="assets\css\skins\green.css.map" />
+    <Content Include="assets\css\skins\green.less" />
+    <Content Include="assets\css\skins\orange.css.map" />
+    <Content Include="assets\css\skins\orange.less" />
+    <Content Include="assets\css\skins\pink.css.map" />
+    <Content Include="assets\css\skins\pink.less" />
+    <Content Include="assets\css\skins\purple.css.map" />
+    <Content Include="assets\css\skins\purple.less" />
+    <Content Include="assets\css\skins\skins-mixins.css.map" />
+    <Content Include="assets\css\skins\skins-mixins.less" />
+    <Content Include="assets\css\skins\teal.css.map" />
+    <Content Include="assets\css\skins\teal.less" />
+    <Content Include="assets\fonts\BYekan.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="assets\fonts\FontAwesome.otf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\Open-Sans-300italic.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\Open-Sans-300italic.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\Open-Sans-300italic.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300italic\Open-Sans-300italic.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\Open-Sans-300.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\Open-Sans-300.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\Open-Sans-300.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-300\Open-Sans-300.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\Open-Sans-600italic.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\Open-Sans-600italic.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\Open-Sans-600italic.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600italic\Open-Sans-600italic.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\Open-Sans-600.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\Open-Sans-600.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\Open-Sans-600.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-600\Open-Sans-600.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\Open-Sans-700italic.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\Open-Sans-700italic.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\Open-Sans-700italic.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700italic\Open-Sans-700italic.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\Open-Sans-700.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\Open-Sans-700.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\Open-Sans-700.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-700\Open-Sans-700.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\Open-Sans-800italic.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\Open-Sans-800italic.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\Open-Sans-800italic.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800italic\Open-Sans-800italic.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\Open-Sans-800.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\Open-Sans-800.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\Open-Sans-800.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-800\Open-Sans-800.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\Open-Sans-italic.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\Open-Sans-italic.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\Open-Sans-italic.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-italic\Open-Sans-italic.woff2" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\Open-Sans-regular.eot" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\Open-Sans-regular.ttf" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\Open-Sans-regular.woff" />
+    <Content Include="assets\fonts\Open-Sans\fonts\Open-Sans-regular\Open-Sans-regular.woff2" />
+    <Content Include="assets\fonts\typicons.eot" />
+    <Content Include="assets\fonts\typicons.ttf" />
+    <Content Include="assets\fonts\typicons.woff" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="assets\fonts\WeatherIcons-Regular.otf" />
+    <Content Include="assets\fonts\YekanWeb-Bold.woff" />
+    <Content Include="assets\fonts\YekanWeb-Regular.woff" />
+    <Content Include="assets\js\beyond.min.js.map" />
+    <Content Include="assets\js\bootbox\bootbox.js.add" />
+    <Content Include="assets\js\bootbox\bootbox.min.js.map" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js.map" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js.map" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js.map" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js.map" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js.map" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js.map" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js.map" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js.map" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js.map" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js.map" />
+    <Content Include="assets\js\skins.min.js.map" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.min.js.map" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js.map" />
+    <Content Include="assets\js\toastr\toastr.min.js.map" />
+    <Content Include="assets\js\validation\bootstrapValidator.min.js.map" />
+    <Content Include="assets\other\DataTable-1.10.10\images\Sorting icons.psd" />
+    <Content Include="fonts\HomemadeApple-Regular.ttf" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer.eot" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer.ttf" />
+    <Content Include="assets\pages\jquery.filer\fonts\jquery.filer-icons\jquery-filer.woff" />
+    <Content Include="Certificates\fultondependencyprod-sp-privatekey.pfx" />
+    <Content Include="Certificates\fultondependencyprod-sp.cer" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\Application-Script\tutorial\jtutorial.config.json" />
+    <Content Include="Scripts\Application-Script\tutorial\README" />
+    <Content Include="Scripts\Application-Script\Administration\CountyCounsel.js" />
+    <Content Include="Scripts\Application-Script\Administration\CountyCounselAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\EditUserGroup.js" />
+    <Content Include="Scripts\Application-Script\Administration\GroupSecurity.js" />
+    <Content Include="Scripts\Application-Script\Administration\HearingRates.js" />
+    <Content Include="Scripts\Application-Script\Administration\HearingRatesAddEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\Training.js" />
+    <Content Include="Scripts\Application-Script\Administration\TrainingEdit.js" />
+    <Content Include="Scripts\Application-Script\Administration\TrainingSummary.js" />
+    <Content Include="Scripts\Application-Script\Administration\UserGroups.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\Associations.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\PetitionAddEdit.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\AddCaseRespondents.js" />
+    <Content Include="Scripts\Application-Script\CaseOpening\AddApptCase.js" />
+    <Content Include="Scripts\Application-Script\Case\LegalNumber.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\AdvCaseSearch.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\CaseSearch.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\InvoiceQueue.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\MyCaseLoad.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\SearchByPhysicalFile.js" />
+    <Content Include="Scripts\Application-Script\Inquiry\ToDoList.js" />
+    <Content Include="Scripts\Application-Script\Tasks\ARSummarySearch.js" />
+    <Content Include="Scripts\Application-Script\Tasks\HourlyInvoiceListSearch.js" />
+    <Content Include="Scripts\Application-Script\Tasks\MonthlyInvoiceListSearch.js" />
+    <Content Include="Scripts\Application-Script\Tasks\SCCInvoiceQueueSearch.js" />
+    <None Include="Scripts\jquery-3.5.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.5.0.js" />
+    <Content Include="Scripts\jquery-3.5.0.min.js" />
+    <Content Include="Scripts\jquery-3.5.0.slim.js" />
+    <Content Include="Scripts\jquery-3.5.0.slim.min.js" />
+    <Content Include="Scripts\jquery-3.5.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.5.0.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <None Include="T4MVC.tt.hooks.t4" />
+    <None Include="T4MVC.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4MVC.cs</LastGenOutput>
+    </None>
+    <None Include="T4MVC.tt.settings.xml" />
+    <Content Include="Views\ARSummary\_arSummurySearchResult.cshtml" />
+    <Content Include="Views\CaseOpening\Hearing.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Account\ChangePasswordRequired.cshtml" />
+    <Content Include="Views\Home\AntiForgery.cshtml" />
+    <Content Include="Views\Task\QuickCalMyCalendar.cshtml" />
+    <Content Include="Views\Task\CalendarNumbering.cshtml" />
+    <Content Include="Views\Task\CalendarAppearanceSheet.cshtml" />
+    <Content Include="Views\Task\_partialCalendarSummaryBar.cshtml" />
+    <Content Include="Views\UserGroups\GroupSecurityBySI.cshtml" />
+    <Content Include="Views\Task\CalendarActivitySheet.cshtml" />
+    <Content Include="Views\Task\CalendarMostRecentAR.cshtml" />
+    <Content Include="Views\Task\CalendarAttachedFiles.cshtml" />
+    <Content Include="Views\Task\CalendarAppearanceNotes.cshtml" />
+    <Content Include="Views\Administration\PredeterminedAnswersList.cshtml" />
+    <Content Include="Views\Administration\PredeterminedAnswersAddEdit.cshtml" />
+    <Content Include="Views\Administration\MergeTemplateAdmin.cshtml" />
+    <Content Include="Views\Task\FillinByAttorneyBatch.cshtml" />
+    <Content Include="Views\Task\CalendarAppearanceSheetNotes.cshtml" />
+    <Content Include="Views\Task\QuickCalNextHearing.cshtml" />
+    <Content Include="Views\Case\CSEC.cshtml" />
+    <Content Include="Views\Case\CSECEdit.cshtml" />
+    <Content Include="Views\Task\CSECSummary.cshtml" />
+    <Content Include="Views\Task\_partialCSECSummary.cshtml" />
+    <Content Include="Views\Task\MyCSECQueue.cshtml" />
+    <Content Include="Views\Mail\ClearConsernEmailNotification.html.cshtml" />
+    <Content Include="Views\Task\CalendarAppearanceSheetForParent.cshtml" />
+    <Content Include="Views\CaseOpening\EditAllegationFinding.cshtml" />
+    <Content Include="Views\Task\_partialAttachedFiles.cshtml" />
+    <Content Include="Views\Case\Advisements.cshtml" />
+    <Content Include="Views\Task\QuickCalDCCAndNewPrivateCounsel.cshtml" />
+    <Content Include="Views\Task\CalendarToDo.cshtml" />
+    <Content Include="Views\Case\TextMessages.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Case\ReferralList.cshtml" />
+    <Content Include="Views\Case\ReferralAddEdit.cshtml" />
+    <Content Include="Views\Case\ReferralCareAddEdit.cshtml" />
+    <Content Include="Views\Case\ReferralMHATAddEdit.cshtml" />
+    <Content Include="Views\Case\ReferralCSECAddEdit.cshtml" />
+    <Content Include="Views\Case\ReferralPeerAdvocateAddEdit.cshtml" />
+    <Content Include="Views\Case\ReferralImmigrationAdvisorAddEdit.cshtml" />
+    <Content Include="Views\Task\ReferralSummary.cshtml" />
+    <Content Include="Views\Task\ReferralSummarySearch.cshtml" />
+    <Content Include="Views\Task\ReferralQueue.cshtml" />
+    <Content Include="Views\Case\_partialReferralTabs.cshtml" />
+    <Content Include="Views\Case\ReferralActivitySheet.cshtml" />
+    <Content Include="Views\Case\ReferralAttachedFiles.cshtml" />
+    <Content Include="Views\Task\QuickAddAdult.cshtml" />
+    <Content Include="Views\Task\QuickAddChild.cshtml" />
+    <Content Include="Views\Task\QuickCalAddNewHearing.cshtml" />
+    <Content Include="Views\Case\GoTo.cshtml" />
+    <Content Include="Views\Administration\JudgeDeptTransfer.cshtml" />
+    <Content Include="Views\Administration\_JudgeDeptTransferSearchResult.cshtml" />
+    <Content Include="Views\Inquiry\MyCaseLoadV2.cshtml" />
+    <Content Include="Views\Inquiry\_myCaseLoadV2SearchResult.cshtml" />
+    <Content Include="Views\Shared\_PushNotification.cshtml" />
+    <Content Include="Views\Task\ClientStatusHistory.cshtml" />
+    <Content Include="Views\Case\CopyCaseTransfer.cshtml" />
+    <Content Include="Views\Task\TrainingUpload.cshtml" />
+    <Content Include="Views\Inquiry\_myJcatsAttyDailyTimePartial.cshtml" />
+    <Content Include="Views\Task\RecordTimeNonCase.cshtml" />
+    <Content Include="Views\Task\_partialRecordTimeNonCaseList.cshtml" />
+    <Content Include="Views\Task\RecordTimeNonCaseAddEdit.cshtml" />
+    <Content Include="Views\Task\IVEActvityLog.cshtml" />
+    <Content Include="Views\Task\_IVEActivitySheetMonthView.cshtml" />
+    <Content Include="Views\Task\HearingPreparationHours.cshtml" />
+    <Content Include="Views\Task\IVEInvoice.cshtml" />
+    <Content Include="Views\Task\IVEProfessionalServices.cshtml" />
+    <Content Include="Views\Task\IVEOperatingExpenses.cshtml" />
+    <Content Include="Views\Task\IVETravelExpenses.cshtml" />
+    <Content Include="Views\Administration\AgencyGroup.cshtml" />
+    <Content Include="Views\Administration\_AgencyGroupPartial.cshtml" />
+    <Content Include="Views\Task\IVEPersonnel.cshtml" />
+    <Content Include="Views\Task\IVEClaimForm.cshtml" />
+    <Content Include="Views\Users\UploadSignature.cshtml" />
+    <Content Include="Views\Task\IVEActvityLogListAgencyEmployees.cshtml" />
+    <Content Include="Views\Task\IVEActivityLogExec.cshtml" />
+    <Content Include="Views\Task\IVEAttachments.cshtml" />
+    <Content Include="Views\Administration\AgencyGroupAllocation.cshtml" />
+    <Content Include="Views\Task\QuickCalNewFacility.cshtml" />
+    <Content Include="Views\Task\IVeInvoiceStatus.cshtml" />
+    <Content Include="Views\Task\QuickCalCurrentERH.cshtml" />
+    <Content Include="Views\Task\AdditionalAttendees.cshtml" />
+    <Content Include="Views\Case\CreateOtherAgencyCase.cshtml" />
+    <Content Include="Views\Inquiry\WritAppealNoticeDuesByAttorney.cshtml" />
+    <Content Include="Views\Case\ExpenseNG.cshtml" />
+    <Content Include="Views\Case\ExpenseNGHeader.cshtml" />
+    <Content Include="Views\Case\ExpenseNGStatusHistory.cshtml" />
+    <Content Include="Views\Case\ExpenseNGFiles.cshtml" />
+    <Content Include="Views\Task\MyInvoiceQueue.cshtml" />
+    <Content Include="Views\Case\Invoices.cshtml" />
+    <Content Include="Views\Case\InvoiceAddEdit.cshtml" />
+    <Content Include="Views\Case\NGInvoiceStatusHistory.cshtml" />
+    <Content Include="Views\Administration\InvoiceSummary.cshtml" />
+    <Content Include="Views\Administration\ImportPaidInvoices.cshtml" />
+    <Content Include="Views\Case\ReferralEventAddEdit.cshtml" />
+    <Content Include="Views\Inquiry\ReferralEventCalendar.cshtml" />
+    <Content Include="Views\Inquiry\_referralEventCalendarPartial.cshtml" />
+    <Content Include="Views\Case\ReferralAddEditCodePopup.cshtml" />
+    <Content Include="Views\Help\Tutorials.cshtml" />
+    <Content Include="Views\Case\ReferralMentorAddEdit.cshtml" />
+    <Content Include="Views\Shared\_HearingContinuanceRequestedAndReason.cshtml" />
+    <None Include="Web.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Case\Search.cshtml" />
+    <Content Include="Views\Shared\_MenuCase.cshtml" />
+    <Content Include="Views\Home\AccessDenied.cshtml" />
+    <Content Include="Views\Home\InvalidGuid.cshtml" />
+    <Content Include="Views\Home\SessionTimeout.cshtml" />
+    <Content Include="Views\Case\AdvCaseSearch.cshtml" />
+    <Content Include="Views\SCCInvoiceQueue\Search.cshtml" />
+    <Content Include="Views\ARSummary\Search.cshtml" />
+    <Content Include="Views\Inquiry\EmployeeRoster.cshtml" />
+    <Content Include="Views\Inquiry\ToDoList.cshtml" />
+    <Content Include="Views\Mail\RaiseElmahErrorEmail.html.cshtml" />
+    <Content Include="Views\Mail\ResetPassword.html.cshtml" />
+    <Content Include="Views\Account\GeneratePassword.cshtml" />
+    <Content Include="Views\MonthlyInvoiceList\Search.cshtml" />
+    <Content Include="Views\Case\Main.cshtml" />
+    <Content Include="Views\Case\_partialHearingListForMainCase.cshtml" />
+    <Content Include="Views\Inquiry\ToDoAddEdit.cshtml" />
+    <Content Include="Views\HourlyInvoiceList\Search.cshtml" />
+    <Content Include="Views\InvoiceQueue\Search.cshtml" />
+    <Content Include="Views\Inquiry\SupvAtty.cshtml" />
+    <Content Include="Views\Inquiry\MasterCalendar.cshtml" />
+    <Content Include="Views\Inquiry\CalendarManagement.cshtml" />
+    <Content Include="Views\Inquiry\_calendarSearchResult.cshtml" />
+    <Content Include="Views\UserGroups\Search.cshtml" />
+    <Content Include="Views\Inquiry\CaseloadManagement.cshtml" />
+    <Content Include="Views\Inquiry\_caseloadSearchresult.cshtml" />
+    <Content Include="Views\Inquiry\MyCalendar.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Inquiry\Reports.cshtml" />
+    <Content Include="Views\CaseOpening\AddApptCase.cshtml" />
+    <Content Include="Views\SearchByPhysicalFile\Search.cshtml" />
+    <Content Include="Views\CaseOpening\AddCaseRespondents.cshtml" />
+    <Content Include="Views\UserGroups\GroupSecurity.cshtml" />
+    <Content Include="Views\Case\PetitionAndRolePopUp.cshtml" />
+    <Content Include="Views\Shared\_Popup.cshtml" />
+    <Content Include="Views\UserGroups\EditUserGroup.cshtml" />
+    <Content Include="Views\CaseOpening\LegalParties.cshtml" />
+    <Content Include="Views\CaseOpening\PetitionList.cshtml" />
+    <Content Include="Views\CaseOpening\_steps.cshtml" />
+    <Content Include="Views\Help\Index.cshtml" />
+    <Content Include="Views\Shared\_HelpLayout.cshtml" />
+    <Content Include="Views\TrainingSummary\Search.cshtml" />
+    <Content Include="Views\CaseOpening\PetitionAddEdit.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Note\Index.cshtml" />
+    <Content Include="Views\TrainingSummary\TrainingEdit.cshtml" />
+    <Content Include="Views\Case\LegalNumber.cshtml" />
+    <Content Include="Views\MyReport\Index.cshtml" />
+    <Content Include="Views\Case\LegalNumberAddEdit.cshtml" />
+    <Content Include="Views\HearingRates\Search.cshtml" />
+    <Content Include="Views\Inquiry\MyJcatsAtty.cshtml" />
+    <Content Include="Views\HearingRates\AddEdit.cshtml" />
+    <Content Include="Views\CountyCounselList\Search.cshtml" />
+    <Content Include="Views\CaseOpening\Associations.cshtml" />
+    <Content Include="Views\CaseOpening\CaseAddresses.cshtml" />
+    <Content Include="Views\CountyCounselList\AddEditCountyCounsel.cshtml" />
+    <Content Include="Views\Inquiry\MyCaseLoad.cshtml" />
+    <Content Include="Views\Inquiry\_myCaseLoadSearchResult.cshtml" />
+    <Content Include="Views\Administration\SystemValues.cshtml" />
+    <Content Include="Views\CaseOpening\LegalNumbers.cshtml" />
+    <Content Include="Views\Inquiry\MyJcatsInv.cshtml" />
+    <Content Include="Views\Users\Search.cshtml" />
+    <Content Include="Views\Users\AddEdit.cshtml" />
+    <Content Include="Views\CodeTables\List.cshtml" />
+    <Content Include="Views\CodeTables\Values.cshtml" />
+    <Content Include="Views\Administration\SystemValuesAddEdit.cshtml" />
+    <Content Include="Views\TrainingSummary\_trainingSummaryPartial.cshtml" />
+    <Content Include="Views\Case\ContactInfo.cshtml" />
+    <Content Include="Views\Motions\List.cshtml" />
+    <Content Include="Views\Case\SubpoenaList.cshtml" />
+    <Content Include="Views\WritsAppeals\List.cshtml" />
+    <Content Include="Views\Shared\_Tracking.cshtml" />
+    <Content Include="Views\WritsAppeals\AddEditAppeals.cshtml" />
+    <Content Include="Views\CaseOpening\Notes.cshtml" />
+    <Content Include="Views\CaseOpening\ActionRequest.cshtml" />
+    <Content Include="Views\CaseOpening\ActionRequestAdd.cshtml" />
+    <Content Include="Views\WritsAppeals\AppealDecisionAddEdit.cshtml" />
+    <Content Include="Views\Case\Conflict.cshtml" />
+    <Content Include="Views\Note\NoteAddEdit.cshtml" />
+    <Content Include="Views\Case\SubpoenaAddEdit.cshtml" />
+    <Content Include="Views\Case\_partialRecordTimeList.cshtml" />
+    <Content Include="Views\Case\RecordTime.cshtml" />
+    <Content Include="Views\Case\RecordTimeAdd.cshtml" />
+    <Content Include="Views\Motions\MotionAddEdit.cshtml" />
+    <Content Include="Views\Case\Expense.cshtml" />
+    <Content Include="Views\Task\MyARQueue.cshtml" />
+    <Content Include="Views\SCCInvoiceQueue\SCCInvoiceAddEdit.cshtml" />
+    <Content Include="Views\Case\MoreInfoOnPerson.cshtml" />
+    <Content Include="Views\Case\CaseEdit.cshtml" />
+    <Content Include="Views\Case\AKAs.cshtml" />
+    <Content Include="Views\Case\AKAsAddEdit.cshtml" />
+    <Content Include="Views\Administration\MyTraining.cshtml" />
+    <Content Include="Views\Administration\_myTraining.cshtml" />
+    <Content Include="Views\Case\Plea.cshtml" />
+    <Content Include="Views\Case\Attendance.cshtml" />
+    <Content Include="Views\Case\Pos.cshtml" />
+    <Content Include="Views\Case\HearingOpinion.cshtml" />
+    <Content Include="Views\Case\MoreInfoOnPetition.cshtml" />
+    <Content Include="Views\Task\BatchHearing.cshtml" />
+    <Content Include="Views\Administration\ChangePassword.cshtml" />
+    <Content Include="Views\Users\PersonLegalNumbers.cshtml" />
+    <Content Include="Views\Users\UserContact.cshtml" />
+    <Content Include="Views\Inquiry\ReportParameter.cshtml" />
+    <Content Include="Views\Case\EditAR.cshtml" />
+    <Content Include="Views\Case\RecordTimeEdit.cshtml" />
+    <Content Include="Views\Home\Preference.cshtml" />
+    <Content Include="Views\Case\EditPerson.cshtml" />
+    <Content Include="Views\Task\ARTransfer.cshtml" />
+    <Content Include="Views\Task\AR\EditRFD.cshtml" />
+    <Content Include="Views\HourlyInvoiceList\Add.cshtml" />
+    <Content Include="Views\HourlyInvoiceList\Edit.cshtml" />
+    <Content Include="Views\Case\QuickAR.cshtml" />
+    <Content Include="Views\Task\AR\EditRFDAddress.cshtml" />
+    <Content Include="Views\Task\QuickAddCaseSearch.cshtml" />
+    <Content Include="Views\Task\QuickAddCase.cshtml" />
+    <Content Include="Views\Task\AR\_tabs.cshtml" />
+    <Content Include="Views\Task\AR\EditRFDProfile.cshtml" />
+    <Content Include="Views\Users\Department.cshtml" />
+    <Content Include="Views\Task\AR\ViewNote.cshtml" />
+    <Content Include="Views\JudicialOfficer\Search.cshtml" />
+    <Content Include="Views\Task\AR\EditRFDProfileQuestion.cshtml" />
+    <Content Include="Views\JudicialOfficer\AddEdit.cshtml" />
+    <Content Include="Views\CaseCleanup\Search.cshtml" />
+    <Content Include="Views\CaseCleanup\_CaseCleanupSearchResultPartial.cshtml" />
+    <Content Include="Views\Inquiry\MyJcatsMgmt.cshtml" />
+    <Content Include="Views\Inquiry\ReportCaseloadSummary.cshtml" />
+    <Content Include="Views\Inquiry\ReportHearingSummary.cshtml" />
+    <Content Include="Views\Inquiry\ReportRFDCaseloadSummary.cshtml" />
+    <Content Include="Views\Case\FindingsAndOrders.cshtml" />
+    <Content Include="Views\Case\AddFindingsAndOrders.cshtml" />
+    <Content Include="Views\CaseOpening\HearingEdit.cshtml" />
+    <Content Include="Views\Case\EditFindingsAndOrders.cshtml" />
+    <Content Include="Views\QHE\QHEHearing.cshtml" />
+    <Content Include="Views\QHE\_steps.cshtml" />
+    <Content Include="Views\QHE\QHEAttendance.cshtml" />
+    <Content Include="Views\QHE\QHEPlea.cshtml" />
+    <Content Include="Views\QHE\QHEPos.cshtml" />
+    <Content Include="Views\QHE\AddFindingsAndOrders.cshtml" />
+    <Content Include="Views\QHE\EditFindingsAndOrders.cshtml" />
+    <Content Include="Views\QHE\QHEFindingsAndOrders.cshtml" />
+    <Content Include="Views\QHE\HearingOpinion.cshtml" />
+    <Content Include="Views\QHE\QHEAllegations.cshtml" />
+    <Content Include="Views\QHE\QHENextHearing.cshtml" />
+    <Content Include="Views\QHE\QHERecordTime.cshtml" />
+    <Content Include="Views\QHE\QHERecordTimeAdd.cshtml" />
+    <Content Include="Views\QHE\_partialRecordTimeList.cshtml" />
+    <Content Include="Views\QHE\QHERecordTimeEdit.cshtml" />
+    <Content Include="Views\Inquiry\TransferCase.cshtml" />
+    <Content Include="Views\InvoiceQueue\InvoiceVerifyPopup.cshtml" />
+    <Content Include="Views\Invoice\Search.cshtml" />
+    <Content Include="Views\Invoice\InvoiceNote.cshtml" />
+    <Content Include="Views\Invoice\EditHearingAmount.cshtml" />
+    <Content Include="Views\Case\AttachFile.cshtml" />
+    <Content Include="Views\Case\EditAttachFile.cshtml" />
+    <Content Include="Views\Case\AddAttachFile.cshtml" />
+    <Content Include="Views\Invoice\InvoiceSentPopup.cshtml" />
+    <Content Include="Views\CodeTables\AddCode.cshtml" />
+    <Content Include="Views\CodeTables\EditCode.cshtml" />
+    <Content Include="Views\MonthlyInvoiceList\EditInvoice.cshtml" />
+    <Content Include="Views\Administration\HelpList.cshtml" />
+    <Content Include="Views\Note\_PageNote.cshtml" />
+    <Content Include="Views\Note\_PageNoteDetail.cshtml" />
+    <Content Include="Views\Inquiry\Leave.cshtml" />
+    <Content Include="Views\Inquiry\HearingOfficerTransfer.cshtml" />
+    <Content Include="Views\MonthlyInvoiceList\AddInvoice.cshtml" />
+    <Content Include="Views\CaseOpening\PetitionCopy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Mobile\Views\Account\" />
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LALoDep.Domain\LALoDep.Domain.csproj">
+      <Project>{4a6bbfd3-3401-4dcf-bbf9-8947aa81a64b}</Project>
+      <Name>LALoDep.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LALoDep.Core\LALoDep.Core.csproj">
+      <Project>{7ec92d5c-0bc7-4492-b4cf-fd0b9f6fb5bd}</Project>
+      <Name>LALoDep.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>61548</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:61538/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

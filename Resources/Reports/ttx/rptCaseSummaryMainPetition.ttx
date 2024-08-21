@@ -1,0 +1,10 @@
+PetitionFileDate	DateTime		01/01/2000
+PetitionDocketNumber	String	100	AAA111
+Type	String	50	Role
+AgencyName	String	50	M
+ChildName	String	100	Smith, John
+Allegation	String	50	ABC
+PetitionCloseDate	DateTime		01/01/2000
+RespondentFlag	Number		1
+GroupID	Number	1
+PetitionCloseReason	String	100	Close Reason

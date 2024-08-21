@@ -1,0 +1,111 @@
+﻿@model LALoDep.Models.Inquiry.ReferralEventCalendarViewModel
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Referral Event Calendar";
+}
+
+<style>
+    .table .grp-header {
+        background: #eee;
+        font-weight : 700;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ref-search-form", @class = "form-inline  center-block" }))
+                {
+
+                    <div class="form-group">
+                        <label for="daterangepicker" class="control-label">Start Date - End Date</label>
+                        <input tabindex="1" type="text" id="daterangepicker" value="@Model.StartDate - @Model.EndDate" class="form-control daterange input-sm" style="width:200px" />
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:280px" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ReferralTypeID, "Referral Type", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.ReferralTypeID, Model.ReferralTypeList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:280px" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AppearingPersonID, "Appearing Staff/Atty", new { @class = "control-label" })
+                        <select id="AppearingPersonID" name="AppearingPersonID" class="form-control input-sm" style="width:280px">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EventTypeID, "Event Type", new { @class = "control-label" })
+                        <select id="EventTypeID" name="EventTypeID" class="form-control input-sm" style="width:280px">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EventLocationID, "Location", new { @class = "control-label" })
+                        <select id="EventLocationID" name="EventLocationID" class="form-control input-sm" style="width:280px">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    @Html.HiddenFor(c => c.PersonID)
+                    @Html.HiddenFor(c => c.StartDate)
+                    @Html.HiddenFor(c => c.EndDate)
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="totalResults">Search Results (0)</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblReferralList">
+                            <thead>
+                                <tr>
+                                    <th width="10%">Time</th>
+                                    <th width="15%">Referral Type</th>
+                                    <th width="15%">Event Type</th>
+                                    <th width="15%">Location</th>
+                                    <th width="15%">Case #</th>
+                                    <th width="15%">Client (Present Y/N)</th>
+                                    <th width="20%">Appearing Staff/Attorney</th>
+                                </tr>
+                            </thead>
+                            <tbody id="referralEventData">
+                                <tr class="odd"><td valign="top" colspan="12" class="text-center dataTables_empty">No results</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSearch" type="submit" class="btn btn-primary v-bottom default" tabindex="4">Search</button>
+    </div>
+}
+@section  Scripts{
+    <script type="text/javascript">
+        var $loadFromCache = '@TempData["ReferralEventSaved"]' == ''
+        var appearingStaffAttyList = @Html.Raw(Model.AppearingStaffAttyList.ToSerialize()),
+            eventTypeList = @Html.Raw(Model.EventTypeList.ToSerialize()),
+            eventLocationList = @Html.Raw(Model.EventLocationList.ToSerialize());
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Inquiry/ReferralEventCalendar.js?v=" + Guid.NewGuid())"></script>
+}

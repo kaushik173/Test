@@ -1,0 +1,9 @@
+AttorneyFullName	String	100	Lorenza, Craig
+AttorneyFirstName	String	50	Lorenza
+AttorneyLastName	String	50	Craig
+HearingType	String	100	26
+HearingCount	Number		1
+StartDate	DateTime	50	01/01/1998
+EndDate	DateTime	50	01/01/2000
+AgencyName	String	200	Public Defender
+AttorneyPersonID	String	200	Lorenza, Craig 12345

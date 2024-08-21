@@ -1,0 +1,355 @@
+﻿@model LALoDep.Models.Case.ReferralEventViewModel
+@using LALoDep.Core.Custom.Utility
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Event Add/Edit";
+    var tabIndex = 1;
+}
+
+@Html.Action("ReferralTabs", "Case", new { id = Model.ReferralID })
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EventAddEdit", @class = "form-inline  center-block" }))
+        {
+            @Html.HiddenFor(m => m.ReferralID)
+            @Html.HiddenFor(m => m.ReferralEventID)
+
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Event
+                    </span>
+                </div>
+                <div class="widget-body">
+                    <div class="row">
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEventTypeCodeID, "Event Type", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ReferralEventTypeCodeID, Model.EventTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEventDateTime, "Event Date", new { @class = "control-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.ReferralEventDateTime, "{0:MM/dd/yyyy}", new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = ++tabIndex, maxlength = "10" })
+                                <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="form-group   useWorkTime">
+                            @Html.LabelFor(m => m.ReferralEventDateTime, "Event Time", new { @class = "control-label" })
+
+                            <br />
+
+
+                            @{
+                                if (!Model.ReferralEventDateTime.HasValue)
+                                {
+                                    Model.ReferralEventDateTime = DateTime.Parse("09:00 AM");
+                                }
+                                var time = Model.ReferralEventDateTime.Value;
+
+                                var hours = int.Parse(time.ToString("hh")).ToString();
+                                var minutes = time.ToString("mm");
+                                var am = time.ToString("tt").Replace(".", "");
+
+
+                            }
+                            @Html.DropDownList("ReferralEventTimeHours", Utility.GetHoursList(hours), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = hours, tabindex = ++tabIndex })  :   @Html.DropDownList("ReferralEventTimeMinutes", Utility.GetMinutesListIncrementOne(minutes), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = minutes, tabindex = ++tabIndex })   @Html.DropDownList("ReferralEventTimeAmPm", Utility.GetTimeAmPm(am), new { style = "width:54px;padding:3px;", @class = "ddlTime", data_oldvalue = am, tabindex = ++tabIndex })
+
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEventLocationCodeID, "Location", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ReferralEventLocationCodeID, Model.LocationList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEventAppearingPersonID, "Appearing Staff/Attorney", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ReferralEventAppearingPersonID, Model.AppearingAttorneyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReferralEventClientPresentFlag, "Client Present", new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.ReferralEventClientPresentFlag, Model.ClientPresentList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%" })
+                        </div>
+                        <div class="form-group  col-md-12 col-sm-12  col-xs-12 ">
+
+                            @if (Model.ControlType == "RTF")
+                            {
+                                @Html.LabelFor(m => m.ReferralEventNote, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(model => model.ReferralEventNote, new { @class = "form-control input-sm summernote", tabindex = ++tabIndex, style = "width:100%" })
+
+                            }
+                            else
+                            {
+                                @Html.LabelFor(m => m.ReferralEventNote, "Note", new { @class = "control-label" })
+                                @Html.TextAreaFor(model => model.ReferralEventNote, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%" })
+
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Event History
+                    </span>
+
+                </div>
+                <div class="widget-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblReferralList">
+                            <thead>
+
+
+                                <tr>
+                                    <th>Date/Time</th>
+                                    <th>Event Type	</th>
+                                    <th>Location</th>
+                                    <th>Appearing Staff/Attorney</th>
+                                    <th>Client Present </th>
+                                    <th>Note</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.EventHistoryList)
+                                {
+                                    <tr class="@(Model.ReferralEventID==item.ReferralEventID?"selectedrow":"")">
+                                        <td class="text-nowrap">
+                                            <a href="/Case/ReferralEventAddEdit/@Model.ReferralID.ToEncrypt()?eventId=@item.ReferralEventID.ToEncrypt()">@item.EventDateTime</a>
+
+
+
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @item.EventType
+                                        </td>
+                                        <td>@item.EventLocation</td>
+                                        <td>@item.AppearingAttorney</td>
+                                        <td>@item.ClientPresent</td>
+                                        <td>@Html.Raw(item.NoteDisplay)</td>
+                                        <td>
+                                            <a href="javascript:void(0);" class="btn btn-danger btn-xs delete" data-id="@item.ReferralEventID.ToEncrypt()"><i class="fa fa-trash-o"></i> Delete</a>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="@TempData["PageID"]" id="pageID"/>
+
+        }
+
+    </div>
+</div>
+@section fixedfooter{
+
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary default" tabindex="@(++tabIndex)">Save/Add Another Event</button>
+        <button id="btnSaveAndReturn" type="button" class="btn btn-default " tabindex="@(++tabIndex)">Save/Return to Referral List</button>
+        <button id="btnSaveAndRef" type="button" class="btn btn-default " tabindex="@(++tabIndex)">Save/Go To Referral</button>
+        <button id="btnSaveAndCal" type="button" class="btn btn-default " tabindex="@(++tabIndex)">Save/Go To Calendar</button>
+        <button id="btnCancel" type="button" class="btn btn-default" tabindex="@(++tabIndex)"><u>C</u>ancel</button>
+    </div>
+}
+<link href="~/assets/js/editors/summernote/summernote.css" rel="stylesheet" />
+<style>
+    .note-list {
+        display: none !important;
+    }
+</style>
+@section scripts{
+
+
+    <script>
+        ApplySummernote()
+    </script>
+
+    <script>
+        $(function () {
+            $('#btnCancel').click(function (e) {
+                e.preventDefault();
+                if ($("#pageID").val() == 1) {
+                    document.location.href = '/Inquiry/ReferralEventCalendar';
+                }
+                else {
+                    document.location.href = '/Case/ReferralList';
+                }
+            });
+
+            $('#btnSaveAndReturn').click(function (e) {
+                e.preventDefault();
+                SaveData(2);
+
+            });
+            $('#btnSaveAndRef').click(function (e) {
+                e.preventDefault();
+                SaveData(3);
+
+            });
+            $('#btnSaveAndCal').click(function (e) {
+                e.preventDefault();
+                SaveData(4);
+
+            });
+
+            $('#btnSave').click(function (e) {
+                e.preventDefault();
+                SaveData(1);
+            });
+            setInitialFormValues('EventAddEdit', true);
+
+            $('body').on('click', '.delete', function () {
+                var id = $(this).attr('data-id');
+                var tr = $(this).parent().parent();
+
+                confirmBox("Are you sure you want to remove this record?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: "POST", url: '/Case/ReferralEventDelete/' + id,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.isSuccess) {
+                                    tr.remove();
+                                    Notify('Record delete successfully.', 'bottom-right', '5000', 'success', 'fa-check', true);
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            }
+                        });
+                    }
+                    else {
+
+                    }
+                });
+            });
+
+        });
+
+
+        function Validation() {
+            if ($('#ReferralEventTypeCodeID').val()=='') {
+                Notify('Event Type is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventTypeCodeID').focus();
+                return false;
+            }
+            else if ($('#ReferralEventDateTime').val() == '') {
+                Notify('Event Date is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventDateTime').focus();
+                return false;
+            }
+            else if ($('#ReferralEventLocationCodeID').val() == '') {
+                Notify('Location is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventLocationCodeID').focus();
+                return false;
+            } else if ($('#ReferralEventLocationCodeID').val() == '') {
+                Notify('Location is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventLocationCodeID').focus();
+                return false;
+            } else if ($('#ReferralEventAppearingPersonID').val() == '') {
+                Notify('Appearing Attorney is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventAppearingPersonID').focus();
+                return false;
+            } else if ($('#ReferralEventClientPresentFlag').val() == '') {
+                Notify('Client Present is required.', 'bottom-right', '5000', 'danger', 'fa-warning', true);
+                $('#ReferralEventClientPresentFlag').focus();
+                return false;
+            }
+
+            return true;
+        }
+        function SaveData(buttonID) {
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            if (!hasFormChanged('EventAddEdit')) {
+                if (buttonID == 1 && $('#ReferralEventID').val() > 0) {
+                    document.location.href = '/Case/ReferralEventAddEdit/@Model.ReferralID.ToEncrypt()';
+                    return false;
+                } else if (buttonID == 2) {
+                    document.location.href = '/Case/ReferralList';
+                    return false;
+                }else if (buttonID == 3) {
+                    document.location.href = '/Case/ReferralAddEdit/@Model.ReferralID.ToEncrypt()';
+                    return false;
+                }else if (buttonID == 4) {
+                    document.location.href = '/Inquiry/ReferralEventCalendar';
+                    return false;
+                }//need to change
+                //else
+                //{
+                //    notifyDanger('Nothing was changed.');
+                //    return false;
+                //}
+
+            }
+
+            var isValid = Validation();
+            if (isValid) {
+                var data = GetData();
+                $.ajax({
+                    type: "POST",
+                    url: "/Case/ReferralEventAddEdit",
+                    data: data,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.isSuccess) {
+                            notifySuccess('Referral Events Added Successfully!');
+
+                            RequestSubmitted();
+
+                            if (buttonID == 1)
+                                document.location.href = '/Case/ReferralEventAddEdit/@Model.ReferralID.ToEncrypt()';
+                            else if (buttonID == 3)
+                                 document.location.href = '/Case/ReferralAddEdit/@Model.ReferralID.ToEncrypt()';
+                            else if (buttonID == 4)
+                                document.location.href = '/Inquiry/ReferralEventCalendar';
+                            else 
+                                document.location.href = '/Case/ReferralList';
+                        } else {
+                        }
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        }
+
+        function GetData() {
+
+
+
+            var data = {
+                'ReferralID': $('#ReferralID').val(),
+                'ReferralEventID': $('#ReferralEventID').val(),
+                'ReferralEventDateTime': $('#ReferralEventDateTime').val() + ' ' + ($("#ReferralEventTimeHours").val() + ':' + $("#ReferralEventTimeMinutes").val() + ' ' + $("#ReferralEventTimeAmPm").val()),
+                'ReferralEventTypeCodeID': $('#ReferralEventTypeCodeID').val(),
+                'ReferralEventLocationCodeID': $('#ReferralEventLocationCodeID').val(),
+                'ReferralEventAppearingPersonID': $('#ReferralEventAppearingPersonID').val(),
+                'ReferralEventClientPresentFlag': $('#ReferralEventClientPresentFlag').val(),
+                'ReferralEventNote': $('#ReferralEventNote').GetHtml(),
+
+            };
+
+
+            return data;
+        }
+    </script>
+} 

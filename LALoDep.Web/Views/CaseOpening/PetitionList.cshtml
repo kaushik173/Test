@@ -1,0 +1,101 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model IEnumerable<LALoDep.Domain.pd_Petition.pd_PetitionGetByCaseID_spResult>
+
+@{  bool isDataEntry = Request.QueryString["dataentry"] != null;
+
+    ViewBag.Title = "Petition List";
+}
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Petition List</span>
+                <div class="widget-buttons">
+                    <input type="button" class="btn btn-labeled btn-default btn " data-secure-id="@((int)SecurityToken.ViewPetition)" onclick="document.location.href = '/CaseOpening/EditAllegationFinding'" value="Edit Allegation Finding" title="Edit Allegation Finding" />
+
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblRespondentData">
+                        <thead>
+                            <tr>
+                                <th>File Date</th>
+                                <th>Close Date</th>
+                                <th>Case #</th>
+                                <th>Type</th>
+                                <th>Child</th>
+                                <th width="60"> </th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><a href="/CaseOpening/PetitionEdit/@(item.PetitionID.ToEncrypt())@(isDataEntry?"?dataentry=true":"")" data-secure-link-id="@((int)SecurityToken.ViewPetition)" >@item.PetitionFileDate.ToDefaultFormat()</a></td>
+                                    <td>@item.CloseDate</td>
+                                    <td>@item.PetitionDocketNumber</td>
+                                    <td>
+
+                                        @item.PetitionTypeCodeValue
+
+
+                                    </td>
+                                    <td>@item.LastName @item.FirstName   </td>
+                                    <td>
+                                        @if (item.ChildCount.HasValue && item.ChildCount.Value > 1)
+                                        {
+                                            <a onclick="OpenPopup('/CaseOpening/PetitionCopy/@(item.PetitionID)','Copy All Petition # @(item.PetitionDocketNumber) Information To')" class="btn btn-info btn-xs  " data-secure-id="@((int)SecurityToken.CopyPetition)"><i class="fa fa-copy"></i> Copy</a>
+
+                                        }
+                                 </td>
+
+
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+
+    @if (!isDataEntry)
+    {  <div class="boxfloat text-center">
+            <button id="saveAndContinue" type="submit" class="btn btn-primary v-bottom default" onclick="document.location.href = '/CaseOpening/Associations';">Continue</button>
+            <a id="saveAndAdd" type="submit" class="btn btn-default v-bottom " href="/CaseOpening/PetitionAdd" data-secure-id="@((int)SecurityToken.AddPetition)">Add</a>
+        </div>
+    }
+    else
+    {  <div class="boxfloat text-center">
+            <button id="saveAndMain" onclick="document.location.href = '/Case/Main';" type="submit" class="btn btn-primary v-bottom default">Main Page</button>
+            <a id="saveAndAdd" type="submit" class="btn btn-default v-bottom " href="/CaseOpening/PetitionAdd?dataentry=true" data-secure-id="@((int)SecurityToken.AddPetition)">Add</a>
+        </div>
+
+    }
+}
+@if (!isDataEntry)
+{
+    @Html.Partial("_steps")
+}
+
+<style>
+    .modal-dialog {
+        margin-top: 50px !important;
+    }
+</style>

@@ -1,0 +1,490 @@
+﻿@model  LALoDep.Models.Task.IVEClaimFormViewModel
+
+@using LALoDep.Core.Custom.Extensions;
+@{
+    ViewBag.Title = "IVE Claim Form";
+    var rowCount = 1;
+    var tabCount = 1;
+}
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+</style>
+<style>
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    table#activity-head {
+        width: 100%;
+        border: 0;
+        font-size: 115%;
+    }
+
+    table th.activity-header {
+        padding: 3px !important;
+        text-align: center !important;
+    }
+
+
+
+
+    .activity-sheet > tbody > tr > td {
+        padding: 0;
+    }
+
+        .activity-sheet > tbody > tr > td input {
+        }
+</style>
+<div class="row @(Model.TitleIVeClaimForm.ReadOnly.ToInt()==1?"readonly":"") " style="margin:0px;">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget ">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12 mobile-title">
+                <span class="widget-caption">
+                    IVE Claim Form
+                </span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "IVEClaimForm-form", @class = "form-inline  center-block" }))
+                {
+
+
+
+                    <div class="form-group">
+                        <label class="control-label" for="CourtSystem">  Court System:</label>
+
+                        @Html.TextBoxFor(m => m.CourtSystem, new { @class = "form-control input-sm  ", tabindex = 1, style = "width:100%;", disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="InvoicePeriod">   Invoice Period:</label>
+
+                        @Html.TextBoxFor(m => m.InvoicePeriod, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="InvoiceDate">  Invoice Date:</label>
+
+                        @Html.TextBoxFor(m => m.InvoiceDate, "{0:d}", new { @class = "form-control input-sm  ", tabindex = 3, style = "width:100%;", disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="InvoiceDate">   Invoice ID:</label>
+                        @Html.HiddenFor(m => m.InvoiceID)
+
+
+                        @Html.TextBoxFor(m => m.HeaderInvoiceID, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="InvoiceDate">   Standard Agreement Number:</label>
+
+
+                        @Html.TextBoxFor(m => m.StandardAgreementNumber, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                    </div>
+
+
+
+                    <div class="clearfix"></div>
+                    <br />
+                    <table style="width:700px" class="tblForm">
+                        <tr>
+                            <td>
+                                Percentage of Practice Devoted to Dependency:
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.PercentageDependency, "{0:n2}", new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Qualifying Children's or Parents Cases Worked on During Invoice Period:
+
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.NbrChildrenCasesWorked, new { @class = "form-control input-sm  ", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <center>(Details on attached Monthly Data Report)</center>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table id="tblIVEPersonnel" class="activity-sheet table" style="width:700px">
+                        <thead>
+                            <tr>
+
+                                <th class="activity-header" style="width:150px;">Expenditure Category </th>
+                                <th class="activity-header" style="width: 150px;"> CAC Base Amount </th>
+                                <th class="activity-header" style="width: 150px;"> FFDRP Enhancement Amount </th>
+                                <th class="activity-header" style="width: 150px;">
+                                    FFDRP Eligible Amount
+                                </th>
+
+                            </tr>
+
+
+
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Personnel
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.PersonnelCostsCACFundAmt, new { @class = "form-control input-sm  PersonnelCostsCACFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.PersonelCostsFFDRPFundAmt, new { @class = "form-control input-sm  PersonelCostsFFDRPFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.PersonnelCostsEligibleCost, new { @class = "form-control input-sm  PersonnelCostsEligibleCost CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    Professional Services
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.ProfessionalServicesCACFundAmt, new { @class = "form-control input-sm  PersonnelCostsCACFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.ProfessionalServicesFFDRPFundAmt, new { @class = "form-control input-sm  PersonelCostsFFDRPFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.ProfessionalServicesEligibleCost, new { @class = "form-control input-sm  PersonnelCostsEligibleCost CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    Operating
+
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.OperatingExpensesCACFundAmt, new { @class = "form-control input-sm  PersonnelCostsCACFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.OperatingExpensesFFDRPFundAmt, new { @class = "form-control input-sm  PersonelCostsFFDRPFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.OperatingExpensesEligibleCost, new { @class = "form-control input-sm  PersonnelCostsEligibleCost CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    Travel
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TravelExpensesCACFundAmt, new { @class = "form-control input-sm  PersonnelCostsCACFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TravelExpensesFFDRPFundAmt, new { @class = "form-control input-sm  PersonelCostsFFDRPFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TravelExpensesEligibleCost, new { @class = "form-control input-sm  PersonnelCostsEligibleCost CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Training (Non-Attorney)
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TrainingNonAttorneyAmt, new { @class = "form-control input-sm  TrainingNonAttorneyAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;font-weight:bold;vertical-align:middle">
+                                    Totals
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TOTALCACFundAmt, new { @class = "form-control input-sm  PersonnelCostsCACFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TOTALFFDRPFundAmt, new { @class = "form-control input-sm  PersonelCostsFFDRPFundAmt CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(o => Model.TitleIVeClaimForm.TOTELEligibleCost, new { @class = "form-control input-sm  PersonnelCostsEligibleCost CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <table style="width:700px" class="tblForm">
+                        <tr>
+                            <td colspan="2">
+                                Total Title IV-E Eligible Amount Claimed for Reimbursement:
+                            </td>
+                            <td style="width:150px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TOTELEligibleCost, new { @class = "form-control input-sm CurrencyFormat ", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                California Title IV-E Eligibility Rate:
+                            </td>
+                            <td style="text-align:right;width:150px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.CaliforniaEligibilityRate, "{0:N2}%", new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:60px;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.CaliforniaEligibilityAmt, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Federal IV-E Administrative Reimbursement Rate:
+                            </td>
+                            <td style="text-align:right;width:60px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.FederalReimbursementRate, "{0:N2}%", new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:60px;", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.FederalReimbursementAmt, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <hr style="border-color: #000; border-width: 3px; margin: 0px" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                Training(Attorney) FFDRP Eligible Amount:
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TrainingEligibleAmount, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                California Title IV-E Eligibility Rate:
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TrainingEligibleRateCA, "{0:N2}%", new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:60px;" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TrainingEligibleAmtCA, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Federal IV-E Administrative Reimbursement Rate for I:
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TrainingReimbursementRateFed, "{0:N2}%", new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:60px;" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TrainingReimbursementAmt, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <hr style="border-color:#000;border-width:3px;margin:0px" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                Total Reimbursement for Month (Title IV-E):
+                            </td>
+                            <td style="width:150px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TOTALReimbursementForMonth, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                Adjustments (enter either a negative or positive value):
+                            </td>
+                            <td style="width:150px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.AdjustmentAmount, new { @class = "form-control input-sm pull-right CurrencyFormat", tabindex = 4, style = "width:100%;" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-align-right" style="vertical-align:top;">
+                                Note:
+                            </td>
+                            <td colspan="2">
+
+                                @Html.TextAreaFor(m => m.TitleIVeClaimForm.Note, new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:100%;", maxlength = 4000 })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                Adjusted Total Reimbursement for Month (Title IV-E)                        :
+                            </td>
+                            <td style="width:150px">
+                                @Html.TextBoxFor(m => m.TitleIVeClaimForm.TOTALAdjustedReimbursementForMonth, new { @class = "form-control input-sm  CurrencyFormat", tabindex = 4, style = "width:100%;", disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Contact Information:
+                            </td>
+                            <td style="text-align:right;width:60px"></td>
+                            <td></td>
+                        </tr>
+
+
+
+
+                    </table>
+                    <div class="row" style="margin:0px;">
+
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="PreparedByName">      Prepared by: </label>
+
+                            @Html.TextBoxFor(m => m.TitleIVeClaimForm.PreparedByName, new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:100%;", maxlength = 100 })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="PreparedByTitle">       Title:</label>
+                            @Html.TextBoxFor(m => m.TitleIVeClaimForm.PreparedByTitle, new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:100%;", maxlength = 100 })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="Phone">         Phone:</label>
+                            @Html.TextBoxFor(m => m.TitleIVeClaimForm.PreparedByPhone, new { @class = "form-control input-sm pull-right phone_format ", tabindex = 4, style = "width:100%;", maxlength = 100 })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="PreparedByEmail">          Email:</label>
+                            @Html.TextBoxFor(m => m.TitleIVeClaimForm.PreparedByEmail, new { @class = "form-control input-sm pull-right ", tabindex = 4, style = "width:100%;", maxlength = 100 })
+
+                        </div>
+
+                        @Html.HiddenFor(m => m.TitleIVeClaimForm.TrainingEligibleRateCA)
+                        @Html.HiddenFor(m => m.TitleIVeClaimForm.TrainingReimbursementRateFed)
+                    </div>}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default">Save</button>
+    </div>
+}
+
+@section scripts{
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="/assets/js/jquery.formatCurrency-1.4.0/jquery.formatCurrency.all.js"></script>
+    <script>
+        $(function () {
+
+
+            $('#btnSave').click(function (e) {
+                e.preventDefault();
+                SaveIVEPersonnel(1)
+            });
+            $("#TitleIVeClaimForm_AdjustmentAmount").on("change", function () {
+                var totalReimbursementForMonth = parseFloat($("#TitleIVeClaimForm_TOTALReimbursementForMonth").val().replace(/[^\d\.]/g, ''));
+                var adjustmentAmt = parseFloat($("#TitleIVeClaimForm_AdjustmentAmount").val().replace(/[^\d\.]/g, ''));
+                if (Math.sign(parseFloat($("#TitleIVeClaimForm_AdjustmentAmount").val().replace("$", ""))) == -1)
+                    $("#TitleIVeClaimForm_TOTALAdjustedReimbursementForMonth").val(totalReimbursementForMonth - adjustmentAmt).formatCurrency();
+                else
+                    $("#TitleIVeClaimForm_TOTALAdjustedReimbursementForMonth").val(totalReimbursementForMonth + adjustmentAmt).formatCurrency();
+            })
+
+
+            $('.CurrencyFormat').formatCurrency();
+            setInitialFormValues("IVEClaimForm-form");
+            $('.readonly input,.readonly select').attr('disabled', 'disabled')
+        });
+
+
+
+
+        function GetFormData() {
+
+            data = $('#IVEClaimForm-form').serialize();
+            return data;
+        }
+        function SaveIVEPersonnel(buttonId) {
+            if (!hasFormChanged("IVEClaimForm-form")) {
+
+                notifyDanger("Nothing was changed");
+                return;
+            }
+            if ($('#TitleIVeClaimForm_PercentageDependency').val() == '') {
+                $('#TitleIVeClaimForm_PercentageDependency').focus();
+                notifyDanger("Percentage of Practice Devoted to Dependency is required.");
+                return;
+            }
+            if ($('#TitleIVeClaimForm_NbrChildrenCasesWorked').val() == '') {
+                $('#TitleIVeClaimForm_NbrChildrenCasesWorked').focus();
+                notifyDanger("Qualifying Children's or Parents Cases Worked on During Invoice Period is required.");
+                return;
+            }
+
+
+            if ($('#TitleIVeClaimForm_PreparedByEmail').val() !== '' && !IsValidData('email', $('#TitleIVeClaimForm_PreparedByEmail').val())) {
+                $('#TitleIVeClaimForm_PreparedByEmail').focus();
+                notifyDanger("Invalid Email");
+                return;
+            }
+            if (!($('#TitleIVeClaimForm_PercentageDependency').val() >= 0 && $('#TitleIVeClaimForm_PercentageDependency').val() <= 100)) {
+                $('#TitleIVeClaimForm_PercentageDependency').focus();
+                notifyDanger("Percentage Dependency must be a value between 0 and 100");
+                return;
+            }
+            if (!($('#TitleIVeClaimForm_NbrChildrenCasesWorked').val() >= 0 && $('#TitleIVeClaimForm_NbrChildrenCasesWorked').val() <= 5000)) {
+                $('#TitleIVeClaimForm_NbrChildrenCasesWorked').focus();
+                notifyDanger("Qualifying Children's or Parents Cases Worked on During Invoice Period should be between 0 and 5000, inclusive");
+                return;
+            }
+
+            if ($('#TitleIVeClaimForm_AdjustmentAmount').val() !== '' && $("#TitleIVeClaimForm_Note").val() == '') {
+                $('#TitleIVeClaimForm_Note').focus();
+                notifyDanger("Note is required.");
+                return;
+            }
+
+            $('.CurrencyFormat').toNumber();
+
+
+            var formData = GetFormData();
+            $.ajax({
+                type: "POST", url: '/Task/IVEClaimForm', data: formData, cache: false,
+                success: function (result) {
+                    if (buttonId == 1) {
+                        if (result.isSuccess) {
+                            notifySuccess("Data saved successfully.");
+                            document.location.href = document.location.href;
+                        }
+                        else {
+                            notifyDanger(result.message);
+                        }
+                    }
+
+                }
+            });
+
+        }
+    </script>
+
+}
+<style>
+    .tblForm td {
+        padding: 3px;
+    }
+</style>

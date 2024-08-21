@@ -1,0 +1,93 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Custom
+@using LALoDep.Custom.Security
+@model LALoDep.Models.Case.AppealDecisionAddEditViewModel
+@{
+    var display = string.Empty;
+
+    ViewBag.Title = "Appeal Decision";
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">@display</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "appealDecisionAddEdit-form", @class = "form-inline  center-block" }))
+                {
+                    @Html.HiddenFor(m => m.DecisionID)
+                    @Html.HiddenFor(m => m.EncryptedAppleaID)
+                    @Html.HiddenFor(m => m.AgencyID)
+                    @Html.HiddenFor(m => m.RecordStateID)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DecisionCodeID, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.DecisionCodeID, Model.Decisions, "", new { @class = "form-control input-sm  required", tabindex = 1, autofocus = "autofocus", style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DecisionDate, new { @class = "control-label" })
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(m => m.DecisionDate, new { @class = "form-control input-sm date-picker required", tabindex = 2, autofocus = "autofocus", maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Decision History</span>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="appealDecisionList">
+                        <thead>
+                            <tr>
+                                <th class="">Decision</th>
+                                <th class="">Decision Date</th>
+                                <th class="" style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.DecisionList != null && Model.DecisionList.Count > 0)
+                            {
+                                foreach (var item in Model.DecisionList)
+                                {
+                                    <tr>
+                                        <td>@item.DecisionCodeValue</td>
+                                        <td>@item.DecisionDate</td>
+                                        <td><a class="btn btn-danger btn-xs delete" data-id="@LALoDep.Core.Custom.Utility.Utility.Encrypt(item.DecisionID.ToString())" href="#" data-secure-id="@((int)SecurityToken.DeleteAppealDecision)"><i class="fa fa-trash-o"></i>Delete</a></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="3">Save</button>
+        <button id="btnCancel" type="button" class="btn v-bottom " tabindex="4">Cancel</button>
+    </div>
+}
+
+@section scripts
+    {
+    <script src="@Url.Content("~/Scripts/Application-Script/Case/AppealsDecisionAddEdit.js?v=" + Guid.NewGuid())"></script>
+}

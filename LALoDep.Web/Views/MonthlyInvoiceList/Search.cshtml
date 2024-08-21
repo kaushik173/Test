@@ -1,0 +1,118 @@
+﻿@model LALoDep.Models.MonthlyInvoiceListViewModel
+@{
+    ViewBag.Title = "Monthly Invoice List";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Criteria</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "MonthlyInvoiceList-search-form", @class = "form-inline  center-block" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgencyID, "Agency", new { @class = "control-label" })
+                        @if (Model.AgencyList.Count() == 1)
+                        {
+                            @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = 1, style = "width:98%", autofocus = "autofocus" })
+
+                        }
+                   </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CountyID, "County", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.CountyID, Model.CountyList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+                    </div>       <div class="form-group">
+                        @Html.LabelFor(m => m.AttorneyID, "Attorney", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AttorneyID, Model.AttorneyList, "", new { @class = "form-control input-sm", tabindex = 2, style = "width:98%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.InvoiceNumber, "Invoice #", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.InvoiceNumber, new { @class = "form-control input-sm", tabindex = 3 })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StatusCodeID, "Status", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.StatusCodeID, Model.StatusList, "", new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })
+                    </div>
+                    @*@if(Model.AddMonthlyInvoiceAdminMode)*@
+
+                    <div class="form-group @(!Model.AddMonthlyInvoiceAdminMode?"hidden":"")">
+                        @Html.LabelFor(m => m.AttorneyPersonID, "Add Invoice For", new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.AttorneyPersonID, Model.AddInvoiceForList, "", new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })
+                    </div>
+                    <div class="form-group @(!Model.AddMonthlyInvoiceAdminMode?"hidden":"")">
+                        @Html.LabelFor(m => m.AsOfDate, "As Of Date", new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.AsOfDate, new { @class = "form-control input-sm date-picker", style = "width:100%;", tabindex = 4, maxlength = "10" })
+                            <span class="input-group-addon datepicker-trigger" style="width:auto !important;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                }
+                <p></p>
+                <div id="search-validation-error" class="alert alert-danger hidden">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    At least one search parameter is required.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchMonthlyInvoiceList">
+                        <thead>
+                            <tr>
+                                <th class="">Attorney</th>
+                                <th class="">County</th>
+ <th class="">Year - Month</th>
+                                <th class="">Invoice #</th>
+                                <th class="">Amount</th>
+                                <th class="">Submit Date</th>
+                                <th class="">Status</th>
+                                <th class="">Status Date</th><th class="">Print</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="search" type="submit" class="btn btn-primary v-bottom default" tabindex="5">Search</button>
+        <button id="btnAdd" type="button" class="btn btn-default v-bottom" tabindex="6" data-secure-id="@((int)LALoDep.Custom.Security.SecurityToken.AddMonthlyInvoice)">Add New Invoice</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Tasks/MonthlyInvoiceListSearch.js?v=" + Guid.NewGuid())"></script>
+}

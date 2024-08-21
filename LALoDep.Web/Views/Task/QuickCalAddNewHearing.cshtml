@@ -1,0 +1,116 @@
+﻿@model LALoDep.Models.Task.QuickCalAddNewHearingCaseViewModels
+@using LALoDep.Core.Custom.Extensions
+@{
+ViewBag.Title = "Add New Hearing";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<style>
+    body {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+</style>
+<style>
+    .form-inline .input-group {
+        display: table;
+    }
+</style>
+
+<div class="row" id="divSearchResult">
+
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption" id="countSearchResult"> </span>
+                <div class="widget-buttons">
+
+                    <div class="form-group">
+                        <label for="email">Client Filter:</label>
+                        <input type="text" class="orm-control input-sm form-inline" id="txtClientFilter" autofocus="autofocus">
+                    </div>
+                </div>
+            </div>
+            <div class="widget-body col-xs-12" style="height:200px;overflow:auto;">
+                @if (Model.HearingList.Count > 0)
+                {
+
+                    <div class="">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped">
+                            <thead>
+                                <tr>
+                                    <th> Client  </th>
+                                    <th> DOB  </th>
+                                    <th> Next Hearing  </th>
+                                    <th> Date  </th>
+                                    <th> Dept  </th>
+                                    <th> Case #  </th>
+                                    <th> Add Hearing To JCATS #  </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                @foreach (var hearing in Model.HearingList)
+                                {
+                                    <tr class="trRecords">
+                                        <td>@hearing.ClientName</td>
+                                        <td>@hearing.ClientDOB</td>
+                                        <td>@hearing.NextHearingType</td>
+                                        <td>@hearing.NextHearingDate</td>
+                                        <td>@hearing.NextHearingDept</td>
+                                        <td>@hearing.PetitionNumber</td>
+                                        <td><a href="/Task/QuickCalNextHearing?CaseID=@(hearing.CaseID.Value.ToEncrypt())&AttorneyPersonID=@(Model.AttorneyPersonID)">  @hearing.CaseNumber </a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center">No records found.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnClose" type="button" class="btn btn-default v-bottom " tabindex="5">Close </button>
+    </div>
+}
+@section Scripts{
+
+    <script>
+        $('.widget-body').css('height', $(document).height() - 120)
+      
+
+
+        $("#btnClose").on("click", function () {
+            parent.ClosePopup();
+        });
+
+        $('#txtClientFilter').on('input propertychange paste', function () {
+            ClientFilter($(this).val(), 0)
+        });
+
+        function ClientFilter(value, columnNo) {
+
+            $('.trRecords').each(function (i, el) {
+                var lineStr = $(this).find('td:eq(0)').text().trim().toLowerCase();
+                if (lineStr.indexOf(value) === -1) {
+
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        }
+
+    </script>
+
+}

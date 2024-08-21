@@ -1,0 +1,282 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@using LALoDep.Core.Custom.Utility
+@using LALoDep.Custom.Security
+@using Microsoft.Ajax.Utilities
+@model LALoDep.Models.Task.HearingPreparationHoursViewModels
+@{ bool isDataEntry = Request.QueryString["dataentry"] != null;
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+    ViewBag.Title = "Add Hearing";
+}
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "case-hearing-form" }))
+{
+
+
+    <div class="row">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px">
+            <div class="widget">
+
+                <div class="widget-body col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="tblPetitionInCase">
+                            <thead>
+
+                                <tr>
+
+
+                                    <th>Staff </th>
+                                    <th>Date </th>
+                                    <th>Hours</th>
+                                    <th style="width:60px">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.HoursHistory)
+                                {
+                                    <tr class="trData">
+
+                                        <td>@item.StaffDisplay </td>
+                                        <td style="width:150px">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => item.WorkDate, "{0:MM/dd/yyyy}", new { @class = "form-control   input-sm  input-sm date-picker-control", tabindex = 2, style = "width:100% !important;", maxlength = "10" })
+                                                <span class="input-group-addon datepicker-control-trigger">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                            @Html.HiddenFor(m => item.WorkID)
+                                        </td>
+                                        <td style="width:100px">
+                                            @Html.TextBoxFor(m => item.WorkHours, new { @class = "form-control input-sm numeric-val" })
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" class="chkDelete" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="saveAndContinue" data-secure-id="@((int) SecurityToken.AddHearing)" type="submit" class="btn btn-primary v-bottom default" tabindex="20">Save</button>
+
+        <button id="btnCancel" type="submit" class="btn btn-default v-bottom " tabindex="20">Cancel</button>
+    </div>
+
+}
+
+@section scripts
+{
+    <script>
+
+        $(function () {
+
+
+            setInitialFormValues('case-hearing-form', true);
+        });
+
+        $('#saveAndContinue').on('click', function () {
+
+            Save(1);
+
+        });
+
+        $('#btnCancel').on('click', function () {
+
+            self.parent.ClosePopup();
+
+        });
+        function Save(buttonId) {
+
+
+
+            IPadKeyboardFix();
+
+            if (!IsValidFormRequest()) {
+                return;
+            }
+            if (!hasFormChanged('case-hearing-form')) {
+
+                notifyDanger('Nothing was changed.');
+                isValid = false;
+                return false;
+            }
+            var isValid = true;
+            var hourMoreThanTwo = false;
+            $('.trData').each(function () {
+                if(!$(this).find('.chkDelete').is(':checked')) {
+                    if ($(this).find('#item_WorkHours').IsValueChanged() && $(this).find('#item_WorkHours').val() == '') {
+                        isValid = false;
+                        $(this).find('#item_WorkHours').focus();
+                        notifyDanger('Hearing Preparation Hours is required');
+                        return false;
+                    }
+                    else if ($(this).find('#item_WorkHours').IsValueChanged() && $(this).find('#item_WorkHours').val() != '' && !($(this).find('#item_WorkHours').val() > 0 && $(this).find('#item_WorkHours').val() <= 8)) {
+                        isValid = false;
+                        $(this).find('#item_WorkHours').focus();
+                        notifyDanger('Hearing Preparation Hours must be between .1 and 8 hours');
+                        return false;
+                    }else   if ($(this).find('#item_WorkDate').IsValueChanged() && $(this).find('#item_WorkDate').val() == '') {
+                        isValid = false;
+                        $(this).find('#item_WorkDate').focus();
+                        notifyDanger('Date is required');
+                        return false;
+                    }
+                    else if ($(this).find('#item_WorkDate').IsValueChanged() && moment($(this).find('#item_WorkDate').val()) > moment()) {
+                        isValid = false;
+                        $(this).find('#item_WorkDate').focus();
+                        notifyDanger('Date cannot be in the future');
+                        return false;
+                    }
+                    if ($(this).find('#item_WorkHours').IsValueChanged() && $(this).find('#item_WorkHours').val()>2) {
+                        hourMoreThanTwo = true;
+                    }
+                }
+            });
+
+            if (isValid) {
+
+                if (hourMoreThanTwo) {
+                    confirmBox('Hearing Preparation Hours is greater than 2 hours.  Is this Correct?', function (result) {
+                        if (result) {
+                            SaveData();
+                        }
+                    });
+
+                } else {
+                    SaveData();
+                }
+
+
+
+
+            }
+
+        }
+        function SaveData() {
+
+            var model = {
+                'HearingID': @Model.HearingID,
+
+                'HoursHistory': []
+
+
+            }
+
+
+            if($('.chkDelete:checked').length>0){
+                confirmBox('You have marked record(s) for delete. Are you sure?', function (result) {
+                    if (result) {
+                        $('.trData').each(function () {
+                            if($(this).find('.chkDelete').is(':checked')) {
+                                model.HoursHistory.push({
+                                    'WorkID':$(this).find('#item_WorkID').val(),
+                                });
+                            }
+                            else  if($(this).find('#item_WorkHours').IsValueChanged() || $(this).find('#item_WorkDate').IsValueChanged())
+                            {
+
+                                model.HoursHistory.push({
+                                    'WorkHours':$(this).find('#item_WorkHours').val(),
+                                    'WorkDate':$(this).find('#item_WorkDate').val(),
+                                    'WorkID':$(this).find('#item_WorkID').val(),
+
+                                });
+
+
+                            }
+
+
+
+
+                        });
+                        var params = model;
+                        $.ajax({
+                            type: "POST",
+                            url: '/Task/HearingPreparationHoursSave',
+                            data: { model: params },
+                            success: function (result) {
+
+                                if (result.Status == "Done") {
+
+                                    notifySuccess('Data Saved Successfully!.');
+                                    RequestSubmitted();
+                                    setTimeout(function () {
+                                        self.parent.document.location.href =
+                                       self.parent.document.location.href;
+
+                                    }, 2000)
+
+
+                                }
+                            },
+                            dataType: 'json'
+                        });
+
+                    }
+                });
+            }else{
+                $('.trData').each(function () {
+                    if($(this).find('#item_WorkHours').IsValueChanged() || $(this).find('#item_WorkDate').IsValueChanged())
+                    {
+
+                        model.HoursHistory.push({
+                            'WorkHours':$(this).find('#item_WorkHours').val(),
+                            'WorkDate':$(this).find('#item_WorkDate').val(),
+                            'WorkID':$(this).find('#item_WorkID').val(),
+
+                        });
+                    }
+
+
+                });
+                var params = model;
+                
+                $.ajax({
+                    type: "POST",
+                    url: '/Task/HearingPreparationHoursSave',
+                    data: { model: params },
+                    success: function (result) {
+
+                        if (result.Status == "Done") {
+
+                            notifySuccess('Data Saved Successfully!.');
+                            RequestSubmitted();
+                            setTimeout(function () {
+                                self.parent.document.location.href =
+                               self.parent.document.location.href;
+
+                            }, 2000)
+
+
+                        }
+                    },
+                    dataType: 'json'
+                });
+
+            }
+
+
+
+        }
+
+    </script>
+}
+<style>
+    .modal-custom {
+        top: 5% !important;
+        left: 50px;
+    }
+</style>

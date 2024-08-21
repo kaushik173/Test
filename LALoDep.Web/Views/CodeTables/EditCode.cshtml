@@ -1,0 +1,548 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Administration.AddEditCodeViewModel
+@{
+    ViewBag.Title = "Edit Code";
+    int tabIndex = 0;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditCode-form", @class = "form-inline center-block" }))
+{
+    @Html.HiddenFor(m => m.CodeID)
+    @Html.HiddenFor(m => m.CodeTypeID)
+    @Html.HiddenFor(m => m.RecordStateID)
+
+
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            @if (!Model.DisplayBanner.IsNullOrEmpty())
+            {
+                <div class="alert " style="color:red; font-size:12pt;border:solid 1px red;background:#fff">
+
+                    @Model.DisplayBanner
+                </div>
+            }
+          
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Code</span>
+                </div>
+                <div class="widget-body col-xs-12 codeValueFields">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.CodeValue, "Value", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CodeValue, new { @class = "form-control input-sm", autofocus = "autofocus", tabindex = ++tabIndex, style = "width:100%", maxlength = "100", data_secure_disabled_id = ((int)LALoDep.Custom.Security.SecurityToken.EditCode) })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(m => m.CodeShortValue, "Short Value", new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CodeShortValue, new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:100%", maxlength = "25", data_secure_disabled_id = ((int)LALoDep.Custom.Security.SecurityToken.EditCode) })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.CodeTypeID == 7)
+    { <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Address </span>
+                </div>
+                <div class="widget-body col-xs-12 addressFields">
+                    <div>
+                        <input type="hidden" name="AddressID" id="AddressID" value="@Model.AddressID" />
+
+                        <div class="form-group col-md-3 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.Street, "Street", new { @class = "control-label" })
+
+                            @Html.TextBoxFor(m => m.Street, new { @class = "form-control input-sm street_number", @autofocus = "autofocus", tabindex = ++tabIndex, style = "width:100%;" })
+                            @Html.ValidationMessageFor(m => m.Street)
+
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.City, "City", new { @class = "control-label" })
+
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control input-sm locality", tabindex = ++tabIndex, style = "width:100%;" })
+                            @Html.ValidationMessageFor(m => m.City)
+
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.StateCodeID, "State", new { @class = "control-label" })
+                            <select class="form-control input-sm" id="StateCodeID" tabindex=@( ++tabIndex) , style="width:98%;color:red" autofocus="autofocus">
+                                <option value=""></option>
+                                @foreach (var item in Model.StateCode)
+                                {
+                                    <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.StateCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                }
+                            </select>
+                            @Html.HiddenFor(m => m.StateCodeID, new { id = "hdn_StateCodeID" })
+
+                            @*@Html.DropDownListFor(m => m.StateCodeID, Model.StateCode, new { @class = "form-control input-sm", tabindex = 1, style = "width:98%" })*@
+
+
+                            @*@Html.ValidationMessageFor(m => m.StateCodeID)*@
+
+                        </div>
+
+
+                        <div class="form-group col-md-1 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.ZipCode, "Zip Code", new { @class = "control-label" })
+
+                            @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control input-sm postal_code", tabindex = ++tabIndex, style = "width:80px;" })
+                            @Html.ValidationMessageFor(m => m.ZipCode)
+
+                        </div>
+                        <div class="form-group col-md-2 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.CountryCodeID, "Country", new { @class = "control-label" })
+                            <select class="form-control input-sm" id="CountryCodeID" tabindex=@( ++tabIndex) , style="width:98%">
+                                <option value=""></option>
+                                @foreach (var item in Model.CountryCode)
+                                {
+                                    <option value="@item.CodeID" data-id="@item.CodeShortValue" @(item.CodeID == Model.CountryCodeID ? "selected=\"selected\"" : null)>@item.CodeValue</option>
+                                }
+                            </select>
+                            @Html.HiddenFor(m => m.CountryCodeID, new { id = "hdn_CountryCodeID" })
+
+                            @*@Html.DropDownListFor(m => m.CountryCodeID, Model.CountryCode, new { @class = "form-control input-sm", tabindex = 4, style = "width:98%" })*@
+
+
+                            @*@Html.ValidationMessageFor(m => m.CountryCodeID)*@
+
+                        </div>
+
+                        <div class="form-group col-md-2 col-sm-4 ">
+
+                            @Html.LabelFor(m => m.HomePhone, "Phone", new { @class = "control-label" })
+
+                            @Html.TextBoxFor(m => m.HomePhone, new { @class = "form-control input-sm phone_format", tabindex = ++tabIndex })
+                            @Html.ValidationMessageFor(m => m.HomePhone)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Notes </span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    @{ var count = 0;}
+                    @foreach (var note in Model.Notes)
+                    {
+                        if (count > 0)
+                        {
+                            <div class="clearfix"></div>
+                            <hr />
+                        }
+                        <div class="@(note.NoteID.Value==0?"addNoteDiv addEditNoteDiv":"addEditNoteDiv")">
+
+                            @if (note.NoteID.Value == 0)
+                            {
+                                @Html.HiddenFor(m => note.HearingID)
+                                @Html.HiddenFor(m => note.NoteID)
+                                @Html.HiddenFor(m => note.CaseID)
+                                @Html.HiddenFor(m => note.NoteEntityCodeID)
+                                @Html.HiddenFor(m => note.NoteEntityTypeCodeID)
+                                @Html.HiddenFor(m => note.PetitionID)
+                                @Html.HiddenFor(m => note.RecordStateID)
+
+
+                                <div class="form-group col-md-1 col-sm-2 ">
+
+                                    @Html.LabelFor(m => note.AgencyID, "Agency", new { @class = "control-label" })
+
+                                    @Html.DropDownListFor(m => note.AgencyID, Model.AgencyList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+
+
+
+
+                                </div>
+                                <div class="form-group col-md-1 col-sm-2 ">
+
+                                    @Html.LabelFor(m => note.NoteTypeCodeID, "Type", new { @class = "control-label" })
+
+                                    @Html.DropDownListFor(m => note.NoteTypeCodeID, Model.NoteTypeList, "", new { @class = "form-control input-sm", tabindex = ++tabIndex, style = "width:98%" })
+
+
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 ">
+
+                                    @Html.LabelFor(m => note.NoteSubject, "Subject", new { @class = "control-label" })
+
+                                    @Html.TextBoxFor(m => note.NoteSubject, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:98%;" })
+
+
+                                </div>
+                                <div class="form-group col-md-7 col-sm-4 ">
+
+                                    @Html.LabelFor(m => note.NoteEntry, "New Note", new { @class = "control-label" })
+
+                                    @Html.TextAreaFor(m => note.NoteEntry, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%;" })
+
+
+                                </div>
+
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(m => note.HearingID)
+                                @Html.HiddenFor(m => note.NoteID)
+                                @Html.HiddenFor(m => note.CaseID)
+                                @Html.HiddenFor(m => note.NoteEntityCodeID)
+                                @Html.HiddenFor(m => note.NoteEntityTypeCodeID)
+                                @Html.HiddenFor(m => note.PetitionID)
+                                @Html.HiddenFor(m => note.RecordStateID)
+                                @Html.HiddenFor(m => note.AgencyID)
+                                @Html.HiddenFor(m => note.NoteTypeCodeID)
+
+
+                                <div class="form-group col-md-1 col-sm-2 ">
+
+                                    @Html.LabelFor(m => note.AgencyID, "Agency", new { @class = "control-label" })<br />
+
+                                    <span>@note.AgencyDisplay</span>
+
+
+
+
+                                </div>
+                                <div class="form-group col-md-1 col-sm-2 ">
+
+                                    @Html.LabelFor(m => note.NoteTypeCodeID, "Type", new { @class = "control-label" })<br />
+
+                                    <span>@note.TypeDisplay</span>
+
+
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 ">
+
+                                    @Html.LabelFor(m => note.NoteSubject, "Subject", new { @class = "control-label" })
+                                    @if (note.CanEditFlag.Value == 1)
+                                    {
+                                        @Html.TextBoxFor(m => note.NoteSubject, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:98%;" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => note.NoteSubject, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:98%;", disabled = "disabled" })
+
+                                    }
+
+                                </div>
+                                <div class="form-group col-md-7 col-sm-4 ">
+
+                                   <div style="width:94%;float:left">
+                                       @Html.LabelFor(m => note.NoteEntry, note.NoteHeaderDisplay, new { @class = "control-label" })
+                                       @if (note.CanEditFlag.Value == 1)
+                                       {
+                                           @Html.TextAreaFor(m => note.NoteEntry, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%;" })
+
+                                       }
+                                       else
+                                       {  @Html.TextAreaFor(m => note.NoteEntry, new { @class = "form-control input-sm ", tabindex = ++tabIndex, style = "width:100%;", disabled = "disabled" })
+
+
+                                       }
+                                   </div>
+
+                                    <div style="width:5%;float:left;margin-left:5px">
+                                        @Html.LabelFor(m => note.NoteID, "Delete", new { @class = "control-label" })
+                                        <br />
+                                        @if (note.CanDeleteFlag.Value == 1)
+                                        {
+                                            <input type="checkbox" id="note_delete" class="chkDelete" />
+                                        }
+                                        else
+                                        {  <input type="checkbox" id="note_delete" class="chkDelete" disabled="disabled" />
+
+                                        }
+                                    </div>
+
+                                    </div>
+                                
+
+                            }
+                        </div>
+
+                        count++;
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    }
+
+
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                    <span class="widget-caption">Agencies</span>
+                </div>
+                <div class="widget-body col-xs-12">
+                    <div class="row">
+                        <div class="col-md-12" style="background:#c6c5c5">
+                            <label>
+                                @Html.CheckBox("AllAgencies", new { tabindex = ++tabIndex, })
+                                <span>All Agencies </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row" id="code-agencies">
+                        @foreach (var agency in Model.CodeAgencies.Where(o=>o.InAgency==true  || o.Selected==true).ToList())
+                        {
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <label>
+                                    @if (agency.InAgency)
+                                    {
+                                        @Html.CheckBox("Agency", agency.Selected, new { @class = "code-in-agency", tabindex = ++tabIndex, data_agencyid = agency.AgencyID, data_agencycodeid = agency.AgencyCodeID })
+                                    }
+                                    else 
+                                    {
+                                        @Html.CheckBox("Agency", agency.Selected, new { @class = "code-not-in-agency", tabindex = ++tabIndex, data_agencyid = agency.AgencyID, data_agencycodeid = agency.AgencyCodeID, disabled = "disabled" })
+                                    }
+                                    <span>@agency.AgencyName</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" tabindex="@(++tabIndex)" class="btn btn-primary v-bottom default">Save</button>
+        <button id="btnSaveAndReturn" type="button" tabindex="@(++tabIndex)" class="btn btn-default v-bottom ">Save/Return</button>
+        <button id="btnCancel" type="button" tabindex="@(++tabIndex)" class="btn btn-default v-bottom">Cancel</button>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+         @if (Model.ReadOnlyCodeFlag == 1)
+         {
+             <text>
+        $('.codeValueFields input').prop('disabled', true);
+
+    </text>
+
+
+         }
+           @if (Model.ReadOnlyAddressFlag == 1)
+           {
+               <text>
+        $('.addressFields input,.addressFields select').prop('disabled', true);
+
+               </text>
+
+
+           } 
+       
+
+function getData() {
+    var data = {
+                AddressID: $("#AddressID").val(),
+
+                CodeID: $("#CodeID").val(),
+                CodeTypeID: $("#CodeTypeID").val(),
+                CodeValue: $("#CodeValue").val(),
+                CodeShortValue: $("#CodeShortValue").val(),
+                RecordStateID: $("#RecordStateID").val(),
+                CountryCodeID: $('#CountryCodeID').val(),
+                StateCodeID: $('#StateCodeID').val(),
+                Street: $('#Street').val(),
+                City: $('#City').val(),
+                ZipCode: $('#ZipCode').val(),
+                HomePhone: $('#HomePhone').val(),
+                CodeAgencies: [],
+                Notes: []
+            };
+
+            $(".code-in-agency").each(function () {
+    var chk = $(this);
+    if (chk.is(":checked") != chk.data("old-value-on-pageload")) {
+                         var agency = {
+                        AgencyID: $(this).attr("data-agencyid"),
+                        AgencyCodeID: $(this).attr("data-agencycodeid"),
+                        Selected: chk.is(":checked")
+                    }
+                     data.CodeAgencies.push(agency);
+                 }
+             });
+            $('.addEditNoteDiv').each(function () {
+
+                 if ($(this).find("#note_AgencyID").IsValueChanged() || $(this).find("#note_NoteTypeCodeID").IsValueChanged() || $(this).find("#note_NoteSubject").IsValueChanged() || $(this).find("#note_NoteEntry").IsValueChanged() || $(this).find("#note_delete").is(':checked')) {
+
+                     data.Notes.push({
+                         NoteId: $(this).find("#note_NoteID").val(),
+                        AgencyID: $(this).find("#note_AgencyID").val(),
+                        NoteTypeCodeID: $(this).find("#note_NoteTypeCodeID").val(),
+                        NoteSubject: $(this).find("#note_NoteSubject").val(),
+                        NoteEntry: $(this).find("#note_NoteEntry").val(),
+                        CaseID: $(this).find("#note_CaseID").val(),
+                        PetitionID: $(this).find("#note_PetitionID").val(),
+                        HearingID: $(this).find("#note_HearingID").val(),
+                        RecordStateID: $(this).find("#note_delete").is(':checked') ? 10 : $(this).find("#note_RecordStateID").val(),
+                        NoteEntityCodeID: $(this).find("#note_NoteEntityCodeID").val(),
+                        NoteEntityTypeCodeID: $(this).find("#note_NoteEntityTypeCodeID").val(),
+
+                    });
+
+
+
+                 }
+             });
+
+            return data;
+        }
+
+        $("#AllAgencies").on("click", function () {
+             var $chkAll = $(this);
+            $(".code-in-agency").each(function () {
+                $(this).prop("checked", $chkAll.is(":checked"));
+             });
+         });
+
+        $("#code-agencies").on("click", ".code-in-agency", function () {
+            $("#AllAgencies").prop("checked", $(".code-in-agency").length == $(".code-in-agency:checked").length);
+         });
+
+        $("#btnCancel").on("click", function () {
+             window.location.href = '@Url.Action(MVC.CodeTables.Values(Model.CodeTypeID.ToEncrypt()))';
+         });
+
+        $("#btnSave").on("click", function () {
+             Save(1)
+        });
+        $("#btnSaveAndReturn").on("click", function () {
+             Save(2)
+        });
+        function Save(buttonId) {
+             if (!IsValidFormRequest()) {
+                 return false;
+             }
+
+             if (!hasFormChanged("EditCode-form")) {
+                 notifyDanger("Nothing has been changed");
+                 return false;
+             }
+
+             if ($("#CodeValue").val() == "") {
+                $("#CodeValue").focus();
+                 notifyDanger("Value is Required field.");
+                 return false;
+             }
+             if ($("#CodeShortValue").val() == "") {
+                $("#CodeShortValue").focus();
+                 notifyDanger("Short value is Required field.");
+                 return false;
+             }
+             if ($("#CodeTypeID").val() == '7') {
+                 if ($("#Street").val() == "") {
+                    $("#Street").focus();
+                     notifyDanger("Street is Required.");
+                     return false;
+                 }
+                 if ($("#City").val() == "") {
+                    $("#City").focus();
+                     notifyDanger("City is Required.");
+                     return false;
+                 }
+                 if ($("#StateCodeID").val() == "") {
+                    $("#StateCodeID").focus();
+                     notifyDanger("State is Required.");
+                     return false;
+                 }
+
+                 if ($(".addNoteDiv #note_AgencyID").val() !== "" || $(".addNoteDiv #note_NoteTypeCodeID").val() !== "" || $(".addNoteDiv #note_NoteSubject").val() !== "" || $(".addNoteDiv #note_NoteEntry").val() !== "") {
+                     if ($(".addNoteDiv #note_AgencyID").val() == "") {
+                        $(".addNoteDiv #note_AgencyID").focus();
+                         notifyDanger("Agency is Required.");
+                         return false;
+                     }
+                     if ($(".addNoteDiv #note_NoteTypeCodeID").val() == "") {
+                        $(".addNoteDiv #note_NoteTypeCodeID").focus();
+                         notifyDanger("Type is Required.");
+                         return false;
+                     }
+                     if ($(".addNoteDiv #note_NoteSubject").val() == "") {
+                        $(".addNoteDiv #note_NoteSubject").focus();
+                         notifyDanger("Subject is Required.");
+                         return false;
+                     }
+                     if ($(".addNoteDiv #note_NoteEntry").val() == "") {
+                        $(".addNoteDiv #note_NoteEntry").focus();
+                         notifyDanger("New Note is Required.");
+                         return false;
+                     }
+
+                 }
+
+
+             }
+
+
+             var data = getData();
+             console.log(data);
+
+             if ($('.chkDelete:checked').length > 0) {
+                 confirmBox("Are you sure you want to delete selected notes?", function (result) {
+                     if (result) {
+                        $.ajax({
+                             type: "POST", url: "@Url.Action(MVC.CodeTables.EditCode())", data: data,
+                            success: function (result) {
+                                 if (result.isSuccess) {
+                                     RequestSubmitted();
+                                     if (buttonId == 1)
+                                         window.location.href = '@Url.Action(MVC.CodeTables.Values(Model.CodeTypeID.ToEncrypt()))';
+                                     else if (buttonId == 2)
+                                         window.location.href = window.location.href;
+                                 }
+                                 else {
+                                     notifyDanger('There is something wrong while processing request.');
+                                 }
+                             }
+                         });
+                     }
+                 });
+             } else {
+                $.ajax({
+                     type: "POST", url: "@Url.Action(MVC.CodeTables.EditCode())", data: data,
+                    success: function (result) {
+                         if (result.isSuccess) {
+                             RequestSubmitted();
+                             if (buttonId == 1)
+                                 window.location.href = '@Url.Action(MVC.CodeTables.Values(Model.CodeTypeID.ToEncrypt()))';
+                             else if (buttonId == 2)
+                                 window.location.href = window.location.href;
+                         }
+                         else {
+                             notifyDanger('There is something wrong while processing request.');
+                         }
+                     }
+                 });
+             }
+
+         }
+        $(document).ready(function () {
+             setInitialFormValues("EditCode-form");
+         });
+    </script>
+}

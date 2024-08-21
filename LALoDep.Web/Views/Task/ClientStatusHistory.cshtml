@@ -1,0 +1,73 @@
+﻿@model IEnumerable<LALoDep.Domain.qcal.ClientStatusGetHistory_spResult>
+
+@using LALoDep.Core.Custom.Extensions
+@{
+    ViewBag.Title = "Appearance Notes";
+
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+}
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+@{
+    var data = Model.ToList();
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        @if (data.Count > 0)
+        {
+
+
+            <div class="widget row">
+                <div class="widget-header bordered-bottom bordered-themeprimary">
+                    <span class="widget-caption">
+                        Client Status History:  @data[0].PersonNameDisplay
+                    </span>
+
+                </div>
+                <div class="widget-body">
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="searchCalendarNumbering">
+
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        Start Date
+
+                                    </th>
+                                    <th>
+                                        End Date
+                                    </th>
+                                    <th>
+                                        Client Status
+                                    </th>
+                                </tr>
+                                @foreach (var item in data)
+                                {
+                                    <tr class="trHearingAttendanceClients">
+
+                                        <td>   @item.StartDate</td>
+                                        <td>   @item.EndDate</td>
+                                        <td>   @item.ClientStatus</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        }
+    </div>
+</div>
+

@@ -1,0 +1,103 @@
+﻿@using LALoDep.Core.Custom.Extensions
+@model LALoDep.Models.Administration.GroupSecurityViewModel
+
+@{
+    ViewBag.Title = "Group Security -</br>" + Model.JcatsGroupName;
+    var tabIndex = 1;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "groupSecurity-form", @class = "form-inline  center-block" }))
+{ 
+<div class="row">
+    @Html.HiddenFor(m => m.JcatsGroupID)
+    <div class="col-md-6 left-panel" style="padding-left:20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Current Access Rights For @Model.JcatsGroupName </span>
+            </div>
+            <div class="widget-body col-xs-12" id="accessRightsItemDiv">
+
+                <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="accessRightsItemList">
+                    <thead>
+                        <tr>
+                            <th class="" style="width:45px">
+                                <input type="checkbox" id="chkDeleteAllAccessRights" onclick="CheckAllAccessRights()" tabindex="@(++tabIndex)" />
+                                Del
+                            </th>
+                            <th>Category</th>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.AccessRightsItemList != null && Model.AccessRightsItemList.Count() > 0)
+                        {
+                            foreach (var item in Model.AccessRightsItemList)
+                            {
+                                <tr data-securityitemid="@item.SecurityItemID"
+                                    data-jcatsgroupid="@item.JcatsGroupID">
+                                    <td>
+                                        <input type="checkbox" class="form-control input-sm chkDeleteAccessRightsClass" id="chkDeleteAccessRights" tabindex="@(++tabIndex)" />
+                                    </td>
+                                    <td>@item.Category</td>
+                                    <td><a href="/UserGroups/GroupSecurityBySI/@item.SecurityItemID.ToEncrypt()?groupId=@item.JcatsGroupID.ToEncrypt()">@item.SecurityItemDescription</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 right-panel" style="padding-right:20px">
+
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Restricted Items</span>
+            </div>
+            <div class="widget-body col-xs-12" id="restrictedItemsDiv">
+                <table class="table table-bordered table-condensed table-hover table-padding  table-striped" id="restrictedItemsList">
+                    <thead>
+                        <tr>
+                            <th class="" style="width:50px">
+                                <input type="checkbox" id="chkAddAllRestrictedItems" onclick="CheckAllRestrictedItems()" tabindex="@(++tabIndex)" />
+                                Add
+                            </th>
+                            <th>Category</th>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RestrictedItemsList != null && Model.RestrictedItemsList.Count() > 0)
+                        {
+                            foreach (var data in Model.RestrictedItemsList)
+                            {
+                                <tr data-securityitemid="@data.SecurityItemID">
+                                    <td>
+                                        <input type="checkbox" class="form-control input-sm chkAddRestrictedItemClass" id="chkAddRestrictedItem" tabindex="@(++tabIndex)" />
+                                    </td>
+                                    <td>@data.Category</td>
+                                    <td><a href="/UserGroups/GroupSecurityBySI/@data.SecurityItemID.ToEncrypt()?groupId=@Model.JcatsGroupID.ToEncrypt()">@data.SecurityItemDescription</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    }
+@section fixedfooter{
+    <div class="boxfloat text-center">
+        <button id="btnSave" type="submit" class="btn btn-primary v-bottom default" tabindex="@(++tabIndex)"><u>S</u>ave</button>
+        <button id="btnSaveAndAddMore" type="button" class="btn  v-bottom" tabindex="@(++tabIndex)">Save/Add More</button>
+        <button id="btnCancel" type="button" class="btn  v-bottom" tabindex="@(++tabIndex)">Cancel</button>
+    </div>
+}
+
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/GroupSecurity.js?v=" + Guid.NewGuid())"></script>
+}

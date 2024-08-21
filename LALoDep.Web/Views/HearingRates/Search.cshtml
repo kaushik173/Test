@@ -1,0 +1,39 @@
+﻿@model LALoDep.Models.Administration.HearingRatesViewModel
+@{
+    ViewBag.Title = "Search";
+}
+
+<div class="row" id="divSearchResult">
+    <div class="col-md-12 col-sm-12 center-block" style="padding: 0 20px 0 20px">
+        <div class="widget row">
+            <div class="widget-header bordered-bottom bordered-themeprimary col-xs-12">
+                <span class="widget-caption">Search Results</span>
+                <div class="widget-buttons">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="widget-body col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-hover table-padding table-striped" id="HearingRate">
+                        <thead>
+                            <tr>
+                                <th class="">Hearing Type</th>
+                                <th class="" style="width: 50px;">DLGSD - MCO</th>
+                                <th class="" style="width: 50px;">DLGSD - CPO</th>
+                                <th class="" style="width: 50px;">DLGSD - PPO</th>
+                                <th class="" style="width: 50px;">DLGSD - CCO</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        var $onViewLoad = '@Model.OnViewLoad';
+    </script>
+    <script src="@Url.Content("~/Scripts/Application-Script/Administration/HearingRates.js?v=" + Guid.NewGuid())"></script>
+}

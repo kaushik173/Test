@@ -1,0 +1,5 @@
+HearingDateTime	Date		1/1/1990
+ID	Number		1
+DocketNumber	String	15	888383
+HearingDateTimeDisplay	Date		1/1/1990
+CaseID	Number		8

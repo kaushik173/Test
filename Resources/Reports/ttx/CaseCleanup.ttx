@@ -1,0 +1,9 @@
+SearchType	String	200	Los Angeles - Anderson : Cases without a Child (100)
+Client	String	150	ClientLast, ClientFirst
+Case Name	String	150	CNLast, CNFirst
+Case #	String	100	CK123456
+JCATS #	String	100	98765432
+Attorney	String	150	AttyLast, AttyFirst
+Inserted On	String	50	01/01/2008
+Inserted By	String	150	InsLast, InsFirst
+UniqueCaseFlag	Number		1
